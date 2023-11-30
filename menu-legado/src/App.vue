@@ -5,8 +5,8 @@ import { RouterLink, RouterView } from 'vue-router'
 <template>
   <div class="dashboard-layout">
     <header>
-			<div class="menu">
-				<div class="menu__logo">
+			<div class="menu flex-wrap">
+				<div class="menu__logo mb-1">
 					<img src="./assets/images/infoconsig-logo-compact.png" alt="infoconsig" class="menu__logo_compact">
 					<img src="./assets/images/infoconsig-logo.png" alt="infoconsig" class="menu__logo_complete">
 				</div>
@@ -23,8 +23,8 @@ import { RouterLink, RouterView } from 'vue-router'
 				</div>
 			</div>
 			<hr class="separator">
-			<div class="menu__main">
-				<ul class="menu__main_list">
+			<div class="menu__main flex-wrap">
+				<ul class="menu__main_list mb-1">
 					<li class="menu__main_list_item"><img src="./assets/svg/home.svg" alt="Dashboard" class="menu__main_list_icon"> Dashboard</li>
 					<li class="menu__main_list_item"><img src="./assets/svg/search.svg" alt="Consultas" class="menu__main_list_icon"> Consultas</li>
 					<li class="menu__main_list_item"><img src="./assets/svg/conversation.svg" alt="Solicitações" class="menu__main_list_icon">Solicitações</li>
@@ -41,7 +41,7 @@ import { RouterLink, RouterView } from 'vue-router'
     </header>
 
     <div class="main"></div>
-    <!-- <RouterView /> -->
+    <RouterView />
 
     <footer class="footer">
       <p class="footer__title">© 2023. Sttórico Sistemas Ltda. Todos direitos reservados.</p>
