@@ -1,0 +1,45 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended"
+    ],
+    "overrides": [
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "plugins": [
+				"prettier"
+    ],
+    "rules": {
+				// "prettier/prettier": "error",
+        "no-console": "error",
+        "no-unused-vars": "off",
+				"keyword-spacing": ["error", { "before": true, "after": true }],
+				"no-duplicate-imports": "error",
+				"eqeqeq": "error",
+				"no-else-return": ["error", {"allowElseIf": false}],
+				"no-var": "error",
+        "indent": ["error", "tab"],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error","single"],
+        "semi": ["error","never"],
+				"import/order": [
+					"error",
+					{
+						"groups": ["builtin","external","internal","parent","sibling","index"
+						],
+						"alphabetize": {
+							"order": "asc",
+							"caseSensitive": true
+						},
+						"newline-between": "always"
+					}
+				]
+    }
+}
