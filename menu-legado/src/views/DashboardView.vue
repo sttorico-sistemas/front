@@ -17,268 +17,64 @@
 										<div
 												class="bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light rounded-full w-9 h-9 grid place-content-center"
 										>
-												<icon-inbox />
+											35%
 										</div>
 								</div>
 								<div class="flex-1">
 										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Income</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$92,600</p>
+												<h6>Margem Principal</h6>
+												<p class="ltr:ml-auto rtl:mr-auto">R$ 350</p>
 										</div>
 										<div class="rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full"></div>
+												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full" style="width: 35%;"></div>
 										</div>
 								</div>
 						</div>
 						<div class="flex items-center">
 								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
 										<div class="bg-success-light dark:bg-success text-success dark:text-success-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-tag />
+											5%
 										</div>
 								</div>
 								<div class="flex-1">
 										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Profit</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$37,515</p>
+												<h6>Margem Secundária</h6>
+												<p class="ltr:ml-auto rtl:mr-auto">R$ 50</p>
 										</div>
 										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 65%"></div>
+												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 5%"></div>
 										</div>
 								</div>
 						</div>
 						<div class="flex items-center">
 								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
 										<div class="bg-warning-light dark:bg-warning text-warning dark:text-warning-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-credit-card />
+											10%
 										</div>
 								</div>
 								<div class="flex-1">
 										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Expenses</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$55,085</p>
+												<h6>Margem Adicional</h6>
+												<p class="ltr:ml-auto rtl:mr-auto">R$ 100</p>
 										</div>
 										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 80%"></div>
+												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 10%"></div>
 										</div>
 								</div>
 						</div>
 				</div>
 			</div>
 			<div class="panel h-full col-span-2">
-				<div class="space-y-9">
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div
-												class="bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light rounded-full w-9 h-9 grid place-content-center"
-										>
-												<icon-inbox />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Income</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$92,600</p>
-										</div>
-										<div class="rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-success-light dark:bg-success text-success dark:text-success-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-tag />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Profit</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$37,515</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 65%"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-warning-light dark:bg-warning text-warning dark:text-warning-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-credit-card />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Expenses</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$55,085</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 80%"></div>
-										</div>
-								</div>
-						</div>
-				</div>
+
 			</div>
 			<div class="panel h-full col-span-2">
-				<div class="space-y-9">
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div
-												class="bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light rounded-full w-9 h-9 grid place-content-center"
-										>
-												<icon-inbox />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Income</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$92,600</p>
-										</div>
-										<div class="rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-success-light dark:bg-success text-success dark:text-success-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-tag />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Profit</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$37,515</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 65%"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-warning-light dark:bg-warning text-warning dark:text-warning-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-credit-card />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Expenses</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$55,085</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 80%"></div>
-										</div>
-								</div>
-						</div>
-				</div>
+
 			</div>
 			<div class="panel h-full col-span-2">
-				<div class="space-y-9">
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div
-												class="bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light rounded-full w-9 h-9 grid place-content-center"
-										>
-												<icon-inbox />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Income</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$92,600</p>
-										</div>
-										<div class="rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-success-light dark:bg-success text-success dark:text-success-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-tag />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Profit</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$37,515</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 65%"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-warning-light dark:bg-warning text-warning dark:text-warning-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-credit-card />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Expenses</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$55,085</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 80%"></div>
-										</div>
-								</div>
-						</div>
-				</div>
+
 			</div>
 			<div class="panel h-full col-span-3">
-				<div class="space-y-9">
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div
-												class="bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light rounded-full w-9 h-9 grid place-content-center"
-										>
-												<icon-inbox />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Income</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$92,600</p>
-										</div>
-										<div class="rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-success-light dark:bg-success text-success dark:text-success-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-tag />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Profit</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$37,515</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 65%"></div>
-										</div>
-								</div>
-						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-warning-light dark:bg-warning text-warning dark:text-warning-light rounded-full w-9 h-9 grid place-content-center">
-												<icon-credit-card />
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Expenses</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">$55,085</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 80%"></div>
-										</div>
-								</div>
-						</div>
-				</div>
+
 			</div>
 		</div>
   </main>
