@@ -39,8 +39,11 @@ import { RouterLink, RouterView } from 'vue-router'
 				</div>
 			</div>
     </header>
+		<div class="sub_header">
+			<p>Sessão: <span>10</span>Mins <span>00</span>Sec</p>
+			<p>Trocar a Matrícula</p>
+		</div>
 
-    <div class="main"></div>
     <RouterView />
 
     <footer class="footer">
@@ -114,7 +117,7 @@ header {
 		&_list {
 			display: flex;
 			align-items: center;
-			gap: 40px;
+			gap: 20px;
 
 			&_item {
 				display:  flex;
@@ -157,8 +160,28 @@ header {
 	}
 }
 
+.sub_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 9px 12px;
+	margin-bottom: 14px;
+
+		p {
+			color: #3B3F5C;
+			font-size: 11px;
+			font-style: normal;
+			font-weight: 600;
+			line-height: normal;
+
+			span {
+				color: #1384AD;
+			}
+		}
+	}
+
 .dashboard-layout{
-	max-width: 1920px;
+	max-width: 100%;
 	margin: 0 auto;
   padding: 13px 20px;
 }
@@ -172,7 +195,6 @@ header {
 
   &__title {
     color: #000;
-    font-family: Nunito Sans;
     font-size: .9375rem;
     font-style: normal;
     font-weight: 400;
