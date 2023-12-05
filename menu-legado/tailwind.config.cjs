@@ -26,26 +26,41 @@ module.exports = {
                     light: '#ebe4f7',
                     'dark-light': 'rgb(128 93 202 / 15%)',
                 },
-                success: {
-                    DEFAULT: '#00ab55',
-                    light: '#ddf5f0',
-                    'dark-light': 'rgba(0,171,85,.15)',
-                },
+								info: {
+									DEFAULT: '#0ea5e9'
+								},
+								success: {
+									DEFAULT: '#00AB55'
+								},
+								warning: {
+									DEFAULT: '#E2A03F'
+								},
+								secondry: {
+									DEFAULT: '#805DCA'
+								},
+								primary_3: {
+									DEFAULT: '#255471'
+								},
+                // success: {
+                //     DEFAULT: '#00ab55',
+                //     light: '#ddf5f0',
+                //     'dark-light': 'rgba(0,171,85,.15)',
+                // },
                 danger: {
-                    DEFAULT: '#e7515a',
+                    DEFAULT: '#E7515A',
                     light: '#fff5f5',
                     'dark-light': 'rgba(231,81,90,.15)',
                 },
-                warning: {
-                    DEFAULT: '#e2a03f',
-                    light: '#fff9ed',
-                    'dark-light': 'rgba(226,160,63,.15)',
-                },
-                info: {
-                    DEFAULT: '#2196f3',
-                    light: '#e7f7ff',
-                    'dark-light': 'rgba(33,150,243,.15)',
-                },
+                // warning: {
+                //     DEFAULT: '#e2a03f',
+                //     light: '#fff9ed',
+                //     'dark-light': 'rgba(226,160,63,.15)',
+                // },
+                // info: {
+                //     DEFAULT: '#2196f3',
+                //     light: '#e7f7ff',
+                //     'dark-light': 'rgba(33,150,243,.15)',
+                // },
                 dark: {
                     DEFAULT: '#3b3f5c',
                     light: '#eaeaec',
