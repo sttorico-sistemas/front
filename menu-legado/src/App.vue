@@ -181,7 +181,7 @@ header {
 	}
 
 .dashboard-layout{
-	max-width: 100%;
+	max-width: 1920px;
 	margin: 0 auto;
   padding: 13px 20px;
 }
