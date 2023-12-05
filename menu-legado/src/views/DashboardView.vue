@@ -1,4 +1,47 @@
 <script setup>
+import { reactive } from "vue";
+
+const data = reactive([
+	{
+		id: 1,
+		titulo: 'Total da Margem Principal',
+		valor: 350,
+		porcentagem: 35,
+		total_reservado: 227.50,
+		detalhamento: {
+			financeiro: 100,
+			convenios: 100,
+			cartao_credito: 100,
+			cartao_beneficios: 100,
+		}
+	},
+	{
+		id: 2,
+		titulo: 'Total da Margem Secundária',
+		valor: 50,
+		porcentagem: 5,
+		total_reservado: 25,
+		detalhamento: {
+			financeiro: 100,
+			convenios: 100,
+			cartao_credito: 100,
+			cartao_beneficios: 100,
+		}
+	},
+	{
+		id: 3,
+		titulo: 'Total da Margem Adicional',
+		valor: 100,
+		porcentagem: 10,
+		total_reservado: 70,
+		detalhamento: {
+			financeiro: 100,
+			convenios: 100,
+			cartao_credito: 100,
+			cartao_beneficios: 100,
+		}
+	},
+])
 
 </script>
 
@@ -9,73 +52,142 @@
 			<li class="before:content-['/'] before:px-1.5"><a href="javascript:;" class="hover:text-black/70 dark:hover:text-white-light/70">Dashboard</a></li>
 		</ol>
 
-		<div class="grid gap-4 grid-cols-12 mt-3 mb-4">
-			<div class="panel h-full col-span-3">
-				<div class="space-y-9">
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div
-												class="bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light rounded-full w-9 h-9 grid place-content-center"
-										>
-											35%
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Margem Principal</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">R$ 350</p>
-										</div>
-										<div class="rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#7579ff] to-[#b224ef] w-11/12 h-full rounded-full" style="width: 35%;"></div>
-										</div>
-								</div>
+		<div class="grid gap-4 grid-cols-12 mt-4 mb-4">
+
+			<div class="grid grid-rows-2 grid-flow-col gap-6 col-span-12 md:col-span-4 xl:col-span-3">
+				<!-- Componente Main #1 -->
+				<div id="margem_consolidado" class="panel max-h-[272px] col-span-12 md:col-span-4 xl:col-span-3 px-3">
+					<h2 class="mb-6">Distribuição da Margem</h2>
+					<div class="space-y-9">
+							<div class="flex items-center gap-4">
+									<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
+											<div
+												class="bg-info text-white rounded-full w-11 h-11 grid place-content-center"
+											>
+												35%
+											</div>
+									</div>
+									<div class="flex-1">
+											<div class="flex justify-between mb-2">
+													<h6>Margem Principal</h6>
+													<p class="ltr:ml-auto rtl:mr-auto">R$ 350</p>
+											</div>
+											<div class="rounded-full h-2 bg-dark-light shadow">
+													<div class="bg-info w-11/12 h-full rounded-full" style="width: 35%;"></div>
+											</div>
+									</div>
+							</div>
+							<div class="flex items-center gap-4">
+									<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
+											<div
+												class="bg-success text-white rounded-full w-11 h-11 grid place-content-center"
+											>
+												5%
+											</div>
+									</div>
+									<div class="flex-1">
+											<div class="flex justify-between  mb-2">
+													<h6>Margem Principal</h6>
+													<p class="ltr:ml-auto rtl:mr-auto">R$ 50</p>
+											</div>
+											<div class="rounded-full h-2 bg-dark-light shadow">
+													<div class="bg-success w-11/12 h-full rounded-full" style="width: 5%;"></div>
+											</div>
+									</div>
+							</div>
+							<div class="flex items-center gap-4">
+									<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
+											<div
+												class="bg-warning text-white rounded-full w-11 h-11 grid place-content-center"
+											>
+												10%
+											</div>
+									</div>
+									<div class="flex-1">
+											<div class="flex justify-between mb-2">
+													<h6>Margem Principal</h6>
+													<p class="ltr:ml-auto rtl:mr-auto">R$ 100</p>
+											</div>
+											<div class="rounded-full h-2 bg-dark-light shadow">
+													<div class="bg-warning w-11/12 h-full rounded-full" style="width: 35%;"></div>
+											</div>
+									</div>
+							</div>
+					</div>
+				</div>
+				<!-- Componente Main #1 -->
+
+				<!-- Componente Main #2 -->
+				<div id="saldo_disponivel" class="panel max-h-[244px] col-span-12 md:col-span-4 xl:col-span-3 px-3">
+					<h2 class="mb-6">Saldo Disponível da Margem</h2>
+				</div>
+				<!-- Componente Main #2 -->
+			</div>
+
+			<!-- Componente Main #3 -->
+			<div
+				v-for="item in data"
+				:key="item.id"
+				id="margem_individual"
+				class="panel max-h-[540px] col-span-8 md:col-span-4 xl:col-span-2"
+			>
+				<div class="margem_individual__principal flex flex-col items-baseline w-full min-h-[123px] bg-info rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none p-3 mb-2 text-start">
+					<h3>R$ {{ item.valor }}</h3>
+					<p>Total da Margem Principal</p>
+				</div>
+
+				<div class="margem_individual__total_reservado flex flex-col items-end justify-end w-full min-h-[86px] bg-white  rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none mb-2 pt-5 pb-1 px-4">
+					<p>Total Reservado</p>
+					<h3>R$ {{ item.total_reservado }}</h3>
+				</div>
+
+				<div class="margem_individual__detalhamento w-full min-h-[266px] bg-white  rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none px-2 pb-5">
+					<h3>Detalhamento da Margem Reservada</h3>
+
+					<div class="w-full bg-white  rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none pr-2 pl-1 py-3">
+
+						<div class="w-full flex justify-between items-center mb-3">
+							<div class="flex items-center gap-1">
+								<div class="flex justify-center items-center bg-info w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<span class="margem_individual__detalhamento__title text-info">Financeiros</span>
+							</div>
+							<span class="margem_individual__detalhamento__value text-info">R$100,00</span>
 						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-success-light dark:bg-success text-success dark:text-success-light rounded-full w-9 h-9 grid place-content-center">
-											5%
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Margem Secundária</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">R$ 50</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#3cba92] to-[#0ba360] w-full h-full rounded-full" style="width: 5%"></div>
-										</div>
-								</div>
+
+						<div class="w-full flex justify-between items-center mb-3">
+							<div class="flex items-center gap-1">
+								<div class="flex justify-center items-center bg-warning w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<span class="margem_individual__detalhamento__title text-warning">Convênios</span>
+							</div>
+							<span class="margem_individual__detalhamento__value text-warning">R$100,00</span>
 						</div>
-						<div class="flex items-center">
-								<div class="w-9 h-9 ltr:mr-3 rtl:ml-3">
-										<div class="bg-warning-light dark:bg-warning text-warning dark:text-warning-light rounded-full w-9 h-9 grid place-content-center">
-											10%
-										</div>
-								</div>
-								<div class="flex-1">
-										<div class="flex font-semibold text-white-dark mb-2">
-												<h6>Margem Adicional</h6>
-												<p class="ltr:ml-auto rtl:mr-auto">R$ 100</p>
-										</div>
-										<div class="w-full rounded-full h-2 bg-dark-light dark:bg-[#1b2e4b] shadow">
-												<div class="bg-gradient-to-r from-[#f09819] to-[#ff5858] w-full h-full rounded-full" style="width: 10%"></div>
-										</div>
-								</div>
+
+						<div class="w-full flex justify-between items-center mb-3">
+							<div class="flex items-center gap-1">
+								<div class="flex justify-center items-center bg-secondry w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<span class="margem_individual__detalhamento__title text-secondry">Cartão de Crédito</span>
+							</div>
+							<span class="margem_individual__detalhamento__value text-secondry">R$100,00</span>
 						</div>
+
+						<div class="w-full flex justify-between items-center">
+							<div class="flex items-center gap-1">
+								<div class="flex justify-center items-center bg-primary_3 w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<span class="margem_individual__detalhamento__title text-primary_3">Cartão de Benefícios</span>
+							</div>
+							<span class="margem_individual__detalhamento__value text-primary_3">R$100,00</span>
+						</div>
+
+					</div>
 				</div>
 			</div>
-			<div class="panel h-full col-span-2">
+			<!-- Componente Main #3 -->
+
+			<!-- Componente Main #4 -->
+			<div class="panel hidden h-full col-span-12 md:col-span-4 xl:col-span-3">
 
 			</div>
-			<div class="panel h-full col-span-2">
-
-			</div>
-			<div class="panel h-full col-span-2">
-
-			</div>
-			<div class="panel h-full col-span-3">
-
-			</div>
+			<!-- Componente Main #4 -->
 		</div>
   </main>
 </template>
@@ -90,6 +202,97 @@ ol {
 
 	li:first-child {
 		color: #4361EE;
+	}
+}
+
+#margem_consolidado.panel {
+	h2 {
+		color: var(--Black, #0E1726);
+		font-size: 19px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+
+	h6 {
+		color: var(--White-light-dark, #888EA8);
+		font-size: 13px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+
+	p {
+		color: var(--White-light-dark, #888EA8);
+		font-size: 20px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+}
+
+#margem_individual.panel {
+	.margem_individual__principal {
+		h3 {
+			color: var(--White, #FFF);
+			text-align: right;
+			font-size: 32px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+		}
+
+		p {
+			color: var(--White, #FFF);
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+		}
+	}
+
+	.margem_individual__total_reservado {
+		h3 {
+			color: var(--Danger, #E7515A);
+			font-size: 32px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+		}
+
+		p {
+			color: #151516;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+		}
+	}
+
+	.margem_individual__detalhamento {
+		h3 {
+			margin: 11px 0 5px;
+			color: #151516;
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+			text-align: center;
+		}
+
+		&__title {
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+		}
+
+		&__value {
+			font-size: 12px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: normal;
+		}
 	}
 }
 </style>
