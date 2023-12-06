@@ -1,5 +1,9 @@
 <script setup>
 import { reactive } from "vue";
+import { ref } from 'vue';
+import Multiselect from '@suadelabs/vue3-multiselect';
+import '@suadelabs/vue3-multiselect/dist/vue3-multiselect.css';
+
 
 const data = reactive([
 	{
@@ -43,6 +47,11 @@ const data = reactive([
 	},
 ])
 
+const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])
+const servico = ref()
+
+const optionsMatriculas = ref([123456, 11111, 22222, 333333])
+const matricula = ref()
 </script>
 
 <template>
@@ -119,7 +128,45 @@ const data = reactive([
 
 				<!-- Componente Main #2 -->
 				<div id="saldo_disponivel" class="panel max-h-[244px] col-span-12 md:col-span-4 xl:col-span-3 px-3">
-					<h2 class="mb-6">Saldo Disponível da Margem</h2>
+					<h2 class="mb-4">Saldo Disponível da Margem</h2>
+
+					<div class="saldo_disponivel__valor border rounded mb-3 px-2 py-2">R$ 0,00</div>
+
+					<multiselect
+						v-model="servico"
+						:options="optionsServicos"
+						class="custom-multiselect mb-3"
+						:searchable="false"
+						placeholder="Selecione Tipo de Serviço"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+					/>
+
+					<div class="flex relative items-stretch flex-wrap">
+						<div class="ltr:-mr-px rtl:-ml-px flex">
+							<span
+								class="
+									border border-[#e0e6ed]
+									dark:border-[#17263c]
+									rounded-l
+									bg-[#EAEAEC]
+									flex
+									items-center
+									justify-center
+									text-black
+									px-4
+									py-1.5
+									dark:bg-[#1a1c2d] dark:text-white-dark
+								"
+								>
+								<img src="../assets/svg/calculator_2.svg" alt="Calcule o saldo disponível da sua Margem">
+								</span
+							>
+						</div>
+						<span class="flex-1 flex items-center border rounded-r px-2 calcula_saldo">Calcule o saldo disponível da sua Margem</span>
+					</div>
 				</div>
 				<!-- Componente Main #2 -->
 			</div>
@@ -183,11 +230,58 @@ const data = reactive([
 			</div>
 			<!-- Componente Main #3 -->
 
-			<!-- Componente Main #4 -->
-			<div class="panel hidden h-full col-span-12 md:col-span-4 xl:col-span-3">
+			<div class="grid grid-rows-2 grid-flow-col gap-6 col-span-12 md:col-span-4 xl:col-span-3">
+				<!-- Componente Main #4 -->
+				<div id="matricula_selecionada" class="panel bg-warning max-h-[380px] col-span-12 md:col-span-4 xl:col-span-3 px-6 py-5">
+					<h2>Matrícula selecionada</h2>
 
+					<multiselect
+						v-model="matricula"
+						:options="optionsMatriculas"
+						class="custom-multiselect my-3"
+						:searchable="false"
+						:preselect-first="true"
+						placeholder="Selecione uma matrícula"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+					/>
+
+					<div class="input-group my-3">
+						<label for="ctnConsignante">Consignante:</label>
+						<input id="ctnConsignante" type="text" placeholder="" class="form-input" />
+					</div>
+
+					<div class="input-group my-3">
+						<label for="ctnAverbador">Averbador:</label>
+						<input id="ctnAverbador" type="text" placeholder="" class="form-input" />
+					</div>
+
+					<div class="input-group my-3">
+						<label for="ctnCargo">Cargo:</label>
+						<input id="ctnCargo" type="text" placeholder="" class="form-input" />
+					</div>
+
+					<div class="input-group my-3">
+						<label for="ctnLotação">Lotação:</label>
+						<input id="ctnLotação" type="text" placeholder="" class="form-input" />
+					</div>
+				</div>
+				<!-- Componente Main #4 -->
+
+				<!-- Componente Main #5 -->
+				<div id="post_blog" class="panel flex items-center justify-center max-h-[301px] col-span-12 md:col-span-4 xl:col-span-3 px-3 py-6">
+					<div class="resumo p-7">
+						<h2 class="mb-5">Lorem ipsum dolor sit amet.</h2>
+
+						<p class="mb-6">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, doloribus.</p>
+
+						<button type="button" class="btn btn-primary">Saiba mais</button>
+					</div>
+				</div>
+				<!-- Componente Main #5 -->
 			</div>
-			<!-- Componente Main #4 -->
 		</div>
   </main>
 </template>
@@ -291,6 +385,80 @@ ol {
 			font-size: 12px;
 			font-style: normal;
 			font-weight: 400;
+			line-height: normal;
+		}
+	}
+}
+
+#saldo_disponivel.panel {
+	h2 {
+		color: var(--Dark, #3B3F5C);
+		font-size: 19px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+
+	.saldo_disponivel__valor {
+		color: var(--Dark, #3B3F5C);
+		font-size: 32px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+
+	.calcula_saldo {
+		color: var(--Dark, #3B3F5C);
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
+}
+
+#matricula_selecionada.panel {
+	h2 {
+		color: var(--Black, #000);
+		font-size: 18px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+
+	.input-group {
+		color: #000;
+		font-size: 12px;
+		font-style: normal;
+		font-weight: 500;
+		line-height: normal;
+	}
+}
+
+#post_blog.panel {
+	.resumo {
+		background: url('../assets/images/post-blog.jpg'), lightgray 50% / cover no-repeat;;
+
+		h2 {
+			color: var(--White, #FFF);
+			font-size: 30px;
+			font-style: normal;
+			font-weight: 600;
+			line-height: normal;
+		}
+
+		p {
+			color: var(--White, #FFF);
+			font-size: 16px;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+		}
+
+		button {
+			color: var(--White, #FFF);
+			font-size: 14px;
+			font-style: normal;
+			font-weight: 500;
 			line-height: normal;
 		}
 	}
