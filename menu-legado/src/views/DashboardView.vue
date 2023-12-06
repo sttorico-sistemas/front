@@ -176,11 +176,16 @@ const matricula = ref()
 				v-for="item in data"
 				:key="item.id"
 				id="margem_individual"
-				class="panel max-h-[540px] col-span-8 md:col-span-4 xl:col-span-2"
+				class="panel max-h-[570px] col-span-8 md:col-span-4 xl:col-span-2"
 			>
-				<div class="margem_individual__principal flex flex-col items-baseline w-full min-h-[123px] bg-info rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none p-3 mb-2 text-start">
+				<div class="margem_individual__principal relative flex flex-col items-baseline w-full min-h-[123px] bg-info rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none p-3 mb-2 mt-8 text-start">
+					<div class="margem_individual__principal__destaque absolute border border-info bg-white text-info rounded-md shadow-md p-2">
+						<span>Limite</span>
+						<p class="text-info">{{ item.porcentagem }}%</p>
+					</div>
+
 					<h3>R$ {{ item.valor }}</h3>
-					<p>Total da Margem Principal</p>
+					<p class="text-white">Total da Margem Principal</p>
 				</div>
 
 				<div class="margem_individual__total_reservado flex flex-col items-end justify-end w-full min-h-[86px] bg-white  rounded border border-[#e0e6ed] dark:border-[#1b2e4b] dark:bg-[#191e3a] dark:shadow-none mb-2 pt-5 pb-1 px-4">
@@ -203,7 +208,7 @@ const matricula = ref()
 
 						<div class="w-full flex justify-between items-center mb-3">
 							<div class="flex items-center gap-1">
-								<div class="flex justify-center items-center bg-warning w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<div class="flex justify-center items-center bg-warning w-10 h-10 rounded-xl"><img src="../assets/svg/convenios.svg" alt="Financeiro"></div>
 								<span class="margem_individual__detalhamento__title text-warning">Convênios</span>
 							</div>
 							<span class="margem_individual__detalhamento__value text-warning">R$100,00</span>
@@ -211,7 +216,7 @@ const matricula = ref()
 
 						<div class="w-full flex justify-between items-center mb-3">
 							<div class="flex items-center gap-1">
-								<div class="flex justify-center items-center bg-secondry w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<div class="flex justify-center items-center bg-secondry w-10 h-10 rounded-xl"><img src="../assets/svg/creditCard.svg" alt="Financeiro"></div>
 								<span class="margem_individual__detalhamento__title text-secondry">Cartão de Crédito</span>
 							</div>
 							<span class="margem_individual__detalhamento__value text-secondry">R$100,00</span>
@@ -219,7 +224,7 @@ const matricula = ref()
 
 						<div class="w-full flex justify-between items-center">
 							<div class="flex items-center gap-1">
-								<div class="flex justify-center items-center bg-primary_3 w-10 h-10 rounded-xl"><img src="../assets/svg/currency.svg" alt="Financeiro"></div>
+								<div class="flex justify-center items-center bg-primary_3 w-10 h-10 rounded-xl"><img src="../assets/svg/beneficsCard.svg" alt="Financeiro"></div>
 								<span class="margem_individual__detalhamento__title text-primary_3">Cartão de Benefícios</span>
 							</div>
 							<span class="margem_individual__detalhamento__value text-primary_3">R$100,00</span>
@@ -337,11 +342,29 @@ ol {
 		}
 
 		p {
-			color: var(--White, #FFF);
 			font-size: 14px;
 			font-style: normal;
 			font-weight: 500;
 			line-height: normal;
+		}
+
+		&__destaque {
+			width: 69px;
+			height: 66px;
+			top: -30px;
+			right: 20px;
+			text-align: center;
+			font-style: normal;
+			font-weight: 500;
+			line-height: normal;
+
+			span {
+				font-size: 12px;
+			}
+
+			p {
+				font-size: 24px;
+			}
 		}
 	}
 
