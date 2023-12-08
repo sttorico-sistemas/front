@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import calculatorIcon from '../../../assets/svg/calculator_2.vue'
+import calculatorIcon from '../../../assets/svg/iconCalculator2.vue'
 import Multiselect from '@suadelabs/vue3-multiselect'
 import '@suadelabs/vue3-multiselect/dist/vue3-multiselect.css'
 

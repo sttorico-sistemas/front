@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
 
-import beneficsCardIcon from '../../../assets/svg/beneficsCard.vue'
-import conveniosIcon from '../../../assets/svg/convenios.vue'
-import creditCardIcon from '../../../assets/svg/creditCard.vue'
-import currencyIcon from '../../../assets/svg/currency.vue'
+import beneficsCardIcon from '../../../assets/svg/iconBeneficsCard.vue'
+import conveniosIcon from '../../../assets/svg/iconAgreements.vue'
+import creditCardIcon from '../../../assets/svg/iconCreditCard.vue'
+import currencyIcon from '../../../assets/svg/iconCurrency.vue'
 
 interface IMargemDetalhamento {
 	financeiro: number,

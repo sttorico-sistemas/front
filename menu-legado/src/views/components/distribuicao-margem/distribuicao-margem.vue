@@ -70,9 +70,10 @@ const color = (value: number) => {
               R$ {{ margem.valor }}
             </p>
           </div>
-          <div class="rounded-full h-2 bg-dark-light shadow">
+          <div class="rounded-full h-2  bg-dark-light shadow">
             <div
               class="w-11/12 h-full rounded-full"
+              :class="color(margem.id)"
               :style="`width: ${margem.porcentagem}%`"
             />
           </div>

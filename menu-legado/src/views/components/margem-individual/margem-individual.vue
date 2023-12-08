@@ -101,7 +101,7 @@ const bgColor = (value: number) => {
       </p>
     </div>
 
-		<total-reservado :total-reservado="margem.total_reservado" />
+    <total-reservado :total-reservado="margem.total_reservado" />
 
     <div
       class="margem_individual__detalhamento w-full min-h-[266px] bg-white rounded border border-[#e0e6ed] px-2 pb-5"
