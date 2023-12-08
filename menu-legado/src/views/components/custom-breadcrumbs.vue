@@ -21,7 +21,7 @@ const separator = (id: number) =>
     </li>
   </ol>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
 ol {
 	color: #0e1726;
 	font-size: 20px;

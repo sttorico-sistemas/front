@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint --fix --fix-type problem,layout src/**/*.{js,vue}",
+    "lint": "eslint problem,layout src/**/*.{js,ts,vue}",
+		"lint:fix": "eslint --fix --fix-type",
     "preview": "vite preview"
   },
   "dependencies": {
