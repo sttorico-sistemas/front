@@ -19,10 +19,10 @@ const post = reactive<IMiniPost>({
 <template>
   <div
     id="post_blog"
-    class="panel flex items-center justify-center max-h-[301px] col-span-12 md:col-span-4 xl:col-span-3 px-3 py-6"
+    class="panel flex items-center justify-center max-h-[301px] col-span-12 md:col-span-6 xl:col-span-3 px-3 py-6"
   >
     <div
-      class="resumo bg-cover bg-no-repeat bg-gray-200/50 p-7"
+      class="resumo bg-cover bg-center bg-no-repeat bg-gray-200/50 p-7"
       :style="`background-image: url('${post.imagem}')`"
     >
       <h2 class="mb-5">

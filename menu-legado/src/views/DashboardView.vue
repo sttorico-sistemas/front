@@ -15,7 +15,7 @@ import ultimasNoticias from './components/ultimas-noticias/ultimas-noticias.vue'
 
     <div class="grid gap-4 grid-cols-12 mt-4 mb-4">
       <div
-        class="grid grid-rows-2 grid-flow-col gap-6 col-span-12 md:col-span-4 xl:col-span-3"
+        class="grid grid-rows-2 grid-flow-col gap-6 col-span-12 md:col-span-12 lg:col-span-4 xl:col-span-3"
       >
         <distribuicao-margem />
 
@@ -25,7 +25,7 @@ import ultimasNoticias from './components/ultimas-noticias/ultimas-noticias.vue'
       <margem-individual />
 
       <div
-        class="grid grid-rows-2 grid-flow-col gap-6 col-span-12 md:col-span-4 xl:col-span-3"
+        class="grid grid-rows-2 grid-flow-col gap-6 col-span-12 md:col-span-12 lg:col-span-4 xl:col-span-3"
       >
         <form-matricula-selecionada />
 

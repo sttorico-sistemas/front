@@ -12,13 +12,13 @@ const servico = ref()
 <template>
   <div
     id="saldo_disponivel"
-    class="panel max-h-[244px] col-span-12 md:col-span-4 xl:col-span-3 px-3"
+    class="panel flex flex-col max-h-[244px] xl:row-start-2 xl:row-span-8 col-span-12 md:col-span-6 lg:col-span-3 xl:col-span-3 px-3"
   >
     <h2 class="mb-4">
       Saldo Disponível da Margem
     </h2>
 
-    <div class="saldo_disponivel__valor border rounded mb-3 px-2 py-2">
+    <div class="saldo_disponivel__valor self-end border rounded mb-3 px-2 py-2">
       R$ 0,00
     </div>
 
@@ -59,6 +59,7 @@ const servico = ref()
 	}
 
 	.saldo_disponivel__valor {
+		width: 272px;
 		color: var(--Dark, #3b3f5c);
 		font-size: 32px;
 		font-style: normal;

@@ -44,7 +44,7 @@ const color = (value: number) => {
 <template>
   <div
     id="margem_consolidado"
-    class="panel max-h-[272px] col-span-12 md:col-span-4 xl:col-span-3 px-3"
+    class="panel max-h-[272px] col-span-12 md:col-span-6 lg:col-span-3 xl:col-span-3 px-3"
   >
     <h2 class="mb-6">
       Distribuição da Margem

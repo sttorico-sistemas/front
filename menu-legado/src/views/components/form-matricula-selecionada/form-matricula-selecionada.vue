@@ -8,7 +8,7 @@ const matricula = ref()
 <template>
   <div
     id="matricula_selecionada"
-    class="panel bg-warning max-h-[380px] col-span-12 md:col-span-4 xl:col-span-3 px-6 py-5"
+    class="panel bg-warning max-h-[380px] col-span-12 md:col-span-6 xl:col-span-3 px-6 py-5"
   >
     <h2>Matrícula selecionada</h2>
 
