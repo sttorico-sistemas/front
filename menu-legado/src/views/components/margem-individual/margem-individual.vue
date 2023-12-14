@@ -79,7 +79,7 @@ const bgColor = (value: number) => {
     v-for="margem in margens"
     id="margem_individual"
     :key="margem.id"
-    class="panel max-h-[570px] col-span-8 md:col-span-4 xl:col-span-2"
+    class="panel max-h-[582px] col-span-8 md:col-span-4 xl:col-span-2"
   >
     <div
       class="margem_individual__principal relative flex flex-col items-baseline w-full min-h-[123px] rounded border border-[#e0e6ed] p-3 mb-2 mt-8 text-start"

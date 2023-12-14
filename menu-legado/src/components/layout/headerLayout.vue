@@ -1,4 +1,19 @@
 <script setup lang="ts">
+// Components
+import IconAcademic from '../../assets/svg/iconAcademic.vue'
+import IconCalculator from '../../assets/svg/iconCalculator.vue'
+import IconCalendar from '../../assets/svg/iconCalendar.vue'
+import IconChat from '../../assets/svg/iconChat.vue'
+import IconConversation from '../../assets/svg/iconConversation.vue'
+import IconDocuments from '../../assets/svg/iconDocuments.vue'
+import IconExit from '../../assets/svg/iconExit.vue'
+import IconHelp from '../../assets/svg/iconHelp.vue'
+import IconHome from '../../assets/svg/iconHome.vue'
+import IconMessage from '../../assets/svg/iconMessage.vue'
+import IconModo from '../../assets/svg/iconModo.vue'
+import IconNotification from '../../assets/svg/iconNotification.vue'
+import IconProfile from '../../assets/svg/iconProfile.vue'
+import IconSearch from '../../assets/svg/iconSearch.vue'
 
 </script>
 <template>
@@ -18,47 +33,103 @@
       </div>
       <div class="menu__profile">
         <ul class="menu__items">
-          <li class="menu__items_item">
-            <img
-              src="../../assets/svg/exit.svg"
-              alt="sair"
+          <li class="menu__items_item !bg-danger">
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-exit />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Deseja sair?
+            </tippy>
           </li>
           <li class="menu__items_item">
-            <img
-              src="../../assets/svg/calendar.svg"
-              alt="calendario"
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-calendar />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Calendario
+            </tippy>
           </li>
           <li class="menu__items_item">
-            <img
-              src="../../assets/svg/modo.svg"
-              alt="modo dark"
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-modo />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Modo Dark
+            </tippy>
           </li>
           <li class="menu__items_item">
-            <img
-              src="../../assets/svg/chat.svg"
-              alt="chat"
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-chat />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Chat
+            </tippy>
           </li>
           <li class="menu__items_item">
-            <img
-              src="../../assets/svg/message.svg"
-              alt="mensagens"
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-message />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Mensagens
+            </tippy>
           </li>
           <li class="menu__items_item">
-            <img
-              src="../../assets/svg/notification.svg"
-              alt="notificação"
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-notification />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Notificações
+            </tippy>
           </li>
           <li class="menu__items_item">
-            <img
-              src="../../assets/svg/profile.svg"
-              alt="perfil"
+            <button
+              v-tippy:top
+              type="button"
             >
+              <icon-profile />
+            </button>
+            <tippy
+              target="top"
+              placement="top"
+            >
+              Perfil
+            </tippy>
           </li>
         </ul>
       </div>
@@ -67,55 +138,32 @@
     <div class="menu__main flex-wrap">
       <ul class="menu__main_list mb-1">
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/home.svg"
-            alt="Dashboard"
-            class="menu__main_list_icon"
-          >
+          <icon-home class="menu__main_list_icon" />
           Dashboard
         </li>
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/search.svg"
-            alt="Consultas"
-            class="menu__main_list_icon"
-          >
+          <icon-search class="menu__main_list_icon" />
           Consultas
         </li>
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/conversation.svg"
-            alt="Solicitações"
-            class="menu__main_list_icon"
-          >Solicitações
+          <icon-conversation class="menu__main_list_icon" />
+          Solicitações
         </li>
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/calculator.svg"
-            alt="Simulador"
-            class="menu__main_list_icon"
-          >Simulador
+          <icon-calculator class="menu__main_list_icon" />
+          Simulador
         </li>
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/documents.svg"
-            alt="Documentos"
-            class="menu__main_list_icon"
-          >Documentos
+          <icon-documents class="menu__main_list_icon" />
+          Documentos
         </li>
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/help.svg"
-            alt="Ajuda"
-            class="menu__main_list_icon"
-          >Ajuda
+          <icon-help class="menu__main_list_icon" />
+          Ajuda
         </li>
         <li class="menu__main_list_item">
-          <img
-            src="../../assets/svg/academic.svg"
-            alt="Educonsig"
-            class="menu__main_list_icon"
-          >Educonsig
+          <icon-academic class="menu__main_list_icon" />
+          Educonsig
         </li>
       </ul>
       <div class="message_welcome">

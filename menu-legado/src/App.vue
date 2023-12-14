@@ -3,6 +3,11 @@
 
 import footerLayout from './components/layout/footerLayout.vue'
 import headerLayout from './components/layout/headerLayout.vue'
+
+import { useMeta } from '@/composables/use-meta'
+
+// Meta
+useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
 </script>
 
 <template>
