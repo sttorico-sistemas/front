@@ -137,33 +137,68 @@ import IconSearch from '../../assets/svg/iconSearch.vue'
     <hr class="separator">
     <div class="menu__main flex-wrap">
       <ul class="menu__main_list mb-1">
-        <li class="menu__main_list_item">
-          <icon-home class="menu__main_list_icon" />
-          Dashboard
+        <li>
+          <router-link
+            :to="{ name: 'dashboard' }"
+            class="menu__main_list_item"
+          >
+            <icon-home class="menu__main_list_icon" />
+            Dashboard
+          </router-link>
         </li>
-        <li class="menu__main_list_item">
-          <icon-search class="menu__main_list_icon" />
-          Consultas
+        <li>
+          <router-link
+            :to="{ name: 'consultas' }"
+            class="menu__main_list_item"
+          >
+            <icon-search class="menu__main_list_icon" />
+            Consultas
+          </router-link>
         </li>
-        <li class="menu__main_list_item">
-          <icon-conversation class="menu__main_list_icon" />
-          Solicitações
+        <li>
+          <router-link
+            :to="{ name: 'consultas' }"
+            class="menu__main_list_item"
+          >
+            <icon-conversation class="menu__main_list_icon" />
+            Solicitações
+          </router-link>
         </li>
-        <li class="menu__main_list_item">
-          <icon-calculator class="menu__main_list_icon" />
-          Simulador
+        <li>
+          <router-link
+            :to="{ name: 'consultas' }"
+            class="menu__main_list_item"
+          >
+            <icon-calculator class="menu__main_list_icon" />
+            Simulador
+          </router-link>
         </li>
-        <li class="menu__main_list_item">
-          <icon-documents class="menu__main_list_icon" />
-          Documentos
+        <li>
+          <router-link
+            :to="{ name: 'consultas' }"
+            class="menu__main_list_item"
+          >
+            <icon-documents class="menu__main_list_icon" />
+            Documentos
+          </router-link>
         </li>
-        <li class="menu__main_list_item">
-          <icon-help class="menu__main_list_icon" />
-          Ajuda
+        <li>
+          <router-link
+            :to="{ name: 'consultas' }"
+            class="menu__main_list_item"
+          >
+            <icon-help class="menu__main_list_icon" />
+            Ajuda
+          </router-link>
         </li>
-        <li class="menu__main_list_item">
-          <icon-academic class="menu__main_list_icon" />
-          Educonsig
+        <li>
+          <router-link
+            :to="{ name: 'consultas' }"
+            class="menu__main_list_item"
+          >
+            <icon-academic class="menu__main_list_icon" />
+            Educonsig
+          </router-link>
         </li>
       </ul>
       <div class="message_welcome">
