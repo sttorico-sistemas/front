@@ -15,6 +15,10 @@ app.use(head)
 import { TippyPlugin } from 'tippy.vue'
 app.use(TippyPlugin)
 
+// popper
+import Popper from 'vue3-popper';
+app.component('Popper', Popper);
+
 app.use(router)
 
 app.mount('#app')
