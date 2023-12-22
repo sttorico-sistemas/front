@@ -6,23 +6,24 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint --fix --fix-type problem,layout src/**/*.{js,vue}",
-		"lint:fix": "eslint --fix --fix-type",
+    "lint:fix": "eslint --fix --fix-type",
     "preview": "vite preview"
   },
   "dependencies": {
     "pinia": "^2.0.22",
+    "vite-tsconfig-paths": "^4.2.2",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5",
     "vue3-perfect-scrollbar": "^1.6.0"
   },
   "devDependencies": {
-		"@bhplugin/vue3-datatable": "^1.0.3",
+    "@bhplugin/vue3-datatable": "^1.0.3",
     "@suadelabs/vue3-multiselect": "^1.0.2",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.7",
     "@vitejs/plugin-vue": "^4.4.0",
     "@vue/eslint-config-typescript": "^12.0.0",
-		"@vueuse/head": "^0.9.7",
+    "@vueuse/head": "^0.9.7",
     "autoprefixer": "^10.4.12",
     "eslint": "^8.55.0",
     "eslint-plugin-prettier": "^5.0.1",
@@ -30,8 +31,18 @@
     "postcss": "^8.4.17",
     "sass": "^1.69.5",
     "tailwindcss": "^3.3.2",
+    "tippy.vue": "^3.2.1",
     "vite": "^4.4.11",
-		"vue3-popper": "^1.5.0",
-		"tippy.vue": "^3.2.1"
+    "vue3-popper": "^1.5.0",
+		"vue3-json-excel": "^1.0.10-alpha",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "eslint-config-standard-with-typescript": "^42.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "vue-tsc": "^1.8.22"
   }
 }
