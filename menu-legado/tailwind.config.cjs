@@ -39,7 +39,8 @@ module.exports = {
 					DEFAULT: '#805DCA'
 				},
 				primary_3: {
-					DEFAULT: '#255471'
+					DEFAULT: '#255471',
+					table: '#1384AD'
 				},
 				// success: {
 				//     DEFAULT: '#00ab55',
@@ -88,7 +89,7 @@ module.exports = {
 			},
 			gridRow: {
       	'span-8': 'span 8 / span 8',
-      },
+			},
 			typography: ({ theme }) => ({
 				DEFAULT: {
 					css: {
