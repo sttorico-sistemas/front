@@ -16,8 +16,12 @@ import { TippyPlugin } from 'tippy.vue'
 app.use(TippyPlugin)
 
 // popper
-import Popper from 'vue3-popper';
+import Popper from 'vue3-popper'
 app.component('Popper', Popper);
+
+// json to excel
+import vue3JsonExcel from 'vue3-json-excel'
+app.use(vue3JsonExcel);
 
 app.use(router)
 
