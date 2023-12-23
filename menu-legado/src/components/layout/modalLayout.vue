@@ -47,7 +47,7 @@
 					x-show="open"
 					x-transition
 					x-transition.duration.300
-					class="panel border-0 p-0 rounded-lg overflow-hidden w-full max-w-lg my-8"
+					class="panel border-0 p-0 rounded-lg overflow-hidden w-full my-8"
 					:class="props.size"
 				>
 					<div
