@@ -17,7 +17,7 @@
 			// "@services/*": ["./src/app/services/*"],
 			// "@utils/*": ["./src/app/utils/*"],
 			// "@config/*": ["./src/app/config/*"],
-			"@svg/*": ["./src/assets/svg/*"],
+			"@icons/*": ["./src/components/icons/*"]
 		},
 		"noImplicitAny": false,
 		"allowJs": true,
