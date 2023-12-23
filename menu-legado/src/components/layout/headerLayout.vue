@@ -1,19 +1,19 @@
 <script setup lang="ts">
 // Components
-import IconAcademic from '../../assets/svg/iconAcademic.vue'
-import IconCalculator from '../../assets/svg/iconCalculator.vue'
-import IconCalendar from '../../assets/svg/iconCalendar.vue'
-import IconChat from '../../assets/svg/iconChat.vue'
-import IconConversation from '../../assets/svg/iconConversation.vue'
-import IconDocuments from '../../assets/svg/iconDocuments.vue'
-import IconExit from '../../assets/svg/iconExit.vue'
-import IconHelp from '../../assets/svg/iconHelp.vue'
-import IconHome from '../../assets/svg/iconHome.vue'
-import IconMessage from '../../assets/svg/iconMessage.vue'
-import IconModo from '../../assets/svg/iconModo.vue'
-import IconNotification from '../../assets/svg/iconNotification.vue'
-import IconProfile from '../../assets/svg/iconProfile.vue'
-import IconSearch from '../../assets/svg/iconSearch.vue'
+import IconAcademic from '@icons/iconAcademic.vue'
+import IconCalculator from '@icons/iconCalculator.vue'
+import IconCalendar from '@icons/iconCalendar.vue'
+import IconChat from '@icons/iconChat.vue'
+import IconConversation from '@icons/iconConversation.vue'
+import IconDocuments from '@icons/iconDocuments.vue'
+import IconExit from '@icons/iconExit.vue'
+import IconHelp from '@icons/iconHelp.vue'
+import IconHome from '@icons/iconHome.vue'
+import IconMessage from '@icons/iconMessage.vue'
+import IconModo from '@icons/iconModo.vue'
+import IconNotification from '@icons/iconNotification.vue'
+import IconProfile from '@icons/iconProfile.vue'
+import IconSearch from '@icons/iconSearch.vue'
 
 </script>
 <template>

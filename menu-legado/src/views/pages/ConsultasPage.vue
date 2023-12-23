@@ -6,9 +6,9 @@ import { reactive } from 'vue'
 import breadcrumbs from '../../components/layout/breadcrumbsLayout.vue'
 
 // Icons
-import IconCaretDown from '../../assets/svg/iconCaretDown.vue'
-import IconFile from '../../assets/svg/iconFile.vue'
-import IconPrinter from '../../assets/svg/iconPrinter.vue'
+import IconCaretDown from '@icons/iconCaretDown.vue'
+import IconFile from '@icons/iconFile.vue'
+import IconPrinter from '@icons/iconPrinter.vue'
 
 // Script
 const cols = reactive([
@@ -301,7 +301,7 @@ const color = (id: number | string): string => {
                             class="form-checkbox"
                             :value="col.field"
                             :checked="!col.hide"
-                            @change="col.hide = !$event.target.checked"
+                            @change="col.hide = !($event.target as HTMLInputElement).checked"
                           >
                           <span
                             :for="`chk-${i}`"
@@ -343,7 +343,7 @@ const color = (id: number | string): string => {
                             class="form-checkbox"
                             :value="col.field"
                             :checked="!col.hide"
-                            @change="col.hide = !$event.target.checked"
+                            @change="col.hide = !($event.target as HTMLInputElement).checked"
                           >
                           <span
                             :for="`chk-${i}`"
@@ -385,7 +385,7 @@ const color = (id: number | string): string => {
                             class="form-checkbox"
                             :value="col.field"
                             :checked="!col.hide"
-                            @change="col.hide = !$event.target.checked"
+                            @change="col.hide = !($event.target as HTMLInputElement).checked"
                           >
                           <span
                             :for="`chk-${i}`"

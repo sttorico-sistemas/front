@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import calculatorIcon from '../../../assets/svg/iconCalculator2.vue'
+import { ref } from 'vue'
 import Multiselect from '@suadelabs/vue3-multiselect'
 import '@suadelabs/vue3-multiselect/dist/vue3-multiselect.css'
 
-import { ref } from 'vue'
+// Icons
+import calculatorIcon from '@icons/iconCalculator2.vue'
 
+// Script
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])
 const servico = ref()
 
