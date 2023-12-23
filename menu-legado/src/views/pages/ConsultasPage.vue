@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
+import { capitalize } from '@utils/index'
 
 // Componentes
-import breadcrumbs from '../../components/layout/breadcrumbsLayout.vue'
+import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+import modalLayout from '@components/layout/modalLayout.vue'
 
 // Icons
 import IconCaretDown from '@icons/iconCaretDown.vue'
@@ -11,6 +13,7 @@ import IconFile from '@icons/iconFile.vue'
 import IconPrinter from '@icons/iconPrinter.vue'
 
 // Script
+const isOpenDialog = ref<boolean>(false)
 const cols = reactive([
 	{ field: 'rmc', title: 'RMC', isUnique: true, hide: false },
 	{ field: 'data', title: 'Data', hide: false },
@@ -25,7 +28,6 @@ const cols = reactive([
 	{ field: 'valor_rmc', title: 'Valor RMC', hide: false },
 	{ field: 'status', title: 'Status', hide: false },
 ])
-
 const rows = reactive([
 	{
 		rmc: 3629999,
@@ -113,28 +115,6 @@ const rows = reactive([
 		}
 	}
 ])
-
-// Mudar para Utils
-// const formatDate = (date) => {
-// 	if (date) {
-// 		const dt = new Date(date)
-// 		const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1
-// 		const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate()
-// 		return day + '/' + month + '/' + dt.getFullYear()
-// 	}
-// 	return ''
-// }
-
-// Mudar para Utils
-const capitalize = (text: string) => {
-	return text
-		.replace('_', ' ')
-		.replace('-', ' ')
-		.toLowerCase()
-		.split(' ')
-		.map((s: string) => s.charAt(0).toUpperCase() + s.substring(1))
-		.join(' ')
-}
 
 const excelColumns = () => {
 	return {
@@ -432,7 +412,9 @@ const color = (id: number | string): string => {
           pagination-info="Mostrando {0} a {1} de {2} entradas"
         >
           <template #rmc="data">
-            <a href="#"><strong class="text-primary_3-table">{{ data.value.rmc }}</strong></a>
+            <button @click="isOpenDialog = true">
+							<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
+						</button>
           </template>
           <template #status="data">
             <span
@@ -444,6 +426,44 @@ const color = (id: number | string): string => {
       </div>
       <!-- Datatable-->
     </div>
+
+		<!-- Modal -->
+		<modal-layout
+			:is-open="isOpenDialog"
+			title="Resumo dos Contratos"
+			size="max-w-full"
+			btn-close
+			@btn-close="isOpenDialog = false"
+		>
+			<!-- Datatable-->
+      <div class="datatable">
+        <vue3-datatable
+          :rows="rows"
+          :columns="cols"
+          :total-rows="rows.length"
+          :sortable="true"
+          skin="whitespace-nowrap bh-table-striped"
+          first-arrow=""
+          no-data-content="Nenhum dado foi encontrado"
+          pagination-info="Mostrando {0} a {1} de {2} entradas"
+        >
+          <template #rmc="data">
+            <button @click="isOpenDialog = true">
+							<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
+						</button>
+          </template>
+          <template #status="data">
+            <span
+              class="flex justify-center badge !w-[80px] h-[22px]"
+              :class="color(data.value.status.id)"
+            >{{ data.value.status.label }}</span>
+          </template>
+        </vue3-datatable>
+      </div>
+      <!-- Datatable-->
+		</modal-layout>
+		<!-- Modal -->
+
   </main>
 </template>
 
