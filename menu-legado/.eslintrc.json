@@ -2,16 +2,13 @@
 	"env": {
 			"browser": true,
 			"commonjs": true,
-			"es2021": true,
-			"jest": true
+			"es2021": true
 	},
 	"extends": [
 			"eslint:recommended",
 			"plugin:vue/vue3-recommended",
-			"plugin:vue/base",
 			"@vue/typescript/recommended",
-			"prettier",
-			"prettier/vue"
+			"prettier"
 	],
 	"overrides": [],
 	"parser": "vue-eslint-parser",
@@ -35,7 +32,7 @@
 		"eqeqeq": "error",
 		"no-else-return": ["error", {"allowElseIf": false}],
 		"no-var": "error",
-		"indent": ["error", "tab"],
+		// "indent": ["error", "tab"],
 		"linebreak-style": ["error", "unix"],
 		"quotes": ["error","single"],
 		"semi": ["error","never"],
@@ -46,24 +43,24 @@
 			"memberSyntaxSortOrder": ["single", "all", "multiple", "none"],
 			"allowSeparatedGroups": true
 		}],
-	"@typescript-eslint/naming-convention": [
-		"error",
-		{
-			"selector": "interface",
-			"format": ["PascalCase"],
-			"custom": {
-				"regex": "^I[A-Z]",
-				"match": true
+		"@typescript-eslint/naming-convention": [
+			"error",
+			{
+				"selector": "interface",
+				"format": ["PascalCase"],
+				"custom": {
+					"regex": "^I[A-Z]",
+					"match": true
+				}
+			},
+			{
+				"selector": "class",
+				"format": ["PascalCase"]
 			}
-		},
-		{
-			"selector": "class",
-			"format": ["PascalCase"]
-		}
-	]
-	// Vue Rules
-	// "vue/no-unused-vars": ["error", {
-	// 	"ignorePattern": "^_"
-	// }]
+		]
+		// Vue Rules
+		// "vue/no-unused-vars": ["error", {
+		// 	"ignorePattern": "^_"
+		// }]
 	}
 }
