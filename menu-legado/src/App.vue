@@ -1,8 +1,8 @@
 <script setup>
 // import { RouterLink, RouterView } from 'vue-router'
 
-import footerLayout from './components/layout/footerLayout.vue'
-import headerLayout from './components/layout/headerLayout.vue'
+import footerLayout from '@components/layout/footerLayout.vue'
+import headerLayout from '@components/layout/headerLayout.vue'
 
 import { useMeta } from '@/composables/use-meta'
 
