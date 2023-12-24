@@ -57,8 +57,11 @@
 				"selector": "class",
 				"format": ["PascalCase"]
 			}
-		]
+		],
 		// Vue Rules
+		"vue/multi-word-component-names": ["error", {
+			"ignores": ["Popper"]
+		}]
 		// "vue/no-unused-vars": ["error", {
 		// 	"ignorePattern": "^_"
 		// }]
