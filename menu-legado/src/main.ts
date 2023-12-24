@@ -23,6 +23,10 @@ app.component('Popper', Popper)
 import JsonExcel from 'vue-json-excel3'
 app.component('DownloadExcel', JsonExcel)
 
+// Multiselect
+import Multiselect from '@suadelabs/vue3-multiselect'
+app.component('Multiselect', Multiselect)
+
 app.use(router)
 
 app.mount('#app')

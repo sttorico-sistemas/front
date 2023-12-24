@@ -1,19 +1,23 @@
 <script lang="ts" setup>
-	import { capitalize } from '@utils/index'
-	import Vue3Datatable from '@bhplugin/vue3-datatable'
-	import { reactive, ref } from 'vue'
+	import { reactive } from 'vue'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
-	import modalLayout from '@components/layout/modalLayout.vue'
+
+	import ConsultasDatatable from '../components/consultas/consultas-datatable/consultas-datatable.vue'
+	import ConsultasExport from '../components/consultas/consultas-export/consultas-export.vue'
+	import ConsultasPopper from '../components/consultas/consultas-popper/consultas-popper.vue'
+	import ConsultasTitulo from '../components/consultas/consultas-titulo/consultas-titulo.vue'
 
 	// Icons
-	import IconCaretDown from '@icons/iconCaretDown.vue'
 	import IconFile from '@icons/iconFile.vue'
 	import IconPrinter from '@icons/iconPrinter.vue'
 
-	// Script
-	const isOpenDialog = ref<boolean>(false)
+	// Declarações
+	const selected = reactive<{ type: string; label: string }>({
+		type: '',
+		label: '',
+	})
 	const cols = reactive([
 		{ field: 'rmc', title: 'RMC', isUnique: true, hide: false },
 		{ field: 'data', title: 'Data', hide: false },
@@ -53,8 +57,8 @@
 			cod_autorizacao: 'Não informado',
 			tipo_autorizacao: 'Não informado',
 			margem_reservada: 'Margem Secundária - 5%',
-			tipo_consignado: 'Financeiro',
-			consignataria: 'Banco do Brasil S/A',
+			tipo_consignado: 'Bancario',
+			consignataria: 'Banco Bradesco',
 			local_atendimento: 'Agência Balneário Camboriú - 1489',
 			operador: 'José da Silva',
 			valor_rmc: 'R$ 100,00',
@@ -70,8 +74,8 @@
 			cod_autorizacao: '202200128CHS',
 			tipo_autorizacao: 'On-line',
 			margem_reservada: 'Margem Principal - 5%',
-			tipo_consignado: 'Financeiro',
-			consignataria: 'Banco do Brasil S/A',
+			tipo_consignado: 'Logista',
+			consignataria: 'Banco Itau',
 			local_atendimento: 'Agência Balneário Camboriú - 1489',
 			operador: 'José da Silva',
 			valor_rmc: 'R$ 100,00',
@@ -104,8 +108,8 @@
 			cod_autorizacao: '202356154WDS',
 			tipo_autorizacao: 'Manual',
 			margem_reservada: 'Margem Principal - 10%',
-			tipo_consignado: 'Financeiro',
-			consignataria: 'Banco do Brasil S/A',
+			tipo_consignado: 'Outros',
+			consignataria: 'Banco Inter',
 			local_atendimento: 'Agência Balneário Camboriú - 1489',
 			operador: 'José da Silva',
 			valor_rmc: 'R$ 100,00',
@@ -129,71 +133,6 @@
 		'Valor RMC': 'valor_rmc',
 		Status: 'status.label',
 	})
-
-	const exportTable = (type: string) => {
-		const columns: any = cols.map((d: any) => d.field)
-
-		const records = rows
-		const filename = 'Resumo da RMC - Reserva da Margem de Consignação'
-
-		// let newVariable: any
-		// newVariable = window.navigator
-
-		if (type === 'print') {
-			let rowhtml = '<p>' + filename + '</p>'
-			rowhtml +=
-				'<table style="width: 100%; " cellpadding="0" cellcpacing="0"><thead><tr style="color: #515365; background: #eff5ff; -webkit-print-color-adjust: exact; print-color-adjust: exact; "> '
-			columns.map((d: any) => {
-				rowhtml += '<th>' + capitalize(d) + '</th>'
-			})
-			rowhtml += '</tr></thead>'
-			rowhtml += '<tbody>'
-
-			records.map((item: any) => {
-				rowhtml += '<tr>'
-				columns.map((d: any) => {
-					let val = item[d] ? item[d] : ''
-
-					if (Object.prototype.hasOwnProperty.call(item[d], 'label'))
-						val = item[d].label
-
-					rowhtml += '<td>' + val + '</td>'
-				})
-				rowhtml += '</tr>'
-			})
-			rowhtml +=
-				'<style>body {font-family:Arial; color:#495057;}p{text-align:center;font-size:18px;font-weight:bold;margin:15px;}table{ border-collapse: collapse; border-spacing: 0; }th,td{font-size:12px;text-align:left;padding: 4px;}th{padding:8px 4px;}tr:nth-child(2n-1){background:#f7f7f7; }</style>'
-			rowhtml += '</tbody></table>'
-
-			const winPrint: any = window.open(
-				'',
-				'',
-				'left=0,top=0,width=1000,height=600,toolbar=0,scrollbars=0,status=0',
-			)
-			winPrint.document.write('<title>Print</title>' + rowhtml)
-			winPrint.document.close()
-			winPrint.focus()
-			winPrint.print()
-			// winPrint.close()
-		}
-	}
-
-	const color = (id: number | string): string => {
-		switch (id) {
-			case 1:
-				return 'bg-info' // Reservada
-			case 2:
-				return 'bg-danger' // Suspensa
-			case 3:
-				return 'bg-secondary' // Baixada
-			case 4:
-				return 'bg-warning' // Cancelada
-			default:
-				return '#E0E6ED'
-		}
-	}
-
-	// fonte: https://vue3-datatable-document.vercel.app/skeleton-loader
 </script>
 
 <template>
@@ -204,189 +143,60 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<h5 class="text-lg font-semibold text-primary_3-table">
-					Resumo da RMC - Reserva da Margem de Consignação
-				</h5>
+				<consultas-titulo
+					title="Resumo da RMC - Reserva da Margem de Consignação"
+				/>
 
-				<div class="flex items-center gap-5 ltr:ml-auto rtl:mr-auto">
-					<div class="dropdown">
-						<Popper
-							placement="bottom-end"
-							offset-distance="0"
-							class="align-middle"
-						>
-							<button
-								type="button"
-								class="flex items-center border font-semibold border-[#e0e6ed] rounded-md px-4 py-2 text-sm"
-							>
-								<span class="text-xs text-black mr-5">Colunas</span>
-								<icon-caret-down class="w-5 h-5" />
-							</button>
-							<template #content>
-								<ul class="whitespace-nowrap">
-									<template v-for="(col, i) in cols" :key="i">
-										<li>
-											<div class="flex items-center px-4 py-1">
-												<label class="cursor-pointer mb-0">
-													<input
-														:id="`chk-${i}`"
-														type="checkbox"
-														class="form-checkbox"
-														:value="col.field"
-														:checked="!col.hide"
-														@change="
-															col.hide = !($event.target as HTMLInputElement)
-																.checked
-														"
-													/>
-													<span
-														:for="`chk-${i}`"
-														class="ml-2 mr-2 text-xs text-black"
-														>{{ col.title }}</span
-													>
-												</label>
-											</div>
-										</li>
-									</template>
-								</ul>
-							</template>
-						</Popper>
-					</div>
-					<div class="dropdown">
-						<Popper
-							placement="bottom-end"
-							offset-distance="0"
-							class="align-middle"
-						>
-							<button
-								type="button"
-								class="min-w-[230px] flex items-center border font-semibold border-[#e0e6ed] rounded-md px-4 py-2 text-sm whitespace-nowrap"
-							>
-								<span class="text-xs text-black mr-5"
-									>Selecione o tipo de consignação</span
-								>
-								<icon-caret-down class="w-5 h-5" />
-							</button>
-							<template #content>
-								<ul class="whitespace-nowrap">
-									<template v-for="(col, i) in cols" :key="i">
-										<li>
-											<div class="flex items-center px-4 py-1">
-												<label class="cursor-pointer mb-0">
-													<input
-														:id="`chk-${i}`"
-														type="checkbox"
-														class="form-checkbox"
-														:value="col.field"
-														:checked="!col.hide"
-														@change="
-															col.hide = !($event.target as HTMLInputElement)
-																.checked
-														"
-													/>
-													<span
-														:for="`chk-${i}`"
-														class="ml-2 mr-2 text-xs text-black"
-														>{{ col.title }}</span
-													>
-												</label>
-											</div>
-										</li>
-									</template>
-								</ul>
-							</template>
-						</Popper>
-					</div>
-					<div class="dropdown">
-						<Popper
-							placement="bottom-end"
-							offset-distance="0"
-							class="align-middle"
-						>
-							<button
-								type="button"
-								class="min-w-[200px] flex items-center border font-semibold border-[#e0e6ed] rounded-md px-4 py-2 text-sm whitespace-nowrap"
-							>
-								<span class="text-xs text-black mr-5"
-									>Selecione a Consignatária</span
-								>
-								<icon-caret-down class="w-5 h-5" />
-							</button>
-							<template #content>
-								<ul class="whitespace-nowrap">
-									<template v-for="(col, i) in cols" :key="i">
-										<li>
-											<div class="flex items-center px-4 py-1">
-												<label class="cursor-pointer mb-0">
-													<input
-														:id="`chk-${i}`"
-														type="checkbox"
-														class="form-checkbox"
-														:value="col.field"
-														:checked="!col.hide"
-														@change="
-															col.hide = !($event.target as HTMLInputElement)
-																.checked
-														"
-													/>
-													<span
-														:for="`chk-${i}`"
-														class="ml-2 mr-2 text-xs text-black"
-														>{{ col.title }}</span
-													>
-												</label>
-											</div>
-										</li>
-									</template>
-								</ul>
-							</template>
-						</Popper>
-					</div>
-					<div class="dropdown">
-						<Popper
-							placement="bottom-end"
-							offset-distance="0"
-							class="align-middle"
-						>
-							<button
-								type="button"
-								class="min-w-[200px] flex items-center border font-semibold border-[#e0e6ed] rounded-md px-4 py-2 text-sm whitespace-nowrap"
-							>
-								<span class="text-xs text-black mr-5"
-									>Selecione a Situação</span
-								>
-								<icon-caret-down class="w-5 h-5" />
-							</button>
-							<template #content>
-								<ul class="whitespace-nowrap">
-									<template v-for="(col, i) in cols" :key="i">
-										<li>
-											<div class="flex items-center px-4 py-1">
-												<label class="cursor-pointer mb-0">
-													<input
-														:id="`chk-${i}`"
-														type="checkbox"
-														class="form-checkbox"
-														:value="col.field"
-														:checked="!col.hide"
-														@change="
-															col.hide = !($event.target as HTMLInputElement)
-																.checked
-														"
-													/>
-													<span
-														:for="`chk-${i}`"
-														class="ml-2 mr-2 text-xs text-black"
-														>{{ col.title }}</span
-													>
-												</label>
-											</div>
-										</li>
-									</template>
-								</ul>
-							</template>
-						</Popper>
-					</div>
+				<div
+					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
+				>
+					<consultas-popper label="Colunas" :options="cols" />
+					<multiselect
+						:options="['Financeiro', 'Bancario', 'Logista', 'Outros']"
+						class="custom-multiselect max-w-[230px]"
+						placeholder="Selecione o tipo de consignação"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="
+							(selected.label = $event), (selected.type = 'tipo_de_consignacao')
+						"
+					/>
+					<multiselect
+						:options="[
+							'Banco do Brasil S/A',
+							'Banco Bradesco',
+							'Banco Itau',
+							'Banco Inter',
+						]"
+						class="custom-multiselect max-w-[200px]"
+						placeholder="Selecione a Consignatária"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="
+							(selected.label = $event), (selected.type = 'consignataria')
+						"
+					/>
+					<multiselect
+						:options="['Reservada', 'Suspensa', 'Baixada', 'Cancelada']"
+						class="custom-multiselect max-w-[200px]"
+						placeholder="Selecione a Situação"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'situacao')"
+					/>
+
 					<download-excel
 						:fields="columns"
 						:data="rows"
@@ -396,92 +206,32 @@
 						<icon-file class="w-5 h-5 mr-2 ml-2" />
 						XLS
 					</download-excel>
-					<button
-						type="button"
-						class="btn btn-sm btn-outline-primary text-xs m-1"
-						@click="exportTable('print')"
+					<consultas-export
+						name="PRINT"
+						:cols="cols"
+						:rows="rows"
+						export-type="print"
 					>
-						<icon-printer class="w-5 h-5 mr-2 ml-2" />
-						PRINT
-					</button>
+						<template #icon>
+							<icon-printer class="w-5 h-5 mr-2 ml-2" />
+						</template>
+					</consultas-export>
 				</div>
 			</div>
 
-			<!-- Datatable-->
-			<div class="datatable mb-[344px]">
-				<vue3-datatable
-					:rows="rows"
-					:columns="cols"
-					:total-rows="rows.length"
-					:sortable="true"
-					skin="whitespace-nowrap bh-table-striped"
-					first-arrow=""
-					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
-				>
-					<template #rmc="data">
-						<button @click="isOpenDialog = true">
-							<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
-						</button>
-					</template>
-					<template #status="data">
-						<span
-							class="flex justify-center badge !w-[80px] h-[22px]"
-							:class="color(data.value.status.id)"
-							>{{ data.value.status.label }}</span
-						>
-					</template>
-				</vue3-datatable>
-			</div>
-			<!-- Datatable-->
+			<consultas-datatable :selected="selected" :cols="cols" :rows="rows" />
 		</div>
-
-		<!-- Modal -->
-		<modal-layout
-			:is-open="isOpenDialog"
-			title="Resumo dos Contratos"
-			size="max-w-full"
-			btn-close
-			@btn-close="isOpenDialog = false"
-		>
-			<!-- Datatable-->
-			<div class="datatable">
-				<vue3-datatable
-					:rows="rows"
-					:columns="cols"
-					:total-rows="rows.length"
-					:sortable="true"
-					skin="whitespace-nowrap bh-table-striped"
-					first-arrow=""
-					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
-				>
-					<template #rmc="data">
-						<button @click="isOpenDialog = true">
-							<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
-						</button>
-					</template>
-					<template #status="data">
-						<span
-							class="flex justify-center badge !w-[80px] h-[22px]"
-							:class="color(data.value.status.id)"
-							>{{ data.value.status.label }}</span
-						>
-					</template>
-				</vue3-datatable>
-			</div>
-			<!-- Datatable-->
-		</modal-layout>
-		<!-- Modal -->
 	</main>
 </template>
 
-<style lang="scss">
-	.datatable .bh-table-responsive table thead tr th {
-		color: #1384ad;
-		font-size: 14px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
+<style lang="scss" scoped>
+	.header_actions:deep(.custom-multiselect) {
+		.multiselect__placeholder {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			font-weight: 600;
+			white-space: nowrap;
+			color: rgb(14 23 38);
+		}
 	}
 </style>

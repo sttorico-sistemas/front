@@ -1,7 +1,5 @@
 <script setup lang="ts">
-	import Multiselect from '@suadelabs/vue3-multiselect'
 	import { ref } from 'vue'
-	import '@suadelabs/vue3-multiselect/dist/vue3-multiselect.css'
 
 	// Icons
 	import calculatorIcon from '@icons/iconCalculator2.vue'
