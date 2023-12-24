@@ -60,7 +60,7 @@
 		],
 		// Vue Rules
 		"vue/multi-word-component-names": ["error", {
-			"ignores": ["Popper"]
+			"ignores": ["Popper", "downloadExcel"]
 		}]
 		// "vue/no-unused-vars": ["error", {
 		// 	"ignorePattern": "^_"
