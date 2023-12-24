@@ -115,28 +115,20 @@
 			},
 		},
 	])
-
-	const excelColumns = () => {
-		return {
-			rmc: 'RMC',
-			data: 'Data',
-			tipo_rmc: 'Tipo RMC',
-			cod_autorizacao: 'Cód Autorização',
-			tipo_autorizacao: 'Tipo Autorização',
-			margem_reservada: 'Margem Reservada',
-			tipo_consignado: 'Tipo Consignação',
-			consignataria: 'Consignatária',
-			local_atendimento: 'Local Atendimento',
-			operador: 'Operador',
-			valor_rmc: 'Valor RMC',
-			status: 'Status',
-		}
-	}
-
-	// !TODO - Não exportar os dados, somente as colunas.
-	const excelItems = () => {
-		return rows
-	}
+	const columns = reactive({
+		RMC: 'rmc',
+		Data: 'data',
+		'Tipo RMC': 'tipo_rmc',
+		'Cód Autorização': 'cod_autorizacao',
+		'Tipo Autorização': 'tipo_autorizacao',
+		'Margem Reservada': 'margem_reservada',
+		'Tipo Consignação': 'tipo_consignado',
+		Consignatária: 'consignataria',
+		'Local Atendimento': 'local_atendimento',
+		Operador: 'operador',
+		'Valor RMC': 'valor_rmc',
+		Status: 'status.label',
+	})
 
 	const exportTable = (type: string) => {
 		const columns: any = cols.map((d: any) => d.field)
@@ -157,7 +149,7 @@
 			rowhtml += '</tr></thead>'
 			rowhtml += '<tbody>'
 
-			records.map((item) => {
+			records.map((item: any) => {
 				rowhtml += '<tr>'
 				columns.map((d: any) => {
 					let val = item[d] ? item[d] : ''
@@ -395,15 +387,15 @@
 							</template>
 						</Popper>
 					</div>
-					<vue3-json-excel
-						class="btn btn-sm btn-outline-primary text-xs m-1 cursor-pointer"
+					<download-excel
+						:fields="columns"
+						:data="rows"
 						name="resumo-da-rmc_reserva_da_margem-de-consignacao.xls"
-						:fields="excelColumns()"
-						:json-data="excelItems()"
+						class="btn btn-sm btn-outline-primary text-xs m-1 cursor-pointer"
 					>
 						<icon-file class="w-5 h-5 mr-2 ml-2" />
 						XLS
-					</vue3-json-excel>
+					</download-excel>
 					<button
 						type="button"
 						class="btn btn-sm btn-outline-primary text-xs m-1"
