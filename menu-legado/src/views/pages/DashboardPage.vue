@@ -1,11 +1,11 @@
 <script setup>
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
-	import distribuicaoMargem from '../components/distribuicao-margem/distribuicao-margem.vue'
-	import formMatriculaSelecionada from '../components/form-matricula-selecionada/form-matricula-selecionada.vue'
-	import margemIndividual from '../components/margem-individual/margem-individual.vue'
-	import saldoDisponivel from '../components/saldo-disponivel/saldo-disponivel.vue'
-	import ultimasNoticias from '../components/ultimas-noticias/ultimas-noticias.vue'
+	import distribuicaoMargem from '../components/dashboard/distribuicao-margem/distribuicao-margem.vue'
+	import formMatriculaSelecionada from '../components/dashboard/form-matricula-selecionada/form-matricula-selecionada.vue'
+	import margemIndividual from '../components/dashboard/margem-individual/margem-individual.vue'
+	import saldoDisponivel from '../components/dashboard/saldo-disponivel/saldo-disponivel.vue'
+	import ultimasNoticias from '../components/dashboard/ultimas-noticias/ultimas-noticias.vue'
 </script>
 
 <template>
