@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { reactive } from 'vue'
+	import { computed, reactive, ref } from 'vue'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
@@ -18,6 +18,9 @@
 		type: '',
 		label: '',
 	})
+	const consignacao = ref<string>('')
+	const consignataria = ref<string>('')
+	const status = ref<string>('')
 	const cols = reactive([
 		{ field: 'rmc', title: 'RMC', isUnique: true, hide: false },
 		{ field: 'data', title: 'Data', hide: false },
@@ -133,6 +136,19 @@
 		'Valor RMC': 'valor_rmc',
 		Status: 'status.label',
 	})
+
+	// Scripts
+	const clearFilter = () => {
+		consignacao.value = ''
+		consignataria.value = ''
+		status.value = ''
+
+		selected.label = ''
+		selected.type = ''
+	}
+
+	// Computed
+	const disabledButtonClear = computed(() => !!selected.label)
 </script>
 
 <template>
@@ -152,6 +168,7 @@
 				>
 					<consultas-popper label="Colunas" :options="cols" />
 					<multiselect
+						v-model="consignacao"
 						:options="['Financeiro', 'Bancario', 'Logista', 'Outros']"
 						class="custom-multiselect max-w-[230px]"
 						placeholder="Selecione o tipo de consignação"
@@ -166,6 +183,7 @@
 						"
 					/>
 					<multiselect
+						v-model="consignataria"
 						:options="[
 							'Banco do Brasil S/A',
 							'Banco Bradesco',
@@ -185,6 +203,7 @@
 						"
 					/>
 					<multiselect
+						v-model="status"
 						:options="['Reservada', 'Suspensa', 'Baixada', 'Cancelada']"
 						class="custom-multiselect max-w-[200px]"
 						placeholder="Selecione a Situação"
@@ -216,6 +235,14 @@
 							<icon-printer class="w-5 h-5 mr-2 ml-2" />
 						</template>
 					</consultas-export>
+					<button
+						type="button"
+						class="btn btn-sm btn-outline-primary text-xs m-1"
+						:disabled="!disabledButtonClear"
+						@click="clearFilter()"
+					>
+						Limpar
+					</button>
 				</div>
 			</div>
 

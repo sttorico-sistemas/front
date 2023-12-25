@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
+	import { reactive, ref } from 'vue'
 
+	// Componentes
 	import modalLayout from '@components/layout/modalLayout.vue'
 
+	// Props
 	const props = defineProps({
 		cols: {
 			type: Object,
@@ -19,8 +21,73 @@
 		},
 	})
 
+	// Declaração
 	const isOpenDialog = ref<boolean>(false)
+	const columnsModal = reactive([
+		{ field: 'rmc', title: 'RMC', hide: false },
+		{ field: 'data', title: 'Data', hide: false },
+		{ field: 'n_contrato', title: 'Nº Contrato', isUnique: true, hide: false },
+		{ field: 'tipo_servico', title: 'Tipo Serviço', hide: false },
+		{ field: 'tipo_operacao', title: 'Tipo Operação', hide: false },
+		{ field: 'consignataria', title: 'Consignatária', hide: false },
+		{ field: 'prazo', title: 'Prazo', hide: false },
+		{ field: 'valor_desconto', title: 'Valor Desconto', hide: false },
+		{ field: 'tipo_desconto', title: 'Tipo Desconto', hide: false },
+		{ field: 'total_desconto', title: 'Total Descontos', hide: false },
+		{ field: 'status', title: 'Status', hide: false },
+	])
+	const rowsModal = reactive([
+		{
+			rmc: 7079,
+			data: '07/18/2017',
+			n_contrato: '0800025698',
+			tipo_servico: 'Plano de Saúde',
+			tipo_operacao: 'Inclusão Nova',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Parcela',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 3,
+				label: 'Encerrado',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '05/05/2017',
+			n_contrato: '032156484',
+			tipo_servico: 'Mensalidade',
+			tipo_operacao: 'Inclusão Nova',
+			consignataria: 'ASPM',
+			prazo: '120',
+			valor_desconto: 'R$ 100,00',
+			tipo_desconto: 'Parcela',
+			total_desconto: 'R$ 100,00',
+			status: {
+				id: 2,
+				label: 'Suspenso',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+	])
 
+	// Scripts
 	const color = (id: number | string): string => {
 		switch (id) {
 			case 1:
@@ -56,7 +123,7 @@
 	<div class="datatable mb-[344px]">
 		<vue3-datatable
 			:rows="filtered(props.selected.label)"
-			:columns="cols"
+			:columns="props.cols"
 			:total-rows="filtered(props.selected.label)?.length"
 			:sortable="true"
 			skin="whitespace-nowrap bh-table-striped"
@@ -89,18 +156,24 @@
 		<!-- Datatable-->
 		<div class="datatable">
 			<vue3-datatable
-				:rows="rows"
-				:columns="cols"
-				:total-rows="rows.length"
+				:rows="rowsModal"
+				:columns="columnsModal"
+				:total-rows="rowsModal.length"
 				:sortable="true"
 				skin="whitespace-nowrap bh-table-striped"
-				first-arrow=""
 				no-data-content="Nenhum dado foi encontrado"
 				pagination-info="Mostrando {0} a {1} de {2} entradas"
 			>
 				<template #rmc="data">
-					<button @click="isOpenDialog = true">
+					<button>
 						<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
+					</button>
+				</template>
+				<template #n_contrato="data">
+					<button>
+						<strong class="text-primary_3-table">{{
+							data.value.n_contrato
+						}}</strong>
 					</button>
 				</template>
 				<template #status="data">
