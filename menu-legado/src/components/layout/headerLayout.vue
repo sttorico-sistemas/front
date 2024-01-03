@@ -1,6 +1,9 @@
 <script setup lang="ts">
+	import { ref } from 'vue'
+
 	// Components
 	import IconAcademic from '@icons/iconAcademic.vue'
+	import IconArrowDown from '@icons/iconArrowDown.vue'
 	import IconCalculator from '@icons/iconCalculator.vue'
 	import IconCalendar from '@icons/iconCalendar.vue'
 	import IconChat from '@icons/iconChat.vue'
@@ -14,6 +17,13 @@
 	import IconNotification from '@icons/iconNotification.vue'
 	import IconProfile from '@icons/iconProfile.vue'
 	import IconSearch from '@icons/iconSearch.vue'
+
+	// Scripts
+	const showMenu = ref(false)
+
+	const toggleShow = () => {
+		showMenu.value = !showMenu.value
+	}
 </script>
 <template>
 	<header>
@@ -87,10 +97,46 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+					<button class="menu__main_list_item relative" @click="toggleShow">
 						<icon-search class="menu__main_list_icon" />
 						Consultas
-					</router-link>
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'consultas' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										RMC
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'contratos' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Contratos
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Histórico de Desconto
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</button>
 				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
