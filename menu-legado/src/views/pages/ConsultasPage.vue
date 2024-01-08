@@ -10,6 +10,7 @@
 	import ConsultasTitulo from '../components/consultas/consultas-titulo/consultas-titulo.vue'
 
 	// Icons
+	import IconClear from '@icons/iconClear.vue'
 	import IconFile from '@icons/iconFile.vue'
 	import IconPrinter from '@icons/iconPrinter.vue'
 
@@ -216,33 +217,52 @@
 						@select="(selected.label = $event), (selected.type = 'situacao')"
 					/>
 
-					<download-excel
-						:fields="columns"
-						:data="rows"
-						name="resumo-da-rmc_reserva_da_margem-de-consignacao.xls"
-						class="btn btn-sm btn-outline-primary text-xs m-1 cursor-pointer"
-					>
-						<icon-file class="w-5 h-5 mr-2 ml-2" />
-						XLS
-					</download-excel>
-					<consultas-export
-						name="PRINT"
-						:cols="cols"
-						:rows="rows"
-						export-type="print"
-					>
-						<template #icon>
-							<icon-printer class="w-5 h-5 mr-2 ml-2" />
-						</template>
-					</consultas-export>
-					<button
-						type="button"
-						class="btn btn-sm btn-outline-primary text-xs m-1"
-						:disabled="!disabledButtonClear"
-						@click="clearFilter()"
-					>
-						Limpar
-					</button>
+					<div>
+						<button
+							v-tippy:top
+							type="button"
+							class="text-xs m-1"
+							:disabled="!disabledButtonClear"
+							@click="clearFilter()"
+						>
+							<icon-clear
+								class="w-5 h-5"
+								:class="
+									!disabledButtonClear
+										? 'text-gray-400'
+										: 'text-primary_3-table'
+								"
+							/>
+						</button>
+						<tippy target="top" placement="top">Limpar pesquisa</tippy>
+					</div>
+
+					<div>
+						<download-excel
+							v-tippy:top
+							:fields="columns"
+							:data="rows"
+							name="resumo-da-rmc_reserva_da_margem-de-consignacao.xls"
+							class="text-xs cursor-pointer"
+						>
+							<icon-file class="w-5 h-5" />
+						</download-excel>
+						<tippy target="top" placement="top">Exportar XLS</tippy>
+					</div>
+
+					<div>
+						<consultas-export
+							v-tippy:top
+							:cols="cols"
+							:rows="rows"
+							export-type="print"
+						>
+							<template #icon>
+								<icon-printer class="w-5 h-5" />
+							</template>
+						</consultas-export>
+						<tippy target="top" placement="top">Imprimir</tippy>
+					</div>
 				</div>
 			</div>
 

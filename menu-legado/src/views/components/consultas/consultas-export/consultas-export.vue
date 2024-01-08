@@ -76,7 +76,7 @@
 <template>
 	<button
 		type="button"
-		class="btn btn-sm btn-outline-primary text-xs m-1"
+		class="text-xs m-1"
 		@click="exportTable(props.exportType)"
 	>
 		<slot name="icon"></slot>
