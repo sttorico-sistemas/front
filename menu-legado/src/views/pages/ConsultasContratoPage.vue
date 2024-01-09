@@ -186,7 +186,7 @@
 	}
 
 	// Computed
-	const disabledButtonClear = computed(() => !!selected.label)
+	// const disabledButtonClear = computed(() => !!selected.label)
 </script>
 
 <template>
