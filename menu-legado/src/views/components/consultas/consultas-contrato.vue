@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-	import { computed, reactive, ref } from 'vue'
+	import { reactive, ref } from 'vue'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
-	import ConsultasExport from '../components/consultas/consultas-export/consultas-export.vue'
-	import ConsultasPopper from '../components/consultas/consultas-popper/consultas-popper.vue'
-	import ConsultasTitulo from '../components/consultas/consultas-titulo/consultas-titulo.vue'
+	import ConsultasExport from './consultas-export/consultas-export.vue'
+	import ConsultasPopper from './consultas-popper/consultas-popper.vue'
+	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'

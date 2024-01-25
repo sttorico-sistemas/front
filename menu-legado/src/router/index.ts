@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Consultas from '../views/pages/ConsultasPage.vue'
-import Contratos from '../views/pages/ConsultasContratoPage.vue'
 import Dashboard from '../views/pages/DashboardPage.vue'
 
 const router = createRouter({
@@ -13,14 +12,20 @@ const router = createRouter({
 			component: Dashboard,
 		},
 		{
-			path: '/consultas/rmc',
+			path: '/consultas',
 			name: 'consultas',
-			component: Consultas,
-		},
-		{
-			path: '/consultas/contratos',
-			name: 'contratos',
-			component: Contratos,
+			children: [
+				{
+					path: 'rmc',
+					name: 'consultas-rmc',
+					component: Consultas,
+				},
+				{
+					path: 'contratos',
+					name: 'consultas-contratos',
+					component: Consultas,
+				},
+			],
 		},
 	],
 })
