@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 	import { useRoute } from 'vue-router'
-	import { shallowRef, watch } from 'vue'
+	import { onMounted, shallowRef, watch } from 'vue'
 
 	import ConsultasContratos from '../components/consultas/consultas-contrato.vue'
+	import ConsultasHistorico from '../components/consultas/consultas-historico.vue'
 	import ConsultasRmc from '../components/consultas/consultas-rmc.vue'
 
 	const route = useRoute()
 
-	const currentComponent = shallowRef(ConsultasRmc)
+	const currentComponent = shallowRef<any>(null)
 
-	watch(route, () => {
+	watch([route, currentComponent], () => {
 		switch (route.name) {
 			case 'consultas-rmc':
 				currentComponent.value = ConsultasRmc
@@ -17,7 +18,14 @@
 			case 'consultas-contratos':
 				currentComponent.value = ConsultasContratos
 				break
+			case 'consultas-historico':
+				currentComponent.value = ConsultasHistorico
+				break
 		}
+	})
+
+	onMounted(() => {
+		currentComponent.value = route.name
 	})
 </script>
 

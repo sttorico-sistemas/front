@@ -74,11 +74,7 @@
 </script>
 
 <template>
-	<button
-		type="button"
-		class="text-xs m-1"
-		@click="exportTable(props.exportType)"
-	>
+	<button type="button" class="text-xs" @click="exportTable(props.exportType)">
 		<slot name="icon"></slot>
 		{{ props.name }}
 	</button>

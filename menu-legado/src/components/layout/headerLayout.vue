@@ -128,7 +128,7 @@
 								</li>
 								<li>
 									<router-link
-										:to="{ name: 'consultas' }"
+										:to="{ name: 'consultas-historico' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Histórico de Desconto

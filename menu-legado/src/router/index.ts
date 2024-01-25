@@ -25,6 +25,11 @@ const router = createRouter({
 					name: 'consultas-contratos',
 					component: Consultas,
 				},
+				{
+					path: 'historico',
+					name: 'consultas-historico',
+					component: Consultas,
+				},
 			],
 		},
 	],
