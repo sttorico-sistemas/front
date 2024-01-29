@@ -9,13 +9,9 @@
 
 	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
-	// Componentes
-	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
-	import modalLayout from '@components/layout/modalLayout.vue'
-
-	import ConsultaMensalDesconto from './consultas-historico/consulta-mensal-desconto.vue'
-	import ConsultasExport from './consultas-export/consultas-export.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
+	import ConsultasExport from '../consultas-export/consultas-export.vue'
+	import ConsultasTitulo from '../consultas-titulo/consultas-titulo.vue'
+	import ImageName from './datatable-coluna-image-name.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -23,64 +19,109 @@
 	import IconPrinter from '@icons/iconPrinter.vue'
 
 	// Declarações
-	const isOpenDialog = ref<boolean>(false)
 	const cols = reactive([
-		{ field: 'mes', title: 'Mês', hide: false },
-		{ field: 'valor_desconto', title: 'Valor desconto', hide: false },
-		{ field: 'valor_enviado', title: 'Valor enviado', hide: false },
-		{ field: 'valor_descontado', title: 'Valor descontado', hide: false },
+		{ field: 'consignataria', title: 'Consignatária', hide: false },
+		{ field: 'tipo_servico', title: 'Tipo de Serviço', hide: false },
+		{ field: 'n_contrato', title: 'Nº Contrato', hide: false },
+		{ field: 'prazo', title: 'Prazo', hide: false },
+		{ field: 'parcela', title: 'Parcela', hide: false },
+		{ field: 'valor_descontar', title: 'Valor à Descontar', hide: false },
+		{ field: 'valor_enviado', title: 'Valor Enviado', hide: false },
+		{ field: 'valor_descontado', title: 'Valor Descontado', hide: false },
 		{ field: 'saldo_desconto', title: 'Saldo desconto', hide: false },
+		{ field: 'situacao', title: 'Situação', hide: false },
+		{ field: 'observacao', title: 'Observações', hide: false },
 	])
 	const rows = reactive([
 		{
-			mes: 'Jan/2024',
-			valor_desconto: 0,
+			consignataria: {
+				nome: 'Banco do Brasil',
+				icone: '',
+			},
+			tipo_servico: {
+				nome: '',
+				icone: '',
+			},
+			n_contrato: 5615517431,
+			prazo: 120,
+			parcela: 12,
+			valor_descontar: 100,
 			valor_enviado: 100,
-			valor_descontado: 0,
-			saldo_desconto: 0.92,
-		},
-		{
-			mes: 'Fev/2024',
-			valor_desconto: 100,
-			valor_enviado: 0,
-			valor_descontado: 100,
-			saldo_desconto: 50,
-		},
-		{
-			mes: 'Mar/2023',
-			valor_desconto: 0,
-			valor_enviado: 100,
-			valor_descontado: 100,
-			saldo_desconto: 120,
-		},
-		{
-			mes: 'Mar/2023',
-			valor_desconto: 100,
-			valor_enviado: 100,
-			valor_descontado: 0,
-			saldo_desconto: 0,
-		},
-		{
-			mes: 'Abr/2022',
-			valor_desconto: 100,
-			valor_enviado: 0,
 			valor_descontado: 100,
 			saldo_desconto: 0,
+			situacao: 'Descontado',
+			observacao: '',
+		},
+		{
+			consignataria: {
+				nome: 'Banco do Brasil',
+				icone: '',
+			},
+			tipo_servico: {
+				nome: '',
+				icone: '',
+			},
+			n_contrato: 5615517431,
+			prazo: 120,
+			parcela: 12,
+			valor_descontar: 100,
+			valor_enviado: 100,
+			valor_descontado: 100,
+			saldo_desconto: 0,
+			situacao: 'Descontado',
+			observacao: '',
+		},
+		{
+			consignataria: {
+				nome: 'ASM',
+				icone: '',
+			},
+			tipo_servico: {
+				nome: '',
+				icone: '',
+			},
+			n_contrato: 32156484,
+			prazo: 120,
+			parcela: 6,
+			valor_descontar: 300,
+			valor_enviado: 300,
+			valor_descontado: 0,
+			saldo_desconto: 200,
+			situacao: 'Negado',
+			observacao: 'Insuficiência de Margem',
+		},
+		{
+			consignataria: {
+				nome: 'Capemisa',
+				icone: '',
+			},
+			tipo_servico: {
+				nome: '',
+				icone: '',
+			},
+			n_contrato: 800025698,
+			prazo: 'Indeterminado',
+			parcela: 1,
+			valor_descontar: 200,
+			valor_enviado: 200,
+			valor_descontado: 50,
+			saldo_desconto: 150,
+			situacao: 'Parcial',
+			observacao: 'Excedente de Margem',
 		},
 	])
 	const columns = reactive({
-		RMC: 'rmc',
-		Data: 'data',
-		'Tipo RMC': 'tipo_rmc',
-		'Cód Autorização': 'cod_autorizacao',
-		'Tipo Autorização': 'tipo_autorizacao',
-		'Margem Reservada': 'margem_reservada',
-		'Tipo Consignação': 'tipo_consignado',
 		Consignatária: 'consignataria',
-		'Local Atendimento': 'local_atendimento',
-		Operador: 'operador',
-		'Valor RMC': 'valor_rmc',
-		Status: 'status.label',
+		'Tipo de Serviço': 'tipo_servico',
+		'Nº Contrato': 'n_contrato',
+		Prazo: 'prazo',
+		Parcela: 'parcela',
+		'Valor à Descontar': 'valor_descontar',
+		'Valor Enviado': 'valor_enviado',
+		'Valor Descontado': 'valor_descontado',
+		'Saldo Desconto': 'saldo_desconto',
+		Situação: 'situacao',
+		Observações: 'observacao',
 	})
 
 	const dateSelected = ref<string>('')
@@ -122,6 +163,17 @@
 		}
 	}
 
+	const situacaoColor = (value: string) => {
+		switch (value) {
+			case 'Descontado':
+				return 'bg-primary'
+			case 'Negado':
+				return 'bg-danger'
+			case 'Parcial':
+				return 'bg-secondary'
+		}
+	}
+
 	const clearFilter = () => {
 		dateSelected.value = ''
 	}
@@ -129,8 +181,6 @@
 
 <template>
 	<main>
-		<breadcrumbs :paginas="['Consultas', 'Histórico Anual dos Descontos']" />
-
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
@@ -188,7 +238,7 @@
 				</div>
 			</div>
 
-			<div class="datatable mb-[344px]">
+			<div class="datatable">
 				<vue3-datatable
 					:rows="filterDate()"
 					:columns="cols"
@@ -198,20 +248,22 @@
 					no-data-content="Nenhum dado foi encontrado"
 					pagination-info="Mostrando {0} a {1} de {2} entradas"
 				>
-					<template #mes="data">
-						<button @click="isOpenDialog = true">
-							<strong class="text-primary_3-table">{{ data.value.mes }}</strong>
-						</button>
+					<template #consignataria="data">
+						<image-name
+							image="https://placehold.co/30x30"
+							:name="data.value.consignataria.nome"
+						/>
 					</template>
-					<template #valor_desconto="data">
-						<span :class="formatedCurrency(data.value.valor_desconto).color">{{
-							formatedCurrency(data.value.valor_desconto).currency
-						}}</span>
+					<template #tipo_servico="data">
+						<image-name
+							image="https://placehold.co/30x30"
+							:name="data.value.tipo_servico.nome"
+						/>
 					</template>
-					<template #valor_enviado="data">
-						<span :class="formatedCurrency(data.value.valor_enviado).color">{{
-							formatedCurrency(data.value.valor_enviado).currency
-						}}</span>
+					<template #n_contrato="data">
+						<strong class="text-primary_3-table">{{
+							data.value.n_contrato
+						}}</strong>
 					</template>
 					<template #valor_descontado="data">
 						<span
@@ -226,20 +278,15 @@
 							formatedCurrency(data.value.saldo_desconto).currency
 						}}</span>
 					</template>
+					<template #situacao="data">
+						<span
+							class="badge block text-center"
+							:class="situacaoColor(data.value.situacao)"
+							>{{ data.value.situacao }}</span
+						>
+					</template>
 				</vue3-datatable>
 			</div>
 		</div>
-
-		<modal-layout
-			:is-open="isOpenDialog"
-			title="Extrato Mensal dos Descontos"
-			size="max-w-full"
-			btn-close
-			@btn-close="isOpenDialog = false"
-		>
-			<!-- Datatable-->
-			<consulta-mensal-desconto />
-			<!-- Datatable-->
-		</modal-layout>
 	</main>
 </template>
