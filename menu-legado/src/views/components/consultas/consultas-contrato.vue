@@ -200,7 +200,7 @@
 			return rows.filter((item: any) => item.status.label === value)
 
 		if (selected.type === 'date')
-			return rows.filter((mounthYear: any) => mounthYear.data === value)
+			return rows.filter((item: any) => item.data === value)
 	}
 
 	// Computed
