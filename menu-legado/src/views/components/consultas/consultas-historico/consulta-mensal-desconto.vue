@@ -185,7 +185,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Extrato Anual dos Descontos " />
+				<consultas-titulo title="Extrato Mensal dos Descontos " />
 
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
