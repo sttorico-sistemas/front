@@ -4,9 +4,6 @@
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 	import { reactive, ref } from 'vue'
 
-	import 'flatpickr/dist/flatpickr.css'
-	import 'flatpickr/dist/plugins/monthSelect/style.css'
-
 	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 	import ConsultasExport from '../consultas-export/consultas-export.vue'
@@ -14,9 +11,14 @@
 	import ImageName from './datatable-coluna-image-name.vue'
 
 	// Icons
+	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
 	import IconClear from '@icons/iconClear.vue'
+	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
 	import IconFile from '@icons/iconFile.vue'
+	import IconMensalidadeServico from '@icons/services/iconMensalidadeServicos.vue'
+	import IconPlanoSaudeServico from '@icons/services/iconPlanoSaudeServico.vue'
 	import IconPrinter from '@icons/iconPrinter.vue'
+	import IconSegurosServico from '@icons/services/iconSegurosServico.vue'
 
 	// Declarações
 	const cols = reactive([
@@ -39,8 +41,8 @@
 				icone: '',
 			},
 			tipo_servico: {
-				nome: '',
-				icone: '',
+				nome: 'Emprestimo',
+				icone: 'emprestimo',
 			},
 			n_contrato: 5615517431,
 			prazo: 120,
@@ -58,8 +60,8 @@
 				icone: '',
 			},
 			tipo_servico: {
-				nome: '',
-				icone: '',
+				nome: 'Mensalidades',
+				icone: 'mensalidades',
 			},
 			n_contrato: 5615517431,
 			prazo: 120,
@@ -77,8 +79,8 @@
 				icone: '',
 			},
 			tipo_servico: {
-				nome: '',
-				icone: '',
+				nome: 'Cartão Crédito',
+				icone: 'cartao-credito',
 			},
 			n_contrato: 32156484,
 			prazo: 120,
@@ -96,8 +98,8 @@
 				icone: '',
 			},
 			tipo_servico: {
-				nome: '',
-				icone: '',
+				nome: 'Plano Saúde',
+				icone: 'plano-saude',
 			},
 			n_contrato: 800025698,
 			prazo: 'Indeterminado',
@@ -171,6 +173,29 @@
 				return 'bg-danger'
 			case 'Parcial':
 				return 'bg-secondary'
+		}
+	}
+
+	const iconeService = (value: string) => {
+		switch (value) {
+			case 'emprestimo':
+				return IconEmprestimoServico
+			case 'compras':
+				return ''
+			case 'mensalidades':
+				return IconMensalidadeServico
+			case 'cartao-credito':
+				return IconCartaoCreditoServico
+			case 'cartao-beneficios':
+				return ''
+			case 'plano-saude':
+				return IconPlanoSaudeServico
+			case 'financiamentos':
+				return ''
+			case 'seguros':
+				return IconSegurosServico
+			default:
+				return 'https://placehold.co/30x30?text=TS'
 		}
 	}
 
@@ -255,10 +280,12 @@
 						/>
 					</template>
 					<template #tipo_servico="data">
-						<image-name
-							image="https://placehold.co/30x30"
-							:name="data.value.tipo_servico.nome"
-						/>
+						<image-name v-tippy:top>
+							<component :is="iconeService(data.value.tipo_servico.icone)" />
+						</image-name>
+						<tippy target="top" placement="top">{{
+							data.value.tipo_servico.nome
+						}}</tippy>
 					</template>
 					<template #n_contrato="data">
 						<strong class="text-primary_3-table">{{
