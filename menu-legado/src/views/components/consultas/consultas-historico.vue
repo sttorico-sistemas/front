@@ -4,9 +4,6 @@
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 	import { reactive, ref } from 'vue'
 
-	import 'flatpickr/dist/flatpickr.css'
-	import 'flatpickr/dist/plugins/monthSelect/style.css'
-
 	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 	// Componentes

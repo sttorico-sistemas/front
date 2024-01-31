@@ -1,5 +1,9 @@
 <script lang="ts" setup>
+	import flatPickr from 'vue-flatpickr-component'
+	import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
 	import { reactive, ref } from 'vue'
+
+	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
@@ -22,6 +26,7 @@
 	const servico = ref<string>('')
 	const consignataria = ref<string>('')
 	const status = ref<string>('')
+	const dateSelected = ref<string>('')
 	const cols = reactive([
 		{ field: 'rmc', title: 'RMC', hide: false },
 		{ field: 'data', title: 'Data', hide: false },
@@ -38,7 +43,7 @@
 	const rows = reactive([
 		{
 			rmc: 7079,
-			data: '07/18/2017',
+			data: 'Dez/2024',
 			n_contrato: '0800025698',
 			tipo_servico: 'Plano de Saúde',
 			tipo_operacao: 'Inclusão Nova',
@@ -54,7 +59,7 @@
 		},
 		{
 			rmc: 7079,
-			data: '05/05/2017',
+			data: 'Jan/2024',
 			n_contrato: '032156484',
 			tipo_servico: 'Mensalidade',
 			tipo_operacao: 'Inclusão Nova',
@@ -70,7 +75,7 @@
 		},
 		{
 			rmc: 7079,
-			data: '03/27/2017',
+			data: 'Fev/2024',
 			n_contrato: '0708206 9605',
 			tipo_servico: 'Empréstimos',
 			tipo_operacao: 'Portabilidade',
@@ -86,7 +91,7 @@
 		},
 		{
 			rmc: 7079,
-			data: '03/27/2017',
+			data: 'Mar/2024',
 			n_contrato: '0708206 9605',
 			tipo_servico: 'Compras',
 			tipo_operacao: 'Portabilidade',
@@ -102,7 +107,7 @@
 		},
 		{
 			rmc: 7079,
-			data: '03/27/2017',
+			data: 'Abr/2024',
 			n_contrato: '0708206 9605',
 			tipo_servico: 'Compras',
 			tipo_operacao: 'Portabilidade',
@@ -118,7 +123,7 @@
 		},
 		{
 			rmc: 7079,
-			data: '03/27/2017',
+			data: 'Mai/2024',
 			n_contrato: '0708206 9605',
 			tipo_servico: 'Compras/Saque',
 			tipo_operacao: 'Portabilidade',
@@ -146,12 +151,22 @@
 		'Total Desconto': 'total_desconto',
 		Status: 'status.label',
 	})
+	const flatPickrConfig = reactive({
+		locale: Portuguese,
+		plugins: [
+			monthSelectPlugin({
+				shorthand: true,
+				dateFormat: 'M/Y',
+			}),
+		],
+	})
 
 	// Scripts
 	const clearFilter = () => {
 		servico.value = ''
 		consignataria.value = ''
 		status.value = ''
+		dateSelected.value = ''
 
 		selected.label = ''
 		selected.type = ''
@@ -183,6 +198,9 @@
 
 		if (selected.type === 'situacao')
 			return rows.filter((item: any) => item.status.label === value)
+
+		if (selected.type === 'date')
+			return rows.filter((mounthYear: any) => mounthYear.data === value)
 	}
 
 	// Computed
@@ -203,6 +221,15 @@
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
 					<consultas-popper label="Colunas" :options="cols" />
+					<flat-pickr
+						v-model="dateSelected"
+						class="form-input form-select"
+						placeholder="Selecione um data"
+						:config="flatPickrConfig"
+						@change="
+							(selected.label = $event.target.value), (selected.type = 'date')
+						"
+					/>
 					<multiselect
 						v-model="consignataria"
 						:options="[
@@ -341,5 +368,12 @@
 			white-space: nowrap;
 			color: rgb(14 23 38);
 		}
+	}
+
+	.flatpickr-input::placeholder {
+		font-size: 0.75rem;
+		font-weight: 600;
+		white-space: nowrap;
+		color: rgb(14 23 38);
 	}
 </style>
