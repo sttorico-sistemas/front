@@ -1,5 +1,9 @@
 <script lang="ts" setup>
+	import flatPickr from 'vue-flatpickr-component'
+	import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
 	import { reactive, ref } from 'vue'
+
+	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
@@ -22,6 +26,7 @@
 	const consignacao = ref<string>('')
 	const consignataria = ref<string>('')
 	const status = ref<string>('')
+	const dateSelected = ref<string>('')
 	const cols = reactive([
 		{ field: 'rmc', title: 'RMC', isUnique: true, hide: false },
 		{ field: 'data', title: 'Data', hide: false },
@@ -39,7 +44,7 @@
 	const rows = reactive([
 		{
 			rmc: 3629999,
-			data: '09/19/2016 - 10:00',
+			data: 'Jan/2024',
 			tipo_rmc: 'Originada',
 			cod_autorizacao: '202356481BBQ',
 			tipo_autorizacao: 'Manual',
@@ -56,7 +61,7 @@
 		},
 		{
 			rmc: 1203,
-			data: 'informada',
+			data: 'Dez/2024',
 			tipo_rmc: 'Importada',
 			cod_autorizacao: 'Não informado',
 			tipo_autorizacao: 'Não informado',
@@ -73,7 +78,7 @@
 		},
 		{
 			rmc: 7079,
-			data: '07/18/2017 - 14:00',
+			data: 'Fev/2024',
 			tipo_rmc: 'Originada',
 			cod_autorizacao: '202200128CHS',
 			tipo_autorizacao: 'On-line',
@@ -90,7 +95,7 @@
 		},
 		{
 			rmc: 9875,
-			data: '03/27/2017 - 09:00',
+			data: 'Mar/2024',
 			tipo_rmc: 'Originada',
 			cod_autorizacao: '202354012LKM',
 			tipo_autorizacao: 'On-line',
@@ -107,7 +112,7 @@
 		},
 		{
 			rmc: 4713,
-			data: '11/06/2017 - 11:00',
+			data: 'Abr/2024',
 			tipo_rmc: 'Originada',
 			cod_autorizacao: '202356154WDS',
 			tipo_autorizacao: 'Manual',
@@ -137,6 +142,15 @@
 		'Valor RMC': 'valor_rmc',
 		Status: 'status.label',
 	})
+	const flatPickrConfig = reactive({
+		locale: Portuguese,
+		plugins: [
+			monthSelectPlugin({
+				shorthand: true,
+				dateFormat: 'M/Y',
+			}),
+		],
+	})
 
 	// Scripts
 	const clearFilter = () => {
@@ -146,6 +160,7 @@
 
 		selected.label = ''
 		selected.type = ''
+		dateSelected.value = ''
 	}
 
 	// Computed
@@ -168,6 +183,15 @@
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
 					<consultas-popper label="Colunas" :options="cols" />
+					<flat-pickr
+						v-model="dateSelected"
+						class="form-input form-select"
+						placeholder="Selecione um data"
+						:config="flatPickrConfig"
+						@change="
+							(selected.label = $event.target.value), (selected.type = 'date')
+						"
+					/>
 					<multiselect
 						v-model="consignacao"
 						:options="['Financeiro', 'Bancario', 'Logista', 'Outros']"
