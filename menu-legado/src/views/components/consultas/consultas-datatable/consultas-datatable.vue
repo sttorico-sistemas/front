@@ -1,19 +1,9 @@
 <script lang="ts" setup>
-	import flatPickr from 'vue-flatpickr-component'
-	import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
-	import Vue3Datatable from '@bhplugin/vue3-datatable'
 	import { reactive, ref } from 'vue'
 
-	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
-
 	// Componentes
-	import ConsultasExport from '../consultas-export/consultas-export.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
-
-	// Icons
-	import IconClear from '@icons/iconClear.vue'
-	import IconFile from '@icons/iconFile.vue'
-	import IconPrinter from '@icons/iconPrinter.vue'
+	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 	// Props
 	const props = defineProps({
@@ -33,7 +23,6 @@
 
 	// Declaração
 	const isOpenDialog = ref<boolean>(false)
-	const dateSelected = ref<string>('')
 	const columnsModal = reactive([
 		{ field: 'rmc', title: 'RMC', hide: false },
 		{ field: 'data', title: 'Data', hide: false },
@@ -96,16 +85,423 @@
 				label: 'Ativo',
 			},
 		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
+		{
+			rmc: 7079,
+			data: '03/27/2017',
+			n_contrato: '0708206 9605',
+			tipo_servico: 'Compras',
+			tipo_operacao: 'Portabilidade',
+			consignataria: 'ASPM',
+			prazo: 'Indeterminado',
+			valor_desconto: 'R$ 50,00',
+			tipo_desconto: 'Fatura',
+			total_desconto: 'R$ 50,00',
+			status: {
+				id: 1,
+				label: 'Ativo',
+			},
+		},
 	])
-	const flatPickrConfig = reactive({
-		locale: Portuguese,
-		plugins: [
-			monthSelectPlugin({
-				shorthand: true,
-				dateFormat: 'M/Y',
-			}),
-		],
-	})
 
 	// Scripts
 	const color = (id: number | string): string => {
@@ -121,16 +517,6 @@
 			default:
 				return '#E0E6ED'
 		}
-	}
-
-	const clearFilter = () => {
-		servico.value = ''
-		consignataria.value = ''
-		status.value = ''
-		dateSelected.value = ''
-
-		selected.label = ''
-		selected.type = ''
 	}
 
 	const filtered = (value: string = '') => {
@@ -186,122 +572,38 @@
 		btn-close
 		@btn-close="isOpenDialog = false"
 	>
-		<div
-			class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
-		>
-			<div
-				class="header_actions w-full flex justify-end items-center gap-5 ltr:ml-auto rtl:mr-auto"
+		<!-- Datatable-->
+		<div class="datatable">
+			<vue3-datatable
+				:rows="rowsModal"
+				:columns="columnsModal"
+				:total-rows="rowsModal.length"
+				:sortable="true"
+				skin="whitespace-nowrap bh-table-striped"
+				no-data-content="Nenhum dado foi encontrado"
+				pagination-info="Mostrando {0} a {1} de {2} entradas"
+				page-size="5"
 			>
-				<flat-pickr
-					v-model="dateSelected"
-					class="form-input form-select max-w-[120px]"
-					placeholder="Selecione um data"
-					:config="flatPickrConfig"
-					@change="
-						(selected.label = $event.target.value), (selected.type = 'date')
-					"
-				/>
-				<multiselect
-					v-model="servico"
-					:options="[
-						'Plano de Saúde',
-						'Mensalidade',
-						'Empréstimos',
-						'Compras',
-						'Compras/Saque',
-					]"
-					class="custom-multiselect max-w-[230px]"
-					placeholder="Selecione o tipo de serviço"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'servico')"
-				/>
-				<multiselect
-					v-model="status"
-					:options="['Encerrado', 'Suspenso', 'Ativo']"
-					class="custom-multiselect max-w-[200px]"
-					placeholder="Selecione a Situação"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'situacao')"
-				/>
-				<div>
-					<button
-						v-tippy:top
-						type="button"
-						class="text-xs m-1"
-						@click="clearFilter()"
-					>
-						<icon-clear class="w-5 h-5 text-primary_3-table" />
+				<template #rmc="data">
+					<button>
+						<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
 					</button>
-					<tippy target="top" placement="top">Limpar pesquisa</tippy>
-				</div>
-				<div>
-					<download-excel
-						v-tippy:top
-						:fields="columns"
-						:data="rows"
-						name="resumo-dos-contratos.xls"
-						class="text-xs m-1 cursor-pointer"
+				</template>
+				<template #n_contrato="data">
+					<button>
+						<strong class="text-primary_3-table">{{
+							data.value.n_contrato
+						}}</strong>
+					</button>
+				</template>
+				<template #status="data">
+					<span
+						class="flex justify-center badge !w-[80px] h-[22px]"
+						:class="color(data.value.status.id)"
+						>{{ data.value.status.label }}</span
 					>
-						<icon-file class="w-5 h-5" />
-					</download-excel>
-					<tippy target="top" placement="top">Exportar XLS</tippy>
-				</div>
-				<div>
-					<consultas-export
-						v-tippy:top
-						:cols="cols"
-						:rows="rows"
-						export-type="print"
-					>
-						<template #icon>
-							<icon-printer class="w-5 h-5" />
-						</template>
-					</consultas-export>
-					<tippy target="top" placement="top">Imprimir</tippy>
-				</div>
-			</div>
-			<!-- Datatable-->
-			<div class="datatable">
-				<vue3-datatable
-					:rows="rowsModal"
-					:columns="columnsModal"
-					:total-rows="rowsModal.length"
-					:sortable="true"
-					skin="whitespace-nowrap bh-table-striped"
-					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
-				>
-					<template #rmc="data">
-						<button>
-							<strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
-						</button>
-					</template>
-					<template #n_contrato="data">
-						<button>
-							<strong class="text-primary_3-table">{{
-								data.value.n_contrato
-							}}</strong>
-						</button>
-					</template>
-					<template #status="data">
-						<span
-							class="flex justify-center badge !w-[80px] h-[22px]"
-							:class="color(data.value.status.id)"
-							>{{ data.value.status.label }}</span
-						>
-					</template>
-				</vue3-datatable>
-			</div>
+				</template>
+			</vue3-datatable>
 		</div>
 		<!-- Datatable-->
 	</modal-layout>
