@@ -1,18 +1,13 @@
 <script lang="ts" setup>
-	import flatPickr from 'vue-flatpickr-component'
-	import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
-	import Vue3Datatable from '@bhplugin/vue3-datatable'
 	import { reactive, ref } from 'vue'
 
-	import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
-
+	// Componentes
 	import ConsultasExport from '../consultas-export/consultas-export.vue'
-	import ConsultasTitulo from '../consultas-titulo/consultas-titulo.vue'
 	import ImageName from './datatable-coluna-image-name.vue'
+	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 	// Icons
 	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
-	import IconClear from '@icons/iconClear.vue'
 	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
 	import IconFile from '@icons/iconFile.vue'
 	import IconMensalidadeServico from '@icons/services/iconMensalidadeServicos.vue'
@@ -127,15 +122,6 @@
 	})
 
 	const dateSelected = ref<string>('')
-	const flatPickrConfig = reactive({
-		locale: Portuguese,
-		plugins: [
-			monthSelectPlugin({
-				shorthand: true,
-				dateFormat: 'M/Y',
-			}),
-		],
-	})
 
 	const filterDate = () => {
 		if (dateSelected.value === '' || dateSelected.value === null) return rows
@@ -198,42 +184,17 @@
 				return 'https://placehold.co/30x30?text=TS'
 		}
 	}
-
-	const clearFilter = () => {
-		dateSelected.value = ''
-	}
 </script>
 
 <template>
 	<main>
-		<div class="panel pb-0 mt-6">
+		<div class="panel py-0">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Extrato Mensal dos Descontos " />
-
 				<div
-					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
+					class="header_actions w-full justify-end flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
-					<flat-pickr
-						v-model="dateSelected"
-						class="form-input form-select"
-						:config="flatPickrConfig"
-						@change="filterDate"
-					/>
-
-					<div>
-						<button
-							v-tippy:top
-							type="button"
-							class="text-xs m-1"
-							@click="clearFilter()"
-						>
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
-						</button>
-						<tippy target="top" placement="top">Limpar pesquisa</tippy>
-					</div>
-
 					<div>
 						<download-excel
 							v-tippy:top
