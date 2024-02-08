@@ -2,6 +2,7 @@
 	import { useRoute } from 'vue-router'
 	import { onMounted, shallowRef, watch } from 'vue'
 
+	import ConsultasConsignataria from '../components/consultas/consultas-consignataria.vue'
 	import ConsultasContratos from '../components/consultas/consultas-contrato.vue'
 	import ConsultasHistorico from '../components/consultas/consultas-historico.vue'
 	import ConsultasRmc from '../components/consultas/consultas-rmc.vue'
@@ -20,6 +21,9 @@
 				break
 			case 'consultas-historico':
 				currentComponent.value = ConsultasHistorico
+				break
+			case 'consultas-consignataria':
+				currentComponent.value = ConsultasConsignataria
 				break
 		}
 	})

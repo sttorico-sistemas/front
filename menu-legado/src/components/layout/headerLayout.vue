@@ -134,6 +134,14 @@
 										Histórico de Desconto
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignataria' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignatária
+									</router-link>
+								</li>
 							</ul>
 						</div>
 					</button>

@@ -30,6 +30,11 @@ const router = createRouter({
 					name: 'consultas-historico',
 					component: Consultas,
 				},
+				{
+					path: 'consignataria',
+					name: 'consultas-consignataria',
+					component: Consultas,
+				},
 			],
 		},
 	],
