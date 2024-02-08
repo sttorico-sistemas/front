@@ -8,15 +8,22 @@
 			type: String,
 			default: '',
 		},
+		description: {
+			type: String,
+			default: '',
+		},
 	})
 </script>
 <template>
 	<div
-		class="flex items-center gap-2"
-		:class="!props.name.length ? 'justify-center' : 'justify-left'"
+		class="flex items-center gap-2 justify-left"
+		:class="!props.name.length ? '_justify-center' : '_justify-left'"
 	>
 		<slot />
 		<img class="w-30 h-30 rounded-full object-cover" :src="props.image" />
-		<span class="text-dark text-sm font-semibold">{{ props.name }}</span>
+		<div>
+			<span class="text-dark text-sm font-semibold">{{ props.name }}</span>
+			<p class="text-dark text-xs font-semibold">{{ props.description }}</p>
+		</div>
 	</div>
 </template>
