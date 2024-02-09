@@ -11,7 +11,6 @@
 
 	// Componentes
 	import ConsultasExport from '../consultas-export/consultas-export.vue'
-	import ConsultasTitulo from '../consultas-titulo/consultas-titulo.vue'
 	import ImageName from '../consultas-historico/datatable-coluna-image-name.vue'
 
 	// Icons
@@ -26,12 +25,14 @@
 	})
 	const rows = reactive([
 		{
+			id: 1,
 			local: 'Agência Centro',
 			endereco: 'Rua Principal, nr 234, centro.',
 			telefone: '(47) 3355-6655',
 			email: 'ag1789@caixa.gov.br',
 		},
 		{
+			id: 2,
 			local: 'Agência Centro',
 			endereco: 'Rua Principal, nr 234, centro.',
 			telefone: '(47) 3355-6655',
@@ -44,16 +45,13 @@
 		<div
 			class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 		>
-			<consultas-titulo title="Pontos de Atendimentos" />
-
 			<div
-				class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
+				class="w-full flex justify-between items-center gap-5 ltr:ml-auto rtl:mr-auto"
 			>
 				<div>
 					<image-name
 						image="https://placehold.co/30x30"
 						name="Banco do Brasil"
-						description="Instituição Financeira"
 					/>
 				</div>
 				<div>
@@ -76,20 +74,26 @@
 			<table>
 				<thead>
 					<tr>
-						<th>Local</th>
-						<th>Endereço</th>
-						<th>Telefone</th>
-						<th>E-mail</th>
-						<th>Ação</th>
+						<th class="text-primary_3-table text-left text-sm font-semibold">
+							Local
+						</th>
+						<th class="text-primary_3-table text-left text-sm font-semibold">
+							Endereço
+						</th>
+						<th class="text-primary_3-table text-left text-sm font-semibold">
+							Telefone
+						</th>
+						<th class="text-primary_3-table text-left text-sm font-semibold">
+							E-mail
+						</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-for="row in rows" :key="row.id">
-						<td>{{ row.local }}</td>
-						<td>{{ row.endereco }}</td>
-						<td>{{ row.telefone }}</td>
-						<td>{{ row.email }}</td>
-						<td></td>
+						<td class="text-xs">{{ row.local }}</td>
+						<td class="text-xs">{{ row.endereco }}</td>
+						<td class="text-xs">{{ row.telefone }}</td>
+						<td class="text-xs">{{ row.email }}</td>
 					</tr>
 				</tbody>
 			</table>

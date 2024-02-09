@@ -48,6 +48,7 @@
 				columns.map((d: any) => {
 					let val = item[d] ? item[d] : ''
 
+					// !TODO corrigir esse trecho onde ocorre erro ao pegar o status
 					if (Object.prototype.hasOwnProperty.call(item[d], 'label'))
 						val = item[d].label
 

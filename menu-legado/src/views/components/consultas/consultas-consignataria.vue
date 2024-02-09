@@ -142,11 +142,27 @@
 		idPontoAtendimento.value = id
 		isOpenDialog.value = true
 	}
+
+	const parseRows = () => {
+		return rows.map((row) => {
+			//!TODO Serviços não mostra ao imprimir a tela
+			const services = row.tipo_servicos.map((servico) => servico.nome)
+
+			return {
+				consignataria: row.consignataria.nome,
+				tipo_servicos: `${services}`,
+				status: {
+					id: row.status.id,
+					label: row.status.label,
+				},
+				pontos_atendimento: row.pontos_atendimento,
+			}
+		})
+	}
 </script>
 <template>
 	<main>
 		<breadcrumbs :paginas="['Consultas', 'Consignatárias']" />
-
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
@@ -206,7 +222,7 @@
 						<consultas-export
 							v-tippy:top
 							:cols="cols"
-							:rows="rows"
+							:rows="parseRows()"
 							export-type="print"
 						>
 							<template #icon>
@@ -275,6 +291,7 @@
 		</div>
 
 		<modal-layout
+			title="Pontos de Atendimentos"
 			:is-open="isOpenDialog"
 			size="max-w-full"
 			btn-close
