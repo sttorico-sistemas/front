@@ -33,8 +33,8 @@
 	const status = ref<string>('')
 	const cols = reactive([
 		{ field: 'consignataria', title: 'Consignatária', hide: false },
-		{ field: 'tipo_servico', title: 'Tipo de Serviços', hide: false },
-		{ field: 'status', title: 'Status', isUnique: true, hide: false },
+		{ field: 'tipo_servicos', title: 'Tipo de Serviços', hide: false },
+		{ field: 'status', title: 'Status', hide: false },
 		{
 			field: 'pontos_atendimento',
 			title: 'Pontos de Atendimento',
@@ -138,14 +138,13 @@
 		}
 	}
 
-	const openModal = (id: number) => {
+	const openModal = (id: number): void => {
 		idPontoAtendimento.value = id
 		isOpenDialog.value = true
 	}
 
-	const parseRows = () => {
+	const parseRows = (): Array<object> => {
 		return rows.map((row) => {
-			//!TODO Serviços não mostra ao imprimir a tela
 			const services = row.tipo_servicos.map((servico) => servico.nome)
 
 			return {
@@ -223,6 +222,7 @@
 							v-tippy:top
 							:cols="cols"
 							:rows="parseRows()"
+							filename="Consignatárias Habilitadas"
 							export-type="print"
 						>
 							<template #icon>
@@ -251,7 +251,7 @@
 							:description="data.value.consignataria.tipo"
 						/>
 					</template>
-					<template #tipo_servico="data">
+					<template #tipo_servicos="data">
 						<div class="flex">
 							<template
 								v-for="(tipo_servico, idx) in data.value.tipo_servicos"

@@ -2,7 +2,7 @@
 	import { reactive } from 'vue'
 
 	// Props
-	const props = defineProps({
+	defineProps({
 		id: {
 			type: Number,
 			required: true,
@@ -17,12 +17,12 @@
 	import IconPrinter from '@icons/iconPrinter.vue'
 
 	// Declaraçoes
-	const cols = reactive({
-		local: 'Local',
-		endereco: 'Endereço',
-		telefone: 'Telefone',
-		email: 'E-mail',
-	})
+	const cols = reactive([
+		{ field: 'local', title: 'Local', hide: false },
+		{ field: 'endereco', title: 'Endereço', hide: false },
+		{ field: 'telefone', title: 'Telefone', hide: false },
+		{ field: 'email', title: 'E-mail', hide: false },
+	])
 	const rows = reactive([
 		{
 			id: 1,
@@ -59,6 +59,7 @@
 						v-tippy:top
 						:cols="cols"
 						:rows="rows"
+						filename="Pontos de Atendimento"
 						export-type="print"
 					>
 						<template #icon>
