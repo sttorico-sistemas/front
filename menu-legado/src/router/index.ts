@@ -35,6 +35,11 @@ const router = createRouter({
 					name: 'consultas-consignataria',
 					component: Consultas,
 				},
+				{
+					path: 'atualizacao-margens',
+					name: 'consultas-atualizacao-margens',
+					component: Consultas,
+				},
 			],
 		},
 	],
