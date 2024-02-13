@@ -29,10 +29,10 @@
 		label: '',
 	})
 	const servico = ref<string>('')
-	const consignataria = ref<string>('')
 	const status = ref<string>('')
 	const cols = reactive([
 		{ field: 'consignataria', title: 'Consignatária', hide: false },
+		{ field: 'tipo_instituicao', title: 'Tipo Instituição', hide: false },
 		{ field: 'tipo_servicos', title: 'Tipo de Serviços', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
 		{
@@ -48,6 +48,7 @@
 				tipo: 'Instituição Financeira',
 				icone: '',
 			},
+			tipo_instituicao: 'Nova Inclusão',
 			tipo_servicos: [
 				{
 					nome: 'Emprestimo',
@@ -66,6 +67,7 @@
 				tipo: 'Associação',
 				icone: '',
 			},
+			tipo_instituicao: 'Nova Inclusão',
 			tipo_servicos: [
 				{
 					nome: 'Emprestimo',
@@ -92,6 +94,9 @@
 	const clearFilter = () => {
 		servico.value = ''
 		status.value = ''
+
+		selected.label = ''
+		selected.type = ''
 	}
 
 	const color = (id: number | string): string => {
@@ -108,8 +113,11 @@
 	const filtered = (value: string = '') => {
 		if (value === '') return rows
 
-		if (selected.type === 'servico')
-			return rows.filter((item: any) => item.tipo_servico === value)
+		if (selected.type === 'servico') {
+			return rows.filter((item: any) => {
+				return item.tipo_servicos.some((servico: any) => servico.nome === value)
+			})
+		}
 
 		if (selected.type === 'situacao')
 			return rows.filter((item: any) => item.status.label === value)
@@ -172,24 +180,17 @@
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
 					<multiselect
-						v-model="consignataria"
-						:options="[
-							'Banco Daycoval S/A',
-							'Meu CaschCard',
-							'Banco do Brasil S/A',
-							'ASPM',
-						]"
-						class="custom-multiselect max-w-[200px]"
-						placeholder="Tipo de Serviço"
+						v-model="servico"
+						:options="['Emprestimo', 'Cartão de Crédito', 'Seguros']"
+						class="custom-multiselect max-w-[230px]"
+						placeholder="Selecione o tipo de serviço"
 						:searchable="false"
 						:preselect-first="false"
 						:allow-empty="false"
 						selected-label=""
 						select-label=""
 						deselect-label=""
-						@select="
-							(selected.label = $event), (selected.type = 'consignataria')
-						"
+						@select="(selected.label = $event), (selected.type = 'servico')"
 					/>
 					<multiselect
 						v-model="status"
@@ -248,7 +249,6 @@
 						<image-name
 							image="https://placehold.co/30x30"
 							:name="data.value.consignataria.nome"
-							:description="data.value.consignataria.tipo"
 						/>
 					</template>
 					<template #tipo_servicos="data">
