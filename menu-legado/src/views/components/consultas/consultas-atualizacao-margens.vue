@@ -18,7 +18,7 @@
 		label: '',
 	})
 	const margem = ref<string>('')
-	const margemValor = ref<string>('')
+	const margemTitlePercent = ref<string>('')
 	const cols = reactive([
 		{ field: 'data', title: 'Data', hide: false },
 		{ field: 'protocolo', title: 'Protocolo', hide: false },
@@ -32,6 +32,7 @@
 	])
 	const rows = reactive([
 		{
+			titulo: 'Margem Principal - 35%',
 			margem35: [
 				{
 					data: '10/03/2023',
@@ -50,6 +51,7 @@
 			],
 		},
 		{
+			titulo: 'Margem Principal - 5%',
 			margem5: [
 				{
 					data: '10/03/2023',
@@ -68,6 +70,7 @@
 			],
 		},
 		{
+			titulo: 'Margem Principal - 10%',
 			margem10: [
 				{
 					data: '10/03/2023',
@@ -96,13 +99,21 @@
 	}
 
 	const filtered = (value: string = '') => {
-		if (value === '') return rows[0].margem35
+		if (value === '') {
+			margemTitlePercent.value = rows[0].titulo
+			return rows[0].margem35
+		}
 
-		const data = rows.filter((item: any) => {
-			if (Object.prototype.hasOwnProperty.call(item, value)) return item[value]
-		})
+		const data = rows.reduce((margem, margens) => {
+			if (margens[value]) {
+				margemTitlePercent.value = margens.titulo
+				margem.push(...margens[value])
+			}
 
-		console.log(...data)
+			return margem
+		}, [])
+
+		return data
 	}
 </script>
 <template>
@@ -178,7 +189,7 @@
 
 			<div class="datatable">
 				<span class="text-base font-semibold text-primary_3"
-					>Histórico - Margem Principal - {{ margemValor }}</span
+					>Histórico - {{ margemTitlePercent }}</span
 				>
 				<vue3-datatable
 					:rows="filtered(selected.label)"
