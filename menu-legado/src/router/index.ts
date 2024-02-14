@@ -40,6 +40,11 @@ const router = createRouter({
 					name: 'consultas-atualizacao-margens',
 					component: Consultas,
 				},
+				{
+					path: 'historico-reserva-margem',
+					name: 'consultas-historico-reserva-margem',
+					component: Consultas,
+				},
 			],
 		},
 	],
