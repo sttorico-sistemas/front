@@ -15,6 +15,10 @@ app.use(head)
 import { TippyPlugin } from 'tippy.vue'
 app.use(TippyPlugin)
 
+// ApexCharts
+import VueApexCharts from 'vue3-apexcharts'
+app.use(VueApexCharts)
+
 // popper
 import Popper from 'vue3-popper'
 app.component('Popper', Popper)
