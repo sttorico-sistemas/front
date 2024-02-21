@@ -314,6 +314,7 @@
 							:cols="cols"
 							:rows="rows"
 							export-type="print"
+							filename="Resumo dos Contratos"
 						>
 							<template #icon>
 								<icon-printer class="w-5 h-5" />

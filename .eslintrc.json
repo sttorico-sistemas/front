@@ -61,6 +61,9 @@
 		// Vue Rules
 		"vue/multi-word-component-names": ["error", {
 			"ignores": ["Popper", "downloadExcel", "Multiselect"]
+		}],
+		"vue/no-lone-template": ["error", {
+			"ignoreAccessible": false
 		}]
 		// "vue/no-unused-vars": ["error", {
 		// 	"ignorePattern": "^_"

@@ -170,7 +170,6 @@
 <template>
 	<main>
 		<breadcrumbs :paginas="['Consultas', 'RMC']" />
-
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
@@ -272,6 +271,7 @@
 							:cols="cols"
 							:rows="rows"
 							export-type="print"
+							filename="Resumo da RMC - Reserva da Margem de Consignação"
 						>
 							<template #icon>
 								<icon-printer class="w-5 h-5" />

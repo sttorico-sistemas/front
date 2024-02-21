@@ -30,6 +30,21 @@ const router = createRouter({
 					name: 'consultas-historico',
 					component: Consultas,
 				},
+				{
+					path: 'consignataria',
+					name: 'consultas-consignataria',
+					component: Consultas,
+				},
+				{
+					path: 'atualizacao-margens',
+					name: 'consultas-atualizacao-margens',
+					component: Consultas,
+				},
+				{
+					path: 'historico-reserva-margem',
+					name: 'consultas-historico-reserva-margem',
+					component: Consultas,
+				},
 			],
 		},
 	],

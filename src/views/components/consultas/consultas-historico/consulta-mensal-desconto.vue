@@ -213,6 +213,7 @@
 							v-tippy:top
 							:cols="cols"
 							:rows="rows"
+							filename="Extrato Mensal dos Descontos"
 							export-type="print"
 						>
 							<template #icon>
