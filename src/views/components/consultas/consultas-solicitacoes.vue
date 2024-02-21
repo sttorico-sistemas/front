@@ -27,7 +27,7 @@
 		{ field: 'solicitacao', title: 'Solicitação', hide: false },
 		{ field: 'solicitado', title: 'Solicitado', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
-		{ field: 'acao', title: 'Ação', hide: false },
+		{ field: 'acao', title: 'Ação', hide: false, sort: false },
 	])
 	const rows = reactive([
 		{
@@ -186,6 +186,7 @@
 					skin="whitespace-nowrap bh-table-striped"
 					no-data-content="Nenhum dado foi encontrado"
 					pagination-info="Mostrando {0} a {1} de {2} entradas"
+					@sort-change=""
 				>
 					<template #solicitado="data">
 						<image-name
