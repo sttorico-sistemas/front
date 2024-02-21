@@ -19,10 +19,10 @@
 	import IconSearch from '@icons/iconSearch.vue'
 
 	// Scripts
-	const showMenu = ref(false)
+	const showMenu = ref<string>('')
 
-	const toggleShow = () => {
-		showMenu.value = !showMenu.value
+	const toggleShow = (value: string) => {
+		showMenu.value = showMenu.value === value ? '' : value
 	}
 </script>
 <template>
@@ -97,14 +97,17 @@
 					</router-link>
 				</li>
 				<li>
-					<button class="menu__main_list_item relative" @click="toggleShow">
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('consultas')"
+					>
 						<icon-search class="menu__main_list_icon" />
 						Consultas
 						<icon-arrow-down />
 						<div
 							id="dropdownNavbar"
 							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu ? '' : 'hidden'"
+							:class="showMenu === 'consultas' ? '' : 'hidden'"
 						>
 							<ul
 								class="py-2 text-sm text-gray-700"
@@ -158,6 +161,14 @@
 										Histórico da Reserva da Margem
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-solicitacoes' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Solicitações
+									</router-link>
+								</li>
 							</ul>
 						</div>
 					</button>
@@ -169,10 +180,33 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('solicitacoes')"
+					>
 						<icon-calculator class="menu__main_list_icon" />
 						Simulador
-					</router-link>
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu === 'solicitacoes' ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'simulador-taxa-juros' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Taxas de Juros
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</button>
 				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">

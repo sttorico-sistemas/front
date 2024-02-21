@@ -8,6 +8,7 @@
 	import ConsultasHistorico from '../components/consultas/consultas-historico.vue'
 	import ConsultasHistoricoReservaMargem from '../components/consultas/consultas-historico-reserva-margem.vue'
 	import ConsultasRmc from '../components/consultas/consultas-rmc.vue'
+	import ConsultasSolicitacoes from '../components/consultas/consultas-solicitacoes.vue'
 
 	const route = useRoute()
 
@@ -32,6 +33,9 @@
 				break
 			case 'consultas-historico-reserva-margem':
 				currentComponent.value = ConsultasHistoricoReservaMargem
+				break
+			case 'consultas-solicitacoes':
+				currentComponent.value = ConsultasSolicitacoes
 				break
 		}
 	})

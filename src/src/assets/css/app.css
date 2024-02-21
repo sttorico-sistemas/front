@@ -1,8 +1,0 @@
-@import '@suadelabs/vue3-multiselect/dist/vue3-multiselect.css';
-@import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
-@import 'tippy.js/dist/tippy.css';
-@import '@bhplugin/vue3-datatable/dist/style.css';
-@import 'flatpickr/dist/flatpickr.css';
-@import 'flatpickr/dist/plugins/monthSelect/style.css';
-/* @import 'file-upload-with-preview/dist/file-upload-with-preview.min.css'; */
-@import 'tailwind.css';

@@ -33,9 +33,6 @@
 
 		const records = props.rows
 
-		// let newVariable: any
-		// newVariable = window.navigator
-
 		if (type === 'print') {
 			let rowhtml = '<p>' + props.filename + '</p>'
 			rowhtml +=
