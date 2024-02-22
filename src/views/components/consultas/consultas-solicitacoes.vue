@@ -186,7 +186,6 @@
 					skin="whitespace-nowrap bh-table-striped"
 					no-data-content="Nenhum dado foi encontrado"
 					pagination-info="Mostrando {0} a {1} de {2} entradas"
-					@sort-change=""
 				>
 					<template #solicitado="data">
 						<image-name
