@@ -14,7 +14,7 @@
 	import IconInfo from '@icons/iconInfo.vue'
 </script>
 <template>
-	<div class="flex gap-2">
+	<div class="flex gap-12">
 		<h5 class="text-lg font-semibold text-primary_3-table">
 			{{ title }}
 		</h5>
