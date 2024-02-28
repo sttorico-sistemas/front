@@ -25,15 +25,15 @@
 		{ field: 'data', title: 'Data', hide: false },
 		{ field: 'protocolo', title: 'Protocolo', hide: false },
 		{ field: 'solicitacao', title: 'Solicitação', hide: false },
-		{ field: 'solicitado', title: 'Solicitado', hide: false },
-		{ field: 'status', title: 'Status', hide: false },
+		{ field: 'solicitado', title: 'Solicitado', hide: false, sort: false },
+		{ field: 'status', title: 'Status', hide: false, sort: false },
 		{ field: 'acao', title: 'Ação', hide: false, sort: false },
 	])
 	const rows = reactive([
 		{
 			id: 1,
 			data: '10/03/2023',
-			protocolo: '12346845',
+			protocolo: '2024001002',
 			solicitacao: 'Solicitação de Proposta',
 			solicitado: {
 				nome: 'Banco do Brasil',
@@ -48,7 +48,7 @@
 		{
 			id: 2,
 			data: '10/03/2023',
-			protocolo: '12346845',
+			protocolo: '2023001003',
 			solicitacao: 'Solicitação Saldo Devedor',
 			solicitado: {
 				nome: 'Santander Brasil',
@@ -175,9 +175,6 @@
 			</div>
 
 			<div class="datatable">
-				<p class="text-base font-semibold text-primary_3 mb-4">
-					Histórico das Solicitações
-				</p>
 				<vue3-datatable
 					:rows="filtered(selected.label)"
 					:columns="cols"
