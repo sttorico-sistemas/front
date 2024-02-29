@@ -69,7 +69,7 @@ module.exports = {
 				},
 				black: {
 					DEFAULT: '#0e1726',
-					light: '#e3e4eb',
+					light: '#A9AAB1',
 					'dark-light': 'rgba(14,23,38,.15)',
 				},
 				white: {
