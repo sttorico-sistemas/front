@@ -2,6 +2,7 @@
 	import { useRoute } from 'vue-router'
 	import { onMounted, shallowRef, watch } from 'vue'
 
+	import SimuladorCalculadora from '../components/simulador/simulador-calculadora.vue'
 	import SimuladorTaxaJuros from '../components/simulador/simulador-taxa-juros.vue'
 
 	const route = useRoute()
@@ -12,6 +13,9 @@
 		switch (route.name) {
 			case 'simulador-taxa-juros':
 				currentComponent.value = SimuladorTaxaJuros
+				break
+			case 'simulador-calculadora':
+				currentComponent.value = SimuladorCalculadora
 				break
 		}
 	})
