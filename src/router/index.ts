@@ -62,6 +62,11 @@ const router = createRouter({
 					name: 'simulador-taxa-juros',
 					component: Simulador,
 				},
+				{
+					path: 'calculadora',
+					name: 'simulador-calculadora',
+					component: Simulador,
+				},
 			],
 		},
 	],
