@@ -135,7 +135,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="flex flex-row justify-between">
 						<p
 							class="text-sm font-semibold text-black-light flex items-center gap-1 mb-4"
 						>
