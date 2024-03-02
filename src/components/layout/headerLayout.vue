@@ -212,6 +212,14 @@
 										Calculadora
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'simulador-emprestimos' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Empréstimos
+									</router-link>
+								</li>
 							</ul>
 						</div>
 					</button>
