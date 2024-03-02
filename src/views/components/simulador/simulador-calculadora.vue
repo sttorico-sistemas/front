@@ -7,13 +7,16 @@
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 	import InputValidation from '@components/layout/inputValidation.vue'
+	import modalLayout from '@components/layout/modalLayout.vue'
 	import StepByNumber from '@components/layout/stepByNumber.vue'
 
 	import ConsultasTitulo from '../consultas/consultas-titulo/consultas-titulo.vue'
+	import SimuladorResultadoCalculo from './simulador-resultado-calculo/simulador-resultado-calculo.vue'
 
 	// Icons
 
 	// Declarações
+	const isOpenDialog = ref<boolean>(false)
 	const isSubmitForm = ref(false)
 	const form = reactive({
 		vlrEmprestimo: '',
@@ -32,7 +35,17 @@
 	const $v = useVuelidate(rules, { form })
 
 	// Script
-	const sendForm = () => {
+	const clear = () => {
+		$v.value.form.$reset()
+		isSubmitForm.value = false
+
+		form.vlrEmprestimo = ''
+		form.vlrParcela = ''
+		form.vlrJuros = ''
+		form.vlrPrazo = ''
+	}
+
+	const calculate = () => {
 		isSubmitForm.value = true
 
 		$v.value.form.$touch()
@@ -40,6 +53,8 @@
 		if ($v.value.form.$invalid) {
 			return false
 		}
+
+		isOpenDialog.value = true
 	}
 </script>
 <template>
@@ -61,7 +76,7 @@
 					class="flex justify-between flex-wrap"
 					@submit.prevent="sendForm()"
 				>
-					<div>
+					<div class="mb-8">
 						<p
 							class="text-sm font-semibold text-black-light flex items-center gap-1 mb-4"
 						>
@@ -72,6 +87,7 @@
 						<div class="flex gap-9">
 							<div class="grid grid-cols-1 sm:flex justify-between">
 								<input-validation
+									v-model="form.vlrEmprestimo"
 									id="vlrEmprestimo"
 									label="Valor do Empréstimo"
 									placeholder="R$"
@@ -82,6 +98,7 @@
 							</div>
 							<div class="grid grid-cols-1 sm:flex justify-between">
 								<input-validation
+									v-model="form.vlrParcela"
 									id="vlrParcela"
 									label="Valor da Parcela"
 									placeholder="R$"
@@ -92,7 +109,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="mb-8">
 						<p
 							class="text-sm font-semibold text-black-light flex items-center gap-1 mb-4"
 						>
@@ -103,6 +120,7 @@
 						<div class="flex gap-9">
 							<div class="grid grid-cols-1 sm:flex justify-between">
 								<input-validation
+									v-model="form.vlrJuros"
 									id="vlrJuros"
 									label="Taxa de Juros"
 									placeholder="% ao mês"
@@ -114,7 +132,7 @@
 							</div>
 						</div>
 					</div>
-					<div>
+					<div class="mb-8">
 						<p
 							class="text-sm font-semibold text-black-light flex items-center gap-1 mb-4"
 						>
@@ -125,6 +143,7 @@
 						<div class="flex gap-9">
 							<div class="grid grid-cols-1 sm:flex justify-between">
 								<input-validation
+									v-model="form.vlrPrazo"
 									id="vlrPrazo"
 									label="Prazo / nº parcelas"
 									placeholder="0"
@@ -135,7 +154,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="flex flex-row justify-between">
+					<div class="flex flex-col">
 						<p
 							class="text-sm font-semibold text-black-light flex items-center gap-1 mb-4"
 						>
@@ -143,17 +162,19 @@
 							Clique em calcular.
 						</p>
 
-						<div class="flex gap-9">
+						<div class="flex gap-9 mt-4">
 							<div class="grid grid-cols-1 sm:flex justify-between gap-5">
 								<button
 									type="button"
 									class="btn bg-primary_3 text-white shadow-none w-32"
+									@click="calculate"
 								>
 									Calcular
 								</button>
 								<button
 									type="button"
-									class="btn btn-outline-primary_3 text-primary_3 shadow-none"
+									class="btn border-primary_3 text-primary_3 shadow-none"
+									@click="clear"
 								>
 									Limpar
 								</button>
@@ -163,6 +184,13 @@
 				</form>
 			</div>
 		</div>
+		<modal-layout
+			:is-open="isOpenDialog"
+			size="max-w-4xl"
+			title="Resultado do Cálculo"
+		>
+			<simulador-resultado-calculo @btn-close="isOpenDialog = false"/>
+		</modal-layout>
 	</main>
 </template>
 <style lang="scss" scoped></style>
