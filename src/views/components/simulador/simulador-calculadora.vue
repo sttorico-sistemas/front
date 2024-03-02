@@ -188,6 +188,7 @@
 			:is-open="isOpenDialog"
 			size="max-w-4xl"
 			title="Resultado do Cálculo"
+			@btn-close="isOpenDialog = false"
 		>
 			<simulador-resultado-calculo @btn-close="isOpenDialog = false"/>
 		</modal-layout>
