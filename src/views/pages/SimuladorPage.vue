@@ -3,6 +3,7 @@
 	import { onMounted, shallowRef, watch } from 'vue'
 
 	import SimuladorCalculadora from '../components/simulador/simulador-calculadora.vue'
+	import SimuladorEmprestimos from '../components/simulador/simulador-emprestimos.vue'
 	import SimuladorTaxaJuros from '../components/simulador/simulador-taxa-juros.vue'
 
 	const route = useRoute()
@@ -16,6 +17,9 @@
 				break
 			case 'simulador-calculadora':
 				currentComponent.value = SimuladorCalculadora
+				break
+			case 'simulador-emprestimos':
+				currentComponent.value = SimuladorEmprestimos
 				break
 		}
 	})
