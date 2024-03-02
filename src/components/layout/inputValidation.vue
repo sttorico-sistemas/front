@@ -1,5 +1,8 @@
 <script setup>
 	defineProps({
+		modelValue: {
+			required: true,
+		},
 		id: {
 			type: String,
 			default: '',
@@ -33,6 +36,8 @@
 			default: false,
 		},
 	})
+
+	const emit = defineEmits(['update:modelValue'])
 </script>
 <template>
 	<div
@@ -43,10 +48,12 @@
 		<label for="{{ id }}" class="text-xs">{{ label }}</label>
 		<input
 			:id="id"
+			:value="modelValue"
 			:type="type"
 			:placeholder="placeholder"
 			class="form-input"
 			:class="styleClass"
+			@input="emit('update:modelValue', $event.target.value)"
 		/>
 		<div v-if="isSubmitForm && error">
 			<p class="text-danger mt-1">{{ messageError }}</p>
