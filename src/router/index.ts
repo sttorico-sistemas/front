@@ -67,6 +67,11 @@ const router = createRouter({
 					name: 'simulador-calculadora',
 					component: Simulador,
 				},
+				{
+					path: 'emprestimos',
+					name: 'simulador-emprestimos',
+					component: Simulador,
+				},
 			],
 		},
 	],
