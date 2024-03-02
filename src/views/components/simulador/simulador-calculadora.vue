@@ -166,14 +166,14 @@
 							<div class="grid grid-cols-1 sm:flex justify-between gap-5">
 								<button
 									type="button"
-									class="btn bg-primary_3 text-white shadow-none w-32"
+									class="btn bg-primary_3-table text-white shadow-none w-32"
 									@click="calculate"
 								>
 									Calcular
 								</button>
 								<button
 									type="button"
-									class="btn border-primary_3 text-primary_3 shadow-none"
+									class="btn border-primary_3-table text-primary_3-table shadow-none"
 									@click="clear"
 								>
 									Limpar
