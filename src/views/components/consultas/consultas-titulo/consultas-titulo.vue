@@ -4,6 +4,10 @@
 			type: String,
 			default: '',
 		},
+		classStyle: {
+			type: String,
+			default: 'text-lg font-semibold text-primary_3-table',
+		},
 		infoMessage: {
 			type: String,
 			default: '',
@@ -15,7 +19,7 @@
 </script>
 <template>
 	<div class="flex gap-12">
-		<h5 class="text-lg font-semibold text-primary_3-table">
+		<h5 :class="classStyle">
 			{{ title }}
 		</h5>
 		<div v-show="infoMessage.length" class="flex self-center">
