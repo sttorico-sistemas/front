@@ -182,7 +182,7 @@
 				<li>
 					<button
 						class="menu__main_list_item relative"
-						@click="toggleShow('solicitacoes')"
+						@click="toggleShow('simulador')"
 					>
 						<icon-calculator class="menu__main_list_icon" />
 						Simulador
@@ -190,7 +190,7 @@
 						<div
 							id="dropdownNavbar"
 							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'solicitacoes' ? '' : 'hidden'"
+							:class="showMenu === 'simulador' ? '' : 'hidden'"
 						>
 							<ul
 								class="py-2 text-sm text-gray-700"
@@ -233,10 +233,33 @@
 					</button>
 				</li>
 				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('documentos')"
+					>
 						<icon-documents class="menu__main_list_icon" />
-						Documentos
-					</router-link>
+							Documentos
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu === 'documentos' ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'documentos-arquivados' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Arquivados
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</button>
 				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
