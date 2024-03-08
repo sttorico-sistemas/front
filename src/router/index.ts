@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Consultas from '../views/pages/ConsultasPage.vue'
 import Dashboard from '../views/pages/DashboardPage.vue'
+import Documentos from '../views/pages/DocumentosPage.vue'
 import Simulador from '../views/pages/SimuladorPage.vue'
 
 const router = createRouter({
@@ -76,6 +77,17 @@ const router = createRouter({
 					path: 'previsao-descontos',
 					name: 'simulador-previsao-descontos',
 					component: Simulador,
+				},
+			],
+		},
+		{
+			path: '/documentos',
+			name: 'documentos',
+			children: [
+				{
+					path: 'arquivados',
+					name: 'documentos-arquivados',
+					component: Documentos,
 				},
 			],
 		},
