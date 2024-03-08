@@ -5,6 +5,7 @@
 	import SimuladorCalculadora from '../components/simulador/simulador-calculadora.vue'
 	import SimuladorEmprestimos from '../components/simulador/simulador-emprestimos.vue'
 	import SimuladorTaxaJuros from '../components/simulador/simulador-taxa-juros.vue'
+	import SimuladorPrevisaoDescontos from '../components/simulador/simulador-previsao-descontos.vue'
 
 	const route = useRoute()
 
@@ -20,6 +21,9 @@
 				break
 			case 'simulador-emprestimos':
 				currentComponent.value = SimuladorEmprestimos
+				break
+			case 'simulador-previsao-descontos':
+				currentComponent.value = SimuladorPrevisaoDescontos
 				break
 		}
 	})
