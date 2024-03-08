@@ -16,7 +16,7 @@
 </script>
 <template>
 	<div
-		class="flex items-center gap-2 justify-left"
+		class="flex items-center gap-1 justify-left"
 		:class="!props.name.length ? '_justify-center' : '_justify-left'"
 	>
 		<slot />
