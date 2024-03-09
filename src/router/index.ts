@@ -52,6 +52,11 @@ const router = createRouter({
 					name: 'consultas-solicitacoes',
 					component: Consultas,
 				},
+				{
+					path: 'resumo-margem',
+					name: 'consultas-resumo-margem',
+					component: Consultas,
+				},
 			],
 		},
 		{
