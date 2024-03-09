@@ -169,6 +169,14 @@
 										Solicitações
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-resumo-margem' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Resumo da Margem
+									</router-link>
+								</li>
 							</ul>
 						</div>
 					</button>
