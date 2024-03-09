@@ -129,9 +129,6 @@
 						<td width="183px"></td>
 					</tr>
 				</table>
-				<!-- <div class="w-full h-11 py-3 mt-3 mb-11 bg-[#E9F0FE]/30">
-					<p class="flex gap-12 text-sm text-primary_3">Totais: <span>R$ 1.000,00</span><span>R$ 900,00</span><span>R$ 100,00</span></p>
-				</div> -->
 			</div>
 		</div>
 	</main>
