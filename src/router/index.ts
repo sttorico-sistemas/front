@@ -57,6 +57,11 @@ const router = createRouter({
 					name: 'consultas-resumo-margem',
 					component: Consultas,
 				},
+				{
+					path: 'previsao-descontos',
+					name: 'consultas-previsao-descontos',
+					component: Consultas,
+				},
 			],
 		},
 		{
@@ -77,12 +82,7 @@ const router = createRouter({
 					path: 'emprestimos',
 					name: 'simulador-emprestimos',
 					component: Simulador,
-				},
-				{
-					path: 'previsao-descontos',
-					name: 'simulador-previsao-descontos',
-					component: Simulador,
-				},
+				},				
 			],
 		},
 		{
