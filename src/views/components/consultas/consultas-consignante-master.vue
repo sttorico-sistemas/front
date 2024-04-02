@@ -45,6 +45,11 @@
 		)
 	}
 
+	const parseCols = [
+		{ field: 'id', title: 'ID', hide: false },
+		{ field: 'consignante_master', title: 'Consignante Master', hide: false },
+	]
+
 	const clearFilter = () => {
 		consignante.value = ''
 	}
@@ -100,7 +105,7 @@
 					<div class="w-5 h-5">
 						<consultas-export
 							v-tippy:top
-							:cols="cols"
+							:cols="parseCols"
 							:rows="rows"
 							filename="Extrato Anual dos Descontos"
 							export-type="print"
