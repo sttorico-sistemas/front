@@ -168,12 +168,12 @@
 				</div>
 
 				<div
-					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
+					class="header_actions flex items-center gap-5"
 				>
 					<multiselect
 						v-model="consignante"
 						:options="['IPMAT', 'PREFEITURA DE CAMBORIÚ']"
-						class="custom-multiselect min-w-[200px]"
+						class="custom-multiselect max-w-[200px]"
 						placeholder="Consignante Master"
 						:searchable="false"
 						:preselect-first="false"
