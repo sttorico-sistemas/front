@@ -67,6 +67,11 @@ const router = createRouter({
 					name: 'consultas-consignante-master',
 					component: Consultas,
 				},
+				{
+					path: 'consignantes',
+					name: 'consultas-consignantes',
+					component: Consultas,
+				},
 			],
 		},
 		{
