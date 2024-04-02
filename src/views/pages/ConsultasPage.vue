@@ -11,6 +11,7 @@
 	import ConsultasSolicitacoes from '../components/consultas/consultas-solicitacoes.vue'
 	import ConsultasResumoMargem from '../components/consultas/consultas-resumo-margem.vue'
 	import ConsultasPrevisaoDescontos from '../components/consultas/consultas-previsao-descontos.vue'
+	import ConsultasConsigantesMaster from '../components/consultas/consultas-consignante-master.vue'
 
 	const route = useRoute()
 
@@ -44,6 +45,9 @@
 				break
 			case 'consultas-previsao-descontos':
 				currentComponent.value = ConsultasPrevisaoDescontos
+				break
+			case 'consultas-consignante-master':
+				currentComponent.value = ConsultasConsigantesMaster
 				break
 		}
 	})
