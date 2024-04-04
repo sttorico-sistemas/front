@@ -4,6 +4,7 @@ import Consultas from '../views/pages/ConsultasPage.vue'
 import Dashboard from '../views/pages/DashboardPage.vue'
 import Documentos from '../views/pages/DocumentosPage.vue'
 import Simulador from '../views/pages/SimuladorPage.vue'
+import Cadastro from '../views/pages/CadastroPage.vue'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -103,6 +104,17 @@ const router = createRouter({
 					path: 'arquivados',
 					name: 'documentos-arquivados',
 					component: Documentos,
+				},
+			],
+		},
+		{
+			path: '/cadastro',
+			name: 'cadastro',
+			children: [
+				{
+					path: 'consignante/:id',
+					name: 'cadastro-consignante',
+					component: Cadastro,
 				},
 			],
 		},
