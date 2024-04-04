@@ -31,13 +31,13 @@
 	const status = ref<string>('')
 	const averbacao = ref<string>('')
 	const cols = reactive([
-		{ field: 'consignante', title: 'Consignante', hide: false },
-		{ field: 'tp_entidade', title: 'Tp Entidade', hide: false },
-		{ field: 'cidade', title: 'Cidade/UF', hide: false },
-		{ field: 'dt_inicial', title: 'Dt Inicial', hide: false },
-		{ field: 'dt_final', title: 'Dt Final', hide: false },
-		{ field: 'status', title: 'Status', hide: false, sort: false, },
-		{ field: 'averbacao', title: 'Averbação', hide: false, sort: false, },
+		{ field: 'consignante', title: 'Consignante', hide: false, },
+		{ field: 'tp_entidade', title: 'Tp Entidade', hide: false, },
+		{ field: 'cidade', title: 'Cidade/UF', hide: false, },
+		{ field: 'dt_inicial', title: 'Dt Inicial', hide: false, },
+		{ field: 'dt_final', title: 'Dt Final', hide: false, },
+		{ field: 'status', title: 'Status', hide: false, },
+		{ field: 'averbacao', title: 'Averbação', hide: false, },
 		{ field: 'actions', title: 'Ações', hide: false, sort: false, },
 	])
 	const rows = reactive([
@@ -48,14 +48,8 @@
 			cidade: 'AMIRANTE TAMANDARÉ - PR',
 			dt_inicial: '23/03/2018',
 			dt_final: '23/03/2023',
-			status: {
-				id: 2,
-				label: 'Inativo',
-			},
-			averbacao: {
-				id: 3,
-				label: 'Bloqueada',
-			},
+			status: 'Inativo',
+			averbacao: 'Bloqueada',
 		},
 		{
 			id: 2,
@@ -64,14 +58,8 @@
 			cidade: 'CAMBORIÚ - SC',
 			dt_inicial: '20/08/2020',
 			dt_final: '20/08/2024',
-			status: {
-				id: 1,
-				label: 'Ativo',
-			},
-			averbacao: {
-				id: 1,
-				label: 'Liberada',
-			},
+			status: 'Ativo',
+			averbacao: 'Liberada',
 		},
 	])
 
@@ -90,14 +78,14 @@
 
 	const color = (id: number | string): string => {
 		switch (id) {
-			case 1:
+			case 'Ativo':
 				return 'bg-success' // Ativo
-			case 2:
+			case 'Inativo':
 				return 'bg-warning' // Inativo
-			case 3:
+			case 'Bloqueada':
 			 	return 'bg-secondary' // Bloqueada 
-			default:
-				return '#E0E6ED'
+			case 'Liberada':
+				return 'bg-success' // Liberada
 		}
 	}
 
@@ -117,10 +105,10 @@
 			return rows.filter((item: any) => item.dt_final === value)
 
 		if (selected.type === 'status')
-			return rows.filter((item: any) => item.status.label === value)
+			return rows.filter((item: any) => item.status === value)
 
 		if (selected.type === 'averbacao')
-			return rows.filter((item: any) => item.averbacao.label === value)
+			return rows.filter((item: any) => item.averbacao === value)
 	}
 
 	const parseCols = (): Array<object> => {
@@ -144,8 +132,8 @@
 				cidade: row.cidade,
 				dt_inicial: row.dt_inicial,
 				dt_final: row.dt_final,
-				status: row.status.label,
-				averbacao: row.averbacao.label,
+				status: row.status,
+				averbacao: row.averbacao,
 			}
 		})
 	}
@@ -159,7 +147,7 @@
 			>
 				<div class="flex items-center gap-14">
 					<consultas-titulo title="Consignantes" />
-					<button @click="isOpenDialog = true" v-tippy:right>
+					<button v-tippy:right>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
@@ -265,7 +253,7 @@
 						<consultas-export
 							v-tippy:top
 							:cols="parseCols()"
-							:rows="parseRows()"
+							:rows="rows"
 							filename="Consignatárias Habilitadas"
 							export-type="print"
 						>
@@ -291,15 +279,15 @@
 					<template #status="data">
 						<span
 							class="flex justify-center badge !w-[80px] h-[22px]"
-							:class="color(data.value.status.id)"
-							>{{ data.value.status.label }}</span
+							:class="color(data.value.status)"
+							>{{ data.value.status }}</span
 						>
 					</template>
 					<template #averbacao="data">
 						<span
 							class="flex justify-center badge !w-[80px] h-[22px]"
-							:class="color(data.value.averbacao.id)"
-							>{{ data.value.averbacao.label }}</span
+							:class="color(data.value.averbacao)"
+							>{{ data.value.averbacao }}</span
 						>
 					</template>
 					<template #actions="data">
@@ -334,11 +322,11 @@
 									type="button"
 									class="text-xs m-1"							
 								>
-									<icon-check v-if="data.value.status.id === 1" class="w-5 h-5 text-primary_3-table" />
+									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
 									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>{{ data.value.status.id === 1 ? data.value.status.label : data.value.status.label }}</tippy
+									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
 								>
 							</div>
 							<div>
@@ -347,11 +335,11 @@
 									type="button"
 									class="text-xs m-1"							
 								>
-									<icon-unlock v-if="data.value.averbacao.id === 1" class="w-5 h-5 text-primary_3-table" />
+									<icon-unlock v-if="data.value.averbacao === 'Liberada'" class="w-5 h-5 text-primary_3-table" />
 									<icon-lock v-else class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>{{ data.value.averbacao.id === 1 ? data.value.averbacao.label : data.value.averbacao.label }}</tippy
+									>{{ data.value.averbacao === 'Liberada' ? 'Liberar' : 'Bloquear' }}</tippy
 								>
 							</div>
 						</div>
