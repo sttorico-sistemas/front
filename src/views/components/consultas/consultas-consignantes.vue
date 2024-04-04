@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { reactive, ref } from 'vue'
+	import router from 'src/router'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
@@ -121,21 +122,6 @@
 			{ field: 'status', title: 'Status', hide: false, sort: false, },
 			{ field: 'averbacao', title: 'Averbação', hide: false, sort: false, },
 		]
-	}
-
-	const parseRows = (): Array<object> => {
-		return rows.map((row) => {
-			return {
-				id: row.id,
-				consignante: row.consignante,
-				tp_entidade: row.tp_entidade,
-				cidade: row.cidade,
-				dt_inicial: row.dt_inicial,
-				dt_final: row.dt_final,
-				status: row.status,
-				averbacao: row.averbacao,
-			}
-		})
 	}
 </script>
 <template>
@@ -296,7 +282,8 @@
 								<button
 									v-tippy:right
 									type="button"
-									class="text-xs m-1"							
+									class="text-xs m-1"
+									@click="router.push({ name: 'cadastro-consignante', params: { id: '1' } })"						
 								>
 									<icon-eye class="w-5 h-5 text-primary_3-table" />
 								</button>
