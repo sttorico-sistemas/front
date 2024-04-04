@@ -2,7 +2,7 @@
 	import { ref } from 'vue'
 
 	// Componentes
-	import ConsultasTitulo from '../consultas-titulo/consultas-titulo.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 
 	// Icons
 	import calculatorIcon from '@icons/iconCalculator2.vue'
@@ -17,7 +17,7 @@
 <template>
 	<div class="panel pb-0 mt-6">
 		<div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-3 gap-5">
-			<consultas-titulo 
+			<titulo 
 				title="Saldo Disponível da Margem"
 				info-message="Alguma mensagem aqui para tirar dúvida sobre a página" 
 			/>

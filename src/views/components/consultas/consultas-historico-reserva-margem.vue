@@ -3,8 +3,7 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
-
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 
 	// Declarações
 	const selected = reactive<{ type: string; label: string }>({
@@ -153,7 +152,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Histórico da Reserva da Margem" />
+				<titulo title="Histórico da Reserva da Margem" />
 
 				<div class="header_actions w-80 flex justify-end items-center gap-5">
 					<multiselect

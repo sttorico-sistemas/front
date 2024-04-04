@@ -4,10 +4,10 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
 
 	import ConsultasExport from './consultas-export/consultas-export.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconAdd from '@icons/iconAdd.vue'
@@ -64,7 +64,7 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex items-center gap-14">
-					<consultas-titulo title="Consignante Master" />
+					<titulo title="Consignante Master" />
 					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>

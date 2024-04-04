@@ -3,9 +3,9 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
-	import ConsultasTitulo from '../consultas/consultas-titulo/consultas-titulo.vue'
 	import ImageName from '../consultas/consultas-historico/datatable-coluna-image-name.vue'
 
 	// Icons
@@ -76,7 +76,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo
+				<titulo
 					title="Tabela das Taxas de Juros de Empréstimos Financeiros"
 					info-message="Alguma mensagem aqui para tirar dúvida sobre a página"
 				/>

@@ -3,10 +3,10 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 	import ConsultasExport from './consultas-export/consultas-export.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 	import ImageName from './consultas-historico/datatable-coluna-image-name.vue'
 
 	// Icons
@@ -126,7 +126,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Solicitações Realizadas" />
+				<titulo title="Solicitações Realizadas" />
 
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"

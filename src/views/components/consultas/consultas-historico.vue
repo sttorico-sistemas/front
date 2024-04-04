@@ -8,11 +8,11 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
 
 	import ConsultaMensalDesconto from './consultas-historico/consulta-mensal-desconto.vue'
 	import ConsultasExport from './consultas-export/consultas-export.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -132,7 +132,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Extrato Anual dos Descontos " />
+				<titulo title="Extrato Anual dos Descontos " />
 
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"

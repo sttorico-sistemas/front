@@ -5,11 +5,11 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import loadingFixed from '@components/layout/loadingFixed.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
 
 	import ConsultasExport from './consultas-export/consultas-export.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 	import ConsultaResumoMargemPrincipal from './consultas-resumo-margem/consultas-resumo-margem-principal/consultas-resumo-margem-principal.vue'
 	import ConsultaSaldoDisponivelMargem from './consultas-resumo-margem/consultas-saldo-disponivel-margem.vue'
 
@@ -80,7 +80,7 @@
 
 		<div class="panel mt-6">
 			<div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
-				<consultas-titulo 
+				<titulo 
 					title="Resumo da Margem Consignável"
 					info-message="Alguma mensagem aqui para tirar dúvida sobre a página" 
 				/>

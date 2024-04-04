@@ -6,11 +6,11 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import InputValidation from '@components/layout/inputValidation.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
 	import StepByNumber from '@components/layout/stepByNumber.vue'
 
-	import ConsultasTitulo from '../consultas/consultas-titulo/consultas-titulo.vue'
 	import SimuladorResultadoEmprestimo from './simulador-resultado-emprestimo/simulador-resultado-emprestimo.vue'
 
 	// Icons
@@ -61,7 +61,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Simulador de Empréstimos Financeiros" />
+				<titulo title="Simulador de Empréstimos Financeiros" />
 			</div>
 
 			<div class="panel mt-6">

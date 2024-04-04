@@ -7,11 +7,11 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 	import ConsultasExport from './consultas-export/consultas-export.vue'
 	import ConsultasPopper from './consultas-popper/consultas-popper.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -215,7 +215,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Resumo dos Contratos" />
+				<titulo title="Resumo dos Contratos" />
 
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"

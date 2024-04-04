@@ -7,11 +7,11 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 
 	import ConsultasDatatable from './consultas-datatable/consultas-datatable.vue'
 	import ConsultasExport from './consultas-export/consultas-export.vue'
 	import ConsultasPopper from './consultas-popper/consultas-popper.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -174,7 +174,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo
+				<titulo
 					title="Resumo da RMC - Reserva da Margem de Consignação"
 				/>
 

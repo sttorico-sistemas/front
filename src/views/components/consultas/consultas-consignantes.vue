@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 	import { reactive, ref } from 'vue'
 	import router from 'src/router'
+	import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
-	import Vue3Datatable from '@bhplugin/vue3-datatable'
+	import titulo from '@components/layout/tituloLayout.vue'
 
 	import ConsultasExport from './consultas-export/consultas-export.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -132,7 +132,7 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex items-center gap-14">
-					<consultas-titulo title="Consignantes" />
+					<titulo title="Consignantes" />
 					<button v-tippy:right>
 						<icon-add />
 					</button>

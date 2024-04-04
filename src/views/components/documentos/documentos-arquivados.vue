@@ -3,9 +3,8 @@
 
 	// Componentes
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
+	import titulo from '@components/layout/tituloLayout.vue'
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
-
-	import ConsultasTitulo from '../consultas/consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconFile from '@icons/iconFile.vue'
@@ -56,7 +55,7 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo title="Consulta Documentos Arquivados" />
+				<titulo title="Consulta Documentos Arquivados" />
 
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
