@@ -2,6 +2,8 @@
 	
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+
+	import DadosConsignante from './cadastro-dados-consignante/cadastro-dados-consignante.vue'
 	
 	// Icons
 
@@ -14,7 +16,7 @@
 	<main>
 		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
 
-    <div class="panel mt-6">Dados do Consignante</div>
+    <dados-consignante />
     <div class="panel mt-6">Contratos Sistema</div>
     <div class="panel mt-6">Lista de Gestores</div>
     <div class="panel mt-6">Lista de Averbadores</div>
