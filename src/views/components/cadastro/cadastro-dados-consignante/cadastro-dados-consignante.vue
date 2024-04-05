@@ -7,7 +7,7 @@
   import modalLayout from '@components/layout/modalLayout.vue'
 	import titulo from '@components/layout/tituloLayout.vue'
 
-  import CadastroConsignante from '../cadastro-consignante/cadastro-consignante.vue'
+  import CadastroModalConsignante from '../cadastro-modal-consignante/cadastro-modal-consignante.vue'
 	
 	// Icons
   import IconEdit from '@icons/iconEdit.vue'
@@ -180,6 +180,6 @@
       size="max-w-[834px]"
       @btn-close="isOpenDialog = false"
     >
-      <cadastro-consignante @btn-cancelar="isOpenDialog = false" />
+      <cadastro-modal-consignante @btn-cancelar="isOpenDialog = false" />
     </modal-layout>
 </template>
