@@ -13,7 +13,7 @@
   import IconEdit from '@icons/iconEdit.vue'
 
 	// Declarações
-  const isOpenDialog = ref<boolean>(true)
+  const isOpenDialog = ref<boolean>(false)
 
 	// Script
 
