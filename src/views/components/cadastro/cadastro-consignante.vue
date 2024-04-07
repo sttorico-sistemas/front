@@ -4,6 +4,10 @@
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 
 	import DadosConsignante from './cadastro-dados-consignante/cadastro-dados-consignante.vue'
+	import ContratoSistema from './cadastro-contrato-sistema/cadastro-contrato-sistema.vue'
+	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
+	import ListaAverbadores from './cadastro-lista-averbadores/cadastro-lista-averbadores.vue'
+	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 	
 	// Icons
 
@@ -17,11 +21,11 @@
 		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
 
     <dados-consignante />
-    <div class="panel mt-6">Contratos Sistema</div>
-    <div class="panel mt-6">Lista de Gestores</div>
-    <div class="panel mt-6">Lista de Averbadores</div>
+    <contrato-sistema />
+    <lista-gestores />
+    <lista-averbadores />
     <div class="panel mt-6">Consignatárias Habilitadas</div>
-    <div class="panel mt-6">Logs de Alterações</div>
+    <logs-alteracao />
 	</main>
 </template>
 <style lang="scss" scoped></style>
