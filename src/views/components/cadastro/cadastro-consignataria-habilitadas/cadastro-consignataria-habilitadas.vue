@@ -10,18 +10,20 @@
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
-	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
-	import IconClear from '@icons/iconClear.vue'
-	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
 	import IconEye from '@icons/iconEye.vue'
-	import IconMensalidadeServico from '@icons/services/iconMensalidadeServicos.vue'
-	import IconPlanoSaudeServico from '@icons/services/iconPlanoSaudeServico.vue'
+	import IconClear from '@icons/iconClear.vue'
 	import IconPrinter from '@icons/iconPrinter.vue'
-	import IconSegurosServico from '@icons/services/iconSegurosServico.vue'
   import IconCheck from '@icons/iconCheck.vue'
 	import IconUnlock from '@icons/iconUnlock.vue'
 	import IconBlock from '@icons/iconBlock.vue'
 	import IconLock from '@icons/iconLock.vue'
+
+	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
+	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
+	import IconMensalidadeServico from '@icons/services/iconMensalidadeServicos.vue'
+	import IconPlanoSaudeServico from '@icons/services/iconPlanoSaudeServico.vue'
+	import IconSegurosServico from '@icons/services/iconSegurosServico.vue'
+
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
@@ -78,11 +80,15 @@
 					icone: 'emprestimo',
 				},
 				{
-					nome: 'Cartão de Crédito',
-					icone: 'cartao-credito',
+					nome: 'Mensalidade',
+					icone: 'mensalidades',
 				},
 				{
-					nome: 'Seguros',
+					nome: 'Plano de Saúde',
+					icone: 'plano-saude',
+				},
+        {
+					nome: 'Seguro',
 					icone: 'seguros',
 				},
 			],
