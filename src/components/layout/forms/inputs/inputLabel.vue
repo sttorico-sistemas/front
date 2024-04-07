@@ -14,7 +14,7 @@
     },
     classWrapper: {
       type: String,
-      default: 'w-full'
+      default: 'w-auto'
     },
     classLabel: {
       type: String,
