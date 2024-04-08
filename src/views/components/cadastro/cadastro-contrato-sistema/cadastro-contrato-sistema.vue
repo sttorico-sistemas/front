@@ -103,7 +103,7 @@
 
 		<modal-layout
 			:is-open="isOpenDialog"
-			title="Extrato Mensal dos Descontos"
+			title="Cadastro Contrato"
 			size="max-w-[490px]"
 			@btn-close="isOpenDialog = false"
 		>

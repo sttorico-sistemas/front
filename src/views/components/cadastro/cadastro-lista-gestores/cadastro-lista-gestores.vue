@@ -6,6 +6,8 @@
 	import titulo from '@components/layout/tituloLayout.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
 
+	import CadastroModalGestor from '../cadastro-modal-gestor/cadastro-modal-gestor.vue'
+
 	// Icons
 	import IconAdd from '@icons/iconAdd.vue'
 	import IconEdit from '@icons/iconEdit.vue'
@@ -52,7 +54,7 @@
 			>
 				<div class="flex items-center gap-14">
 					<titulo title="Lista de Gestores" />
-					<button v-tippy:right>
+					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
@@ -84,13 +86,12 @@
 
 		<modal-layout
 			:is-open="isOpenDialog"
-			title="Extrato Mensal dos Descontos"
-			size="max-w-full"
-			btn-close
+			title="Cadastro Gestores do Consignante"
+			size="max-w-[526px]"
 			@btn-close="isOpenDialog = false"
 		>
 			<!-- Datatable-->
-
+			<cadastro-modal-gestor @btn-cancelar="isOpenDialog = false" />
 			<!-- Datatable-->
 		</modal-layout>
 	</main>

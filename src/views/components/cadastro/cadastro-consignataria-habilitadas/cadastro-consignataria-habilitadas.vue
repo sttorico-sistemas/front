@@ -8,6 +8,8 @@
 	import modalLayout from '@components/layout/modalLayout.vue'
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
+	import cadastroModalHabilitarConsignatarias from '../cadastro-modal-habilitar-consignatarias/cadastro-modal-habilitar-consignatarias.vue'
+
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
 	import IconEye from '@icons/iconEye.vue'
@@ -26,7 +28,7 @@
 
 
 	// Declarações
-	const isOpenDialog = ref<boolean>(false)
+	const isOpenDialog = ref<boolean>(true)
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
@@ -189,7 +191,7 @@
 			>
         <div class="flex items-center gap-14">
 					<titulo title="Consignatárias Habilitadas" />
-					<button v-tippy:right>
+					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
@@ -374,14 +376,13 @@
 		</div>
 
 		<modal-layout
-			title="Pontos de Atendimentos"
+			title="Habilitar Consignatárias"
 			:is-open="isOpenDialog"
-			size="max-w-full"
-			btn-close
+			size="max-w-[490px]"
 			@btn-close="isOpenDialog = false"
 		>
 			<!-- Datatable-->
-
+			<cadastro-modal-habilitar-consignatarias @btn-cancelar="isOpenDialog = false" />
 			<!-- Datatable-->
 		</modal-layout>
 	</main>
