@@ -28,7 +28,7 @@
 
 
 	// Declarações
-	const isOpenDialog = ref<boolean>(true)
+	const isOpenDialog = ref<boolean>(false)
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
