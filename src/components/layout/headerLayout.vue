@@ -139,7 +139,7 @@
 								</li>
 								<li>
 									<router-link
-										:to="{ name: 'consultas-consignataria' }"
+										:to="{ name: 'consultas-consignataria-servidor' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Consignatária
@@ -201,6 +201,16 @@
 										Consignantes
 									</router-link>
 								</li>
+								<hr class="mx-2">
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignataria-admin' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignatária Admin
+									</router-link>
+								</li>
+
 							</ul>
 						</div>
 					</button>
