@@ -14,6 +14,8 @@
 	import ConsultasConsigantesMaster from '../components/consultas/consultas-consignante-master.vue'
 	import ConsultasConsigantes from '../components/consultas/consultas-consignantes.vue'
 
+	import ConsultasConsignatariaAdmin from '../components/consultas/consultas-consignataria-admin.vue'
+
 	const route = useRoute()
 
 	const currentComponent = shallowRef<any>(null)
@@ -29,8 +31,11 @@
 			case 'consultas-historico':
 				currentComponent.value = ConsultasHistorico
 				break
-			case 'consultas-consignataria':
+			case 'consultas-consignataria-servidor':
 				currentComponent.value = ConsultasConsignataria
+				break
+			case 'consultas-consignataria-admin':
+				currentComponent.value = ConsultasConsignatariaAdmin
 				break
 			case 'consultas-atualizacao-margens':
 				currentComponent.value = consultasAtualizacaoMargens
