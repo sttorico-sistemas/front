@@ -34,8 +34,13 @@ const router = createRouter({
 					component: Consultas,
 				},
 				{
-					path: 'consignataria',
-					name: 'consultas-consignataria',
+					path: 'consignataria-servidor',
+					name: 'consultas-consignataria-servidor',
+					component: Consultas,
+				},
+				{
+					path: 'consignataria-admin',
+					name: 'consultas-consignataria-admin',
 					component: Consultas,
 				},
 				{
@@ -93,7 +98,7 @@ const router = createRouter({
 					path: 'emprestimos',
 					name: 'simulador-emprestimos',
 					component: Simulador,
-				},				
+				},
 			],
 		},
 		{
