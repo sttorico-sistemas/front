@@ -153,16 +153,33 @@
 					<input id="name" type="text" class="form-input" />
 				</div>
 				<div class="flex justify-center gap-12 mt-8">
-					<button 
-						type="button" 
-						class="w-24 text-xs btn border border-primary_3-table shadow-none text-primary_3-table" 
+					<button
+						type="button"
+						class="w-24 text-xs btn border border-primary_3-table shadow-none text-primary_3-table"
 						@click="isOpenDialog = false"
 					>
 						Cancelar
 					</button>
 					<button type="button" class="w-24 text-xs btn bg-primary_3-table shadow-none text-white">Salvar</button>
 				</div>
-			</form> 
+			</form>
 		</modal-layout>
 	</main>
 </template>
+<style lang="scss" scoped>
+	.header_actions:deep(.custom-multiselect) {
+		.multiselect__placeholder {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			font-weight: 600;
+			white-space: nowrap;
+			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
+		}
+	}
+</style>

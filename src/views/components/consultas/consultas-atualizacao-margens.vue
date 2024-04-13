@@ -215,5 +215,11 @@
 			white-space: nowrap;
 			color: rgb(14 23 38);
 		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
+		}
 	}
 </style>

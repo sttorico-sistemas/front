@@ -35,7 +35,6 @@
 	})
 	const consignataria = ref<string>('')
 	const instituicao = ref<string>('')
-	const cnpj = ref<string>('')
 	const servico = ref<string>('')
 	const status = ref<string>('')
 	const averbacao = ref<string>('')
@@ -95,7 +94,6 @@
 	const clearFilter = () => {
 		consignataria.value = ''
 		instituicao.value = ''
-		cnpj.value = ''
 		servico.value = ''
 		status.value = ''
 		averbacao.value = ''
@@ -125,9 +123,6 @@
 
 		if (selected.type === 'tipo_instituicao')
 			return rows.filter((item: any) => item.tipo_instituicao === value)
-
-		if (selected.type === 'cnpj')
-			return rows.filter((item: any) => item.cnpj === value)
 
 		if (selected.type === 'servico') {
 			return rows.filter((item: any) => {
@@ -241,19 +236,6 @@
 						select-label=""
 						deselect-label=""
 						@select="(selected.label = $event), (selected.type = 'tipo_instituicao')"
-					/>
-					<multiselect
-						v-model="cnpj"
-						:options="['11.845.879/0001-01', '14.333.879/0001-18']"
-						class="custom-multiselect max-w-[230px]"
-						placeholder="CNPJ"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'cnpj')"
 					/>
 					<multiselect
 						v-model="servico"
@@ -427,6 +409,12 @@
 			font-weight: 600;
 			white-space: nowrap;
 			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
 		}
 	}
 </style>

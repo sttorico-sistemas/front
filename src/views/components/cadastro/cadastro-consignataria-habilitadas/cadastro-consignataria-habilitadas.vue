@@ -335,7 +335,7 @@
 								<button
 									v-tippy:right
 									type="button"
-									class="text-xs m-1"															
+									class="text-xs m-1"
 								>
 									<icon-eye class="w-5 h-5 text-primary_3-table" />
 								</button>
@@ -347,7 +347,7 @@
 								<button
 									v-tippy:right
 									type="button"
-									class="text-xs m-1"							
+									class="text-xs m-1"
 								>
 									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
 									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
@@ -360,7 +360,7 @@
 								<button
 									v-tippy:right
 									type="button"
-									class="text-xs m-1"							
+									class="text-xs m-1"
 								>
 									<icon-unlock v-if="data.value.averbacao === 'Liberada'" class="w-5 h-5 text-primary_3-table" />
 									<icon-lock v-else class="w-5 h-5 text-primary_3-table" />
@@ -395,6 +395,12 @@
 			font-weight: 600;
 			white-space: nowrap;
 			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
 		}
 	}
 </style>

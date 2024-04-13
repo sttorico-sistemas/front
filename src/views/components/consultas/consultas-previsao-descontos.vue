@@ -27,7 +27,7 @@
 		{ field: 'valor_enviar', title: 'Vlr à Enviar', hide: false },
 		{ field: 'saldo_desconto', title: 'Saldo Desconto', hide: false },
 		{ field: 'observacao', title: 'Observação', hide: false },
-		
+
 	])
 	const rows = reactive([
 		{
@@ -142,6 +142,12 @@
 			font-weight: 600;
 			white-space: nowrap;
 			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
 		}
 	}
 
