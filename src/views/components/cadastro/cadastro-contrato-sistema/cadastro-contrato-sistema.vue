@@ -2,6 +2,22 @@
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 	import { reactive, ref } from 'vue'
 
+	// props
+	const props = defineProps({
+		cols: {
+			type: Array as PropType<Object>,
+			required: true,
+		},
+		rows: {
+			type: Array as PropType<Object>,
+			required: true,
+		},
+		pagination: {
+			type: Boolean,
+			default: false,
+		},
+	})
+
 	// Componentes
 	import titulo from '@components/layout/tituloLayout.vue'
 	import modalLayout from '@components/layout/modalLayout.vue'
@@ -16,33 +32,6 @@
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
-	const cols = reactive([
-		{ field: 'cod', title: 'Cód. Contrato', hide: false, sort: false, },
-		{ field: 'tipo_contrato', title: 'Tipo Contrato', hide: false, sort: false, },
-		{ field: 'vigencia', title: 'Vigência', hide: false, sort: false, },
-		{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: false, },
-		{ field: 'data_final', title: 'Data Final', hide: false, sort: false, },
-		{ field: 'status', title: 'Status', hide: false, sort: false, },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false, },
-	])
-	const rows = reactive([
-		{
-      cod: '55622',
-      tipo_contrato: 'Contrato Comodato',
-      vigencia: '48',
-      data_inicial: '23/03/2018',
-      data_final: '23/03/2023',
-      status: 'Ativo',
-    },
-    {
-      cod: '55632',
-      tipo_contrato: 'Acordo de Cooperação Técnica',
-      vigencia: '60',
-      data_inicial: '23/03/2018',
-      data_final: '23/03/2023',
-      status: 'Inativo',
-    },
-	])
 
   // Scripts
   const color = (value: string) => {
@@ -70,18 +59,21 @@
 						>Cadastre um novo Contrato</tippy
 					>
 				</div>
+				<div class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto">
+					<slot name="filters" />
+				</div>
 			</div>
 
 			<div class="datatable">
 				<vue3-datatable
-					:rows="rows"
-					:columns="cols"
-					:total-rows="rows.length"
+					:rows="props.rows"
+					:columns="props.cols"
+					:total-rows="props.rows.length"
 					:sortable="true"
 					skin="whitespace-nowrap bh-table-striped mb-5"
 					no-data-content="Nenhum dado foi encontrado"
 					pagination-info="Mostrando {0} a {1} de {2} entradas"
-          :pagination="false"
+          :pagination="props.pagination"
 				>
 					<template #status="data">
 						<span
@@ -113,3 +105,20 @@
 		</modal-layout>
 	</main>
 </template>
+<style lang="scss" scoped>
+	.header_actions:deep(.custom-multiselect) {
+		.multiselect__placeholder {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			font-weight: 600;
+			white-space: nowrap;
+			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
+		}
+	}
+</style>
