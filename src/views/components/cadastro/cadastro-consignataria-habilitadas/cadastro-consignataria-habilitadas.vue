@@ -1,6 +1,22 @@
 <script lang="ts" setup>
 	import { reactive, ref } from 'vue'
 
+	// props
+	const props = defineProps({
+		cols: {
+			type: Array as PropType<Object>,
+			required: true,
+		},
+		rows: {
+			type: Array as PropType<Object>,
+			required: true,
+		},
+		pagination: {
+			type: Boolean,
+			default: false,
+		},
+	})
+
 	// Componentes
 	import titulo from '@components/layout/tituloLayout.vue'
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
@@ -26,7 +42,6 @@
 	import IconPlanoSaudeServico from '@icons/services/iconPlanoSaudeServico.vue'
 	import IconSegurosServico from '@icons/services/iconSegurosServico.vue'
 
-
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
 	const selected = reactive<{ type: string; label: string }>({
@@ -37,69 +52,6 @@
 	const status = ref<string>('')
 	const instituicao = ref<string>('')
 	const averbacao = ref<string>('')
-	const cols = reactive([
-		{ field: 'id', title: '#', hide: false, sort: false },
-		{ field: 'consignataria', title: 'Consignatária', hide: false },
-		{ field: 'tipo_instituicao', title: 'Tipo Instituição', hide: false },
-		{ field: 'tipo_servicos', title: 'Tipo de Serviços', hide: false },
-		{ field: 'data_habilitacao', title: 'Data Habilitação', hide: false },
-		{ field: 'data_renovação', title: 'Data Renovação', hide: false },
-		{ field: 'status', title: 'Status', hide: false },
-		{ field: 'averbacao', title: 'Averbação', hide: false },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false },
-	])
-	const rows = reactive([
-		{
-      id: 1,
-			consignataria: {
-				nome: 'Banco do Brasil',
-				tipo: 'Instituição Financeira',
-				icone: '',
-			},
-			tipo_instituicao: 'Instituição Financeira',
-			tipo_servicos: [
-				{
-					nome: 'Emprestimo',
-					icone: 'emprestimo',
-				},
-			],
-      data_habilitacao: '23/03/2020',
-      data_renovação: '23/03/2021',
-			status: 'Inativo',
-      averbacao: 'Bloqueada',
-		},
-		{
-      id: 2,
-			consignataria: {
-				nome: 'Banco Daycoval',
-				tipo: 'Associação',
-				icone: '',
-			},
-			tipo_instituicao: 'Cooperativa de Crédito',
-			tipo_servicos: [
-				{
-					nome: 'Emprestimo',
-					icone: 'emprestimo',
-				},
-				{
-					nome: 'Mensalidade',
-					icone: 'mensalidades',
-				},
-				{
-					nome: 'Plano de Saúde',
-					icone: 'plano-saude',
-				},
-        {
-					nome: 'Seguro',
-					icone: 'seguros',
-				},
-			],
-			data_habilitacao: '15/10/2021',
-      data_renovação: '15/10/2022',
-			status: 'Ativo',
-      averbacao: 'Liberada',
-		},
-	])
 
 	// Script
 	const clearFilter = () => {
@@ -126,22 +78,22 @@
 	}
 
 	const filtered = (value: string = '') => {
-		if (value === '') return rows
+		if (value === '') return props.rows
 
     if (selected.type === 'instituicao')
-			return rows.filter((item: any) => item.tipo_instituicao === value)
+			return props.rows.filter((item: any) => item.tipo_instituicao === value)
 
 		if (selected.type === 'servico') {
-			return rows.filter((item: any) => {
+			return props.rows.filter((item: any) => {
 				return item.tipo_servicos.some((servico: any) => servico.nome === value)
 			})
 		}
 
 		if (selected.type === 'status')
-			return rows.filter((item: any) => item.status === value)
+			return props.rows.filter((item: any) => item.status === value)
 
     if (selected.type === 'averbacao')
-			return rows.filter((item: any) => item.averbacao === value)
+			return props.rows.filter((item: any) => item.averbacao === value)
 	}
 
 	const iconeService = (value: string) => {
@@ -168,11 +120,12 @@
 	}
 
 	const parseRows = (): Array<object> => {
-		return rows.map((row) => {
+		return props.rows.map((row) => {
 			const services = row.tipo_servicos.map((servico) => servico.nome)
 
 			return {
-				consignataria: row.consignataria.nome,
+				consignante: row?.consignante,
+				consignataria: row?.consignataria?.nome,
 				tipo_instituicao: row.tipo_instituicao,
 				tipo_servicos: `${services}`,
         data_habilitacao: row.data_habilitacao,
@@ -205,7 +158,7 @@
           <multiselect
 						v-model="instituicao"
 						:options="['Instituição Financeira', 'Cooperativa de Crédito']"
-						class="custom-multiselect max-w-[200px]"
+						class="custom-multiselect min-w-[200px]"
 						placeholder="Tipo de Instituição"
 						:searchable="false"
 						:preselect-first="false"
@@ -218,7 +171,7 @@
 					<multiselect
 						v-model="servico"
 						:options="['Emprestimo', 'Cartão de Crédito', 'Seguros']"
-						class="custom-multiselect max-w-[200px]"
+						class="custom-multiselect min-w-[200px]"
 						placeholder="Tipo de serviço"
 						:searchable="false"
 						:preselect-first="false"
@@ -231,7 +184,7 @@
 					<multiselect
 						v-model="status"
 						:options="['Ativo', 'Inativo']"
-						class="custom-multiselect max-w-[122px]"
+						class="custom-multiselect min-w-[122px]"
 						placeholder="Status"
 						:searchable="false"
 						:preselect-first="false"
@@ -244,7 +197,7 @@
           <multiselect
 						v-model="averbacao"
 						:options="['Bloqueada', 'Liberada']"
-						class="custom-multiselect max-w-[122px]"
+						class="custom-multiselect min-w-[122px]"
 						placeholder="Averbação"
 						:searchable="false"
 						:preselect-first="false"
@@ -287,7 +240,7 @@
 			<div class="datatable">
 				<vue3-datatable
 					:rows="filtered(selected.label)"
-					:columns="cols"
+					:columns="props.cols"
 					:total-rows="filtered(selected.label)?.length"
 					:sortable="true"
 					skin="whitespace-nowrap bh-table-striped"
@@ -299,6 +252,9 @@
 							image="https://placehold.co/30x30"
 							:name="data.value.consignataria.nome"
 						/>
+					</template>
+					<template #consignante="data">
+						{{ data.value.consignante }}
 					</template>
 					<template #tipo_servicos="data">
 						<div class="flex">
