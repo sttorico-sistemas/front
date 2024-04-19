@@ -68,6 +68,69 @@
       email: 'gabinete@prefeitura.sc.gov.br',
     },
 	])
+	const colsConsignatesHabilitadas = reactive([
+		{ field: 'id', title: '#', hide: false, sort: false },
+		{ field: 'consignataria', title: 'Consignatária', hide: false },
+		{ field: 'tipo_instituicao', title: 'Tipo Instituição', hide: false },
+		{ field: 'tipo_servicos', title: 'Tipo de Serviços', hide: false },
+		{ field: 'data_habilitacao', title: 'Data Habilitação', hide: false },
+		{ field: 'data_renovação', title: 'Data Renovação', hide: false },
+		{ field: 'status', title: 'Status', hide: false },
+		{ field: 'averbacao', title: 'Averbação', hide: false },
+		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+	])
+	const rowsConsignatesHabilitadas = reactive([
+		{
+      id: 1,
+			consignataria: {
+				nome: 'Banco do Brasil',
+				tipo: 'Instituição Financeira',
+				icone: '',
+			},
+			tipo_instituicao: 'Instituição Financeira',
+			tipo_servicos: [
+				{
+					nome: 'Emprestimo',
+					icone: 'emprestimo',
+				},
+			],
+      data_habilitacao: '23/03/2020',
+      data_renovação: '23/03/2021',
+			status: 'Inativo',
+      averbacao: 'Bloqueada',
+		},
+		{
+      id: 2,
+			consignataria: {
+				nome: 'Banco Daycoval',
+				tipo: 'Associação',
+				icone: '',
+			},
+			tipo_instituicao: 'Cooperativa de Crédito',
+			tipo_servicos: [
+				{
+					nome: 'Emprestimo',
+					icone: 'emprestimo',
+				},
+				{
+					nome: 'Mensalidade',
+					icone: 'mensalidades',
+				},
+				{
+					nome: 'Plano de Saúde',
+					icone: 'plano-saude',
+				},
+        {
+					nome: 'Seguro',
+					icone: 'seguros',
+				},
+			],
+			data_habilitacao: '15/10/2021',
+      data_renovação: '15/10/2022',
+			status: 'Ativo',
+      averbacao: 'Liberada',
+		},
+	])
 
 	// Script
 
@@ -86,7 +149,10 @@
 			:rows="rowsGestores"
 		/>
     <lista-averbadores />
-    <consignataria-habilitadas />
+    <consignataria-habilitadas
+			:cols="colsConsignatesHabilitadas"
+			:rows="rowsConsignatesHabilitadas"
+		/>
     <logs-alteracao />
 	</main>
 </template>

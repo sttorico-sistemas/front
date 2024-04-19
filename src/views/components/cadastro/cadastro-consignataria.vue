@@ -7,7 +7,6 @@
 	import ConsignatariaHabilitadas from './cadastro-consignataria-habilitadas/cadastro-consignataria-habilitadas.vue'
 	import ContratosSistema from './cadastro-contrato-sistema/cadastro-contrato-sistema.vue'
 	import DadosConsignataria from './cadastro-dados-consignataria/cadastro-dados-consignataria.vue'
-	import ListaAverbadores from './cadastro-lista-averbadores/cadastro-lista-averbadores.vue'
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 
@@ -83,6 +82,61 @@
       celular: '(47) 9991-4455',
       email: 'gabinete@prefeitura.sc.gov.br',
     },
+	])
+	const colsConsignatesHabilitadas = reactive([
+		{ field: 'id', title: '#', hide: false, sort: false },
+		{ field: 'consignante', title: 'Consignante', hide: false },
+		{ field: 'tipo_instituicao', title: 'Instituição', hide: false },
+		{ field: 'tipo_servicos', title: 'Serviços', hide: false },
+		{ field: 'data_habilitacao', title: 'Data Habilitação', hide: false },
+		{ field: 'data_renovação', title: 'Data Renovação', hide: false },
+		{ field: 'status', title: 'Status', hide: false },
+		{ field: 'averbacao', title: 'Averbação', hide: false },
+		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+	])
+	const rowsConsignatesHabilitadas = reactive([
+		{
+      id: 1,
+			consignante: 'Prefeitura de Florianópolis',
+			tipo_instituicao: 'Instituição Financeira',
+			tipo_servicos: [
+				{
+					nome: 'Emprestimo',
+					icone: 'emprestimo',
+				},
+			],
+      data_habilitacao: '23/03/2020',
+      data_renovação: '23/03/2021',
+			status: 'Inativo',
+      averbacao: 'Bloqueada',
+		},
+		{
+      id: 2,
+			consignante: 'Governo do Mato Grosso',
+			tipo_instituicao: 'Cooperativa de Crédito',
+			tipo_servicos: [
+				{
+					nome: 'Emprestimo',
+					icone: 'emprestimo',
+				},
+				{
+					nome: 'Mensalidade',
+					icone: 'mensalidades',
+				},
+				{
+					nome: 'Plano de Saúde',
+					icone: 'plano-saude',
+				},
+        {
+					nome: 'Seguro',
+					icone: 'seguros',
+				},
+			],
+			data_habilitacao: '15/10/2021',
+      data_renovação: '15/10/2022',
+			status: 'Ativo',
+      averbacao: 'Liberada',
+		},
 	])
 
 	// Script
@@ -212,8 +266,10 @@
 			:rows="rowsGestores"
 			:pagination="true"
 		/>
-    <lista-averbadores />
-    <consignataria-habilitadas />
+    <consignataria-habilitadas
+			:cols="colsConsignatesHabilitadas"
+			:rows="rowsConsignatesHabilitadas"
+		/>
     <logs-alteracao />
 	</main>
 </template>
