@@ -119,13 +119,32 @@
 		}
 	}
 
+	const parseCols = (): Array<object> => {
+		return [
+			{ field: 'id', title: '#', hide: false, sort: false },
+			{ field: 'consignante', title: 'Consignante', hide: false },
+			{ field: 'tipo_instituicao', title: 'Instituição', hide: false },
+			{ field: 'tipo_servicos', title: 'Serviços', hide: false },
+			{ field: 'data_habilitacao', title: 'Data Habilitação', hide: false },
+			{ field: 'data_renovação', title: 'Data Renovação', hide: false },
+			{ field: 'status', title: 'Status', hide: false },
+			{ field: 'averbacao', title: 'Averbação', hide: false },
+		]
+	}
+
 	const parseRows = (): Array<object> => {
 		return props.rows.map((row) => {
 			const services = row.tipo_servicos.map((servico) => servico.nome)
 
+			let consignanteOuConsignataria = {}
+			if (row.consignante !== undefined)
+				consignanteOuConsignataria = { consignante: row.consignante }
+			else if (row.consignataria.nome !== undefined)
+				consignanteOuConsignataria = { consignataria: row.consignataria.nome }
+
 			return {
-				consignante: row?.consignante,
-				consignataria: row?.consignataria?.nome,
+				id: row.id,
+				...consignanteOuConsignataria,
 				tipo_instituicao: row.tipo_instituicao,
 				tipo_servicos: `${services}`,
         data_habilitacao: row.data_habilitacao,
@@ -223,7 +242,7 @@
 					<div>
 						<consultas-export
 							v-tippy:top
-							:cols="cols"
+							:cols="parseCols()"
 							:rows="parseRows()"
 							filename="Consignatárias Habilitadas"
 							export-type="print"
