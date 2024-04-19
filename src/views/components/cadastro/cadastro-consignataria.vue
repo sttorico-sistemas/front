@@ -54,6 +54,36 @@
       status: 'Inativo',
     },
 	])
+	const colsGestores = reactive([
+		{ field: 'id', title: '#', hide: true, sort: true, },
+		{ field: 'gestor', title: 'Gestores', hide: false, sort: true, },
+		{ field: 'atribuicoes', title: 'Atribuições', hide: false, sort: true, },
+		{ field: 'cargo', title: 'Cargo', hide: false, sort: true, },
+		{ field: 'telefone', title: 'Telefone', hide: false, sort: true, },
+		{ field: 'celular', title: 'Celular', hide: false, sort: true, },
+		{ field: 'email', title: 'E-mail', hide: false, sort: true, },
+		{ field: 'actions', title: 'Ações', hide: false, sort: false, },
+	])
+	const rowsGestores = reactive([
+		{
+			id: 1,
+      gestor: 'João Carlos de Oliveira Carvalho',
+			atribuicoes: 'Contratos',
+      cargo: 'Secretário de Administração e Finanças',
+      telefone: '(47) 3322-4455',
+      celular: '(47) 9991-4455',
+      email: 'financas@prefeitura.sc.gov.br',
+    },
+    {
+			id: 2,
+      gestor: 'Mário José da Silva Chavier',
+			atribuicoes: 'Pontos de Vendas',
+      cargo: 'Prefeito Municipal',
+      telefone: '(47) 3322-4455',
+      celular: '(47) 9991-4455',
+      email: 'gabinete@prefeitura.sc.gov.br',
+    },
+	])
 
 	// Script
 	const filtered = (value: string = '') => {
@@ -177,7 +207,11 @@
 				</div>
 			</template>
 		</contratos-sistema>
-    <lista-gestores />
+    <lista-gestores
+			:cols="colsGestores"
+			:rows="rowsGestores"
+			:pagination="true"
+		/>
     <lista-averbadores />
     <consignataria-habilitadas />
     <logs-alteracao />
