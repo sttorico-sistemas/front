@@ -5,6 +5,8 @@
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 
 	import ConsignatariaHabilitadas from './cadastro-consignataria-habilitadas/cadastro-consignataria-habilitadas.vue'
+	import BackOffice from './cadastro-backoffice/cadastro-backoffice.vue'
+	import PontoVenda from './cadastro-ponto-venda/cadastro-ponto-venda.vue'
 	import ContratosSistema from './cadastro-contrato-sistema/cadastro-contrato-sistema.vue'
 	import DadosConsignataria from './cadastro-dados-consignataria/cadastro-dados-consignataria.vue'
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
@@ -138,6 +140,58 @@
       averbacao: 'Liberada',
 		},
 	])
+	const colsPontoVenda = reactive([
+		{ field: 'ponto_venda', title: 'Ponto de Venda', hide: false, sort: false },
+		{ field: 'pdv', title: 'Tipo PDV', hide: false },
+		{ field: 'cidade', title: 'Cidade', hide: false },
+		{ field: 'status', title: 'Status', hide: false },
+		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+	])
+	const rowsPontoVenda = reactive([
+		{
+      id: 1,
+      ponto_venda: 'Agência Centro Florianópolis',
+      pdv: 'Agência',
+      cidade: 'Brasília - DF',
+			status: 'Inativo',
+		},
+		{
+      id: 2,
+			ponto_venda: 'PAB - Prefeitura Florianópolis',
+      pdv: 'PAB',
+      cidade: 'Florianópolis - SC',
+			status: 'Ativo',
+		},
+	])
+	const colsOperadores = reactive([
+		{ field: 'operador', title: 'Operador', hide: false, sort: false },
+		{ field: 'perfil', title: 'Perfil', hide: false, sort: false },
+		{ field: 'ponto_venda', title: 'Ponto de Venda', hide: false, sort: false },
+		{ field: 'pdv', title: 'Tipo PDV', hide: false },
+		{ field: 'cidade', title: 'Cidade', hide: false },
+		{ field: 'status', title: 'Status', hide: false },
+		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+	])
+	const rowsOperadores = reactive([
+		{
+      id: 1,
+			operador: 'João da Silva',
+			perfil: 'Vendedor',
+      ponto_venda: 'Agência Centro Florianópolis',
+      pdv: 'Agência',
+      cidade: 'Brasília - DF',
+			status: 'Inativo',
+		},
+		{
+      id: 2,
+			operador: 'Mario Alves Cabral',
+			perfil: 'Vendedor',
+			ponto_venda: 'PAB - Prefeitura Florianópolis',
+      pdv: 'PAB',
+      cidade: 'Florianópolis - SC',
+			status: 'Ativo',
+		},
+	])
 
 	// Script
 	const filtered = (value: string = '') => {
@@ -265,6 +319,16 @@
 			:cols="colsGestores"
 			:rows="rowsGestores"
 			:pagination="true"
+		/>
+		<back-office />
+		<ponto-venda
+			:cols="colsPontoVenda"
+			:rows="rowsPontoVenda"
+		/>
+		<ponto-venda
+			:cols="colsOperadores"
+			:rows="rowsOperadores"
+			title="Operadores"
 		/>
     <consignataria-habilitadas
 			:cols="colsConsignatesHabilitadas"
