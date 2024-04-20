@@ -100,7 +100,10 @@
 			@btn-close="isOpenDialog = false"
 		>
 			<!-- Datatable-->
-			<cadastro-modal-contrato @btn-cancelar="isOpenDialog = false" />
+			<cadastro-modal-contrato
+				type-screen="consignataria"
+				@btn-cancelar="isOpenDialog = false"
+			/>
 			<!-- Datatable-->
 		</modal-layout>
 	</main>
