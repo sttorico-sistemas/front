@@ -329,17 +329,19 @@
 		<ponto-venda
 			:cols="colsPontoVenda"
 			:rows="rowsPontoVenda"
+			title="Ponto de Venda"
 		/>
 		<ponto-venda
 			:cols="colsOperadores"
 			:rows="rowsOperadores"
 			title="Operadores"
+			:btn-add="false"
 		/>
     <consignataria-habilitadas
 			:cols="colsConsignatesHabilitadas"
 			:rows="rowsConsignatesHabilitadas"
 			title="Consignantes Habilitados"
-			type="consignataria"
+			type-screen="consignataria"
 		/>
     <logs-alteracao />
 
