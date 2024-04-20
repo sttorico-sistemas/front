@@ -15,6 +15,14 @@
 			type: Boolean,
 			default: false,
 		},
+		title: {
+			type: String,
+			default: '',
+		},
+		type: {
+			type: String,
+			default: 'consignante',
+		},
 	})
 
 	// Componentes
@@ -35,6 +43,8 @@
 	import IconUnlock from '@icons/iconUnlock.vue'
 	import IconBlock from '@icons/iconBlock.vue'
 	import IconLock from '@icons/iconLock.vue'
+	import IconShieldCheck from '@icons/iconShieldCheck.vue'
+	import IconShieldUser from '@icons/iconShieldUser.vue'
 
 	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
 	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
@@ -162,7 +172,7 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
         <div class="flex items-center gap-14">
-					<titulo title="Consignatárias Habilitadas" />
+					<titulo :title="props.title" />
 					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>
@@ -318,7 +328,7 @@
 									>Ver Consignatária</tippy
 								>
 							</div>
-							<div>
+							<div v-if="props.type === 'consignante'">
 								<button
 									v-tippy:right
 									type="button"
@@ -331,7 +341,7 @@
 									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
 								>
 							</div>
-							<div>
+							<div v-if="props.type === 'consignante'">
 								<button
 									v-tippy:right
 									type="button"
@@ -342,6 +352,30 @@
 								</button>
 								<tippy target="right" placement="right"
 									>{{ data.value.averbacao === 'Liberada' ? 'Liberar' : 'Bloquear' }}</tippy
+								>
+							</div>
+							<div v-if="props.type === 'consignataria'">
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-shield-check class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Backoffice</tippy
+								>
+							</div>
+							<div v-if="props.type === 'consignataria'">
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-shield-user class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Ponto de venda</tippy
 								>
 							</div>
 						</div>
