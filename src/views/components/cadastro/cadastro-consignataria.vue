@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { ref, reactive } from 'vue'
+	import VueCollapsible from 'vue-height-collapsible/vue3'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
@@ -14,11 +15,15 @@
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
+	import IconCaretDown from '@icons/iconCaretDown.vue'
 
 	// Declarações
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
+	})
+	const accordians = reactive({
+		backoffice: false
 	})
 	const contrato = ref<string>('')
 	const consignante = ref<string>('')
@@ -337,5 +342,24 @@
 			type="consignataria"
 		/>
     <logs-alteracao />
+
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg"
+				@click="accordians.backoffice === true ? (accordians.backoffice = false) : (accordians.backoffice = true)"
+			>
+				Backoffice Teste
+				<div
+					:class="{ 'rotate-180': accordians.backoffice === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.backoffice === true">
+				<back-office />
+			</vue-collapsible>
+		</div>
 	</main>
 </template>
