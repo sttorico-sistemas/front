@@ -6,6 +6,10 @@
 			type: String,
 			default: '',
 		},
+		filename: {
+			type: String,
+			default: 'Relatório Impresso',
+		},
 		cols: {
 			type: Object,
 			required: true,
@@ -28,13 +32,9 @@
 		const columns: any = props.cols.map((d: any) => d.field)
 
 		const records = props.rows
-		const filename = 'Resumo da RMC - Reserva da Margem de Consignação'
-
-		// let newVariable: any
-		// newVariable = window.navigator
 
 		if (type === 'print') {
-			let rowhtml = '<p>' + filename + '</p>'
+			let rowhtml = '<p>' + props.filename + '</p>'
 			rowhtml +=
 				'<table style="width: 100%; " cellpadding="0" cellcpacing="0"><thead><tr style="color: #515365; background: #eff5ff; -webkit-print-color-adjust: exact; print-color-adjust: exact; "> '
 			columns.map((d: any) => {

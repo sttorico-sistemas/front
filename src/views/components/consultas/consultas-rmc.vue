@@ -7,11 +7,11 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 
 	import ConsultasDatatable from './consultas-datatable/consultas-datatable.vue'
 	import ConsultasExport from './consultas-export/consultas-export.vue'
 	import ConsultasPopper from './consultas-popper/consultas-popper.vue'
-	import ConsultasTitulo from './consultas-titulo/consultas-titulo.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -170,12 +170,11 @@
 <template>
 	<main>
 		<breadcrumbs :paginas="['Consultas', 'RMC']" />
-
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<consultas-titulo
+				<titulo
 					title="Resumo da RMC - Reserva da Margem de Consignação"
 				/>
 
@@ -272,6 +271,7 @@
 							:cols="cols"
 							:rows="rows"
 							export-type="print"
+							filename="Resumo da RMC - Reserva da Margem de Consignação"
 						>
 							<template #icon>
 								<icon-printer class="w-5 h-5" />
@@ -295,6 +295,12 @@
 			font-weight: 600;
 			white-space: nowrap;
 			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
 		}
 	}
 </style>

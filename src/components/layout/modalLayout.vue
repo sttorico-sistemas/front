@@ -34,7 +34,7 @@
 </script>
 
 <template>
-	<div class="mb-5" x-data="modal">
+	<div class="_mb-5" x-data="modal">
 		<div
 			class="fixed inset-0 bg-[black]/60 z-[999] hidden overflow-y-auto"
 			:class="isOpen && '!block'"

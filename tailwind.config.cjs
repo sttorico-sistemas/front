@@ -63,13 +63,14 @@ module.exports = {
 				//     'dark-light': 'rgba(33,150,243,.15)',
 				// },
 				dark: {
+					primary: '#162640',
 					DEFAULT: '#3b3f5c',
 					light: '#eaeaec',
 					'dark-light': 'rgba(59,63,92,.15)',
 				},
 				black: {
 					DEFAULT: '#0e1726',
-					light: '#e3e4eb',
+					light: '#A9AAB1',
 					'dark-light': 'rgba(14,23,38,.15)',
 				},
 				white: {

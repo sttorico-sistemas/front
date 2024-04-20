@@ -19,10 +19,10 @@
 	import IconSearch from '@icons/iconSearch.vue'
 
 	// Scripts
-	const showMenu = ref(false)
+	const showMenu = ref<string>('')
 
-	const toggleShow = () => {
-		showMenu.value = !showMenu.value
+	const toggleShow = (value: string) => {
+		showMenu.value = showMenu.value === value ? '' : value
 	}
 </script>
 <template>
@@ -97,14 +97,17 @@
 					</router-link>
 				</li>
 				<li>
-					<button class="menu__main_list_item relative" @click="toggleShow">
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('consultas')"
+					>
 						<icon-search class="menu__main_list_icon" />
 						Consultas
 						<icon-arrow-down />
 						<div
 							id="dropdownNavbar"
 							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu ? '' : 'hidden'"
+							:class="showMenu === 'consultas' ? '' : 'hidden'"
 						>
 							<ul
 								class="py-2 text-sm text-gray-700"
@@ -134,6 +137,80 @@
 										Histórico de Desconto
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignataria-servidor' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignatária
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-atualizacao-margens' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Atualização das Margens
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-historico-reserva-margem' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Histórico da Reserva da Margem
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-solicitacoes' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Solicitações
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-resumo-margem' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Resumo da Margem
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-previsao-descontos' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Previsão de Descontos
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignante-master' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignante Master
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignantes' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignantes
+									</router-link>
+								</li>
+								<hr class="mx-2">
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignataria-admin' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignatária Admin
+									</router-link>
+								</li>
+
 							</ul>
 						</div>
 					</button>
@@ -145,16 +222,78 @@
 					</router-link>
 				</li>
 				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('simulador')"
+					>
 						<icon-calculator class="menu__main_list_icon" />
 						Simulador
-					</router-link>
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu === 'simulador' ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'simulador-taxa-juros' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Taxas de Juros
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'simulador-calculadora' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Calculadora
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'simulador-emprestimos' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Empréstimos
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</button>
 				</li>
 				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('documentos')"
+					>
 						<icon-documents class="menu__main_list_icon" />
-						Documentos
-					</router-link>
+							Documentos
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu === 'documentos' ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'documentos-arquivados' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Arquivados
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</button>
 				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
