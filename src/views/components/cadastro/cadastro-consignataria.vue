@@ -333,6 +333,8 @@
     <consignataria-habilitadas
 			:cols="colsConsignatesHabilitadas"
 			:rows="rowsConsignatesHabilitadas"
+			title="Consignantes Habilitados"
+			type="consignataria"
 		/>
     <logs-alteracao />
 	</main>

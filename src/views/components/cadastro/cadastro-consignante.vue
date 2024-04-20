@@ -152,6 +152,7 @@
     <consignataria-habilitadas
 			:cols="colsConsignatesHabilitadas"
 			:rows="rowsConsignatesHabilitadas"
+			title="Consignatárias Habilitadas"
 		/>
     <logs-alteracao />
 	</main>
