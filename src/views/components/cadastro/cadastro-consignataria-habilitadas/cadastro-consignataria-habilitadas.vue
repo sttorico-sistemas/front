@@ -19,7 +19,7 @@
 			type: String,
 			default: '',
 		},
-		type: {
+		typeScreen: {
 			type: String,
 			default: 'consignante',
 		},
@@ -173,7 +173,11 @@
 			>
         <div class="flex items-center gap-14">
 					<titulo :title="props.title" />
-					<button @click="isOpenDialog = true" v-tippy:right>
+					<button
+						:class="props.typeScreen === 'consignataria' ? 'hidden' : ''"
+						@click="isOpenDialog = true"
+						v-tippy:right
+					>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
