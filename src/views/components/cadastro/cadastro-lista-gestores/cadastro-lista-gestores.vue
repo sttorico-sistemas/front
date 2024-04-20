@@ -75,12 +75,15 @@
 
 		<modal-layout
 			:is-open="isOpenDialog"
-			title="Cadastro Gestores do Consignante"
+			title="Cadastro de Gestores"
 			size="max-w-[526px]"
 			@btn-close="isOpenDialog = false"
 		>
 			<!-- Datatable-->
-			<cadastro-modal-gestor @btn-cancelar="isOpenDialog = false" />
+			<cadastro-modal-gestor
+				type-screen="consignataria"
+				@btn-cancelar="isOpenDialog = false"
+			/>
 			<!-- Datatable-->
 		</modal-layout>
 	</main>
