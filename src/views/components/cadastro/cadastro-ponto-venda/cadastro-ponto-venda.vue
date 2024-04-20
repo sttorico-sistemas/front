@@ -17,6 +17,10 @@
       type: String,
       default: 'Pontos de Vendas',
     },
+		btnAdd: {
+			type: Boolean,
+			default: true,
+		},
 	})
 
 	// Componentes
@@ -24,6 +28,8 @@
 	import Vue3Datatable from '@bhplugin/vue3-datatable'
 	import modalLayout from '@components/layout/modalLayout.vue'
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
+
+	import CadastroModalPontoVenda from '../cadastro-modal-ponto-venda/cadastro-modal-ponto-venda.vue'
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
@@ -96,7 +102,11 @@
 			>
         <div class="flex items-center gap-14">
 					<titulo :title="props.title" />
-					<button @click="isOpenDialog = true" v-tippy:right>
+					<button
+						:class="!props.btnAdd ? 'hidden' : ''"
+						@click="isOpenDialog = true"
+						v-tippy:right
+					>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
@@ -239,13 +249,15 @@
 		</div>
 
 		<modal-layout
-			title=""
+			title="Cadastro Ponto de Venda"
 			:is-open="isOpenDialog"
 			size="max-w-[490px]"
 			@btn-close="isOpenDialog = false"
 		>
 			<!-- Datatable-->
-
+			<cadastro-modal-ponto-venda
+				@btn-cancelar="isOpenDialog = false"
+			/>
 			<!-- Datatable-->
 		</modal-layout>
 	</main>
