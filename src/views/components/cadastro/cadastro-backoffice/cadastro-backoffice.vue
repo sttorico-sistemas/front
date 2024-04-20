@@ -7,6 +7,8 @@
 	import modalLayout from '@components/layout/modalLayout.vue'
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
+	import CadastroModalBackoffice from '../cadastro-modal-backoffice/cadastro-modal-backoffice.vue'
+
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
   import IconEdit from '@icons/iconEdit.vue'
@@ -257,13 +259,15 @@
 		</div>
 
 		<modal-layout
-			title=""
+			title="Cadastro Backoffice"
 			:is-open="isOpenDialog"
 			size="max-w-[490px]"
 			@btn-close="isOpenDialog = false"
 		>
 			<!-- Datatable-->
-
+			<cadastro-modal-backoffice
+				@btn-cancelar="isOpenDialog = false"
+			/>
 			<!-- Datatable-->
 		</modal-layout>
 	</main>
