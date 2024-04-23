@@ -53,8 +53,8 @@
 					<div
 						class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3"
 					>
-						<h5 class="text-lg font-semibold text-primary_3-table">
-							{{ props.title }}
+						<h5 class="flex items-center gap-2 text-lg font-semibold text-primary_3-table">
+							<slot name="icon"></slot> {{ props.title }}
 						</h5>
 						<button
 							type="button"
