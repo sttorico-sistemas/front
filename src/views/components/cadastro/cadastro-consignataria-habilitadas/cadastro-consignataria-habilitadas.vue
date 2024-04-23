@@ -332,7 +332,7 @@
 									>Ver Consignatária</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignante'">
+							<div v-if="props.typeScreen === 'consignante'">
 								<button
 									v-tippy:right
 									type="button"
@@ -345,7 +345,7 @@
 									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignante'">
+							<div v-if="props.typeScreen === 'consignante'">
 								<button
 									v-tippy:right
 									type="button"
@@ -358,7 +358,7 @@
 									>{{ data.value.averbacao === 'Liberada' ? 'Liberar' : 'Bloquear' }}</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignataria'">
+							<div v-if="props.typeScreen === 'consignataria'">
 								<button
 									v-tippy:right
 									type="button"
@@ -370,7 +370,7 @@
 									>Backoffice</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignataria'">
+							<div v-if="props.typeScreen === 'consignataria'">
 								<button
 									v-tippy:right
 									type="button"
