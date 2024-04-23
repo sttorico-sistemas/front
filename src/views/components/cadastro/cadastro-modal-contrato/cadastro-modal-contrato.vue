@@ -22,7 +22,6 @@
 	// Script
 
   const emits = defineEmits(['btnSave', 'btnCancelar'])
-  console.log(props.typeScreen)
 </script>
 <template>
 	<main>
