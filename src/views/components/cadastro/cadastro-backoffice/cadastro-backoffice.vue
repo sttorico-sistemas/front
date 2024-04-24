@@ -8,6 +8,7 @@
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
 	import CadastroModalBackoffice from '../cadastro-modal-backoffice/cadastro-modal-backoffice.vue'
+	import CadastroListagemModalBackoffice from '../modal-cadastro-listagem-backoffice/modal-cadastro-listagem-backoffice.vue'
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
@@ -21,6 +22,7 @@
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
+	const isOpenDialogCadastroListagemBackoffice = ref<boolean>(false)
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
@@ -220,11 +222,12 @@
 									v-tippy:right
 									type="button"
 									class="text-xs m-1"
+									@click="isOpenDialogCadastroListagemBackoffice = true"
 								>
 									<icon-user class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>Perfil</tippy
+									>Gestor</tippy
 								>
 							</div>
               <div>
@@ -267,6 +270,18 @@
 			<!-- Datatable-->
 			<cadastro-modal-backoffice
 				@btn-cancelar="isOpenDialog = false"
+			/>
+			<!-- Datatable-->
+		</modal-layout>
+		<modal-layout
+			title="Cadastro Backoffice"
+			:is-open="isOpenDialogCadastroListagemBackoffice"
+			size="max-w-full"
+			@btn-close="isOpenDialog = false"
+		>
+			<!-- Datatable-->
+			<cadastro-listagem-modal-backoffice
+				@btn-cancelar="isOpenDialogCadastroListagemBackoffice = false"
 			/>
 			<!-- Datatable-->
 		</modal-layout>
