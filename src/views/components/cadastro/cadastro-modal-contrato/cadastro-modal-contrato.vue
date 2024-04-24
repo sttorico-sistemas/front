@@ -56,7 +56,7 @@
         :options="['consignante 1', 'consignante 2']"
       />
 
-      <div class="flex justify-start items-center gap-[70px]">
+      <div class="flex justify-start items-center gap-4">
         <label-input
           id="vigencia"
           label="Vigência"
@@ -65,17 +65,19 @@
           layout="row"
         />
         <label-input
+          type="date"
           id="data_inicial"
           label="Data Inicial"
           class-label="text-sm"
-          class-input="md:max-w-[100px]"
+          class-input="md:max-w-[150px]"
           layout="row"
         />
         <label-input
+          type="date"
           id="data_final"
           label="Data Final"
           class-label="text-sm"
-          class-input="md:max-w-[100px]"
+          class-input="md:max-w-[150px]"
           layout="row"
         />
       </div>
