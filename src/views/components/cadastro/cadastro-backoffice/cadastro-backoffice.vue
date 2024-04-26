@@ -35,7 +35,7 @@
 		{ field: 'setor', title: 'Setor', hide: false },
 		{ field: 'cidade', title: 'Cidade', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false },
 	])
 	const rows = reactive([
 		{
@@ -100,7 +100,7 @@
 </script>
 <template>
 	<main>
-		<div class="panel mt-6">
+		<div class="panel">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>

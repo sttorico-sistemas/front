@@ -53,7 +53,7 @@
 </script>
 <template>
   <div v-if="props.layout === 'row'" :class="props.classWrapper">
-    <label for="props.id" :class="props.classLabel">{{ props.label }}</label>
+    <label for="props.id" class="mb-0" :class="props.classLabel">{{ props.label }}</label>
     <input
       :id="props.id"
       :type="props.type"

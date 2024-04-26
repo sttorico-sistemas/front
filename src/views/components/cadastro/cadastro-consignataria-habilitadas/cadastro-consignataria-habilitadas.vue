@@ -171,7 +171,7 @@
 </script>
 <template>
 	<main>
-		<div class="panel mt-6">
+		<div class="panel">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>

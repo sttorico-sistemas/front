@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 	import { reactive, ref } from 'vue'
+	import router from 'src/router'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
@@ -352,6 +353,7 @@
 									v-tippy:right
 									type="button"
 									class="text-xs m-1"
+									@click="router.push({ name: 'cadastro-consignataria', params: { id: '1' } })"
 								>
 									<icon-eye class="w-5 h-5 text-primary_3-table" />
 								</button>
