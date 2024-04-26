@@ -44,7 +44,7 @@
 		{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: true, },
 		{ field: 'data_final', title: 'Data Final', hide: false, sort: true, },
 		{ field: 'status', title: 'Status', hide: false, sort: true, },
-		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false, },
+		{ field: 'actions', title: 'Ações', hide: false, width: '80px', sort: false, },
 	])
 	const rowsContratoSistema = reactive([
 		{
@@ -74,7 +74,7 @@
 		{ field: 'telefone', title: 'Telefone', hide: false, sort: true, },
 		{ field: 'celular', title: 'Celular', hide: false, sort: true, },
 		{ field: 'email', title: 'E-mail', hide: false, sort: true, },
-		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false, },
+		{ field: 'actions', title: 'Ações', hide: false, width: '80px', sort: false, },
 	])
 	const rowsGestores = reactive([
 		{
