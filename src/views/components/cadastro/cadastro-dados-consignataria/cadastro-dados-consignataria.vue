@@ -28,11 +28,11 @@
 	<main>
     <div class="panel mt-6">
       <div class="flex items-center gap-14">
-        <titulo title="Dados do Consignante " />
+        <titulo title="Dados do Consignatária " />
         <button class="hidden" @click="isOpenDialog = true" v-tippy:right>
           <icon-edit />
         </button>
-        <tippy target="right" placement="right">Editar Consignante</tippy
+        <tippy target="right" placement="right">Editar Consignatária</tippy
         >
       </div>
 
@@ -40,7 +40,7 @@
         <div class="flex flex-col md:flex-row gap-4 items-center">
           <label-input
             id="cod"
-            label="Cód. Consignante"
+            label="Cód. Consignatária"
             type="text"
             class-wrapper="w-full md:w-[110px]"
             class-label="text-[10px]"
