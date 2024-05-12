@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import { computed } from 'vue'
+
 	const props = defineProps({
     id: {
       type: String,
@@ -44,7 +46,10 @@
       type: Array,
       default: () => []
     }
+  })
 
+  const classDisabled = computed(() => {
+    return props.disabled ? 'disabled:pointer-events-none disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b] cursor-not-allowed' : ''
   })
 </script>
 <template>
@@ -53,7 +58,7 @@
     <select
       :id="props.id"
       class="form-select h-[38px] flex-1"
-      :class="classSelect"
+      :class="[classSelect, classDisabled]"
       :required="props.required"
       :disabled="props.disabled"
     >
@@ -70,7 +75,7 @@
     <select
       :id="props.id"
       class="form-select h-[38px] flex-1"
-      :class="classSelect"
+      :class="[classSelect, classDisabled]"
       :required="props.required"
       :disabled="props.disabled"
     >

@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+  // Core
+  import { computed } from 'vue'
+
   const props = defineProps({
     id: {
       type: String,
@@ -49,7 +52,13 @@
   const maskPhone = () => {
     if (props.type === 'cel') return '(##) # ####-####'
     if (props.type === 'tel') return '(##) ####-####'
+    if (props.type === 'cpf') return '###.###.###-##'
+    if (props.type === 'cnpj') return '##.###.###/####-##'
   }
+
+  const classDisabled = computed(() => {
+    return props.disabled ? 'disabled:pointer-events-none disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b] cursor-not-allowed' : ''
+  })
 </script>
 <template>
   <div v-if="props.layout === 'row'" :class="props.classWrapper">
@@ -58,7 +67,7 @@
       :id="props.id"
       :type="props.type"
       class="form-input h-[38px]"
-      :class="props.classInput"
+      :class="[props.classInput, classDisabled]"
       :value="props.value"
       :disabled="props.disabled"
       :required="props.required"
@@ -72,7 +81,7 @@
       :type="props.type"
       :placeholder="props.placeholder"
       class="form-input flex-1"
-      :class="props.classInput"
+      :class="[props.classInput, classDisabled]"
       :disabled="props.disabled"
       :required="props.required"
       v-maska="maskPhone()"
