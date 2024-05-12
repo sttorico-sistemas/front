@@ -1,6 +1,14 @@
 <script lang="ts" setup>
   // Core
-  import { reactive, ref } from 'vue'
+  import { reactive, ref, onMounted } from 'vue'
+
+  // Props
+  const props = defineProps({
+    disabled: {
+      type: Boolean,
+      default: true,
+    }
+  })
 
 	// Componentes
   import titulo from '@components/layout/tituloLayout.vue'
@@ -14,22 +22,29 @@
   import IconClose from '@icons/iconClose.vue'
 
 	// Declarações
-  const isDisabled = ref(true)
+  const isDisabled = ref<boolean>(true)
 
 	// Script
 
   const emits = defineEmits(['btnSave', 'btnCancelar'])
 
+  onMounted(() => {
+    isDisabled.value = props.disabled
+  })
 </script>
 <template>
 	<main>
     <div class="panel mt-5 border border-primary_3-table">
       <div class="flex items-center gap-14 mb-6">
         <titulo title="Cadastro Pessoa" />
-        <button @click="isDisabled = false" v-tippy:right>
+        <button
+          v-if="props.disabled"
+          @click="isDisabled = false"
+          v-tippy:right
+        >
           <icon-edit />
         </button>
-        <tippy target="right" placement="right"
+        <tippy v-if="props.disabled" target="right" placement="right"
           >Editar cadastro</tippy
         >
       </div>
