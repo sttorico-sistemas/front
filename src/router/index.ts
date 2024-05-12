@@ -136,6 +136,11 @@ const router = createRouter({
 					name: 'cadastro-consignataria',
 					component: Cadastro,
 				},
+				{
+					path: 'operador',
+					name: 'cadastro-operador',
+					component: Cadastro,
+				},
 			],
 		},
 	],
