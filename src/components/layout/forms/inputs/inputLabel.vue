@@ -31,9 +31,8 @@
       type: String,
       default: ''
     },
-    value: {
-      type: String,
-      default: ''
+    modelValue: {
+      default: '' // !TODO - Trocar isso com prioridade para required: true
     },
     disabled: {
       type: Boolean,
@@ -48,6 +47,8 @@
       default: 'row',
     },
   })
+
+  const emit = defineEmits(['update:modelValue'])
 
   const maskPhone = () => {
     if (props.type === 'cel') return '(##) # ####-####'
@@ -66,12 +67,13 @@
     <input
       :id="props.id"
       :type="props.type"
+      :value="props.modelValue"
       class="form-input h-[38px]"
       :class="[props.classInput, classDisabled]"
-      :value="props.value"
       :disabled="props.disabled"
       :required="props.required"
       v-maska="maskPhone()"
+      @input="emit('update:modelValue', $event.target.value)"
     />
   </div>
   <div v-if="props.layout === 'col'" class="flex sm:flex-row flex-col items-center mb-3">
@@ -79,12 +81,14 @@
     <input
       :id="props.id"
       :type="props.type"
+      :value="props.modelValue"
       :placeholder="props.placeholder"
       class="form-input flex-1"
       :class="[props.classInput, classDisabled]"
       :disabled="props.disabled"
       :required="props.required"
       v-maska="maskPhone()"
+      @input="emit('update:modelValue', $event.target.value)"
     />
   </div>
 </template>
