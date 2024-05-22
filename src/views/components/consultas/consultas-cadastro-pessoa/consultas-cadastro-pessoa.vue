@@ -23,8 +23,41 @@
 
 	// Declarações
   const isDisabled = ref<boolean>(true)
+  const contatos = reactive([
+    {
+      tipoContato: '',
+      telefone: '',
+      celular: '',
+      email: '',
+    }
+  ])
+  const enderecos = reactive([
+    {
+      tipoEndereco: '',
+      endereco: '',
+      cidade: '',
+      uf: '',
+    }
+  ])
 
 	// Script
+  const addContato = () => {
+    if (contatos.length >= 3) return false // adicionar mensagem que o máximo é 3 contatos
+    if (!contatos[0].celular.length && !contatos[0].email.length) return false // adicionar mensagem que deve ser preenchido
+
+    contatos.push({
+      tipoContato: '',
+      telefone: '',
+      celular: '',
+      email: '',
+    })
+  }
+
+  const removeContato = (index: number) => {
+    if (contatos.length === 1) return false // adicionar mensagem que não pode excluir
+
+    contatos.splice(index, 1)
+  }
 
   const emits = defineEmits(['btnSave', 'btnCancelar'])
 
@@ -91,14 +124,12 @@
       <div class="panel my-3">
         <div class="flex items-center gap-14 mb-6">
 					<titulo title="Contatos" />
-					<button @click="isOpenDialog = true" v-tippy:right>
-						<icon-add />
-					</button>
-					<tippy target="right" placement="right"
-						>Cadastre uma nova pessoa</tippy
-					>
 				</div>
-        <div class="flex-col md:flex-row flex gap-2.5">
+        <div
+          v-for="(contato, id) in contatos"
+          :key="id"
+          class="flex-col md:flex-row flex gap-2.5 mb-3"
+        >
           <label-select
             id="tp_contrato"
             label="Tipo Contrato"
@@ -109,6 +140,7 @@
             :options="['Amigo', 'Familia', 'Trabalho', 'Vizinho', 'Casa']"
           />
           <label-input
+            v-model="contato.telefone"
             type="tel"
             id="telefone"
             label="Telefone"
@@ -118,6 +150,7 @@
             layout="row"
           />
           <label-input
+            v-model="contato.celular"
             type="cel"
             id="celular"
             label="Celular"
@@ -127,6 +160,7 @@
             layout="row"
           />
           <label-input
+            v-model="contato.email"
             id="email"
             label="E-mail"
             :disabled="isDisabled"
@@ -134,9 +168,15 @@
             class-input="md:w-[400px]"
             layout="row"
           />
-          <button @click="isOpenDialog = true" v-tippy:right class="flex self-end mb-2">
-						<icon-close />
-					</button>
+          <div class="flex items-center gap-1">
+            <button @click="addContato(contato, contatos)" v-tippy:right class="flex self-end mb-2">
+              <icon-add />
+            </button>
+            <button @click="removeContato(index)"  class="flex self-end mb-2">
+              <icon-close />
+            </button>
+            <tippy target="right" placement="right">Cadastre um novo Contato</tippy>
+          </div>
         </div>
       </div>
 
@@ -147,7 +187,7 @@
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
-						>Cadastre uma nova pessoa</tippy
+						>Cadastre um novo Endereço</tippy
 					>
 				</div>
         <div class="flex-col md:flex-row flex gap-2.5">
