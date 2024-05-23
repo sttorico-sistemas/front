@@ -35,6 +35,11 @@ app.component('DownloadExcel', JsonExcel)
 import Multiselect from '@suadelabs/vue3-multiselect'
 app.component('Multiselect', Multiselect)
 
+// Mitt
+import mitt from 'mitt'
+const emitter = mitt()
+app.provide('eventBus', emitter)
+
 app.use(router)
 
 app.mount('#app')
