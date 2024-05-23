@@ -8,7 +8,6 @@
   import modalLayout from '@components/layout/modalLayout.vue'
   import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
   import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
-  import alertLayout from '@components/layout/alertLayout.vue'
 
   import ConsultasCadastroPessoa from '../consultas/consultas-cadastro-pessoa/consultas-cadastro-pessoa.vue'
   import CadastroPerfilOperador from './cadastro-perfil-operador/cadastro-perfil-operador.vue'
@@ -136,8 +135,6 @@
         <cadastro-perfil-operador />
 			</vue-collapsible>
 		</div>
-
-    <alert-layout />
 
     <modal-layout
 			:is-open="isOpenDialog"
