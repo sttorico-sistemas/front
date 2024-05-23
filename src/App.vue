@@ -3,6 +3,7 @@
 
 	import footerLayout from '@components/layout/footerLayout.vue'
 	import headerLayout from '@components/layout/headerLayout.vue'
+	import alertLayout from '@components/layout/alertLayout.vue'
 
 	import { useMeta } from '@/composables/use-meta'
 
@@ -17,6 +18,7 @@
 		<RouterView />
 
 		<footer-layout />
+		<alert-layout />
 	</div>
 </template>
 
