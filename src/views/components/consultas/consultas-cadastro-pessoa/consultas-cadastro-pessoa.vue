@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   // Core
-  import { reactive, ref, onMounted } from 'vue'
+  import { reactive, ref, onMounted, inject } from 'vue'
 
   // Props
   const props = defineProps({
@@ -22,6 +22,7 @@
   import IconClose from '@icons/iconClose.vue'
 
 	// Declarações
+  const eventBus = inject('eventBus')
   const isDisabled = ref<boolean>(true)
   const contatos = reactive([
     {
@@ -42,8 +43,17 @@
 
 	// Script
   const addContato = () => {
-    if (contatos.length >= 3) return false // adicionar mensagem que o máximo é 3 contatos
-    if (!contatos[0].celular.length && !contatos[0].email.length) return false // adicionar mensagem que deve ser preenchido
+    if (contatos.length >= 3) {
+      eventBus.emit('alertDanger', 'Limite máximo de contato é de 3')
+
+      return false
+    }
+
+    if (!contatos[0].celular.length && !contatos[0].email.length) {
+      eventBus.emit('alertDanger', 'Preencha os campos obrigatórios!')
+
+      return false
+    }
 
     contatos.push({
       tipoContato: '',
@@ -54,7 +64,10 @@
   }
 
   const removeContato = (index: number) => {
-    if (contatos.length === 1) return false // adicionar mensagem que não pode excluir
+    if (contatos.length === 1) {
+      eventBus.emit('alertDanger', 'Não foi possivel remover contato')
+      return false
+    }
 
     contatos.splice(index, 1)
   }
