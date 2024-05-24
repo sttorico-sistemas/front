@@ -89,8 +89,8 @@
       </div>
 
       <consultas-cadastro-pessoa-contato />
-
-      <consultas-cadastro-pessoa-endereco v-bind="$attrs" />
+      
+      <consultas-cadastro-pessoa-endereco  />
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button
