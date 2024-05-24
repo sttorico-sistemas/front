@@ -100,8 +100,7 @@
         class-input="md:max-w-[300px]"
         layout="row"
       />
-        <label-select
-        v-model="endereco.uf"
+      <label-select
         id="uf"
         label="UF"
         :disabled="isDisabled"
