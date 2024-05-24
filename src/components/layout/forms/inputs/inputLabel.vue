@@ -32,7 +32,8 @@
       default: ''
     },
     modelValue: {
-      default: '' // !TODO - Trocar isso com prioridade para required: true
+      type: String,
+      required: true,
     },
     disabled: {
       type: Boolean,
