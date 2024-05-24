@@ -30,7 +30,8 @@ module.exports = {
 					DEFAULT: '#0ea5e9'
 				},
 				success: {
-					DEFAULT: '#00AB55'
+					DEFAULT: '#00AB55',
+					light: '#f0fdf4',
 				},
 				warning: {
 					DEFAULT: '#E2A03F'
