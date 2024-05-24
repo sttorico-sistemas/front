@@ -12,65 +12,19 @@
 
 	// Componentes
   import titulo from '@components/layout/tituloLayout.vue'
-
   import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
   import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
 
+  import ConsultasCadastroPessoaContato from './consultas-cadastro-pessoa-contato/consultas-cadastro-pessoa-contato.vue'
+  import ConsultasCadastroPessoaEndereco from './consultas-cadastro-pessoa-endereco/consultas-cadastro-pessoa-endereco.vue'
+
   // Icons
-  import IconAdd from '@icons/iconAdd.vue'
   import IconEdit from '@icons/iconEdit.vue'
-  import IconClose from '@icons/iconClose.vue'
 
 	// Declarações
-  const eventBus = inject('eventBus')
   const isDisabled = ref<boolean>(true)
-  const contatos = reactive([
-    {
-      tipoContato: '',
-      telefone: '',
-      celular: '',
-      email: '',
-    }
-  ])
-  const enderecos = reactive([
-    {
-      tipoEndereco: '',
-      endereco: '',
-      cidade: '',
-      uf: '',
-    }
-  ])
 
 	// Script
-  const addContato = () => {
-    if (contatos.length >= 3) {
-      eventBus.emit('alertDanger', 'Limite máximo de contato é de 3')
-
-      return false
-    }
-
-    if (!contatos[0].celular.length && !contatos[0].email.length) {
-      eventBus.emit('alertDanger', 'Preencha os campos obrigatórios!')
-
-      return false
-    }
-
-    contatos.push({
-      tipoContato: '',
-      telefone: '',
-      celular: '',
-      email: '',
-    })
-  }
-
-  const removeContato = (index: number) => {
-    if (contatos.length === 1) {
-      eventBus.emit('alertDanger', 'Não foi possivel remover contato')
-      return false
-    }
-
-    contatos.splice(index, 1)
-  }
 
   const emits = defineEmits(['btnSave', 'btnCancelar'])
 
@@ -134,115 +88,9 @@
         </div>
       </div>
 
-      <div class="panel my-3">
-        <div class="flex items-center gap-14 mb-6">
-					<titulo title="Contatos" />
-				</div>
-        <div
-          v-for="(contato, id) in contatos"
-          :key="id"
-          class="flex-col md:flex-row flex gap-2.5 mb-3"
-        >
-          <label-select
-            id="tp_contrato"
-            label="Tipo Contrato"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-select="md:w-[200px]"
-            layout="row"
-            :options="['Amigo', 'Familia', 'Trabalho', 'Vizinho', 'Casa']"
-          />
-          <label-input
-            v-model="contato.telefone"
-            type="tel"
-            id="telefone"
-            label="Telefone"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:max-w-[150px]"
-            layout="row"
-          />
-          <label-input
-            v-model="contato.celular"
-            type="cel"
-            id="celular"
-            label="Celular"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:max-w-[150px]"
-            layout="row"
-          />
-          <label-input
-            v-model="contato.email"
-            id="email"
-            label="E-mail"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:w-[400px]"
-            layout="row"
-          />
-          <div class="flex items-center gap-1">
-            <button @click="addContato(contato, contatos)" v-tippy:right class="flex self-end mb-2">
-              <icon-add />
-            </button>
-            <button @click="removeContato(index)"  class="flex self-end mb-2">
-              <icon-close />
-            </button>
-            <tippy target="right" placement="right">Cadastre um novo Contato</tippy>
-          </div>
-        </div>
-      </div>
+      <consultas-cadastro-pessoa-contato />
 
-      <div class="panel my-3">
-        <div class="flex items-center gap-14 mb-6">
-					<titulo title="Endereços" />
-					<button @click="isOpenDialog = true" v-tippy:right>
-						<icon-add />
-					</button>
-					<tippy target="right" placement="right"
-						>Cadastre um novo Endereço</tippy
-					>
-				</div>
-        <div class="flex-col md:flex-row flex gap-2.5">
-           <label-select
-            id="tipo_endereco"
-            label="Tipo Endereço"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-select="md:w-[200px]"
-            layout="row"
-            :options="['Rua', 'Comunidade', 'Condominio']"
-          />
-          <label-input
-            id="endereco"
-            label="Endereço"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:min-w-[545px]"
-            layout="row"
-          />
-          <label-input
-            id="cidade"
-            label="Cidade"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:max-w-[300px]"
-            layout="row"
-          />
-           <label-select
-            id="uf"
-            label="UF"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-select="md:w-[70px]"
-            layout="row"
-            :options="['SP', 'RJ', 'MG', 'ES']"
-          />
-          <button @click="isOpenDialog = true" v-tippy:right class="flex self-end mb-2">
-						<icon-close />
-					</button>
-        </div>
-      </div>
+      <consultas-cadastro-pessoa-endereco v-bind="$attrs" />
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button
