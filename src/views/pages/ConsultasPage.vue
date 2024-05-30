@@ -14,6 +14,7 @@
 	import ConsultasConsigantesMaster from '../components/consultas/consultas-consignante-master.vue'
 	import ConsultasConsigantes from '../components/consultas/consultas-consignantes.vue'
 	import ConsultasPessoas from '../components/consultas/consultas-pessoas.vue'
+	import ConsultasConsignador from '../components/consultas/consultas-consignador.vue'
 
 	import ConsultasConsignatariaAdmin from '../components/consultas/consultas-consignataria-admin.vue'
 
@@ -61,6 +62,9 @@
 				break
 			case 'consultas-pessoas':
 				currentComponent.value = ConsultasPessoas
+				break
+			case 'consultas-consignador':
+				currentComponent.value = ConsultasConsignador
 				break
 		}
 	})
