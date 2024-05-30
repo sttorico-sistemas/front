@@ -48,9 +48,10 @@
   }
 </script>
 <template>
+  <!-- TODO - Corrigir bug de efeito de translate-x-1000 que não sai da tela, mas ao aplicar hidden, ele tira o efeito -->
   <div
     class="flex items-center p-3.5 transition ease-linear duration-1000 rounded absolute right-5 bottom-5 z-[9999]"
-    :class="[!message.length ? 'translate-x-[1000px]' : 'translate-x-0', setupAlert().color]"
+    :class="[!message.length ? 'translate-x-[1000px] hidden' : 'translate-x-0', setupAlert().color]"
   >
     <span class="pr-2 pl-2">
       {{ message }}
