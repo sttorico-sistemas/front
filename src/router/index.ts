@@ -84,6 +84,11 @@ const router = createRouter({
 					name: 'consultas-pessoas',
 					component: Consultas,
 				},
+				{
+					path: 'consignador',
+					name: 'consultas-consignador',
+					component: Consultas,
+				},
 			],
 		},
 		// Simulador
