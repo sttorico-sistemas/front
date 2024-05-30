@@ -217,6 +217,14 @@
 										Operadores
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'cadastro-perfil-operador' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Cadastro Operadores
+									</router-link>
+								</li>
 								<hr class="mx-2">
 								<li>
 									<router-link
