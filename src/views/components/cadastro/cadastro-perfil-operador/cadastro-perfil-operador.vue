@@ -2,13 +2,140 @@
   // Core
   import { reactive, ref } from 'vue'
 
+  // Props
+  const props = defineProps({
+    addButton: {
+      type: Boolean,
+      default: false
+    }
+  })
+
+  // Icons
+  import IconAdd from '@icons/iconAdd.vue'
+  import IconClear from '@icons/iconClear.vue'
+	import IconPrinter from '@icons/iconPrinter.vue'
+
 	// Componentes
   import titulo from '@components/layout/tituloLayout.vue'
+  import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
+
+  // Declarações
+  const tp_operador = ref('')
+  const cliente = ref('')
+  const cols = reactive([
+		{ field: 'funcionalidade', title: 'Funcionalidade', hide: false, },
+		{ field: 'perfil_1', title: 'Perfil 1', hide: false, },
+		{ field: 'perfil_2', title: 'Perfil 2', hide: false, },
+		{ field: 'perfil_3', title: 'Perfil 3', hide: false, },
+		{ field: 'perfil_4', title: 'Perfil 4', hide: false, },
+		{ field: 'perfil_5', title: 'Perfil 5', hide: false, },
+	])
+  const rows = reactive([
+		{
+      funcionalidade: 'Consultas',
+      perfil_1: 'Ativo',
+      perfil_2: 'Ativo',
+      perfil_3: 'Ativo',
+      perfil_4: 'Inativo',
+      perfil_5: 'Inativo',
+		},
+    {
+      funcionalidade: 'Cadastros',
+      perfil_1: 'Ativo',
+      perfil_2: 'Inativo',
+      perfil_3: 'Ativo',
+      perfil_4: 'Inativo',
+      perfil_5: 'Ativo',
+		},
+    {
+      funcionalidade: 'Operações',
+      perfil_1: 'Inativo',
+      perfil_2: 'Inativo',
+      perfil_3: 'Ativo',
+      perfil_4: 'Ativo',
+      perfil_5: 'Ativo',
+		},
+	])
+
+  // Script
+  const clearFilter = () => {
+		tp_operador.value = ''
+		cliente.value = ''
+
+		selected.label = ''
+		selected.type = ''
+	}
 </script>
 <template>
 	<main>
     <div class="panel">
-      <titulo title="Perfil de Operador Cadastrado" />
+      <div class="flex">
+        <div class="flex items-center gap-14">
+          <titulo title="Perfil de Operador Cadastrado" />
+          <button v-if="props.addButton" @click="isOpenDialog = true" v-tippy:right>
+            <icon-add />
+          </button>
+          <tippy v-if="props.addButton" target="right" placement="right"
+            >Cadastre um novo perfil de operador</tippy
+          >
+        </div>
+
+        <div v-if="props.addButton" class="header_actions flex items-center justify-end grow gap-5">
+          <multiselect
+            v-model="tp_operador"
+            :options="[]"
+            class="custom-multiselect max-w-[200px]"
+            placeholder="Tipo operador"
+            :searchable="false"
+            :preselect-first="false"
+            :allow-empty="false"
+            selected-label=""
+            select-label=""
+            deselect-label=""
+            @select="(selected.label = $event), (selected.type = 'tp_operador')"
+          />
+          <multiselect
+            v-model="cliente"
+            :options="[]"
+            class="custom-multiselect max-w-[300px]"
+            placeholder="Cliente"
+            :searchable="false"
+            :preselect-first="false"
+            :allow-empty="false"
+            selected-label=""
+            select-label=""
+            deselect-label=""
+            @select="(selected.label = $event), (selected.type = 'cliente')"
+          />
+
+          <div>
+            <button
+              v-tippy:top
+              type="button"
+              class="text-xs m-1"
+              @click="clearFilter()"
+            >
+              <icon-clear class="w-5 h-5 text-primary_3-table" />
+            </button>
+            <tippy target="top" placement="top">Limpar pesquisa</tippy>
+          </div>
+
+          <div>
+            <consultas-export
+              v-tippy:top
+              :cols="cols"
+              :rows="rows"
+              filename="Consignatárias Habilitadas"
+              export-type="print"
+            >
+              <template #icon>
+                <icon-printer class="w-5 h-5" />
+              </template>
+            </consultas-export>
+            <tippy target="top" placement="top">Imprimir</tippy>
+          </div>
+        </div>
+      </div>
 
       <div class="table-responsive my-3">
         <table>
@@ -67,4 +194,19 @@ tbody tr {
 tr {
   text-align: center;
 }
+.header_actions:deep(.custom-multiselect) {
+		.multiselect__placeholder {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			font-weight: 600;
+			white-space: nowrap;
+			color: rgb(14 23 38);
+		}
+
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
+		}
+	}
 </style>
