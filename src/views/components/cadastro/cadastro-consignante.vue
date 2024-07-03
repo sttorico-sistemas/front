@@ -3,6 +3,7 @@
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import VueCollapsible from 'vue-height-collapsible/vue3'
 
 	import ConsignatariaHabilitadas from './cadastro-consignataria-habilitadas/cadastro-consignataria-habilitadas.vue'
 	import ContratoSistema from './cadastro-contrato-sistema/cadastro-contrato-sistema.vue'
@@ -12,8 +13,16 @@
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 
 	// Icons
+	import IconCaretDown from '@icons/iconCaretDown.vue'
 
 	// Declarações
+	const accordians = reactive({
+		contratoSistema: false,
+		gestores: false,
+		averbadores: false,
+		consignatariaHabilitadas: false,
+		logs: false,
+	})
 	const colsContratoSistema = reactive([
 		{ field: 'cod', title: 'Cód. Contrato', hide: false, sort: false, },
 		{ field: 'tipo_contrato', title: 'Tipo Contrato', hide: false, sort: false, },
@@ -140,21 +149,102 @@
 		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
 
     <dados-consignante />
-    <contrato-sistema
-			:cols="colsContratoSistema"
-			:rows="rowsContratoSistema"
-		/>
-    <lista-gestores
-			:cols="colsGestores"
-			:rows="rowsGestores"
-		/>
-    <lista-averbadores />
-    <consignataria-habilitadas
-			:cols="colsConsignatesHabilitadas"
-			:rows="rowsConsignatesHabilitadas"
-			title="Consignatárias Habilitadas"
-		/>
-    <logs-alteracao />
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.contratoSistema === true ? (accordians.contratoSistema = false) : (accordians.contratoSistema = true)"
+			>
+				Contratos Sistema
+				<div
+					:class="{ 'rotate-180': accordians.contratoSistema === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.contratoSistema === true">
+				<contrato-sistema
+					:cols="colsContratoSistema"
+					:rows="rowsContratoSistema"
+				/>
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.gestores === true ? (accordians.gestores = false) : (accordians.gestores = true)"
+			>
+				Lista de Gestores
+				<div
+					:class="{ 'rotate-180': accordians.gestores === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.gestores === true">
+				<lista-gestores
+					:cols="colsGestores"
+					:rows="rowsGestores"
+				/>
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.averbadores === true ? (accordians.averbadores = false) : (accordians.averbadores = true)"
+			>
+				Lista de Averbadores
+				<div
+					:class="{ 'rotate-180': accordians.averbadores === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.averbadores === true">
+				<lista-averbadores />
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.consignatariaHabilitadas === true ? (accordians.consignatariaHabilitadas = false) : (accordians.consignatariaHabilitadas = true)"
+			>
+				Consignatária Habilitadas
+				<div
+					:class="{ 'rotate-180': accordians.consignatariaHabilitadas === true }"
+				>
+					<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.consignatariaHabilitadas === true">
+				<consignataria-habilitadas
+					:cols="colsConsignatesHabilitadas"
+					:rows="rowsConsignatesHabilitadas"
+					title="Consignatárias Habilitadas"
+				/>
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.logs === true ? (accordians.logs = false) : (accordians.logs = true)"
+			>
+				Logs
+				<div
+					:class="{ 'rotate-180': accordians.logs === true }"
+				>
+					<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.logs === true">
+				<logs-alteracao />
+			</vue-collapsible>
+		</div>
 	</main>
 </template>
 <style lang="scss" scoped></style>

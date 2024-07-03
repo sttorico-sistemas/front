@@ -33,6 +33,8 @@
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
 	import cadastroModalHabilitarConsignatarias from '../cadastro-modal-habilitar-consignatarias/cadastro-modal-habilitar-consignatarias.vue'
+	import modalHabilitarPontoVenda from '../modal-habilitar-ponto-venda/modal-habilitar-ponto-venda.vue'
+	import modalHabilitarBackoffice from '../modal-habilitar-backoffice/modal-habilitar-backoffice.vue'
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
@@ -54,6 +56,8 @@
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
+	const isOpenDialogPontoVenda = ref<boolean>(false)
+	const isOpenDialogBackOffice = ref<boolean>(false)
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
@@ -167,7 +171,7 @@
 </script>
 <template>
 	<main>
-		<div class="panel mt-6">
+		<div class="panel">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
@@ -332,7 +336,7 @@
 									>Ver Consignatária</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignante'">
+							<div v-if="props.typeScreen === 'consignante'">
 								<button
 									v-tippy:right
 									type="button"
@@ -345,7 +349,7 @@
 									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignante'">
+							<div v-if="props.typeScreen === 'consignante'">
 								<button
 									v-tippy:right
 									type="button"
@@ -358,11 +362,12 @@
 									>{{ data.value.averbacao === 'Liberada' ? 'Liberar' : 'Bloquear' }}</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignataria'">
+							<div v-if="props.typeScreen === 'consignataria'">
 								<button
 									v-tippy:right
 									type="button"
 									class="text-xs m-1"
+									@click="isOpenDialogBackOffice = true"
 								>
 									<icon-shield-check class="w-5 h-5 text-primary_3-table" />
 								</button>
@@ -370,11 +375,12 @@
 									>Backoffice</tippy
 								>
 							</div>
-							<div v-if="props.type === 'consignataria'">
+							<div v-if="props.typeScreen === 'consignataria'">
 								<button
 									v-tippy:right
 									type="button"
 									class="text-xs m-1"
+									@click="isOpenDialogPontoVenda = true"
 								>
 									<icon-shield-user class="w-5 h-5 text-primary_3-table" />
 								</button>
@@ -397,6 +403,30 @@
 			<!-- Datatable-->
 			<cadastro-modal-habilitar-consignatarias @btn-cancelar="isOpenDialog = false" />
 			<!-- Datatable-->
+		</modal-layout>
+
+		<modal-layout
+			title="Habilitar Pontos de Venda para Consignante"
+			:is-open="isOpenDialogPontoVenda"
+			size="max-w-full"
+			@btn-close="isOpenDialogPontoVenda = false"
+		>
+			<template #icon>
+				<component :is="IconShieldUser" />
+			</template>
+			<modal-habilitar-ponto-venda @btn-cancelar="isOpenDialogPontoVenda = false" />
+		</modal-layout>
+
+		<modal-layout
+			title="Habilitar Backoffice para Consignante"
+			:is-open="isOpenDialogBackOffice"
+			size="max-w-full"
+			@btn-close="isOpenDialogBackOffice = false"
+		>
+			<template #icon>
+				<component :is="IconShieldCheck" />
+			</template>
+			<modal-habilitar-backoffice @btn-cancelar="isOpenDialogBackOffice = false" />
 		</modal-layout>
 	</main>
 </template>

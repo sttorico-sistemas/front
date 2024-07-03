@@ -4,6 +4,8 @@
 
 	import cadastroConsignante from '../components/cadastro/cadastro-consignante.vue'
 	import cadastroConsignataria from '../components/cadastro/cadastro-consignataria.vue'
+	import cadastroOperador from '../components/cadastro/cadastro-operador.vue'
+	import cadastroPerfilOperador from '../components/cadastro/cadastro-perfil-operador.vue'
 
 	const route = useRoute()
 
@@ -16,6 +18,12 @@
 				break
 			case 'cadastro-consignante':
 				currentComponent.value = cadastroConsignante
+				break
+			case 'cadastro-operador':
+				currentComponent.value = cadastroOperador
+				break
+			case 'cadastro-perfil-operador':
+				currentComponent.value = cadastroPerfilOperador
 				break
 		}
 	})

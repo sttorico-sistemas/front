@@ -15,6 +15,10 @@ app.use(head)
 import { TippyPlugin } from 'tippy.vue'
 app.use(TippyPlugin)
 
+//input mask
+import Maska from 'maska';
+app.use(Maska);
+
 // ApexCharts
 import VueApexCharts from 'vue3-apexcharts'
 app.use(VueApexCharts)
@@ -30,6 +34,11 @@ app.component('DownloadExcel', JsonExcel)
 // Multiselect
 import Multiselect from '@suadelabs/vue3-multiselect'
 app.component('Multiselect', Multiselect)
+
+// Mitt
+import mitt from 'mitt'
+const emitter = mitt()
+app.provide('eventBus', emitter)
 
 app.use(router)
 

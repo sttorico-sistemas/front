@@ -77,6 +77,7 @@
 
       <div class="flex justify-start items-center gap-2.5">
         <label-input
+          type="tel"
           id="telefone"
           label="Telefone"
           class-label="text-sm"
@@ -84,6 +85,7 @@
           layout="row"
         />
         <label-input
+          type="cel"
           id="celular"
           label="Celular"
           class-label="text-sm"

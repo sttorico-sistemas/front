@@ -23,7 +23,13 @@
 		label: '',
 	})
 	const accordians = reactive({
-		backoffice: false
+		backoffice: false,
+		contratoSistema: false,
+		gestores: false,
+		pontoVenda: false,
+		operadores: false,
+		consignantesHabilitados: false,
+		logs: false,
 	})
 	const contrato = ref<string>('')
 	const consignante = ref<string>('')
@@ -38,7 +44,7 @@
 		{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: true, },
 		{ field: 'data_final', title: 'Data Final', hide: false, sort: true, },
 		{ field: 'status', title: 'Status', hide: false, sort: true, },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false, },
+		{ field: 'actions', title: 'Ações', hide: false, width: '80px', sort: false, },
 	])
 	const rowsContratoSistema = reactive([
 		{
@@ -68,7 +74,7 @@
 		{ field: 'telefone', title: 'Telefone', hide: false, sort: true, },
 		{ field: 'celular', title: 'Celular', hide: false, sort: true, },
 		{ field: 'email', title: 'E-mail', hide: false, sort: true, },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false, },
+		{ field: 'actions', title: 'Ações', hide: false, width: '80px', sort: false, },
 	])
 	const rowsGestores = reactive([
 		{
@@ -99,7 +105,7 @@
 		{ field: 'data_renovação', title: 'Data Renovação', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
 		{ field: 'averbacao', title: 'Averbação', hide: false },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false },
 	])
 	const rowsConsignatesHabilitadas = reactive([
 		{
@@ -150,7 +156,7 @@
 		{ field: 'pdv', title: 'Tipo PDV', hide: false },
 		{ field: 'cidade', title: 'Cidade', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false },
 	])
 	const rowsPontoVenda = reactive([
 		{
@@ -175,7 +181,7 @@
 		{ field: 'pdv', title: 'Tipo PDV', hide: false },
 		{ field: 'cidade', title: 'Cidade', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
-		{ field: 'actions', title: 'Ações', hide: false, sort: false },
+		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false },
 	])
 	const rowsOperadores = reactive([
 		{
@@ -235,124 +241,138 @@
 		<breadcrumbs :paginas="['Cadastro', 'Consignatária']" />
 
     <dados-consignataria />
-    <contratos-sistema
-			:cols="colsContratoSistema"
-			:rows="filtered(selected.label)"
-			:pagination="true"
-		>
-			<template #filters>
-				<multiselect
-					v-model="contrato"
-					:options="['Contrato de Adesão', 'Aditivo Contrato']"
-					class="custom-multiselect min-w-[150px]"
-					placeholder="Tipo Contrato"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'contrato')"
-				/>
-				<multiselect
-					v-model="consignante"
-					:options="['N/A', 'Prefeitura de Florianópolis']"
-					class="custom-multiselect min-w-[200px]"
-					placeholder="Consignante"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'consignante')"
-				/>
-				<multiselect
-					v-model="data_inicial"
-					:options="['23/03/2018']"
-					class="custom-multiselect min-w-[100px]"
-					placeholder="Data Inicial"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'data_inicial')"
-				/>
-				<multiselect
-					v-model="data_final"
-					:options="['23/03/2023']"
-					class="custom-multiselect min-w-[100px]"
-					placeholder="Data Final"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'data_final')"
-				/>
-				<multiselect
-					v-model="status"
-					:options="['Ativo', 'Inativo']"
-					class="custom-multiselect min-w-[100px]"
-					placeholder="Status"
-					:searchable="false"
-					:preselect-first="false"
-					:allow-empty="false"
-					selected-label=""
-					select-label=""
-					deselect-label=""
-					@select="(selected.label = $event), (selected.type = 'status')"
-				/>
 
-				<div>
-					<button
-						v-tippy:top
-						type="button"
-						class="text-xs m-1"
-						@click="clearFilter()"
-					>
-						<icon-clear class="w-5 h-5 text-primary_3-table" />
-					</button>
-					<tippy target="top" placement="top">Limpar pesquisa</tippy>
-				</div>
-			</template>
-		</contratos-sistema>
-    <lista-gestores
-			:cols="colsGestores"
-			:rows="rowsGestores"
-			:pagination="true"
-		/>
-		<back-office />
-		<ponto-venda
-			:cols="colsPontoVenda"
-			:rows="rowsPontoVenda"
-			title="Ponto de Venda"
-		/>
-		<ponto-venda
-			:cols="colsOperadores"
-			:rows="rowsOperadores"
-			title="Operadores"
-			:btn-add="false"
-		/>
-    <consignataria-habilitadas
-			:cols="colsConsignatesHabilitadas"
-			:rows="rowsConsignatesHabilitadas"
-			title="Consignantes Habilitados"
-			type-screen="consignataria"
-		/>
-    <logs-alteracao />
-
-
-		<div class="mt-6 border border-slate-50 shadow-md rounded-md">
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
 			<button
 				type="button"
-				class="p-4 w-full flex justify-between items-center text-lg"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.contratoSistema === true ? (accordians.contratoSistema = false) : (accordians.contratoSistema = true)"
+			>
+				Contratos Sistema
+				<div
+					:class="{ 'rotate-180': accordians.contratoSistema === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.contratoSistema === true">
+				<contratos-sistema
+					:cols="colsContratoSistema"
+					:rows="filtered(selected.label)"
+					:pagination="true"
+				>
+					<template #filters>
+						<multiselect
+							v-model="contrato"
+							:options="['Contrato de Adesão', 'Aditivo Contrato']"
+							class="custom-multiselect min-w-[150px]"
+							placeholder="Tipo Contrato"
+							:searchable="false"
+							:preselect-first="false"
+							:allow-empty="false"
+							selected-label=""
+							select-label=""
+							deselect-label=""
+							@select="(selected.label = $event), (selected.type = 'contrato')"
+						/>
+						<multiselect
+							v-model="consignante"
+							:options="['N/A', 'Prefeitura de Florianópolis']"
+							class="custom-multiselect min-w-[200px]"
+							placeholder="Consignante"
+							:searchable="false"
+							:preselect-first="false"
+							:allow-empty="false"
+							selected-label=""
+							select-label=""
+							deselect-label=""
+							@select="(selected.label = $event), (selected.type = 'consignante')"
+						/>
+						<multiselect
+							v-model="data_inicial"
+							:options="['23/03/2018']"
+							class="custom-multiselect min-w-[100px]"
+							placeholder="Data Inicial"
+							:searchable="false"
+							:preselect-first="false"
+							:allow-empty="false"
+							selected-label=""
+							select-label=""
+							deselect-label=""
+							@select="(selected.label = $event), (selected.type = 'data_inicial')"
+						/>
+						<multiselect
+							v-model="data_final"
+							:options="['23/03/2023']"
+							class="custom-multiselect min-w-[100px]"
+							placeholder="Data Final"
+							:searchable="false"
+							:preselect-first="false"
+							:allow-empty="false"
+							selected-label=""
+							select-label=""
+							deselect-label=""
+							@select="(selected.label = $event), (selected.type = 'data_final')"
+						/>
+						<multiselect
+							v-model="status"
+							:options="['Ativo', 'Inativo']"
+							class="custom-multiselect min-w-[100px]"
+							placeholder="Status"
+							:searchable="false"
+							:preselect-first="false"
+							:allow-empty="false"
+							selected-label=""
+							select-label=""
+							deselect-label=""
+							@select="(selected.label = $event), (selected.type = 'status')"
+						/>
+
+						<div>
+							<button
+								v-tippy:top
+								type="button"
+								class="text-xs m-1"
+								@click="clearFilter()"
+							>
+								<icon-clear class="w-5 h-5 text-primary_3-table" />
+							</button>
+							<tippy target="top" placement="top">Limpar pesquisa</tippy>
+						</div>
+					</template>
+				</contratos-sistema>
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.gestores === true ? (accordians.gestores = false) : (accordians.gestores = true)"
+			>
+				Gestores
+				<div
+					:class="{ 'rotate-180': accordians.gestores === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.gestores === true">
+				<lista-gestores
+					:cols="colsGestores"
+					:rows="rowsGestores"
+					:pagination="true"
+				/>
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
 				@click="accordians.backoffice === true ? (accordians.backoffice = false) : (accordians.backoffice = true)"
 			>
-				Backoffice Teste
+				Backoffice
 				<div
 					:class="{ 'rotate-180': accordians.backoffice === true }"
 				>
@@ -361,6 +381,92 @@
 			</button>
 			<vue-collapsible :isOpen="accordians.backoffice === true">
 				<back-office />
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.pontoVenda === true ? (accordians.pontoVenda = false) : (accordians.pontoVenda = true)"
+			>
+				Pontos de Vendas
+				<div
+					:class="{ 'rotate-180': accordians.pontoVenda === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.pontoVenda === true">
+				<ponto-venda
+					:cols="colsPontoVenda"
+					:rows="rowsPontoVenda"
+					title="Ponto de Venda"
+				/>
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.operadores === true ? (accordians.operadores = false) : (accordians.operadores = true)"
+			>
+				Operadores
+				<div
+					:class="{ 'rotate-180': accordians.operadores === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.operadores === true">
+				<ponto-venda
+					:cols="colsOperadores"
+					:rows="rowsOperadores"
+					title="Operadores"
+					:btn-add="false"
+				/>
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.consignantesHabilitados === true ? (accordians.consignantesHabilitados = false) : (accordians.consignantesHabilitados = true)"
+			>
+				Consignantes Habilitados
+				<div
+					:class="{ 'rotate-180': accordians.consignantesHabilitados === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.consignantesHabilitados === true">
+				<consignataria-habilitadas
+					:cols="colsConsignatesHabilitadas"
+					:rows="rowsConsignatesHabilitadas"
+					title="Consignantes Habilitados"
+					type-screen="consignataria"
+				/>
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.logs === true ? (accordians.logs = false) : (accordians.logs = true)"
+			>
+				Logs de Alterações
+				<div
+					:class="{ 'rotate-180': accordians.logs === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.logs === true">
+    		<logs-alteracao />
 			</vue-collapsible>
 		</div>
 	</main>

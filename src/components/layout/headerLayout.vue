@@ -201,6 +201,38 @@
 										Consignantes
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-pessoas' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Pessoas Cadastradas
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignador' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignador
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'cadastro-operador' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Operadores
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'cadastro-perfil-operador' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Cadastro Operadores
+									</router-link>
+								</li>
 								<hr class="mx-2">
 								<li>
 									<router-link
@@ -210,7 +242,6 @@
 										Consignatária Admin
 									</router-link>
 								</li>
-
 							</ul>
 						</div>
 					</button>

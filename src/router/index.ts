@@ -14,6 +14,7 @@ const router = createRouter({
 			name: 'dashboard',
 			component: Dashboard,
 		},
+		// Consultas
 		{
 			path: '/consultas',
 			name: 'consultas',
@@ -78,8 +79,19 @@ const router = createRouter({
 					name: 'consultas-consignantes',
 					component: Consultas,
 				},
+				{
+					path: 'pessoas',
+					name: 'consultas-pessoas',
+					component: Consultas,
+				},
+				{
+					path: 'consignador',
+					name: 'consultas-consignador',
+					component: Consultas,
+				},
 			],
 		},
+		// Simulador
 		{
 			path: '/simulador',
 			name: 'simulador',
@@ -101,6 +113,8 @@ const router = createRouter({
 				},
 			],
 		},
+
+		// Documentos
 		{
 			path: '/documentos',
 			name: 'documentos',
@@ -112,6 +126,7 @@ const router = createRouter({
 				},
 			],
 		},
+		// Cadastro
 		{
 			path: '/cadastro',
 			name: 'cadastro',
@@ -124,6 +139,16 @@ const router = createRouter({
 				{
 					path: 'consignataria/:id',
 					name: 'cadastro-consignataria',
+					component: Cadastro,
+				},
+				{
+					path: 'operador',
+					name: 'cadastro-operador',
+					component: Cadastro,
+				},
+				{
+					path: 'perfil-operador',
+					name: 'cadastro-perfil-operador',
 					component: Cadastro,
 				},
 			],
