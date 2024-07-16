@@ -28,6 +28,8 @@
 	import IconAdd from '@icons/iconAdd.vue'
 	import IconEdit from '@icons/iconEdit.vue'
 	import IconDelete from '@icons/iconDelete.vue'
+	import IconBlock from '@icons/iconBlock.vue'
+	import IconCheck from '@icons/iconCheck.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
@@ -67,6 +69,9 @@
 						<div class="flex gap-2">
               <button><icon-edit /></button>
               <button><icon-delete /></button>
+							
+							<button v-if="data.value.status === 'Ativo'"><icon-block /></button>
+              <button v-else><icon-check /></button>
             </div>
 					</template>
 				</vue3-datatable>

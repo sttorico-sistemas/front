@@ -67,6 +67,7 @@
       telefone: '(47) 3322-4455',
       celular: '(47) 9991-4455',
       email: 'financas@prefeitura.sc.gov.br',
+			status: 'Ativo',
     },
     {
 			id: 2,
@@ -75,6 +76,7 @@
       telefone: '(47) 3322-4455',
       celular: '(47) 9991-4455',
       email: 'gabinete@prefeitura.sc.gov.br',
+			status: 'Inativo',
     },
 	])
 	const colsConsignatesHabilitadas = reactive([
@@ -86,6 +88,7 @@
 		{ field: 'data_renovação', title: 'Data Renovação', hide: false },
 		{ field: 'status', title: 'Status', hide: false },
 		{ field: 'averbacao', title: 'Averbação', hide: false },
+		{ field: 'habilitacao', title: 'Habilitação', hide: false },
 		{ field: 'actions', title: 'Ações', hide: false, sort: false },
 	])
 	const rowsConsignatesHabilitadas = reactive([
@@ -107,6 +110,7 @@
       data_renovação: '23/03/2021',
 			status: 'Inativo',
       averbacao: 'Bloqueada',
+			habilitacao: 'Desabilitado',
 		},
 		{
       id: 2,
@@ -138,6 +142,7 @@
       data_renovação: '15/10/2022',
 			status: 'Ativo',
       averbacao: 'Liberada',
+			habilitacao: 'Habilitado',
 		},
 	])
 
@@ -213,7 +218,7 @@
 				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
 				@click="accordians.consignatariaHabilitadas === true ? (accordians.consignatariaHabilitadas = false) : (accordians.consignatariaHabilitadas = true)"
 			>
-				Consignatária Habilitadas
+				Consignatárias Habilitadas
 				<div
 					:class="{ 'rotate-180': accordians.consignatariaHabilitadas === true }"
 				>

@@ -6,8 +6,11 @@
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 	import titulo from '@components/layout/tituloLayout.vue'
+	import modalLayout from '@components/layout/modalLayout.vue'
 
 	import ConsultasExport from './consultas-export/consultas-export.vue'
+	import CadastroModalConsignante from '../cadastro/cadastro-modal-consignante/cadastro-modal-consignante.vue'
+
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
@@ -21,6 +24,7 @@
 	import IconLock from '@icons/iconLock.vue'
 
 	// Declarações
+	const isOpenDialog = ref<boolean>(false);
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
@@ -126,14 +130,14 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Consultas', 'Consignantes']" />
+		<breadcrumbs :paginas="['Cadastro', 'Consignantes']" />
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex items-center gap-14">
+				<div class="flex items-center gap-1">
 					<titulo title="Consignantes" />
-					<button v-tippy:right>
+					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
@@ -160,7 +164,7 @@
 					<multiselect
 						v-model="cidade"
 						:options="['AMIRANTE TAMANDARÉ - PR', 'CAMBORIÚ - SC']"
-						class="custom-multiselect max-w-[150px]"
+						class="custom-multiselect min-w-[200px]"
 						placeholder="Cidade"
 						:searchable="false"
 						:preselect-first="false"
@@ -173,7 +177,7 @@
 					<multiselect
 						v-model="tp_entidade"
 						:options="['INSTITUTO PREVIDENCIA', 'GOVERNO MUNICIPAL']"
-						class="custom-multiselect max-w-[150px]"
+						class="custom-multiselect min-w-[200px]"
 						placeholder="Tipo Entidade"
 						:searchable="false"
 						:preselect-first="false"
@@ -297,18 +301,6 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-user class="w-5 h-5 text-primary_3-table" />
-								</button>
-								<tippy target="right" placement="right"
-									>Usuário {{ data.value.consignante }}</tippy
-								>
-							</div>
-							<div>
-								<button
-									v-tippy:right
-									type="button"
-									class="text-xs m-1"
-								>
 									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
 									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
 								</button>
@@ -334,6 +326,14 @@
 				</vue3-datatable>
 			</div>
 		</div>
+		<modal-layout
+      title="Cadastro Consignante"
+      :is-open="isOpenDialog"
+      size="max-w-[834px]"
+      @btn-close="isOpenDialog = false"
+    >
+      <cadastro-modal-consignante @btn-cancelar="isOpenDialog = false" />
+    </modal-layout>
 	</main>
 </template>
 <style lang="scss" scoped>

@@ -47,6 +47,7 @@
 	import IconLock from '@icons/iconLock.vue'
 	import IconShieldCheck from '@icons/iconShieldCheck.vue'
 	import IconShieldUser from '@icons/iconShieldUser.vue'
+	import IconEdit from '@icons/iconEdit.vue'
 
 	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
 	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
@@ -88,6 +89,10 @@
 				return 'bg-warning' // Inativo
 			case 'Bloqueada':
 				return 'bg-secondary'
+			case 'Desabilitado':
+				return 'bg-warning' // Inativo
+			case 'Habilitado':
+				return 'bg-success'
 		}
 	}
 
@@ -185,7 +190,7 @@
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
-						>Cadastre uma nova Consignatária</tippy
+						>Habilitar Nova Consignatária</tippy
 					>
 				</div>
 
@@ -322,6 +327,13 @@
 							>{{ data.value.averbacao }}</span
 						>
 					</template>
+					<template #habilitacao="data">
+						<span
+							class="flex justify-center badge !w-[80px] h-[22px]"
+							:class="color(data.value.habilitacao)"
+							>{{ data.value.habilitacao }}</span
+						>
+					</template>
           <template #actions="data">
 						<div class="flex">
 							<div>
@@ -330,7 +342,7 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
 									>Ver Consignatária</tippy

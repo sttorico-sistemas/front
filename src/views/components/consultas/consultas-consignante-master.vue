@@ -57,7 +57,7 @@
 
 <template>
 	<main>
-		<breadcrumbs :paginas="['Consultas', 'Consignante Master']" />
+		<breadcrumbs :paginas="['Cadastro', 'Consignante Master']" />
 
 		<div class="panel pb-0 mt-6">
 			<div
