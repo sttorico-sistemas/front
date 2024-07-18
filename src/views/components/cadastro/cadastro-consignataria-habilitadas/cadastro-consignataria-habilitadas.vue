@@ -345,7 +345,7 @@
 									<icon-edit class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>Ver Consignatária</tippy
+									>Editar</tippy
 								>
 							</div>
 							<div v-if="props.typeScreen === 'consignante'">

@@ -185,7 +185,7 @@
 										Previsão de Descontos
 									</router-link>
 								</li>
-								<li>
+								<li class="hidden">
 									<router-link
 										:to="{ name: 'consultas-consignante-master' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -193,7 +193,7 @@
 										Consignante Master
 									</router-link>
 								</li>
-								<li>
+								<li class="hidden">
 									<router-link
 										:to="{ name: 'consultas-consignantes' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -233,6 +233,42 @@
 										Cadastro Operadores
 									</router-link>
 								</li>
+							</ul>
+						</div>
+					</button>
+				</li>
+				<button
+					class="menu__main_list_item relative"
+					@click="toggleShow('cadastro')"
+				>
+					<icon-calculator class="menu__main_list_icon" />
+						Cadastro
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu === 'cadastro' ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignante-master' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignante Master
+									</router-link>
+								</li>
+								<li>
+									<router-link
+										:to="{ name: 'consultas-consignantes' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Consignantes
+									</router-link>
+								</li>
 								<hr class="mx-2">
 								<li>
 									<router-link
@@ -245,7 +281,6 @@
 							</ul>
 						</div>
 					</button>
-				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
 						<icon-conversation class="menu__main_list_icon" />

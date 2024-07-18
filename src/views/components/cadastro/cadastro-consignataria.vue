@@ -85,6 +85,7 @@
       telefone: '(47) 3322-4455',
       celular: '(47) 9991-4455',
       email: 'financas@prefeitura.sc.gov.br',
+			status: 'Ativo',
     },
     {
 			id: 2,
@@ -94,6 +95,7 @@
       telefone: '(47) 3322-4455',
       celular: '(47) 9991-4455',
       email: 'gabinete@prefeitura.sc.gov.br',
+			status: 'Inativo',
     },
 	])
 	const colsConsignatesHabilitadas = reactive([
