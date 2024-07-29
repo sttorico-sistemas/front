@@ -17,6 +17,10 @@
       type: String,
       default: 'Pontos de Vendas',
     },
+		administrador: {
+			type: Boolean,
+			default: false,
+		},
 		btnAdd: {
 			type: Boolean,
 			default: true,
@@ -39,6 +43,7 @@
 	import IconPrinter from '@icons/iconPrinter.vue'
   import IconCheck from '@icons/iconCheck.vue'
 	import IconBlock from '@icons/iconBlock.vue'
+	import IconDelete from '@icons/iconDelete.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
@@ -48,12 +53,16 @@
 	})
 	const pdv = ref<string>('')
 	const cidade = ref<string>('')
+	const perfil = ref<string>('')
+	const tipo_admin = ref<string>('')
 	const status = ref<string>('')
 
 	// Script
 	const clearFilter = () => {
 		pdv.value = ''
 		cidade.value = ''
+		perfil.value = ''
+		tipo_admin.value = ''
 		status.value = ''
 
 		selected.label = ''
@@ -82,9 +91,25 @@
 
     if (selected.type === 'cidade')
 			return props.rows.filter((item: any) => item.cidade === value)
+
+		if (selected.type === 'perfil')
+			return props.rows.filter((item: any) => item.perfil === value)
+
+		if (selected.type === 'tipo_admin')
+			return props.rows.filter((item: any) => item.tipo_administrador === value)
 	}
 
   const parseCols = (): Array<object> => {
+		if (props.administrador) {
+				return [
+				{ field: 'id', title: '#', hide: false, sort: false },
+				{ field: 'operador', title: 'Operador', hide: false, sort: false },
+				{ field: 'perfil', title: 'Perfil', hide: false, sort: false },
+				{ field: 'tipo_administrador', title: 'Tipo Administrador', hide: false, sort: false },
+				{ field: 'status', title: 'Status', hide: false, sort: false },
+			]
+		}
+
 		return [
       { field: 'id', title: '#', hide: false, sort: false },
       { field: 'ponto_venda', title: 'Ponto de Venda', hide: false },
@@ -118,6 +143,7 @@
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
           <multiselect
+						v-if="!administrador"
 						v-model="pdv"
 						:options="['Agência', 'PAB']"
 						class="custom-multiselect min-w-[200px]"
@@ -131,6 +157,7 @@
 						@select="(selected.label = $event), (selected.type = 'pdv')"
 					/>
 					<multiselect
+						v-if="!administrador"
 						v-model="cidade"
 						:options="['Brasília - DF', 'Florianópolis - SC']"
 						class="custom-multiselect min-w-[200px]"
@@ -142,6 +169,34 @@
 						select-label=""
 						deselect-label=""
 						@select="(selected.label = $event), (selected.type = 'cidade')"
+					/>
+					<multiselect
+						v-if="administrador"
+						v-model="perfil"
+						:options="['Atendimento', 'Fechamento']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Perfil"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'perfil')"
+					/>
+					<multiselect
+						v-if="administrador"
+						v-model="tipo_admin"
+						:options="['Suporte', 'Operacional']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Tipo Admin"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'tipo_admin')"
 					/>
 					<multiselect
 						v-model="status"
@@ -240,6 +295,18 @@
 								</button>
 								<tippy target="right" placement="right"
 									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
+								>
+							</div>
+							<div>
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-delete class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Excluir</tippy
 								>
 							</div>
 						</div>
