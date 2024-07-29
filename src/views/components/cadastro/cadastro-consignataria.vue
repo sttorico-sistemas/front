@@ -1,21 +1,25 @@
 <script lang="ts" setup>
 	import { ref, reactive } from 'vue'
+	import router from 'src/router'
 	import VueCollapsible from 'vue-height-collapsible/vue3'
 
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
+	import titulo from '@components/layout/tituloLayout.vue'
 
 	import ConsignatariaHabilitadas from './cadastro-consignataria-habilitadas/cadastro-consignataria-habilitadas.vue'
 	import BackOffice from './cadastro-backoffice/cadastro-backoffice.vue'
 	import PontoVenda from './cadastro-ponto-venda/cadastro-ponto-venda.vue'
 	import ContratosSistema from './cadastro-contrato-sistema/cadastro-contrato-sistema.vue'
 	import DadosConsignataria from './cadastro-dados-consignataria/cadastro-dados-consignataria.vue'
+	import ConsultaConsignataria from './cadastro-consulta-consignataria/cadastro-consulta-consignataria.vue'
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 
 	// Icons
 	import IconClear from '@icons/iconClear.vue'
 	import IconCaretDown from '@icons/iconCaretDown.vue'
+	import IconEye from '@icons/iconEye.vue'
 
 	// Declarações
 	const selected = reactive<{ type: string; label: string }>({
@@ -64,38 +68,6 @@
       data_inicial: '23/03/2018',
       data_final: '23/03/2023',
       status: 'Inativo',
-    },
-	])
-	const colsGestores = reactive([
-		{ field: 'id', title: '#', hide: true, sort: true, },
-		{ field: 'gestor', title: 'Gestores', hide: false, sort: true, },
-		{ field: 'atribuicoes', title: 'Atribuições', hide: false, sort: true, },
-		{ field: 'cargo', title: 'Cargo', hide: false, sort: true, },
-		{ field: 'telefone', title: 'Telefone', hide: false, sort: true, },
-		{ field: 'celular', title: 'Celular', hide: false, sort: true, },
-		{ field: 'email', title: 'E-mail', hide: false, sort: true, },
-		{ field: 'actions', title: 'Ações', hide: false, width: '80px', sort: false, },
-	])
-	const rowsGestores = reactive([
-		{
-			id: 1,
-      gestor: 'João Carlos de Oliveira Carvalho',
-			atribuicoes: 'Contratos',
-      cargo: 'Secretário de Administração e Finanças',
-      telefone: '(47) 3322-4455',
-      celular: '(47) 9991-4455',
-      email: 'financas@prefeitura.sc.gov.br',
-			status: 'Ativo',
-    },
-    {
-			id: 2,
-      gestor: 'Mário José da Silva Chavier',
-			atribuicoes: 'Pontos de Vendas',
-      cargo: 'Prefeito Municipal',
-      telefone: '(47) 3322-4455',
-      celular: '(47) 9991-4455',
-      email: 'gabinete@prefeitura.sc.gov.br',
-			status: 'Inativo',
     },
 	])
 	const colsConsignatesHabilitadas = reactive([
@@ -242,6 +214,8 @@
 	<main>
 		<breadcrumbs :paginas="['Cadastro', 'Consignatária']" />
 
+		<consulta-consignataria />
+
     <dados-consignataria />
 
 		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
@@ -350,28 +324,6 @@
 			<button
 				type="button"
 				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
-				@click="accordians.gestores === true ? (accordians.gestores = false) : (accordians.gestores = true)"
-			>
-				Gestores
-				<div
-					:class="{ 'rotate-180': accordians.gestores === true }"
-				>
-						<icon-caret-down />
-				</div>
-			</button>
-			<vue-collapsible :isOpen="accordians.gestores === true">
-				<lista-gestores
-					:cols="colsGestores"
-					:rows="rowsGestores"
-					:pagination="true"
-				/>
-			</vue-collapsible>
-		</div>
-
-		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
-			<button
-				type="button"
-				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
 				@click="accordians.backoffice === true ? (accordians.backoffice = false) : (accordians.backoffice = true)"
 			>
 				Backoffice
@@ -396,7 +348,7 @@
 				<div
 					:class="{ 'rotate-180': accordians.pontoVenda === true }"
 				>
-						<icon-caret-down />
+					<icon-caret-down />
 				</div>
 			</button>
 			<vue-collapsible :isOpen="accordians.pontoVenda === true">
@@ -429,6 +381,15 @@
 					:btn-add="false"
 				/>
 			</vue-collapsible>
+		</div>
+
+		<div class="panel mt-6 bg-[#f6f8fa]">
+      <div class="flex items-center justify-between">
+        <titulo title="Perfil de Acesso para Operadores" :class-style="'text-[#1E1E1E] text-lg'" />
+        <a :href="router.resolve({ name: 'cadastro-perfil-operador', params: { id: '1' } }).href" target="_blank">
+					<icon-eye />
+        </a>
+      </div>
 		</div>
 
 		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">

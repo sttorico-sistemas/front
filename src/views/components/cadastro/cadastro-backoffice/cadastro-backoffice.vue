@@ -222,19 +222,6 @@
 									v-tippy:right
 									type="button"
 									class="text-xs m-1"
-									@click="isOpenDialogCadastroListagemBackoffice = true"
-								>
-									<icon-user class="w-5 h-5 text-primary_3-table" />
-								</button>
-								<tippy target="right" placement="right"
-									>Gestor</tippy
-								>
-							</div>
-              <div>
-								<button
-									v-tippy:right
-									type="button"
-									class="text-xs m-1"
 								>
 									<icon-edit class="w-5 h-5 text-primary_3-table" />
 								</button>

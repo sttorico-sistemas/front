@@ -29,6 +29,7 @@
 	import IconEdit from '@icons/iconEdit.vue'
 	import IconBlock from '@icons/iconBlock.vue'
 	import IconCheck from '@icons/iconCheck.vue'
+	import IconEye from '@icons/iconEye.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
@@ -84,6 +85,18 @@
 					</template>
 					<template #actions="data">
 						<div class="flex gap-2">
+							<div>
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-eye class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Visualizar</tippy
+								>
+							</div>
 							<div>
 								<button
 									v-tippy:right

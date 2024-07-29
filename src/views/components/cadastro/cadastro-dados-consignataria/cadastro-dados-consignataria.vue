@@ -155,6 +155,11 @@
           <icon-mensalidade-servico />
           <icon-seguros-servico />
         </div>
+
+        <label class="text-xs my-0 ml-14 mr-2">Status:</label>
+        <span
+          class="flex justify-center badge !w-[80px] h-[22px] bg-success"
+          >Ativo</span>
       </div>
     </div>
 	</main>
