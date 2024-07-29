@@ -151,6 +151,11 @@ const router = createRouter({
 					name: 'cadastro-perfil-operador',
 					component: Cadastro,
 				},
+				{
+					path: 'administrador',
+					name: 'cadastro-administrador',
+					component: Cadastro,
+				},
 			],
 		},
 	],
