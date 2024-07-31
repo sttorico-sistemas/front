@@ -105,7 +105,7 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
         <div class="flex items-center gap-14">
-					<titulo title="BackOffice" />
+					<titulo title="Backoffices Cadastrados" />
 					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>

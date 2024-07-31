@@ -61,10 +61,11 @@
 	const isOpenDialog = ref<boolean>(false)
 	const isOpenDialogPontoVenda = ref<boolean>(false)
 	const isOpenDialogBackOffice = ref<boolean>(false)
-	const selected = reactive<{ type: string; label: string }>({
+	const selected = reactive<{ type: string, label: string }>({
 		type: '',
 		label: '',
 	})
+	const consignante = ref<string>('')
 	const servico = ref<string>('')
 	const status = ref<string>('')
 	const instituicao = ref<string>('')
@@ -76,6 +77,7 @@
 		status.value = ''
 		instituicao.value = ''
 		averbacao.value = ''
+		consignante.value = ''
 
 		selected.label = ''
 		selected.type = ''
@@ -100,6 +102,9 @@
 
 	const filtered = (value: string = '') => {
 		if (value === '') return props.rows
+
+		if (selected.type === 'consignante')
+			return props.rows.filter((item: any) => item.consignante === value)
 
     if (selected.type === 'instituicao')
 			return props.rows.filter((item: any) => item.tipo_instituicao === value)
@@ -199,6 +204,19 @@
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
+					<multiselect
+						v-model="consignante"
+						:options="['Prefeitura de Florianópolis', 'Governo do Mato Grosso']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Consignantes"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'consignante')"
+					/>
           <multiselect
 						v-model="instituicao"
 						:options="['Instituição Financeira', 'Cooperativa de Crédito']"

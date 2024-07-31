@@ -6,6 +6,7 @@
 	// Componentes
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 	import titulo from '@components/layout/tituloLayout.vue'
+	import ConsultasExport from '../consultas/consultas-export/consultas-export.vue'
 
 	import ConsignatariaHabilitadas from './cadastro-consignataria-habilitadas/cadastro-consignataria-habilitadas.vue'
 	import BackOffice from './cadastro-backoffice/cadastro-backoffice.vue'
@@ -20,6 +21,7 @@
 	import IconClear from '@icons/iconClear.vue'
 	import IconCaretDown from '@icons/iconCaretDown.vue'
 	import IconEye from '@icons/iconEye.vue'
+	import IconPrinter from '@icons/iconPrinter.vue'
 
 	// Declarações
 	const selected = reactive<{ type: string; label: string }>({
@@ -27,6 +29,7 @@
 		label: '',
 	})
 	const accordians = reactive({
+		dadosContrato: false,
 		backoffice: false,
 		contratoSistema: false,
 		gestores: false,
@@ -209,14 +212,42 @@
 		selected.type = ''
 	}
 
+  const parseColsContratoSistema = (): Array<object> => {
+		return [
+			{ field: 'cod', title: 'Cód. Contrato', hide: false, sort: true, },
+			{ field: 'tipo_contrato', title: 'Tipo Contrato', hide: false, sort: true, },
+			{ field: 'tipo_consignante', title: 'Tipo Consignante', hide: false, sort: true, },
+			{ field: 'vigencia', title: 'Vigência', hide: false, sort: true, },
+			{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: true, },
+			{ field: 'data_final', title: 'Data Final', hide: false, sort: true, },
+			{ field: 'status', title: 'Status', hide: false, sort: true, },
+    ]
+	}
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Cadastro', 'Consignatária']" />
+		<breadcrumbs :paginas="['Cadastro', 'Contrato da Consignatária ']" />
 
 		<consulta-consignataria />
 
-    <dados-consignataria />
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.dadosContrato === true ? (accordians.dadosContrato = false) : (accordians.dadosContrato = true)"
+			>
+				Dados do Contrato
+				<div
+					:class="{ 'rotate-180': accordians.dadosContrato === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.dadosContrato === true">
+				<dados-consignataria />
+			</vue-collapsible>
+		</div>
+
 
 		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
 			<button
@@ -239,19 +270,6 @@
 				>
 					<template #filters>
 						<multiselect
-							v-model="contrato"
-							:options="['Contrato de Adesão', 'Aditivo Contrato']"
-							class="custom-multiselect min-w-[150px]"
-							placeholder="Tipo Contrato"
-							:searchable="false"
-							:preselect-first="false"
-							:allow-empty="false"
-							selected-label=""
-							select-label=""
-							deselect-label=""
-							@select="(selected.label = $event), (selected.type = 'contrato')"
-						/>
-						<multiselect
 							v-model="consignante"
 							:options="['N/A', 'Prefeitura de Florianópolis']"
 							class="custom-multiselect min-w-[200px]"
@@ -263,6 +281,19 @@
 							select-label=""
 							deselect-label=""
 							@select="(selected.label = $event), (selected.type = 'consignante')"
+						/>
+						<multiselect
+							v-model="contrato"
+							:options="['Contrato de Adesão', 'Aditivo Contrato']"
+							class="custom-multiselect min-w-[150px]"
+							placeholder="Tipo Contrato"
+							:searchable="false"
+							:preselect-first="false"
+							:allow-empty="false"
+							selected-label=""
+							select-label=""
+							deselect-label=""
+							@select="(selected.label = $event), (selected.type = 'contrato')"
 						/>
 						<multiselect
 							v-model="data_inicial"
@@ -314,6 +345,20 @@
 								<icon-clear class="w-5 h-5 text-primary_3-table" />
 							</button>
 							<tippy target="top" placement="top">Limpar pesquisa</tippy>
+						</div>
+						<div>
+							<consultas-export
+								v-tippy:top
+								:cols="parseColsContratoSistema()"
+								:rows="rowsContratoSistema"
+								filename=""
+								export-type="print"
+							>
+								<template #icon>
+									<icon-printer class="w-5 h-5" />
+								</template>
+							</consultas-export>
+							<tippy target="top" placement="top">Imprimir</tippy>
 						</div>
 					</template>
 				</contratos-sistema>

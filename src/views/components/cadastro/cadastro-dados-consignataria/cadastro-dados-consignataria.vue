@@ -28,7 +28,7 @@
 	<main>
     <div class="panel mt-6">
       <div class="flex items-center gap-14">
-        <titulo title="Dados do Consignatária " />
+        <titulo title="Dados do Contrato" />
         <button class="hidden" @click="isOpenDialog = true" v-tippy:right>
           <icon-edit />
         </button>
