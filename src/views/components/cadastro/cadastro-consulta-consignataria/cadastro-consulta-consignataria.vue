@@ -15,7 +15,7 @@
 </script>
 <template>
 	<main>
-    <div class="panel py-2.5 mt-6 bg-[#EAEAEC]">
+    <div class="panel py-4 mt-6 bg-[#EAEAEC]">
       <form class="">
         <div class="flex flex-col md:flex-row gap-4 items-center">
           <label-select

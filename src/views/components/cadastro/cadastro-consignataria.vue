@@ -226,7 +226,7 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Cadastro', 'Contrato da Consignatária ']" />
+		<breadcrumbs :paginas="['Cadastro', 'Consignatária ']" />
 
 		<consulta-consignataria />
 
@@ -236,7 +236,7 @@
 				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
 				@click="accordians.dadosContrato === true ? (accordians.dadosContrato = false) : (accordians.dadosContrato = true)"
 			>
-				Dados do Contrato
+				Dados da Consignatária
 				<div
 					:class="{ 'rotate-180': accordians.dadosContrato === true }"
 				>
@@ -255,7 +255,7 @@
 				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
 				@click="accordians.contratoSistema === true ? (accordians.contratoSistema = false) : (accordians.contratoSistema = true)"
 			>
-				Contratos Sistema
+				Contratos do Sistema
 				<div
 					:class="{ 'rotate-180': accordians.contratoSistema === true }"
 				>
