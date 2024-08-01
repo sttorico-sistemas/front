@@ -29,7 +29,7 @@
     <div class="panel mt-6">
       <div class="flex items-center gap-14">
         <titulo title="Dados da Consignatária" />
-        <button class="hidden" @click="isOpenDialog = true" v-tippy:right>
+        <button @click="isOpenDialog = true" v-tippy:right>
           <icon-edit />
         </button>
         <tippy target="right" placement="right">Editar Consignatária</tippy
