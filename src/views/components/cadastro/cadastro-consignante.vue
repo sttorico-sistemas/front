@@ -11,12 +11,14 @@
 	import ListaAverbadores from './cadastro-lista-averbadores/cadastro-lista-averbadores.vue'
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
+	import ConsultaConsignante from './cadastro-consulta-consignante/cadastro-consulta-consignante.vue'
 
 	// Icons
 	import IconCaretDown from '@icons/iconCaretDown.vue'
 
 	// Declarações
 	const accordians = reactive({
+		dadosConsignante: false,
 		contratoSistema: false,
 		gestores: false,
 		averbadores: false,
@@ -153,7 +155,25 @@
 	<main>
 		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
 
-    <dados-consignante />
+		<consulta-consignante />
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.dadosConsignante === true ? (accordians.dadosConsignante = false) : (accordians.dadosConsignante = true)"
+			>
+				Dados do Consignante
+				<div
+					:class="{ 'rotate-180': accordians.dadosConsignante === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.dadosConsignante === true">
+				<dados-consignante />
+			</vue-collapsible>
+		</div>
 
 		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
 			<button
