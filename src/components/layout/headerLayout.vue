@@ -17,6 +17,7 @@
 	import IconNotification from '@icons/iconNotification.vue'
 	import IconProfile from '@icons/iconProfile.vue'
 	import IconSearch from '@icons/iconSearch.vue'
+	import IconConfig from '@icons/iconConfig.vue'
 
 	// Scripts
 	const showMenu = ref<string>('')
@@ -237,6 +238,7 @@
 						</div>
 					</button>
 				</li>
+				<li>
 				<button
 					class="menu__main_list_item relative"
 					@click="toggleShow('cadastro')"
@@ -289,11 +291,35 @@
 							</ul>
 						</div>
 					</button>
+				</li>
 				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
-						<icon-conversation class="menu__main_list_icon" />
-						Solicitações
-					</router-link>
+					<button
+						class="menu__main_list_item relative"
+						@click="toggleShow('configuracoes')"
+					>
+						<icon-config class="menu__main_list_icon" />
+							Configurações
+						<icon-arrow-down />
+						<div
+							id="dropdownNavbar"
+							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
+							:class="showMenu === 'configuracoes' ? '' : 'hidden'"
+						>
+							<ul
+								class="py-2 text-sm text-gray-700"
+								aria-labelledby="dropdownLargeButton"
+							>
+								<li>
+									<router-link
+										:to="{ name: 'configuracoes-tabelas-auxiliares' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Tableas Auxiliares
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</button>
 				</li>
 				<li>
 					<button
