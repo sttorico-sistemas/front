@@ -137,6 +137,11 @@ const router = createRouter({
 					name: 'configuracoes-tabelas-auxiliares',
 					component: Configuracoes,
 				},
+				{
+					path: 'logomarcas',
+					name: 'configuracoes-logomarcas',
+					component: Configuracoes,
+				},
 			],
 		},
 		// Cadastro
