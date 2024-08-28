@@ -3,6 +3,7 @@
 	import { onMounted, shallowRef, watch } from 'vue'
 
 	import TabelasAuxiliares from '../components/configuracoes/tabelas-auxiliares.vue'
+	import Logomarcas from '../components/configuracoes/logomarcas.vue'
 
 	const route = useRoute()
 
@@ -12,6 +13,9 @@
 		switch (route.name) {
 			case 'configuracoes-tabelas-auxiliares':
 				currentComponent.value = TabelasAuxiliares
+				break
+			case 'configuracoes-logomarcas':
+				currentComponent.value = Logomarcas
 				break
 		}
 	})
