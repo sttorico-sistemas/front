@@ -317,6 +317,14 @@
 										Tableas Auxiliares
 									</router-link>
 								</li>
+								<li>
+									<router-link
+										:to="{ name: 'configuracoes-logomarcas' }"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
+										Logomarcas
+									</router-link>
+								</li>
 							</ul>
 						</div>
 					</button>
