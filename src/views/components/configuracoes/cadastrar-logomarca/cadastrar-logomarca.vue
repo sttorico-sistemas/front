@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-	import { reactive, ref, onMounted } from 'vue'
-  import { FileUploadWithPreview, Events, ImageAddedEvent } from 'file-upload-with-preview'
+	import { reactive, ref, onMounted, watch } from 'vue'
 
 	// Componentes
   import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
@@ -11,27 +10,57 @@
   import IconProfile from '@icons/iconProfile.vue'
 
 	// Declarações
+  const logomarca = ref<string>('')
+  const messageErrors = ref<array<string>>([])
 
 	// Script
-  onMounted(() => {
-    new FileUploadWithPreview('logomarca', {
-      images: {
-        baseImage: 'https://placehold.co/150x150',
-      }
-    })
-  })
+  const emits = defineEmits(['btnSave', 'btnCancelar'])
+  
+  // Valida o tamanho em kb da imagem
+  const fileSize = (size) => {
+    if (size > 512000) return false
 
-  /*
-    Pegar evento do input ao adicionar imagem
-    Verificar tamanho (< 512kb)
-    Verificar tamanho (150px)
-    Verificar formato (png, jpg)
-  */
-  window.addEventListener(Events.IMAGE_ADDED, (e: Event) => {
-  const { detail } = e as unknown as ImageAddedEvent;
+    return true
+  }
 
-  console.log('detail', detail);
-});
+  // Valida o tamanho da imagem em px
+  const filePixel = (e) => {
+    const image = new Image()
+    image.src = e
+
+    const isBigger = image.onload = () => {
+      if (image.naturalWidth < 150 || image.naturalHeight < 150) return true
+
+      return false
+    }
+
+    return isBigger()
+  }
+
+  const onFileChange = (e: Event) => {
+    onFileDelete()
+
+    const file = event.target.files[0]
+
+    const reader = new FileReader()
+
+    if (!fileSize(file.size)) {
+      messageErrors.value.push('Tamanho da imagem é maior que 512kb.')
+    }
+
+    reader.onload = (e) => {
+      logomarca.value = e.target.result
+
+      if (!filePixel(e.target.result)) messageErrors.value.push('Recomendado 150x150px (pixel) ou a mesma proporção.')
+    }
+
+    reader.readAsDataURL(file)
+  }
+
+  const onFileDelete = () => {
+    logomarca.value = ''
+    messageErrors.value = []
+  }
 </script>
 <template>
 	<main>
@@ -58,16 +87,21 @@
       <div class="mb-3">
         <div class="flex">
           <label class="text-sm m-0 mr-3">Logo</label>
-          <label class="m-0 cursor-pointer" for="file-upload-with-preview-logomarca"><icon-add class="w-5 h-5 mr-1" /></label>
-          <a class="clear-button" href="javascript:void(0)" title="Limpar Logomarca">
-            <icon-delete class="w-5 h-5" />
-          </a>
+          <label class="m-0 cursor-pointer" for="file-upload-logomarca">
+            <icon-add class="w-5 h-5 mr-1" />
+            <input id="file-upload-logomarca" type="file" class="hidden" @change="onFileChange" accept="image/png, image/jpeg" />
+          </label>
+          <icon-delete class="w-5 h-5" @click="onFileDelete" />
         </div>
         <div
-          class="w-40 h-40 mt-2 rounded-md border border-gray-200 custom-file-container"
-          data-upload-id="logomarca"
+          v-show="messageErrors.length"
+          v-for="messageError in messageErrors"
+          :key="messageError"
+          class="flex items-center p-2 my-2 rounded text-danger bg-danger-light"
         >
+          <span class="pr-1 pl-1 text-sm"><strong class="mr-1 ml-1">Atenção!</strong>{{ messageError }}</span>
         </div>
+        <div class="w-40 h-40 mt-2 rounded-md border border-gray-200 bg-no-repeat bg-center" :style="`background-image: url(${logomarca})`"></div>
       </div>
     </div>
 
