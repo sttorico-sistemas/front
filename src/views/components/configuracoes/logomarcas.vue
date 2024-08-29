@@ -21,7 +21,7 @@
 	})
   const instituicao = ref<string>('')
   const tipo_instituicao = ref<string>('')
-  const isOpenDialog = ref<boolean>(true)
+  const isOpenDialog = ref<boolean>(false)
 	const cols = reactive([
 		{ field: 'logo', title: 'Logo', hide: false, },
 		{ field: 'instituicao', title: 'Instituição', hide: false, },
@@ -142,7 +142,7 @@
     size="max-w-[650px]"
     @btn-close="isOpenDialog = false"
   >
-    <cadastrar-logomarca />
+    <cadastrar-logomarca @btn-cancelar="isOpenDialog = false" />
   </modal-layout>
 </template>
 <style lang="scss" scoped>
