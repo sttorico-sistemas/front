@@ -12,6 +12,7 @@
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 	import ConsultaConsignante from './cadastro-consulta-consignante/cadastro-consulta-consignante.vue'
+	import NormativosCadastrado from './normativos-cadastrado/normativos-cadastrado.vue'
 
 	// Icons
 	import IconCaretDown from '@icons/iconCaretDown.vue'
@@ -23,6 +24,7 @@
 		gestores: false,
 		averbadores: false,
 		consignatariaHabilitadas: false,
+		normativosCadastrado: false,
 		logs: false,
 	})
 	const colsContratoSistema = reactive([
@@ -253,6 +255,27 @@
 				/>
 			</vue-collapsible>
 		</div>
+
+		<!-- novas abas -->
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.normativosCadastrado === true ? (accordians.normativosCadastrado = false) : (accordians.normativosCadastrado = true)"
+			>
+				Normativos
+				<div
+					:class="{ 'rotate-180': accordians.normativosCadastrado === true }"
+				>
+					<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.normativosCadastrado === true">
+				<normativos-cadastrado />
+			</vue-collapsible>
+		</div>
+		<!-- novas abas -->
+
 		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
 			<button
 				type="button"
