@@ -7,6 +7,11 @@
   import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
   import inputReadOnly from '@components/layout/forms/inputs/inputReadonly.vue'
 
+  // Props
+  const props = defineProps({
+    title: String,
+  })
+
   // Icones
 
   // Declarações
@@ -17,7 +22,7 @@
 <template>
   <div class="panel mb-2">
     <div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
-      <titulo title="Regras da Consignação" />
+      <titulo :title="props.title" />
     </div>
 
     <form class="">
