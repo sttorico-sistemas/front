@@ -4,6 +4,10 @@
 
   // Props
   const props = defineProps({
+    matricula: {
+      type: Boolean,
+      default: true,
+    },
     disabled: {
       type: Boolean,
       default: true,
@@ -93,7 +97,7 @@
 
       <consultas-cadastro-pessoa-endereco  />
 
-      <consultas-cadastro-pessoa-matricula  />
+      <consultas-cadastro-pessoa-matricula v-if="matricula"  />
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button
