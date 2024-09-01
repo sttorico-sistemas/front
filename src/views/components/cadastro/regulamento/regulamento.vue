@@ -20,6 +20,13 @@
   import IconPrinter from '@icons/iconPrinter.vue'
   import IconClear from '@icons/iconClear.vue'
 
+	// Props
+	const props = defineProps({
+		title: String,
+		titleModal: String,
+		subTitleModal: String,
+	})
+
 	// Declarações
   const isOpenDialog = ref<boolean>(false);
 	const selected = reactive<{ type: string, label: string }>({
@@ -99,12 +106,12 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
         <div class="flex items-center gap-14">
-					<titulo title="Regras para Consignações" />
+					<titulo :title="props.title" />
 					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
-						>Cadastre uma nova regra para consignações</tippy
+						>Cadastre uma nova {{ props.subTitleModal }}</tippy
 					>
 				</div>
 
@@ -216,12 +223,15 @@
 			</div>
 		</div>
     <modal-layout
-      title="Cadastrar Regulamento"
+      :title="props.titleModal"
       :is-open="isOpenDialog"
       size="max-w-[600px]"
       @btn-close="isOpenDialog = false"
     >
-      <cadastrar-regulamento @btn-cancelar="isOpenDialog = false" />
+      <cadastrar-regulamento
+				:title="props.subTitleModal"
+				@btn-cancelar="isOpenDialog = false"
+			/>
     </modal-layout>
 	</main>
 </template>
