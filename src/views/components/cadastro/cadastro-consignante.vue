@@ -328,7 +328,11 @@
 				</div>
 			</button>
 			<vue-collapsible :isOpen="accordians.regulamento === true">
-				<regulamento />
+				<regulamento
+					title="Regras para Consignações"
+					title-modal="Cadastrar Regulamento"
+					sub-title-modal="Regras da Consignação"
+				/>
 			</vue-collapsible>
 		</div>
 		<!-- novas abas -->
