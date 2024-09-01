@@ -13,6 +13,7 @@
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 	import ConsultaConsignante from './cadastro-consulta-consignante/cadastro-consulta-consignante.vue'
 	import NormativosCadastrado from './normativos-cadastrado/normativos-cadastrado.vue'
+	import ConsignacoesAutorizadas from './consignacoes-autorizadas/consignacoes-autorizadas.vue'
 
 	// Icons
 	import IconCaretDown from '@icons/iconCaretDown.vue'
@@ -25,6 +26,7 @@
 		averbadores: false,
 		consignatariaHabilitadas: false,
 		normativosCadastrado: false,
+		consignacoesAutorizadas: false,
 		logs: false,
 	})
 	const colsContratoSistema = reactive([
@@ -272,6 +274,23 @@
 			</button>
 			<vue-collapsible :isOpen="accordians.normativosCadastrado === true">
 				<normativos-cadastrado />
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.consignacoesAutorizadas === true ? (accordians.consignacoesAutorizadas = false) : (accordians.consignacoesAutorizadas = true)"
+			>
+				Consignações
+				<div
+					:class="{ 'rotate-180': accordians.consignacoesAutorizadas === true }"
+				>
+					<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.consignacoesAutorizadas === true">
+				<consignacoes-autorizadas />
 			</vue-collapsible>
 		</div>
 		<!-- novas abas -->
