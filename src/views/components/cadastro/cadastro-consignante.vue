@@ -15,6 +15,7 @@
 	import NormativosCadastrado from './normativos-cadastrado/normativos-cadastrado.vue'
 	import ConsignacoesAutorizadas from './consignacoes-autorizadas/consignacoes-autorizadas.vue'
 	import MargemConsignavel from './margem-consignavel/margem-consignavel.vue'
+	import Regulamento from './regulamento/regulamento.vue'
 
 	// Icons
 	import IconCaretDown from '@icons/iconCaretDown.vue'
@@ -29,6 +30,7 @@
 		normativosCadastrado: false,
 		consignacoesAutorizadas: false,
 		margemConsignavel: false,
+		regulamento: false,
 		logs: false,
 	})
 	const colsContratoSistema = reactive([
@@ -310,6 +312,23 @@
 			</button>
 			<vue-collapsible :isOpen="accordians.margemConsignavel === true">
 				<margem-consignavel />
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.regulamento === true ? (accordians.regulamento = false) : (accordians.regulamento = true)"
+			>
+				Regulamento
+				<div
+					:class="{ 'rotate-180': accordians.regulamento === true }"
+				>
+					<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.regulamento === true">
+				<regulamento />
 			</vue-collapsible>
 		</div>
 		<!-- novas abas -->
