@@ -15,6 +15,7 @@
 	import DadosConsignataria from './cadastro-dados-consignataria/cadastro-dados-consignataria.vue'
 	import ConsultaConsignataria from './cadastro-consulta-consignataria/cadastro-consulta-consignataria.vue'
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
+	import Regulamento from './regulamento/regulamento.vue'
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 
 	// Icons
@@ -36,6 +37,7 @@
 		pontoVenda: false,
 		operadores: false,
 		consignantesHabilitados: false,
+		regrasServicos: false,
 		logs: false,
 	})
 	const contrato = ref<string>('')
@@ -456,6 +458,28 @@
 					:rows="rowsConsignatesHabilitadas"
 					title="Consignantes Habilitados"
 					type-screen="consignataria"
+				/>
+			</vue-collapsible>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.regrasServicos === true ? (accordians.regrasServicos = false) : (accordians.regrasServicos = true)"
+			>
+				Regras de Serviços
+				<div
+					:class="{ 'rotate-180': accordians.regrasServicos === true }"
+				>
+					<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.regrasServicos === true">
+				<regulamento
+					title="Regras de Serviços"
+					title-modal="Cadastro Regras de Serviços"
+					sub-title-modal="Regras de Serviços"
 				/>
 			</vue-collapsible>
 		</div>
