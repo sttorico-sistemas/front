@@ -7,7 +7,7 @@
   import modalLayout from '@components/layout/modalLayout.vue'
 	import titulo from '@components/layout/tituloLayout.vue'
 
-  import CadastroModalConsignante from '../cadastro-modal-consignante/cadastro-modal-consignante.vue'
+	import ConsultaCadastroConsignante from '../../consultas/consultas-cadastro-consignatarias/consultas-cadastro-consignatarias.vue'
 
 	// Icons
   import IconEdit from '@icons/iconEdit.vue'
@@ -164,11 +164,11 @@
     </div>
 	</main>
     <modal-layout
-      title="Cadastro Consignante"
+      title="Cadastro Consignatária"
       :is-open="isOpenDialog"
       size="max-w-[834px]"
       @btn-close="isOpenDialog = false"
     >
-      <cadastro-modal-consignante @btn-cancelar="isOpenDialog = false" />
+      <consulta-cadastro-consignante @btn-cancelar="isOpenDialog = false" />
     </modal-layout>
 </template>
