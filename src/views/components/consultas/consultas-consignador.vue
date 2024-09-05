@@ -233,7 +233,7 @@
 											<icon-eye class="w-5 h-5 text-primary_3-table" />
 										</button>
 										<tippy target="right" placement="right"
-											>ver {{ data.value.id }}</tippy
+											>Cadastro Matrícula {{ data.value.id }}</tippy
 										>
 									</div>
 									<div>
@@ -245,7 +245,7 @@
 											<icon-user class="w-5 h-5 text-primary_3-table" />
 										</button>
 										<tippy target="right" placement="right"
-											>cadastrar {{ data.value.id }}</tippy
+											>Cadastro Pessoa {{ data.value.id }}</tippy
 										>
 									</div>
 									<div>
@@ -287,7 +287,6 @@
 		</div>
 
     <modal-layout
-			:is-open="isOpenDialog"
 			size="max-w-full"
 			@btn-close="isOpenDialog = false"
 		>
