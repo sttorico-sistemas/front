@@ -7,7 +7,7 @@
   import modalLayout from '@components/layout/modalLayout.vue'
 	import titulo from '@components/layout/tituloLayout.vue'
 
-  import CadastroModalConsignante from '../cadastro-modal-consignante/cadastro-modal-consignante.vue'
+  import CadastroModalAdministrador from '../cadastro-modal-administrador/cadastro-modal-administrador.vue'
 
 	// Icons
   import IconEdit from '@icons/iconEdit.vue'
@@ -30,7 +30,7 @@
     <div class="panel mt-6">
       <div class="flex items-center gap-14">
         <titulo title="Dados do Administrador" />
-        <button @click="isDisabled = !isDisabled" v-tippy:right>
+        <button @click="isOpenDialog = true" v-tippy:right>
           <icon-edit />
         </button>
         <tippy target="right" placement="right">Editar Administrador</tippy
@@ -128,11 +128,11 @@
     </div>
 	</main>
     <modal-layout
-      title="Cadastro Consignante"
+      title="Cadastro Administrador"
       :is-open="isOpenDialog"
       size="max-w-[834px]"
       @btn-close="isOpenDialog = false"
     >
-      <cadastro-modal-consignante @btn-cancelar="isOpenDialog = false" />
+      <cadastro-modal-administrador @btn-cancelar="isOpenDialog = false" />
     </modal-layout>
 </template>

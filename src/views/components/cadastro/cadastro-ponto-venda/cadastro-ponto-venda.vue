@@ -34,6 +34,7 @@
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
 	import CadastroModalPontoVenda from '../cadastro-modal-ponto-venda/cadastro-modal-ponto-venda.vue'
+	import CadastroModalOperadores from '../cadastro-modal-operadores/cadastro-modal-operadores.vue'
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
@@ -43,10 +44,12 @@
 	import IconPrinter from '@icons/iconPrinter.vue'
   import IconCheck from '@icons/iconCheck.vue'
 	import IconBlock from '@icons/iconBlock.vue'
+	import IconLock from '@icons/iconLock.vue'
 	import IconDelete from '@icons/iconDelete.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
+	const isOpenDialogOperadores = ref<boolean>(false)
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
@@ -95,6 +98,12 @@
 		if (selected.type === 'perfil')
 			return props.rows.filter((item: any) => item.perfil === value)
 
+		if (selected.type === 'operador')
+			return props.rows.filter((item: any) => item.operador === value)
+
+		if (selected.type === 'tp_operador')
+			return props.rows.filter((item: any) => item.tp_operador === value)
+
 		if (selected.type === 'tipo_admin')
 			return props.rows.filter((item: any) => item.tipo_administrador === value)
 	}
@@ -104,9 +113,12 @@
 				return [
 				{ field: 'id', title: '#', hide: false, sort: false },
 				{ field: 'operador', title: 'Operador', hide: false, sort: false },
+				{ field: 'tp_operador', title: 'Tp Operador', hide: false, sort: false },
 				{ field: 'perfil', title: 'Perfil', hide: false, sort: false },
-				{ field: 'tipo_administrador', title: 'Tipo Administrador', hide: false, sort: false },
-				{ field: 'status', title: 'Status', hide: false, sort: false },
+				{ field: 'departamento', title: 'Departamento', hide: false, sort: false },
+				{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: false },
+				{ field: 'data_final', title: 'Data Final', hide: false, sort: false },
+				{ field: 'status', title: 'Status', hide: false },
 			]
 		}
 
@@ -128,8 +140,17 @@
         <div class="flex items-center gap-14">
 					<titulo :title="props.title" />
 					<button
+						v-if="!administrador"
 						:class="!props.btnAdd ? 'hidden' : ''"
 						@click="isOpenDialog = true"
+						v-tippy:right
+					>
+						<icon-add />
+					</button>
+					<button
+						v-else
+						:class="!props.btnAdd ? 'hidden' : ''"
+						@click="isOpenDialogOperadores = true"
 						v-tippy:right
 					>
 						<icon-add />
@@ -172,6 +193,34 @@
 					/>
 					<multiselect
 						v-if="administrador"
+						v-model="operador"
+						:options="['João da Silva', 'Mario Alves Cabral']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Nome"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'operador')"
+					/>
+					<multiselect
+						v-if="administrador"
+						v-model="tp_operador"
+						:options="['Suporte', 'Operacional']"
+						class="custom-multiselect min-w-[120px]"
+						placeholder="Tp Operador"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'tp_operador')"
+					/>
+					<multiselect
+						v-if="administrador"
 						v-model="perfil"
 						:options="['Atendimento', 'Fechamento']"
 						class="custom-multiselect min-w-[200px]"
@@ -183,20 +232,6 @@
 						select-label=""
 						deselect-label=""
 						@select="(selected.label = $event), (selected.type = 'perfil')"
-					/>
-					<multiselect
-						v-if="administrador"
-						v-model="tipo_admin"
-						:options="['Suporte', 'Operacional']"
-						class="custom-multiselect min-w-[200px]"
-						placeholder="Tipo Admin"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'tipo_admin')"
 					/>
 					<multiselect
 						v-model="status"
@@ -290,11 +325,10 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
-									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-lock class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
+									>Resetar senha</tippy
 								>
 							</div>
 							<div>
@@ -303,10 +337,11 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-delete class="w-5 h-5 text-primary_3-table" />
+									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
+									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>Excluir</tippy
+									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
 								>
 							</div>
 						</div>
@@ -321,11 +356,20 @@
 			size="max-w-[490px]"
 			@btn-close="isOpenDialog = false"
 		>
-			<!-- Datatable-->
 			<cadastro-modal-ponto-venda
 				@btn-cancelar="isOpenDialog = false"
 			/>
-			<!-- Datatable-->
+		</modal-layout>
+
+		<modal-layout
+			title="Cadastro Operadores"
+			:is-open="isOpenDialogOperadores"
+			size="max-w-[490px]"
+			@btn-close="isOpenDialogOperadores = false"
+		>
+			<cadastro-modal-operadores
+				@btn-cancelar="isOpenDialogOperadores = false"
+			/>
 		</modal-layout>
 	</main>
 </template>

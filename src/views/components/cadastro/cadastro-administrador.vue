@@ -14,6 +14,7 @@
 	import DadosAdministrador from './cadastro-dados-administrador/cadastro-dados-administrador.vue'
 	import ConsultaConsignataria from './cadastro-consulta-consignataria/cadastro-consulta-consignataria.vue'
 	import ListaGestores from './cadastro-lista-gestores/cadastro-lista-gestores.vue'
+	import instrucoesProcedimentos from './ip-instrucoes-procedimentos/ip-instrucoes-procedimentos.vue'
 	import LogsAlteracao from './logs-alteracao/logs-alteracao.vue'
 
 	// Icons
@@ -33,6 +34,7 @@
 		pontoVenda: false,
 		operadores: false,
 		consignantesHabilitados: false,
+		ip: false,
 		logs: false,
 	})
 	const contrato = ref<string>('')
@@ -43,8 +45,11 @@
 
 	const colsOperadores = reactive([
 		{ field: 'operador', title: 'Operador', hide: false, sort: false },
+		{ field: 'tp_operador', title: 'Tp Operador', hide: false, sort: false },
 		{ field: 'perfil', title: 'Perfil', hide: false, sort: false },
-		{ field: 'tipo_administrador', title: 'Tipo Administrador', hide: false, sort: false },
+		{ field: 'departamento', title: 'Departamento', hide: false, sort: false },
+		{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: false },
+		{ field: 'data_final', title: 'Data Final', hide: false, sort: false },
 		{ field: 'status', title: 'Status', hide: false },
 		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false },
 	])
@@ -52,15 +57,21 @@
 		{
       id: 1,
 			operador: 'João da Silva',
+			tp_operador: 'Suporte',
 			perfil: 'Atendimento',
-      tipo_administrador: 'Suporte',
+			departamento: 'Suporte ao Cliente',
+			data_inicial: '',
+			data_final: '',
 			status: 'Inativo',
 		},
 		{
       id: 2,
 			operador: 'Mario Alves Cabral',
+			tp_operador: 'Operacional',
 			perfil: 'Fechamento',
-			tipo_administrador: 'Operacional',
+			departamento: 'Operacional',
+			data_inicial: '',
+			data_final: '',
 			status: 'Ativo',
 		},
 	])
@@ -120,9 +131,8 @@
 				<ponto-venda
 					:cols="colsOperadores"
 					:rows="rowsOperadores"
-					title="Operadores"
+					title="Operadores Cadastrados"
 					administrador
-					:btn-add="false"
 				/>
 			</vue-collapsible>
 		</div>
@@ -134,6 +144,24 @@
 					<icon-eye />
         </a>
       </div>
+		</div>
+
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.ip === true ? (accordians.ip = false) : (accordians.ip = true)"
+			>
+				IP-Instrução de Procedimentos
+				<div
+					:class="{ 'rotate-180': accordians.ip === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.ip === true">
+				<instrucoes-procedimentos />
+			</vue-collapsible>
 		</div>
 
 		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
