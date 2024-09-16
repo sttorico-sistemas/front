@@ -16,6 +16,10 @@
 	import ConsignacoesAutorizadas from './consignacoes-autorizadas/consignacoes-autorizadas.vue'
 	import MargemConsignavel from './margem-consignavel/margem-consignavel.vue'
 	import Regulamento from './regulamento/regulamento.vue'
+	import PontoVenda from './cadastro-ponto-venda/cadastro-ponto-venda.vue'
+	import instrucoesProcedimentos from './ip-instrucoes-procedimentos/ip-instrucoes-procedimentos.vue'
+	import restricoes from './restricoes/restricoes.vue'
+	import anotacoes from './anotacoes/anotacoes.vue'
 
 	// Icons
 	import IconCaretDown from '@icons/iconCaretDown.vue'
@@ -29,8 +33,12 @@
 		consignatariaHabilitadas: false,
 		normativosCadastrado: false,
 		consignacoesAutorizadas: false,
+		operadores: false,
 		margemConsignavel: false,
 		regulamento: false,
+		restricoes: false,
+		ip: false,
+		anotacoes: false,
 		logs: false,
 	})
 	const colsContratoSistema = reactive([
@@ -155,7 +163,38 @@
 			habilitacao: 'Habilitado',
 		},
 	])
-
+	const colsOperadores = reactive([
+		{ field: 'operador', title: 'Operador', hide: false, sort: false },
+		{ field: 'tp_operador', title: 'Tp Operador', hide: false, sort: false },
+		{ field: 'perfil', title: 'Perfil', hide: false, sort: false },
+		{ field: 'departamento', title: 'Departamento', hide: false, sort: false },
+		{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: false },
+		{ field: 'data_final', title: 'Data Final', hide: false, sort: false },
+		{ field: 'status', title: 'Status', hide: false },
+		{ field: 'actions', title: 'Ações', hide: false, width: '116px', sort: false },
+	])
+	const rowsOperadores = reactive([
+		{
+      id: 1,
+			operador: 'João da Silva',
+			tp_operador: 'Suporte',
+			perfil: 'Atendimento',
+			departamento: 'Suporte ao Cliente',
+			data_inicial: '',
+			data_final: '',
+			status: 'Inativo',
+		},
+		{
+      id: 2,
+			operador: 'Mario Alves Cabral',
+			tp_operador: 'Operacional',
+			perfil: 'Fechamento',
+			departamento: 'Operacional',
+			data_inicial: '',
+			data_final: '',
+			status: 'Ativo',
+		},
+	])
 	// Script
 
 </script>
@@ -267,6 +306,28 @@
 			<button
 				type="button"
 				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.operadores === true ? (accordians.operadores = false) : (accordians.operadores = true)"
+			>
+				Operadores
+				<div
+					:class="{ 'rotate-180': accordians.operadores === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.operadores === true">
+				<ponto-venda
+					:cols="colsOperadores"
+					:rows="rowsOperadores"
+					title="Operadores Cadastrados"
+					administrador
+				/>
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
 				@click="accordians.normativosCadastrado === true ? (accordians.normativosCadastrado = false) : (accordians.normativosCadastrado = true)"
 			>
 				Normativos
@@ -333,6 +394,57 @@
 					title-modal="Cadastrar Regulamento"
 					sub-title-modal="Regras da Consignação"
 				/>
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.restricoes === true ? (accordians.restricoes = false) : (accordians.restricoes = true)"
+			>
+				Restrições
+				<div
+					:class="{ 'rotate-180': accordians.restricoes === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.restricoes === true">
+				<restricoes />
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.ip === true ? (accordians.ip = false) : (accordians.ip = true)"
+			>
+				IP-Instrução de Procedimentos
+				<div
+					:class="{ 'rotate-180': accordians.ip === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.ip === true">
+				<instrucoes-procedimentos />
+			</vue-collapsible>
+		</div>
+		<div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
+			<button
+				type="button"
+				class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
+				@click="accordians.anotacoes === true ? (accordians.anotacoes = false) : (accordians.anotacoes = true)"
+			>
+				Anotações
+				<div
+					:class="{ 'rotate-180': accordians.anotacoes === true }"
+				>
+						<icon-caret-down />
+				</div>
+			</button>
+			<vue-collapsible :isOpen="accordians.anotacoes === true">
+				<anotacoes />
 			</vue-collapsible>
 		</div>
 		<!-- novas abas -->
