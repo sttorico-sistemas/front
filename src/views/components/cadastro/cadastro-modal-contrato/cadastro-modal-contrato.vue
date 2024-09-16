@@ -38,15 +38,6 @@
       />
 
       <label-select
-        id="contrato"
-        label="Tipo de Contrato"
-        class-label="text-sm"
-        class-select="w-full md:max-w-[400px] mb-3"
-        layout="row"
-        :options="['Contrato Comodato', 'Acordo de Cooperação Técnica']"
-      />
-
-      <label-select
         v-if="props.typeScreen === 'consignataria'"
         id="consignante"
         label="Consignante"
@@ -54,6 +45,15 @@
         class-select="w-full md:max-w-[400px] mb-3"
         layout="row"
         :options="['consignante 1', 'consignante 2']"
+      />
+
+      <label-select
+        id="contrato"
+        label="Tipo de Contrato"
+        class-label="text-sm"
+        class-select="w-full md:max-w-[400px] mb-3"
+        layout="row"
+        :options="['Contrato Comodato', 'Acordo de Cooperação Técnica']"
       />
 
       <div class="flex justify-start items-center gap-4">

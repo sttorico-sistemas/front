@@ -29,6 +29,7 @@
 	import IconEdit from '@icons/iconEdit.vue'
 	import IconBlock from '@icons/iconBlock.vue'
 	import IconCheck from '@icons/iconCheck.vue'
+	import IconEye from '@icons/iconEye.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
@@ -51,7 +52,7 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex items-center gap-14">
-					<titulo title="Contratos Sistema" />
+					<titulo title="Contratos da Consignatária" />
 					<button @click="isOpenDialog = true" v-tippy:right>
 						<icon-add />
 					</button>
@@ -84,9 +85,43 @@
 					</template>
 					<template #actions="data">
 						<div class="flex gap-2">
-              <button><icon-edit /></button>
-              <button v-if="data.value.status === 'Ativo'"><icon-block /></button>
-              <button v-else><icon-check /></button>
+							<div>
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-eye class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Visualizar</tippy
+								>
+							</div>
+							<div>
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-edit class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Editar</tippy
+								>
+							</div>
+							<div>
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
+									<icon-block v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
+									<icon-check v-else class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
+								>
+							</div>
             </div>
 					</template>
 				</vue3-datatable>

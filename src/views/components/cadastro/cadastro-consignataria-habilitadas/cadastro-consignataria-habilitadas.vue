@@ -47,6 +47,9 @@
 	import IconLock from '@icons/iconLock.vue'
 	import IconShieldCheck from '@icons/iconShieldCheck.vue'
 	import IconShieldUser from '@icons/iconShieldUser.vue'
+	import IconEdit from '@icons/iconEdit.vue'
+	import IconHabilitar from '@icons/iconHabilitar.vue'
+	import IconDesabilitar from '@icons/iconDesabilitar.vue'
 
 	import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
 	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
@@ -58,10 +61,11 @@
 	const isOpenDialog = ref<boolean>(false)
 	const isOpenDialogPontoVenda = ref<boolean>(false)
 	const isOpenDialogBackOffice = ref<boolean>(false)
-	const selected = reactive<{ type: string; label: string }>({
+	const selected = reactive<{ type: string, label: string }>({
 		type: '',
 		label: '',
 	})
+	const consignante = ref<string>('')
 	const servico = ref<string>('')
 	const status = ref<string>('')
 	const instituicao = ref<string>('')
@@ -73,6 +77,7 @@
 		status.value = ''
 		instituicao.value = ''
 		averbacao.value = ''
+		consignante.value = ''
 
 		selected.label = ''
 		selected.type = ''
@@ -88,11 +93,18 @@
 				return 'bg-warning' // Inativo
 			case 'Bloqueada':
 				return 'bg-secondary'
+			case 'Desabilitado':
+				return 'bg-warning' // Inativo
+			case 'Habilitado':
+				return 'bg-success'
 		}
 	}
 
 	const filtered = (value: string = '') => {
 		if (value === '') return props.rows
+
+		if (selected.type === 'consignante')
+			return props.rows.filter((item: any) => item.consignante === value)
 
     if (selected.type === 'instituicao')
 			return props.rows.filter((item: any) => item.tipo_instituicao === value)
@@ -185,13 +197,26 @@
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right"
-						>Cadastre uma nova Consignatária</tippy
+						>Habilitar Nova Consignatária</tippy
 					>
 				</div>
 
 				<div
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
+					<multiselect
+						v-model="consignante"
+						:options="['Prefeitura de Florianópolis', 'Governo do Mato Grosso']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Consignantes"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'consignante')"
+					/>
           <multiselect
 						v-model="instituicao"
 						:options="['Instituição Financeira', 'Cooperativa de Crédito']"
@@ -322,6 +347,13 @@
 							>{{ data.value.averbacao }}</span
 						>
 					</template>
+					<template #habilitacao="data">
+						<span
+							class="flex justify-center badge !w-[80px] h-[22px]"
+							:class="color(data.value.habilitacao)"
+							>{{ data.value.habilitacao }}</span
+						>
+					</template>
           <template #actions="data">
 						<div class="flex">
 							<div>
@@ -330,10 +362,10 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>Ver Consignatária</tippy
+									>Editar</tippy
 								>
 							</div>
 							<div v-if="props.typeScreen === 'consignante'">
@@ -342,11 +374,11 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
-									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-habilitar v-if="data.value.habilitacao === 'Desabilitado'" class="w-5 h-5 text-primary_3-table" />
+									<icon-desabilitar v-else class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}</tippy
+									>{{ data.value.habilitacao === 'Desabilitado' ? 'Habilitar' : 'Desabilitar' }}</tippy
 								>
 							</div>
 							<div v-if="props.typeScreen === 'consignante'">

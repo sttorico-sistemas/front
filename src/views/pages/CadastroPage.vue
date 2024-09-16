@@ -6,6 +6,7 @@
 	import cadastroConsignataria from '../components/cadastro/cadastro-consignataria.vue'
 	import cadastroOperador from '../components/cadastro/cadastro-operador.vue'
 	import cadastroPerfilOperador from '../components/cadastro/cadastro-perfil-operador.vue'
+	import cadastroAdministrador from '../components/cadastro/cadastro-administrador.vue'
 
 	const route = useRoute()
 
@@ -24,6 +25,9 @@
 				break
 			case 'cadastro-perfil-operador':
 				currentComponent.value = cadastroPerfilOperador
+				break
+			case 'cadastro-administrador':
+				currentComponent.value = cadastroAdministrador
 				break
 		}
 	})

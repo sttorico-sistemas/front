@@ -57,7 +57,7 @@
 
 <template>
 	<main>
-		<breadcrumbs :paginas="['Consultas', 'Consignante Master']" />
+		<breadcrumbs :paginas="['Cadastro', 'Consignante Master']" />
 
 		<div class="panel pb-0 mt-6">
 			<div
@@ -79,7 +79,7 @@
 					<multiselect
 						v-model="consignante"
 						:options="['MUNIC DE ALMIRANTE TAMANDARÉ', 'MUNIC DE CAMBORIÚ']"
-						class="custom-multiselect max-w-[300px]"
+						class="custom-multiselect min-w-[250px]"
 						placeholder="Selecione Consignante Master"
 						:searchable="false"
 						:preselect-first="false"

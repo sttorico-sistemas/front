@@ -15,6 +15,17 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    display: none;
+}
+.custom-file-container .input-container {
+    display: none;
+}
+.custom-file-container .image-preview {
+    background-color: transparent;
+    background-size: auto;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
 }
 .custom-file-container .label-container .custom-file-container__image-clear {
     color: #333;

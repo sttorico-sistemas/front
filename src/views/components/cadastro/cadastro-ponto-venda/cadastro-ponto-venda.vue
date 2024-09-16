@@ -17,6 +17,10 @@
       type: String,
       default: 'Pontos de Vendas',
     },
+		administrador: {
+			type: Boolean,
+			default: false,
+		},
 		btnAdd: {
 			type: Boolean,
 			default: true,
@@ -30,6 +34,7 @@
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
 	import CadastroModalPontoVenda from '../cadastro-modal-ponto-venda/cadastro-modal-ponto-venda.vue'
+	import CadastroModalOperadores from '../cadastro-modal-operadores/cadastro-modal-operadores.vue'
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
@@ -39,21 +44,29 @@
 	import IconPrinter from '@icons/iconPrinter.vue'
   import IconCheck from '@icons/iconCheck.vue'
 	import IconBlock from '@icons/iconBlock.vue'
+	import IconLock from '@icons/iconLock.vue'
+	import IconDelete from '@icons/iconDelete.vue'
+	import IconResetPassword from '@icons/iconResetPassword.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
+	const isOpenDialogOperadores = ref<boolean>(false)
 	const selected = reactive<{ type: string; label: string }>({
 		type: '',
 		label: '',
 	})
 	const pdv = ref<string>('')
 	const cidade = ref<string>('')
+	const perfil = ref<string>('')
+	const tipo_admin = ref<string>('')
 	const status = ref<string>('')
 
 	// Script
 	const clearFilter = () => {
 		pdv.value = ''
 		cidade.value = ''
+		perfil.value = ''
+		tipo_admin.value = ''
 		status.value = ''
 
 		selected.label = ''
@@ -82,9 +95,34 @@
 
     if (selected.type === 'cidade')
 			return props.rows.filter((item: any) => item.cidade === value)
+
+		if (selected.type === 'perfil')
+			return props.rows.filter((item: any) => item.perfil === value)
+
+		if (selected.type === 'operador')
+			return props.rows.filter((item: any) => item.operador === value)
+
+		if (selected.type === 'tp_operador')
+			return props.rows.filter((item: any) => item.tp_operador === value)
+
+		if (selected.type === 'tipo_admin')
+			return props.rows.filter((item: any) => item.tipo_administrador === value)
 	}
 
   const parseCols = (): Array<object> => {
+		if (props.administrador) {
+				return [
+				{ field: 'id', title: '#', hide: false, sort: false },
+				{ field: 'operador', title: 'Operador', hide: false, sort: false },
+				{ field: 'tp_operador', title: 'Tp Operador', hide: false, sort: false },
+				{ field: 'perfil', title: 'Perfil', hide: false, sort: false },
+				{ field: 'departamento', title: 'Departamento', hide: false, sort: false },
+				{ field: 'data_inicial', title: 'Data Inicial', hide: false, sort: false },
+				{ field: 'data_final', title: 'Data Final', hide: false, sort: false },
+				{ field: 'status', title: 'Status', hide: false },
+			]
+		}
+
 		return [
       { field: 'id', title: '#', hide: false, sort: false },
       { field: 'ponto_venda', title: 'Ponto de Venda', hide: false },
@@ -103,8 +141,17 @@
         <div class="flex items-center gap-14">
 					<titulo :title="props.title" />
 					<button
+						v-if="!administrador"
 						:class="!props.btnAdd ? 'hidden' : ''"
 						@click="isOpenDialog = true"
+						v-tippy:right
+					>
+						<icon-add />
+					</button>
+					<button
+						v-else
+						:class="!props.btnAdd ? 'hidden' : ''"
+						@click="isOpenDialogOperadores = true"
 						v-tippy:right
 					>
 						<icon-add />
@@ -118,6 +165,7 @@
 					class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto"
 				>
           <multiselect
+						v-if="!administrador"
 						v-model="pdv"
 						:options="['Agência', 'PAB']"
 						class="custom-multiselect min-w-[200px]"
@@ -131,6 +179,7 @@
 						@select="(selected.label = $event), (selected.type = 'pdv')"
 					/>
 					<multiselect
+						v-if="!administrador"
 						v-model="cidade"
 						:options="['Brasília - DF', 'Florianópolis - SC']"
 						class="custom-multiselect min-w-[200px]"
@@ -142,6 +191,48 @@
 						select-label=""
 						deselect-label=""
 						@select="(selected.label = $event), (selected.type = 'cidade')"
+					/>
+					<multiselect
+						v-if="administrador"
+						v-model="operador"
+						:options="['João da Silva', 'Mario Alves Cabral']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Nome"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'operador')"
+					/>
+					<multiselect
+						v-if="administrador"
+						v-model="tp_operador"
+						:options="['Suporte', 'Operacional']"
+						class="custom-multiselect min-w-[120px]"
+						placeholder="Tp Operador"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'tp_operador')"
+					/>
+					<multiselect
+						v-if="administrador"
+						v-model="perfil"
+						:options="['Atendimento', 'Fechamento']"
+						class="custom-multiselect min-w-[200px]"
+						placeholder="Perfil"
+						:searchable="false"
+						:preselect-first="false"
+						:allow-empty="false"
+						selected-label=""
+						select-label=""
+						deselect-label=""
+						@select="(selected.label = $event), (selected.type = 'perfil')"
 					/>
 					<multiselect
 						v-model="status"
@@ -235,6 +326,18 @@
 									type="button"
 									class="text-xs m-1"
 								>
+									<icon-reset-password class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right"
+									>Resetar senha</tippy
+								>
+							</div>
+							<div>
+								<button
+									v-tippy:right
+									type="button"
+									class="text-xs m-1"
+								>
 									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
 									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
 								</button>
@@ -254,11 +357,20 @@
 			size="max-w-[490px]"
 			@btn-close="isOpenDialog = false"
 		>
-			<!-- Datatable-->
 			<cadastro-modal-ponto-venda
 				@btn-cancelar="isOpenDialog = false"
 			/>
-			<!-- Datatable-->
+		</modal-layout>
+
+		<modal-layout
+			title="Cadastro Operadores"
+			:is-open="isOpenDialogOperadores"
+			size="max-w-[490px]"
+			@btn-close="isOpenDialogOperadores = false"
+		>
+			<cadastro-modal-operadores
+				@btn-cancelar="isOpenDialogOperadores = false"
+			/>
 		</modal-layout>
 	</main>
 </template>

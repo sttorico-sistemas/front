@@ -5,6 +5,7 @@ import Dashboard from '../views/pages/DashboardPage.vue'
 import Documentos from '../views/pages/DocumentosPage.vue'
 import Simulador from '../views/pages/SimuladorPage.vue'
 import Cadastro from '../views/pages/CadastroPage.vue'
+import Configuracoes from '../views/pages/ConfiguracoesPage.vue'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -126,6 +127,23 @@ const router = createRouter({
 				},
 			],
 		},
+		// Configuracoes
+		{
+			path: '/configuracoes',
+			name: 'configuracoes',
+			children: [
+				{
+					path: 'tabelas-auxiliares',
+					name: 'configuracoes-tabelas-auxiliares',
+					component: Configuracoes,
+				},
+				{
+					path: 'logomarcas',
+					name: 'configuracoes-logomarcas',
+					component: Configuracoes,
+				},
+			],
+		},
 		// Cadastro
 		{
 			path: '/cadastro',
@@ -149,6 +167,11 @@ const router = createRouter({
 				{
 					path: 'perfil-operador',
 					name: 'cadastro-perfil-operador',
+					component: Cadastro,
+				},
+				{
+					path: 'administrador',
+					name: 'cadastro-administrador',
 					component: Cadastro,
 				},
 			],

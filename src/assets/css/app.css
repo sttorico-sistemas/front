@@ -4,5 +4,5 @@
 @import '@bhplugin/vue3-datatable/dist/style.css';
 @import 'flatpickr/dist/flatpickr.css';
 @import 'flatpickr/dist/plugins/monthSelect/style.css';
-/* @import 'file-upload-with-preview/dist/file-upload-with-preview.min.css'; */
+@import 'file-upload-with-preview/dist/style.css';
 @import 'tailwind.css';

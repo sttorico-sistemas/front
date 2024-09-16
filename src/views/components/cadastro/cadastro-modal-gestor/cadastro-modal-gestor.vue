@@ -36,15 +36,6 @@
           class-input="md:max-w-[400px]"
           layout="row"
         />
-        <label-select
-          v-if="props.typeScreen === 'consignataria'"
-          id="atribuicao"
-          label="Atribuição"
-          class-label="text-sm"
-          class-select="w-full md:max-w-[400px]"
-          layout="row"
-          :options="['Atribuições 1', 'Atribuições 2']"
-        />
         <label-input
           id="cargo"
           label="Cargo"

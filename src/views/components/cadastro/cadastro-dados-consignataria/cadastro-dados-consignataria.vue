@@ -7,7 +7,7 @@
   import modalLayout from '@components/layout/modalLayout.vue'
 	import titulo from '@components/layout/tituloLayout.vue'
 
-  import CadastroModalConsignante from '../cadastro-modal-consignante/cadastro-modal-consignante.vue'
+	import ConsultaCadastroConsignante from '../../consultas/consultas-cadastro-consignatarias/consultas-cadastro-consignatarias.vue'
 
 	// Icons
   import IconEdit from '@icons/iconEdit.vue'
@@ -28,8 +28,8 @@
 	<main>
     <div class="panel mt-6">
       <div class="flex items-center gap-14">
-        <titulo title="Dados do Consignatária " />
-        <button class="hidden" @click="isOpenDialog = true" v-tippy:right>
+        <titulo title="Dados da Consignatária" />
+        <button @click="isOpenDialog = true" v-tippy:right>
           <icon-edit />
         </button>
         <tippy target="right" placement="right">Editar Consignatária</tippy
@@ -155,15 +155,20 @@
           <icon-mensalidade-servico />
           <icon-seguros-servico />
         </div>
+
+        <label class="text-xs my-0 ml-14 mr-2">Status:</label>
+        <span
+          class="flex justify-center badge !w-[80px] h-[22px] bg-success"
+          >Ativo</span>
       </div>
     </div>
 	</main>
     <modal-layout
-      title="Cadastro Consignante"
+      title="Cadastro Consignatária"
       :is-open="isOpenDialog"
       size="max-w-[834px]"
       @btn-close="isOpenDialog = false"
     >
-      <cadastro-modal-consignante @btn-cancelar="isOpenDialog = false" />
+      <consulta-cadastro-consignante @btn-cancelar="isOpenDialog = false" />
     </modal-layout>
 </template>
