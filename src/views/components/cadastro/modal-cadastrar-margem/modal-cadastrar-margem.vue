@@ -17,7 +17,7 @@
 <template>
   <div class="panel mb-2">
     <div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
-      <titulo title="Regras da Consignação" />
+      <titulo title="Dados da Margem" />
     </div>
 
     <form class="">
