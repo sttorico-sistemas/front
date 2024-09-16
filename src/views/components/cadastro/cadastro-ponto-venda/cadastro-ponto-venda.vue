@@ -46,6 +46,7 @@
 	import IconBlock from '@icons/iconBlock.vue'
 	import IconLock from '@icons/iconLock.vue'
 	import IconDelete from '@icons/iconDelete.vue'
+	import IconResetPassword from '@icons/iconResetPassword.vue'
 
 	// Declarações
 	const isOpenDialog = ref<boolean>(false)
@@ -325,7 +326,7 @@
 									type="button"
 									class="text-xs m-1"
 								>
-									<icon-lock class="w-5 h-5 text-primary_3-table" />
+									<icon-reset-password class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
 									>Resetar senha</tippy
