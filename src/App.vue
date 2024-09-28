@@ -1,10 +1,6 @@
 <script setup>
 	// import { RouterLink, RouterView } from 'vue-router'
-
-	import footerLayout from '@components/layout/footerLayout.vue'
-	import headerLayout from '@components/layout/headerLayout.vue'
-	import alertLayout from '@components/layout/alertLayout.vue'
-
+	
 	import { useMeta } from '@/composables/use-meta'
 
 	// Meta
@@ -12,23 +8,5 @@
 </script>
 
 <template>
-	<div class="dashboard-layout">
-		<header-layout />
-
-		<RouterView />
-
-		<footer-layout />
-		<alert-layout />
-	</div>
+	<RouterView />
 </template>
-
-<style lang="scss" scoped>
-	.dashboard-layout {
-		max-width: 1920px;
-		margin: 0 auto;
-		padding: 13px 20px;
-	}
-	.main {
-		height: 90vh;
-	}
-</style>

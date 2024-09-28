@@ -1,5 +1,6 @@
 <script setup>
 	// Componentes
+	import mainLayout from '@components/layout/mainLayout.vue'
 	import breadcrumbs from '@components/layout/breadcrumbsLayout.vue'
 	import distribuicaoMargem from '../components/dashboard/distribuicao-margem/distribuicao-margem.vue'
 	import formMatriculaSelecionada from '../components/dashboard/form-matricula-selecionada/form-matricula-selecionada.vue'
@@ -9,7 +10,7 @@
 </script>
 
 <template>
-	<main>
+	<main-layout>
 		<breadcrumbs :paginas="['Home', 'Dashboard']" />
 
 		<div class="grid gap-4 grid-cols-12 mt-4 mb-4">
@@ -31,5 +32,5 @@
 				<ultimas-noticias />
 			</div>
 		</div>
-	</main>
+	</main-layout>
 </template>
