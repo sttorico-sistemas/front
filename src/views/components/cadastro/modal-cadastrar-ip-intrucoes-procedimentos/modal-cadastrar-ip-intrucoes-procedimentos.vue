@@ -1,32 +1,32 @@
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 
-  // Componentes
-  import titulo from '@components/layout/tituloLayout.vue'
-  import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
-  import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
-  import inputReadOnly from '@components/layout/forms/inputs/inputReadonly.vue'
+// Componentes
+import titulo from '@/core/components/layout/tituloLayout.vue'
+import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
+import inputReadOnly from '@/core/components/layout/forms/inputs/inputReadonly.vue'
 
-  // Icones
-  import IconDoc from '@icons/iconFile.vue'
+// Icones
+import IconDoc from '@/core/components/icons/iconFile.vue'
 
-  // Declarações
+// Declarações
 
-  // Scripts
-  const emits = defineEmits(['btnSave', 'btnCancelar'])
+// Scripts
+const emits = defineEmits(['btnSave', 'btnCancelar'])
 
-  const color = (value: string): string => {
-		switch (value) {
-			case 'Ativo':
-				return 'bg-success' // Ativo
-      case 'Liberada':
-        return 'bg-success'
-			case 'Inativo':
-				return 'bg-warning' // Inativo
-			case 'Bloqueada':
-				return 'bg-secondary'
-		}
-	}
+const color = (value: string): string => {
+  switch (value) {
+    case 'Ativo':
+      return 'bg-success' // Ativo
+    case 'Liberada':
+      return 'bg-success'
+    case 'Inativo':
+      return 'bg-warning' // Inativo
+    case 'Bloqueada':
+      return 'bg-secondary'
+  }
+}
 </script>
 <template>
   <div class="panel mb-2">
@@ -35,38 +35,15 @@
     </div>
 
     <form class="">
-      <label-select
-        id="numero"
-        label="Número"
-        class-label="text-sm"
-        class-select="w-full md:w-[150px]"
-        layout="row"
-        :options="['numero 1', 'numero 2']"
-      />
-      <label-input
-        id="instrucoes"
-        label="Instrução"
-        class-label="text-sm"
-        class-input="md:max-w-[400px]"
-        layout="row"
-      />
+      <label-select id="numero" label="Número" class-label="text-sm" class-select="w-full md:w-[150px]" layout="row"
+        :options="['numero 1', 'numero 2']" />
+      <label-input id="instrucoes" label="Instrução" class-label="text-sm" class-input="md:max-w-[400px]"
+        layout="row" />
       <div class="flex flex-col md:flex-row gap-4 items-center my-2.5">
-        <label-input
-          type="date"
-          id="data_inicial"
-          label="Data Inicial"
-          class-label="text-sm"
-          class-input="md:max-w-[150px]"
-          layout="row"
-        />
-        <label-input
-          type="date"
-          id="data_final"
-          label="Data Final"
-          class-label="text-sm"
-          class-input="md:max-w-[150px]"
-          layout="row"
-        />
+        <label-input type="date" id="data_inicial" label="Data Inicial" class-label="text-sm"
+          class-input="md:max-w-[150px]" layout="row" />
+        <label-input type="date" id="data_final" label="Data Final" class-label="text-sm" class-input="md:max-w-[150px]"
+          layout="row" />
       </div>
       <div class="flex flex-col justify-between md:flex-row gap-4 items-center mt-8">
         <label for="anexar-documento" class="flex gap-2 cursor-pointer">
@@ -81,11 +58,8 @@
   </div>
 
   <div class="flex justify-center items-center gap-12 mt-8">
-    <button
-      type="button"
-      class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
-      @click="emits('btnCancelar', false)"
-    >Cancelar</button>
+    <button type="button" class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+      @click="emits('btnCancelar', false)">Cancelar</button>
     <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
   </div>
 </template>

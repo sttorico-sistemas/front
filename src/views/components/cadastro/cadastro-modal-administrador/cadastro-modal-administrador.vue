@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-  // Core
-  import { reactive, ref } from 'vue'
+// Core
+import { reactive, ref } from 'vue'
 
-	// Componentes
-  import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
-  import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
+// Componentes
+import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
 
-	// Icons
-  import IconClear from '@icons/iconClear.vue'
+// Icons
+import IconClear from '@/core/components/icons/iconClear.vue'
 
-	// Declarações
-  const consignanteMaster = ref<string>('')
+// Declarações
+const consignanteMaster = ref<string>('')
 
-	// Script
-  const clearOption = () => consignanteMaster.value = ''
+// Script
+const clearOption = () => consignanteMaster.value = ''
 
-  const emits = defineEmits(['btnSave', 'btnCancelar'])
+const emits = defineEmits(['btnSave', 'btnCancelar'])
 
 </script>
 <template>
-	<main>
+  <main>
     <div class="panel border mt-5 border-primary_3-table">
       <h3 class="text-base font-semibold text-primary_3-table mb-7">Dados do Administrador</h3>
 
@@ -28,35 +28,13 @@
         <input id="cnpj" type="text" class="form-input mb-3 md:mb-0 md:max-w-[200px] h-[38px]" />
       </div>
 
-      <label-input
-        id="nome"
-        label="Nome"
-        class-label="text-sm"
-        class-input="md:max-w-[420px]"
-        layout="col"
-      />
-      <label-input
-        id="nome_curto"
-        label="Nome curto"
-        class-label="text-sm"
-        class-input="md:max-w-[250px]"
-        layout="col"
-      />
-      <label-select
-        id="tipo_endereco"
-        label="Tipo de Endereço"
-        class-label="text-sm"
-        class-select="md:max-w-[250px]"
-        layout="col"
-        :options="['Av', 'Alameda', 'Beco', 'Comunidade', 'Estrada', 'Rua']"
-      />
-      <label-input
-        id="endereco"
-        label="Endereço Completo"
-        class-label="text-sm"
-        class-input="md:max-w-[620px]"
-        layout="col"
-      />
+      <label-input id="nome" label="Nome" class-label="text-sm" class-input="md:max-w-[420px]" layout="col" />
+      <label-input id="nome_curto" label="Nome curto" class-label="text-sm" class-input="md:max-w-[250px]"
+        layout="col" />
+      <label-select id="tipo_endereco" label="Tipo de Endereço" class-label="text-sm" class-select="md:max-w-[250px]"
+        layout="col" :options="['Av', 'Alameda', 'Beco', 'Comunidade', 'Estrada', 'Rua']" />
+      <label-input id="endereco" label="Endereço Completo" class-label="text-sm" class-input="md:max-w-[620px]"
+        layout="col" />
 
       <div class="flex flex-col md:flex-row items-center mb-3">
         <label for="cidade" class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left">Cidade</label>
@@ -78,13 +56,11 @@
       </div>
 
       <div class="flex justify-center items-center gap-12 mt-8">
-        <button
-          type="button"
+        <button type="button"
           class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
-          @click="emits('btnCancelar', false)"
-        >Cancelar</button>
+          @click="emits('btnCancelar', false)">Cancelar</button>
         <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
       </div>
     </div>
-	</main>
+  </main>
 </template>

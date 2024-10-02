@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Consultas from '../views/pages/ConsultasPage.vue'
 import Dashboard from '../views/pages/DashboardPage.vue'
 import Documentos from '../views/pages/DocumentosPage.vue'
 import Simulador from '../views/pages/SimuladorPage.vue'
 import Cadastro from '../views/pages/CadastroPage.vue'
 import Configuracoes from '../views/pages/ConfiguracoesPage.vue'
+import { consultasRoutes } from 'src/modules/consultas/routes'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,83 +15,7 @@ const router = createRouter({
 			name: 'dashboard',
 			component: Dashboard,
 		},
-		// Consultas
-		{
-			path: '/consultas',
-			name: 'consultas',
-			children: [
-				{
-					path: 'rmc',
-					name: 'consultas-rmc',
-					component: Consultas,
-				},
-				{
-					path: 'contratos',
-					name: 'consultas-contratos',
-					component: Consultas,
-				},
-				{
-					path: 'historico',
-					name: 'consultas-historico',
-					component: Consultas,
-				},
-				{
-					path: 'consignataria-servidor',
-					name: 'consultas-consignataria-servidor',
-					component: Consultas,
-				},
-				{
-					path: 'consignataria-admin',
-					name: 'consultas-consignataria-admin',
-					component: Consultas,
-				},
-				{
-					path: 'atualizacao-margens',
-					name: 'consultas-atualizacao-margens',
-					component: Consultas,
-				},
-				{
-					path: 'historico-reserva-margem',
-					name: 'consultas-historico-reserva-margem',
-					component: Consultas,
-				},
-				{
-					path: 'solicitacoes',
-					name: 'consultas-solicitacoes',
-					component: Consultas,
-				},
-				{
-					path: 'resumo-margem',
-					name: 'consultas-resumo-margem',
-					component: Consultas,
-				},
-				{
-					path: 'previsao-descontos',
-					name: 'consultas-previsao-descontos',
-					component: Consultas,
-				},
-				{
-					path: 'consignante-master',
-					name: 'consultas-consignante-master',
-					component: Consultas,
-				},
-				{
-					path: 'consignantes',
-					name: 'consultas-consignantes',
-					component: Consultas,
-				},
-				{
-					path: 'pessoas',
-					name: 'consultas-pessoas',
-					component: Consultas,
-				},
-				{
-					path: 'consignador',
-					name: 'consultas-consignador',
-					component: Consultas,
-				},
-			],
-		},
+		...consultasRoutes,
 		// Simulador
 		{
 			path: '/simulador',

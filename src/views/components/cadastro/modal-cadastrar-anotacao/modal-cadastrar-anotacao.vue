@@ -1,32 +1,32 @@
 <script lang="ts" setup>
-  import { reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 
-  // Componentes
-  import titulo from '@components/layout/tituloLayout.vue'
-  import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
-  import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
-  import inputReadOnly from '@components/layout/forms/inputs/inputReadonly.vue'
+// Componentes
+import titulo from '@/core/components/layout/tituloLayout.vue'
+import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
+import inputReadOnly from '@/core/components/layout/forms/inputs/inputReadonly.vue'
 
-  // Icones
-  import IconDoc from '@icons/iconFile.vue'
+// Icones
+import IconDoc from '@/core/components/icons/iconFile.vue'
 
-  // Declarações
+// Declarações
 
-  // Scripts
-  const emits = defineEmits(['btnSave', 'btnCancelar'])
+// Scripts
+const emits = defineEmits(['btnSave', 'btnCancelar'])
 
-  const color = (value: string): string => {
-		switch (value) {
-			case 'Ativo':
-				return 'bg-success' // Ativo
-      case 'Liberada':
-        return 'bg-success'
-			case 'Inativo':
-				return 'bg-warning' // Inativo
-			case 'Bloqueada':
-				return 'bg-secondary'
-		}
-	}
+const color = (value: string): string => {
+  switch (value) {
+    case 'Ativo':
+      return 'bg-success' // Ativo
+    case 'Liberada':
+      return 'bg-success'
+    case 'Inativo':
+      return 'bg-warning' // Inativo
+    case 'Bloqueada':
+      return 'bg-secondary'
+  }
+}
 </script>
 <template>
   <div class="panel mb-2">
@@ -35,23 +35,10 @@
     </div>
 
     <form class="">
-      <label-input
-        id="consignante"
-        value=""
-        label="Consignante"
-        class-label="text-sm sm:w-2/5 "
+      <label-input id="consignante" value="" label="Consignante" class-label="text-sm sm:w-2/5 "
         class-input="md:min-w-[288px] mb-2.5 text-xs font-normal disabled:pointer-events-none disabled:bg-[#eee] dark:disabled:bg-[#1b2e4b] cursor-not-allowed"
-        class-wrapper="w-full md:min-w-[288px]"
-        layout="row"
-        disabled
-      />
-      <label-input
-        id="titulo"
-        label="Título"
-        class-label="text-sm"
-        class-input="md:max-w-full"
-        layout="row"
-      />
+        class-wrapper="w-full md:min-w-[288px]" layout="row" disabled />
+      <label-input id="titulo" label="Título" class-label="text-sm" class-input="md:max-w-full" layout="row" />
       <div class="mt-2.5">
         <label for="nota" class="text-sm">Nota:</label>
         <textarea id="nota" rows="3" class="form-textarea text-xs font-normal md:max-w-full h-[95px]"></textarea>
@@ -69,11 +56,8 @@
   </div>
 
   <div class="flex justify-center items-center gap-12 mt-8">
-    <button
-      type="button"
-      class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
-      @click="emits('btnCancelar', false)"
-    >Cancelar</button>
+    <button type="button" class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+      @click="emits('btnCancelar', false)">Cancelar</button>
     <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
   </div>
 </template>

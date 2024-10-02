@@ -1,106 +1,58 @@
 <script lang="ts" setup>
-  // Core
-  import { reactive, ref } from 'vue'
+// Core
+import { reactive, ref } from 'vue'
 
-  // Props
+// Props
 
-	// Componentes
-  import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
-  import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
+// Componentes
+import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
 
-	// Icons
-  import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
-  import IconConveniosServico from '@icons/services/iconConveniosServicos.vue'
-	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
-	import IconMensalidadeServico from '@icons/services/iconMensalidadeServicos.vue'
-	import IconPlanoSaudeServico from '@icons/services/iconPlanoSaudeServico.vue'
-	import IconSegurosServico from '@icons/services/iconSegurosServico.vue'
-	import IconComprasServico from '@icons/services/iconComprasServico.vue'
-	import iconFinanciamentosServico from '@icons/services/iconFinanciamentosServico.vue'
-	import IconCartaoBeneficiosServico from '@icons/services/iconCartaoBeneficiosServico.vue'
+// Icons
+import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
+import IconConveniosServico from '@/core/components/icons/services/iconConveniosServicos.vue'
+import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
+import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from '@/core/components/icons/services/iconPlanoSaudeServico.vue'
+import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconComprasServico from '@/core/components/icons/services/iconComprasServico.vue'
+import iconFinanciamentosServico from '@/core/components/icons/services/iconFinanciamentosServico.vue'
+import IconCartaoBeneficiosServico from '@/core/components/icons/services/iconCartaoBeneficiosServico.vue'
 
-	// Declarações
+// Declarações
 
-	// Script
+// Script
 
-  const emits = defineEmits(['btnSave', 'btnCancelar'])
+const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 <template>
-	<main>
+  <main>
     <div class="panel mt-5 border border-primary_3-table">
       <label class="text-sm md:text-base text-primary_3-table m-0 mb-3">Dados do Ponto de Venda</label>
 
-      <label-select
-        id="ponto_venda"
-        label="Tipo Ponto de Venda"
-        class-label="text-sm"
-        class-select="w-full md:max-w-[400px] mb-3"
-        layout="row"
-        :options="[]"
-      />
+      <label-select id="ponto_venda" label="Tipo Ponto de Venda" class-label="text-sm"
+        class-select="w-full md:max-w-[400px] mb-3" layout="row" :options="[]" />
 
-      <label-input
-        id="nome"
-        label="Nome"
-        class-label="text-sm"
-        class-input="md:max-w-[400px] mb-3"
-        layout="row"
-      />
+      <label-input id="nome" label="Nome" class-label="text-sm" class-input="md:max-w-[400px] mb-3" layout="row" />
 
       <div class="flex justify-start items-center gap-2.5">
-        <label-select
-          id="cidade"
-          label="Cidade"
-          class-label="text-sm"
-          class-select="w-full md:min-w-[290px] mb-3"
-          layout="row"
-          :options="['Rio de Janeiro']"
-        />
-        <label-select
-          id="uf"
-          label="UF"
-          class-label="text-sm"
-          class-select="w-full md:min-w-[100px] mb-3"
-          layout="row"
-          :options="['RJ']"
-        />
+        <label-select id="cidade" label="Cidade" class-label="text-sm" class-select="w-full md:min-w-[290px] mb-3"
+          layout="row" :options="['Rio de Janeiro']" />
+        <label-select id="uf" label="UF" class-label="text-sm" class-select="w-full md:min-w-[100px] mb-3" layout="row"
+          :options="['RJ']" />
       </div>
 
-      <label-select
-        id="gestor"
-        label="Gestor"
-        class-label="text-sm"
-        class-select="w-full md:max-w-[400px] mb-3"
-        layout="row"
-        :options="[]"
-      />
+      <label-select id="gestor" label="Gestor" class-label="text-sm" class-select="w-full md:max-w-[400px] mb-3"
+        layout="row" :options="[]" />
 
       <div class="flex justify-start items-center gap-2.5">
-        <label-input
-          type="tel"
-          id="telefone"
-          label="Telefone"
-          class-label="text-sm"
-          class-input="md:max-w-[195px] mb-3"
-          layout="row"
-        />
-        <label-input
-          type="cel"
-          id="celular"
-          label="Celular"
-          class-label="text-sm"
-          class-input="md:max-w-[195px] mb-3"
-          layout="row"
-        />
+        <label-input type="tel" id="telefone" label="Telefone" class-label="text-sm" class-input="md:max-w-[195px] mb-3"
+          layout="row" />
+        <label-input type="cel" id="celular" label="Celular" class-label="text-sm" class-input="md:max-w-[195px] mb-3"
+          layout="row" />
       </div>
 
-      <label-input
-        id="email"
-        label="E-mail"
-        class-label="text-sm"
-        class-input="md:max-w-[400px] mb-3"
-        layout="row"
-      />
+      <label-input id="email" label="E-mail" class-label="text-sm" class-input="md:max-w-[400px] mb-3" layout="row" />
 
       <div class="flex flex-col gap-5 mt-4 mb-10">
         <p class="text-sm">Selecione os Tipos de Serviços:</p>
@@ -149,13 +101,11 @@
       </div>
 
       <div class="flex justify-center items-center gap-12 mt-8">
-        <button
-          type="button"
+        <button type="button"
           class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
-          @click="emits('btnCancelar', false)"
-        >Cancelar</button>
+          @click="emits('btnCancelar', false)">Cancelar</button>
         <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
       </div>
     </div>
-	</main>
+  </main>
 </template>

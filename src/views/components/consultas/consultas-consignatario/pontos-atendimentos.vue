@@ -1,67 +1,54 @@
 <script lang="ts" setup>
-	import { reactive } from 'vue'
+import { reactive } from 'vue'
 
-	// Props
-	defineProps({
-		id: {
-			type: Number,
-			required: true,
-		},
-	})
+// Props
+defineProps({
+	id: {
+		type: Number,
+		required: true,
+	},
+})
 
-	// Componentes
-	import ConsultasExport from '../consultas-export/consultas-export.vue'
-	import ImageName from '../consultas-historico/datatable-coluna-image-name.vue'
+// Componentes
+import ConsultasExport from '../consultas-export/consultas-export.vue'
+import ImageName from '../consultas-historico/datatable-coluna-image-name.vue'
 
-	// Icons
-	import IconPrinter from '@icons/iconPrinter.vue'
+// Icons
+import IconPrinter from '@/core/components/icons/iconPrinter.vue'
 
-	// Declaraçoes
-	const cols = reactive([
-		{ field: 'local', title: 'Local', hide: false },
-		{ field: 'endereco', title: 'Endereço', hide: false },
-		{ field: 'telefone', title: 'Telefone', hide: false },
-		{ field: 'email', title: 'E-mail', hide: false },
-	])
-	const rows = reactive([
-		{
-			id: 1,
-			local: 'Agência Centro',
-			endereco: 'Rua Principal, nr 234, centro.',
-			telefone: '(47) 3355-6655',
-			email: 'ag1789@caixa.gov.br',
-		},
-		{
-			id: 2,
-			local: 'Agência Centro',
-			endereco: 'Rua Principal, nr 234, centro.',
-			telefone: '(47) 3355-6655',
-			email: 'ag1789@caixa.gov.br',
-		},
-	])
+// Declaraçoes
+const cols = reactive([
+	{ field: 'local', title: 'Local', hide: false },
+	{ field: 'endereco', title: 'Endereço', hide: false },
+	{ field: 'telefone', title: 'Telefone', hide: false },
+	{ field: 'email', title: 'E-mail', hide: false },
+])
+const rows = reactive([
+	{
+		id: 1,
+		local: 'Agência Centro',
+		endereco: 'Rua Principal, nr 234, centro.',
+		telefone: '(47) 3355-6655',
+		email: 'ag1789@caixa.gov.br',
+	},
+	{
+		id: 2,
+		local: 'Agência Centro',
+		endereco: 'Rua Principal, nr 234, centro.',
+		telefone: '(47) 3355-6655',
+		email: 'ag1789@caixa.gov.br',
+	},
+])
 </script>
 <template>
 	<div class="panel pb-0 mt-6">
-		<div
-			class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
-		>
-			<div
-				class="w-full flex justify-between items-center gap-5 ltr:ml-auto rtl:mr-auto"
-			>
+		<div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
+			<div class="w-full flex justify-between items-center gap-5 ltr:ml-auto rtl:mr-auto">
 				<div>
-					<image-name
-						image="https://placehold.co/30x30"
-						name="Banco do Brasil"
-					/>
+					<image-name image="https://placehold.co/30x30" name="Banco do Brasil" />
 				</div>
 				<div>
-					<consultas-export
-						v-tippy:top
-						:cols="cols"
-						:rows="rows"
-						filename="Pontos de Atendimento"
-						export-type="print"
-					>
+					<consultas-export v-tippy:top :cols="cols" :rows="rows" filename="Pontos de Atendimento" export-type="print">
 						<template #icon>
 							<icon-printer class="w-5 h-5" />
 						</template>

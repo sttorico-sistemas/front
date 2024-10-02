@@ -14,7 +14,7 @@
 		"skipLibCheck": true,
 		"baseUrl": "./",
 		"paths": {
-			"@utils/*": ["./src/utils/*"],
+			"@utils/*": ["src/core/utils/*"],
 			"@components/layout/*": ["./src/components/layout/*"],
 			"@icons/*": ["./src/components/icons/*"]
 		},

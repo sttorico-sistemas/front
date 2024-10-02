@@ -1,21 +1,21 @@
 <script lang="ts" setup>
-	defineProps({
-		title: {
-			type: String,
-			default: '',
-		},
-		classStyle: {
-			type: String,
-			default: 'text-lg font-semibold text-primary_3-table',
-		},
-		infoMessage: {
-			type: String,
-			default: '',
-		},
-	})
+defineProps({
+	title: {
+		type: String,
+		default: '',
+	},
+	classStyle: {
+		type: String,
+		default: 'text-lg font-semibold text-primary_3-table',
+	},
+	infoMessage: {
+		type: String,
+		default: '',
+	},
+})
 
-	// Icons
-	import IconInfo from '@icons/iconInfo.vue'
+// Icons
+import IconInfo from '@/core/components/icons/iconInfo.vue'
 </script>
 <template>
 	<div class="flex gap-12">

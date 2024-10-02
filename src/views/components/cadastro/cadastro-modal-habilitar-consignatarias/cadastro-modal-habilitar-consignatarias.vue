@@ -1,51 +1,41 @@
 <script lang="ts" setup>
-  // Core
-  import { reactive, ref } from 'vue'
-	
-	// Componentes
-  import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
-  import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
-	
-	// Icons
-  import IconCartaoCreditoServico from '@icons/services/iconCartaoCreditoServico.vue'
-  import IconConveniosServico from '@icons/services/iconConveniosServicos.vue'
-	import IconEmprestimoServico from '@icons/services/iconEmprestimosServicos.vue'
-	import IconMensalidadeServico from '@icons/services/iconMensalidadeServicos.vue'
-	import IconPlanoSaudeServico from '@icons/services/iconPlanoSaudeServico.vue'
-	import IconSegurosServico from '@icons/services/iconSegurosServico.vue'
-	import IconComprasServico from '@icons/services/iconComprasServico.vue'
-	import iconFinanciamentosServico from '@icons/services/iconFinanciamentosServico.vue'
-	import IconCartaoBeneficiosServico from '@icons/services/iconCartaoBeneficiosServico.vue'
+// Core
+import { reactive, ref } from 'vue'
 
-	// Declarações
+// Componentes
+import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
 
-	// Script
+// Icons
+import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
+import IconConveniosServico from '@/core/components/icons/services/iconConveniosServicos.vue'
+import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
+import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from '@/core/components/icons/services/iconPlanoSaudeServico.vue'
+import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconComprasServico from '@/core/components/icons/services/iconComprasServico.vue'
+import iconFinanciamentosServico from '@/core/components/icons/services/iconFinanciamentosServico.vue'
+import IconCartaoBeneficiosServico from '@/core/components/icons/services/iconCartaoBeneficiosServico.vue'
 
-  const emits = defineEmits(['btnSave', 'btnCancelar'])
+// Declarações
+
+// Script
+
+const emits = defineEmits(['btnSave', 'btnCancelar'])
 
 </script>
 <template>
-	<main>
+  <main>
     <div class="panel mt-5 border border-primary_3-table">
-      <label for="consignante_master" class="text-sm md:text-base text-primary_3-table m-0 mb-3">Selecione Consignatária</label>
+      <label for="consignante_master" class="text-sm md:text-base text-primary_3-table m-0 mb-3">Selecione
+        Consignatária</label>
 
-      <div class="flex flex-col gap-2.5">        
-        <label-select
-          id="tipo_insituicao"
-          label="Tipo de Instituição"
-          class-label="text-sm"
-          class-select="md:max-w-[400px]"
-          layout="row"
-          :options="['Instituição Financeira', 'Cooperativa de Crédito']"
-        />
-        <label-select
-          id="consignataria"
-          label="Consignatária"
-          class-label="text-sm"
-          class-select="md:max-w-[400px]"
-          layout="row"
-          :options="['Banco do Brasil', 'Banco Daycoval']"
-        />
+      <div class="flex flex-col gap-2.5">
+        <label-select id="tipo_insituicao" label="Tipo de Instituição" class-label="text-sm"
+          class-select="md:max-w-[400px]" layout="row"
+          :options="['Instituição Financeira', 'Cooperativa de Crédito']" />
+        <label-select id="consignataria" label="Consignatária" class-label="text-sm" class-select="md:max-w-[400px]"
+          layout="row" :options="['Banco do Brasil', 'Banco Daycoval']" />
 
         <div class="flex flex-col gap-5 mt-4 mb-10">
           <span class="text-sm">Selecione os Tipos de Serviços:</span>
@@ -93,31 +83,19 @@
         </div>
 
         <div class="flex justify-center gap-12">
-          <label-input 
-            id="data_habilitacao"
-            label="Data de Habilitação"
-            class-label="text-sm"
-            class-input="md:max-w-[150px]"
-            layout="row"
-          />
-          <label-input 
-            id="data_renovacao"
-            label="Data de Renovação"
-            class-label="text-sm"
-            class-input="md:max-w-[150px]"
-            layout="row"
-          />
-        </div>        
+          <label-input id="data_habilitacao" label="Data de Habilitação" class-label="text-sm"
+            class-input="md:max-w-[150px]" layout="row" />
+          <label-input id="data_renovacao" label="Data de Renovação" class-label="text-sm"
+            class-input="md:max-w-[150px]" layout="row" />
+        </div>
       </div>
 
       <div class="flex justify-center items-center gap-12 mt-8">
-        <button 
-          type="button" 
-          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs" 
-          @click="emits('btnCancelar', false)"
-        >Cancelar</button>
+        <button type="button"
+          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+          @click="emits('btnCancelar', false)">Cancelar</button>
         <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
       </div>
     </div>
-	</main>
+  </main>
 </template>
