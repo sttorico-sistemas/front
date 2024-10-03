@@ -3,9 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Dashboard from '../views/pages/DashboardPage.vue'
 import Documentos from '../views/pages/DocumentosPage.vue'
 import Simulador from '../views/pages/SimuladorPage.vue'
-import Cadastro from '../views/pages/CadastroPage.vue'
 import Configuracoes from '../views/pages/ConfiguracoesPage.vue'
 import { consultasRoutes } from 'src/modules/consultas/routes'
+import { cadastroRoutes } from 'src/modules/cadastro/routes'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,38 +68,7 @@ const router = createRouter({
 				},
 			],
 		},
-		// Cadastro
-		{
-			path: '/cadastro',
-			name: 'cadastro',
-			children: [
-				{
-					path: 'consignante/:id',
-					name: 'cadastro-consignante',
-					component: Cadastro,
-				},
-				{
-					path: 'consignataria/:id',
-					name: 'cadastro-consignataria',
-					component: Cadastro,
-				},
-				{
-					path: 'operador',
-					name: 'cadastro-operador',
-					component: Cadastro,
-				},
-				{
-					path: 'perfil-operador',
-					name: 'cadastro-perfil-operador',
-					component: Cadastro,
-				},
-				{
-					path: 'administrador',
-					name: 'cadastro-administrador',
-					component: Cadastro,
-				},
-			],
-		},
+		...cadastroRoutes,
 	],
 })
 
