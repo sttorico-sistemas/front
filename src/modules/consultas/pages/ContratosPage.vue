@@ -6,8 +6,8 @@ import { reactive, ref } from 'vue'
 import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 import ConsultasExport from '../components/ConsultasExport.vue'

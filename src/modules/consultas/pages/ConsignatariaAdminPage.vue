@@ -3,10 +3,10 @@ import { reactive, ref } from 'vue'
 import router from 'src/core/router'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import modalLayout from '@/core/components/Modal.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
@@ -253,7 +253,7 @@ const parseRows = (): Array<object> => {
                 </image-name>
                 <tippy target="top" placement="top">{{
                   tipo_servico.nome
-                  }}</tippy>
+                }}</tippy>
               </template>
             </div>
           </template>

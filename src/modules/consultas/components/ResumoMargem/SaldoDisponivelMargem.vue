@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import titulo from '@/core/components/Titulo.vue'
 
 // Icons
 import calculatorIcon from '@/core/components/icons/iconCalculator2.vue'

@@ -16,7 +16,7 @@ import IconClear from '@/core/components/icons/iconClear.vue'
 import IconPrinter from '@/core/components/icons/iconPrinter.vue'
 
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import titulo from '@/core/components/Titulo.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 
 // Declarações

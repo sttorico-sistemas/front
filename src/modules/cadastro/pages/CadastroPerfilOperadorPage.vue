@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
 import CadastroPerfilOperador from './CadastroOperadorPage.vue'
 </script>
 <template>

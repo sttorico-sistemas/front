@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import titulo from '@/core/components/Titulo.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 
 // Icones
 import IconDoc from '@/core/components/icons/iconFile.vue'

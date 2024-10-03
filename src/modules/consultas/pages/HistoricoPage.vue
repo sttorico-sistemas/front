@@ -7,9 +7,9 @@ import { reactive, ref } from 'vue'
 import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
+import modalLayout from '@/core/components/Modal.vue'
 
 import ConsultaMensalDesconto from '../components/ConsultasHistorico/ConsultaMensalDesconto.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
@@ -175,22 +175,22 @@ const clearFilter = () => {
           <template #valor_desconto="data">
             <span :class="formatedCurrency(data.value.valor_desconto).color">{{
               formatedCurrency(data.value.valor_desconto).currency
-            }}</span>
+              }}</span>
           </template>
           <template #valor_enviado="data">
             <span :class="formatedCurrency(data.value.valor_enviado).color">{{
               formatedCurrency(data.value.valor_enviado).currency
-            }}</span>
+              }}</span>
           </template>
           <template #valor_descontado="data">
             <span :class="formatedCurrency(data.value.valor_descontado).color">{{
               formatedCurrency(data.value.valor_descontado).currency
-            }}</span>
+              }}</span>
           </template>
           <template #saldo_desconto="data">
             <span :class="formatedCurrency(data.value.saldo_desconto).color">{{
               formatedCurrency(data.value.saldo_desconto).currency
-            }}</span>
+              }}</span>
           </template>
         </vue3-datatable>
       </div>

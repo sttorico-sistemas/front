@@ -2,9 +2,9 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import titulo from '@/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import modalLayout from '@/core/components/Modal.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 
 import CadastroModalBackoffice from './Modal/CadastrarBackoffice.vue'

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 // Componentes
-import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
+import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icons
 import IconAdd from '@/core/components/icons/iconAdd.vue'

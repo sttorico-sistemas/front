@@ -3,11 +3,11 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import VueCollapsible from 'vue-height-collapsible/vue3'
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
-import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
+import modalLayout from '@/core/components/Modal.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 import ConsultasCadastroPessoa from 'src/modules/consultas/components/CadastroPessoa/CadastroPessoa.vue'
 import CadastroPerfilOperador from '../components/PerfilOperador.vue'

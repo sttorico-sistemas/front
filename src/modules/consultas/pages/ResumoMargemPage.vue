@@ -4,10 +4,10 @@ import { reactive, ref } from 'vue'
 
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import loadingFixed from '@/core/components/layout/loadingFixed.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
+import loadingFixed from '@/core/components/LoadingFixed.vue'
+import modalLayout from '@/core/components/Modal.vue'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultaResumoMargemPrincipal from '../components/ResumoMargem/MargemPrincipal.vue'

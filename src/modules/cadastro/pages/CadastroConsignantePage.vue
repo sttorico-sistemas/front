@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
 import VueCollapsible from 'vue-height-collapsible/vue3'
 
 import ConsignatariaHabilitadas from '../components/ConsignatariaHabilitadas.vue'

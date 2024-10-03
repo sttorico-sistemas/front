@@ -3,8 +3,8 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
+import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
 
 // Icons
 import IconFile from '@/core/components/icons/iconFile.vue'

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
+import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 </script>
 <template>
   <main>

@@ -2,10 +2,9 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
-import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
-import inputReadOnly from '@/core/components/layout/forms/inputs/inputReadonly.vue'
+import titulo from '@/core/components/Titulo.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icones
 import IconClear from '@/core/components/icons/iconClear.vue'

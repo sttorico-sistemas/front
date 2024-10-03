@@ -19,8 +19,8 @@ const props = defineProps({
 })
 
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import titulo from '@/core/components/Titulo.vue'
+import modalLayout from '@/core/components/Modal.vue'
 
 import CadastroModalContrato from './Modal/CadastroContrato.vue'
 

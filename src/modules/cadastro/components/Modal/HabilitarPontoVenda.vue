@@ -3,8 +3,8 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import titulo from '@/core/components/Titulo.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 
 // Icones
 import IconCheck from '@/core/components/icons/iconCheck.vue'

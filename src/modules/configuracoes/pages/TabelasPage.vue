@@ -3,10 +3,10 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
+import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import modalLayout from '@/core/components/Modal.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 
 // Icons
 import IconAdd from '@/core/components/icons/iconAdd.vue'

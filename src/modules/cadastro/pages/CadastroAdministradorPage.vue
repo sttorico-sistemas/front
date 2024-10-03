@@ -4,8 +4,8 @@ import router from 'src/core/router'
 import VueCollapsible from 'vue-height-collapsible/vue3'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
 
 import PontoVenda from '../components/PontoVenda.vue'
 import DadosAdministrador from '../components/DadosAdministrador.vue'

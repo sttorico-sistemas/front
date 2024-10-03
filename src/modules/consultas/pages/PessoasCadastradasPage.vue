@@ -2,10 +2,10 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import modalLayout from '@/core/components/Modal.vue'
 
 import ConsultasCadastroPessoa from '../components/CadastroPessoa/CadastroPessoa.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'

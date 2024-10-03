@@ -11,9 +11,9 @@ const props = defineProps({
 })
 
 // Componentes
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
-import LabelSelect from '@/core/components/layout/forms/inputs/selectLabel.vue'
+import titulo from '@/core/components/Titulo.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 import ConsultasCadastroPessoaContato from './CadastroPessoaContato.vue'
 import ConsultasCadastroPessoaEndereco from './ConsultasCadastroPessoaEndereco.vue'

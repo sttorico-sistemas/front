@@ -2,8 +2,8 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'

@@ -1,6 +1,6 @@
 <script setup>
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
 import distribuicaoMargem from '../components/DistribuicaoMargem.vue'
 import formMatriculaSelecionada from '../components/FormMatriculaSelecionada.vue'
 import margemIndividual from '../components/MargemIndividual.vue'

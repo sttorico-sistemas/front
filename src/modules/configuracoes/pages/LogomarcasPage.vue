@@ -3,9 +3,9 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import modalLayout from '@/core/components/Modal.vue'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
 import CadastrarLogomarca from '../components/CadastrarLogomarca.vue'
 

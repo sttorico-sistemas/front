@@ -3,9 +3,9 @@
 import { ref } from 'vue'
 
 // Componentes
-import LabelInput from '@/core/components/layout/forms/inputs/inputLabel.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
+import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import modalLayout from '@/core/components/Modal.vue'
+import titulo from '@/core/components/Titulo.vue'
 
 import CadastroModalAdministrador from './Modal/CadastroAdministrador.vue'
 

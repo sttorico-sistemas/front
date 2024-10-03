@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Componentes
-import InputReadonly from '@/core/components/layout/forms/inputs/inputReadonly.vue'
+import InputReadonly from '@/core/components/Inputs/InputReadonly.vue'
 // Icons
 // Declarações
 // Scripts

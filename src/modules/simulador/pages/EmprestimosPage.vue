@@ -5,11 +5,11 @@ import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
 
 // Componentes
-import breadcrumbs from '@/core/components/layout/breadcrumbsLayout.vue'
-import titulo from '@/core/components/layout/tituloLayout.vue'
-import InputValidation from '@/core/components/layout/inputValidation.vue'
-import modalLayout from '@/core/components/layout/modalLayout.vue'
-import StepByNumber from '@/core/components/layout/stepByNumber.vue'
+import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from '@/core/components/Titulo.vue'
+import InputValidation from '@/core/components/InputValidation.vue'
+import modalLayout from '@/core/components/Modal.vue'
+import StepByNumber from '@/core/components/StepByNumber.vue'
 
 import SimuladorResultadoEmprestimo from '../components/ResultadoEmprestimo.vue'
 

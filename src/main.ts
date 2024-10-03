@@ -1,45 +1,33 @@
-import './assets/css/app.css'
+import 'public/assets/css/app.css'
 
 import App from './App.vue'
 import { createApp } from 'vue'
 import router from './core/router'
+import { createHead } from '@vueuse/head'
+import mitt from 'mitt'
+import DefaultLayout from './core/layouts/DefaultLayout.vue'
+import AppLayout from './core/layouts/AppLayout.vue'
+import { TippyPlugin } from 'tippy.vue'
+import Maska from 'maska'
+import VueApexCharts from 'vue3-apexcharts'
+import Popper from 'vue3-popper'
+import JsonExcel from 'vue-json-excel3'
+import Multiselect from '@suadelabs/vue3-multiselect'
 
 const app = createApp(App)
 
-//vue-meta
-import { createHead } from '@vueuse/head'
-const head = createHead()
-app.use(head)
-
-// tippy tooltips
-import { TippyPlugin } from 'tippy.vue'
-app.use(TippyPlugin)
-
-//input mask
-import Maska from 'maska';
-app.use(Maska);
-
-// ApexCharts
-import VueApexCharts from 'vue3-apexcharts'
-app.use(VueApexCharts)
-
-// popper
-import Popper from 'vue3-popper'
+app.component('default-layout', DefaultLayout);
+app.component('app-layout', AppLayout);
 app.component('Popper', Popper)
-
-// json to excel
-import JsonExcel from 'vue-json-excel3'
 app.component('DownloadExcel', JsonExcel)
-
-// Multiselect
-import Multiselect from '@suadelabs/vue3-multiselect'
 app.component('Multiselect', Multiselect)
 
-// Mitt
-import mitt from 'mitt'
-const emitter = mitt()
-app.provide('eventBus', emitter)
-
+app.use(createHead())
+app.use(TippyPlugin)
+app.use(Maska)
+app.use(VueApexCharts)
 app.use(router)
+
+app.provide('eventBus', mitt())
 
 app.mount('#app')

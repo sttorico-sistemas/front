@@ -2,7 +2,7 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import modalLayout from '@/core/components/layout/modalLayout.vue'
+import modalLayout from '@/core/components/Modal.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 // Props
@@ -572,7 +572,7 @@ const filtered = (value: string = '') => {
           <button>
             <strong class="text-primary_3-table">{{
               data.value.n_contrato
-            }}</strong>
+              }}</strong>
           </button>
         </template>
         <template #status="data">
