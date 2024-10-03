@@ -1,9 +1,40 @@
 import { RouteRecordRaw } from "vue-router";
+import CadastroConsignantePage from "./pages/CadastroConsignantePage.vue";
+import CadastroConsignatariaPage from "./pages/CadastroConsignatariaPage.vue";
+import CadastroOperadorPage from "./pages/CadastroOperadorPage.vue";
+import CadastroPerfilOperador from "src/views/components/cadastro/cadastro-perfil-operador.vue";
+import CadastroAdministradorPage from "./pages/CadastroAdministradorPage.vue";
 
 export const cadastroRoutes: RouteRecordRaw[] = [
   {
     path: '/cadastro',
     name: 'cadastro',
-    children: [],
+    children: [
+      {
+        path: 'consignante/:id',
+        name: 'cadastro-consignante',
+        component: CadastroConsignantePage,
+      },
+      {
+        path: 'consignataria/:id',
+        name: 'cadastro-consignataria',
+        component: CadastroConsignatariaPage,
+      },
+      {
+        path: 'operador',
+        name: 'cadastro-operador',
+        component: CadastroOperadorPage,
+      },
+      {
+        path: 'perfil-operador',
+        name: 'cadastro-perfil-operador',
+        component: CadastroPerfilOperador,
+      },
+      {
+        path: 'administrador',
+        name: 'cadastro-administrador',
+        component: CadastroAdministradorPage,
+      },
+    ],
   }
 ]
