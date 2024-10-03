@@ -9,9 +9,9 @@ import modalLayout from '@/core/components/Modal.vue'
 import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconDelete from '@/core/components/icons/iconDelete.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconDelete from '@/core/components/Icons/IconDelete.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

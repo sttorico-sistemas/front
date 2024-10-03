@@ -5,8 +5,8 @@ import { ref } from 'vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconDelete from '@/core/components/icons/iconDelete.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconDelete from '@/core/components/Icons/IconDelete.vue'
 
 // Declarações
 const logomarca = ref('')

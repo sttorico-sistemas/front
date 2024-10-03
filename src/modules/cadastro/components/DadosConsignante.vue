@@ -10,7 +10,7 @@ import titulo from '@/core/components/Titulo.vue'
 import CadastroModalConsignante from './Modal/CadastroConsignante.vue'
 
 // Icons
-import IconEdit from '@/core/components/icons/iconEdit.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

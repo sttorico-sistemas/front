@@ -2,10 +2,10 @@
 import { PropType } from 'vue'
 
 // Icons
-import beneficsCardIcon from '@/core/components/icons/iconBeneficsCard.vue'
-import conveniosIcon from '@/core/components/icons/iconAgreements.vue'
-import creditCardIcon from '@/core/components/icons/iconCreditCard.vue'
-import currencyIcon from '@/core/components/icons/iconCurrency.vue'
+import beneficsCardIcon from '@/core/components/Icons/IconBeneficsCard.vue'
+import conveniosIcon from '@/core/components/Icons/IconAgreements.vue'
+import creditCardIcon from '@/core/components/Icons/IconCreditCard.vue'
+import currencyIcon from '@/core/components/Icons/IconCurrency.vue'
 
 // Scripts
 interface IMargemDetalhamento {

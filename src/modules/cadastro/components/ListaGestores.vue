@@ -25,11 +25,11 @@ import modalLayout from '@/core/components/Modal.vue'
 import CadastroModalGestor from './Modal/CadastroGestor.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconDelete from '@/core/components/icons/iconDelete.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconDelete from '@/core/components/Icons/IconDelete.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

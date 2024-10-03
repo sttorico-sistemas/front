@@ -11,9 +11,9 @@ const props = defineProps({
 })
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Componentes
 import titulo from '@/core/components/Titulo.vue'

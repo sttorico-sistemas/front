@@ -10,11 +10,11 @@ import titulo from '@/core/components/Titulo.vue'
 import ConsultaCadastroConsignante from 'src/modules/consultas/components/ConsultaCadastroConsignatarias.vue'
 
 // Icons
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
-import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

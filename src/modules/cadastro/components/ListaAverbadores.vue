@@ -9,10 +9,10 @@ import modalLayout from '@/core/components/Modal.vue'
 import CadastroModalAverbador from './Modal/CadastroAverbadores.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

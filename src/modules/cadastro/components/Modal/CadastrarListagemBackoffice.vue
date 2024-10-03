@@ -7,9 +7,9 @@ import titulo from '@/core/components/Titulo.vue'
 import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 
 // Icones
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
 
 // Declarações
 const cols = reactive([

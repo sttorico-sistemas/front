@@ -10,8 +10,8 @@ import ImageName from 'src/modules/consultas/components/ConsultasHistorico/Datat
 import CadastrarLogomarca from '../components/CadastrarLogomarca.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconDelete from '@/core/components/icons/iconDelete.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconDelete from '@/core/components/Icons/IconDelete.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

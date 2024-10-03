@@ -9,8 +9,8 @@ import Vue3Datatable from '@bhplugin/vue3-datatable'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconNote from '@/core/components/icons/iconNote.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconNote from '@/core/components/Icons/IconNote.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

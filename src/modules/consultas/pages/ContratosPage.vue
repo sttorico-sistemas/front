@@ -14,9 +14,9 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultasPopper from '../components/ConsultasPopper.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconFile from '@/core/components/icons/iconFile.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconFile from '@/core/components/Icons/IconFile.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({
@@ -283,7 +283,7 @@ const filtered = (value: string = '') => {
             <button>
               <strong class="text-primary_3-table">{{
                 data.value.n_contrato
-              }}</strong>
+                }}</strong>
             </button>
           </template>
           <template #status="data">

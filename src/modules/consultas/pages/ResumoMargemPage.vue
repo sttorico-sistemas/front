@@ -14,8 +14,8 @@ import ConsultaResumoMargemPrincipal from '../components/ResumoMargem/MargemPrin
 import ConsultaSaldoDisponivelMargem from '../components/ResumoMargem/SaldoDisponivelMargem.vue'
 
 // Icons
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

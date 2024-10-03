@@ -19,7 +19,7 @@ import ConsultasCadastroPessoaContato from './CadastroPessoaContato.vue'
 import ConsultasCadastroPessoaEndereco from './ConsultasCadastroPessoaEndereco.vue'
 
 // Icons
-import IconEdit from '@/core/components/icons/iconEdit.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
 
 // Declarações
 const isDisabled = ref<boolean>(true)

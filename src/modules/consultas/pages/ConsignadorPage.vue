@@ -15,17 +15,17 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconCaretDown from '@/core/components/icons/iconCaretDown.vue'
-import IconUser from '@/core/components/icons/iconUser.vue'
-import IconUnlock from '@/core/components/icons/iconUnlock.vue'
-import IconLock from '@/core/components/icons/iconLock.vue'
-import IconFilter from '@/core/components/icons/iconFilter.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
+import IconUser from '@/core/components/Icons/IconUser.vue'
+import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
+import IconLock from '@/core/components/Icons/IconLock.vue'
+import IconFilter from '@/core/components/Icons/IconFilter.vue'
 
 // Declarações
 const accordians = reactive({

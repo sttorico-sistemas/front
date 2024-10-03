@@ -10,11 +10,11 @@ import Vue3Datatable from '@bhplugin/vue3-datatable'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/icons/services/iconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const cols = reactive([

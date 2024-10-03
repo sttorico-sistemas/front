@@ -10,10 +10,10 @@ import modalLayout from '@/core/components/Modal.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

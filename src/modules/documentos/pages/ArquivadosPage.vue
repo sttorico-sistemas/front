@@ -7,7 +7,7 @@ import titulo from '@/core/components/Titulo.vue'
 import breadcrumbs from '@/core/components/Breadcrumbs.vue'
 
 // Icons
-import IconFile from '@/core/components/icons/iconFile.vue'
+import IconFile from '@/core/components/Icons/IconFile.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

@@ -5,7 +5,7 @@ import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icones
-import IconDoc from '@/core/components/icons/iconFile.vue'
+import IconDoc from '@/core/components/Icons/IconFile.vue'
 
 // Scripts
 const emits = defineEmits(['btnSave', 'btnCancelar'])

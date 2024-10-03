@@ -10,9 +10,9 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

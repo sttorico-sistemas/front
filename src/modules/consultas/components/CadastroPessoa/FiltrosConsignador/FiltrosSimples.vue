@@ -7,8 +7,8 @@ import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconFilter from '@/core/components/icons/iconFilter.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconFilter from '@/core/components/Icons/IconFilter.vue'
 
 // Declarações
 

@@ -5,7 +5,7 @@ import { ref } from 'vue'
 import titulo from '@/core/components/Titulo.vue'
 
 // Icons
-import calculatorIcon from '@/core/components/icons/iconCalculator2.vue'
+import calculatorIcon from '@/core/components/Icons/IconCalculator2.vue'
 
 // Declarações
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])

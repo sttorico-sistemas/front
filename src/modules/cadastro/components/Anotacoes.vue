@@ -9,11 +9,11 @@ import modalLayout from '@/core/components/Modal.vue'
 import CadastrarAnotacao from './Modal/CadastrarAnotacao.vue'
 
 // Icons
-import IconDoc from '@/core/components/icons/iconFile.vue'
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconDelete from '@/core/components/icons/iconDelete.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
+import IconDoc from '@/core/components/Icons/IconFile.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconDelete from '@/core/components/Icons/IconDelete.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false);

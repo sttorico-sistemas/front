@@ -8,13 +8,13 @@ import router from 'src/core/router'
 import ImageName from '../ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
-import IconConveniosServico from '@/core/components/icons/services/iconConveniosServicos.vue'
-import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/icons/services/iconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconConveniosServico from '@/core/components/Icons/Services/IconConveniosServicos.vue'
+import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const cols = reactive([

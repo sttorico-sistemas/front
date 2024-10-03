@@ -9,7 +9,7 @@ import modalLayout from '@/core/components/Modal.vue'
 import CadastrarRegulamento from './Modal/CadastrarRegulamento.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false);

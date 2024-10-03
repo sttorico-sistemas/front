@@ -22,7 +22,7 @@ import restricoes from '../components/Restricoes.vue'
 import anotacoes from '../components/Anotacoes.vue'
 
 // Icons
-import IconCaretDown from '@/core/components/icons/iconCaretDown.vue'
+import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
 
 // Declarações
 const accordians = reactive({

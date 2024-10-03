@@ -38,14 +38,14 @@ import CadastroModalPontoVenda from './Modal/CadastroPontoVenda.vue'
 import CadastroModalOperadores from './Modal/CadastroOperadores.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconResetPassword from '@/core/components/icons/iconResetPassword.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconResetPassword from '@/core/components/Icons/IconResetPassword.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

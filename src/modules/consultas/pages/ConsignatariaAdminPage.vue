@@ -13,20 +13,20 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultaCadastroConsignante from '../components/ConsultaCadastroConsignatarias.vue'
 
 // Icons
-import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/icons/services/iconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
 
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconUnlock from '@/core/components/icons/iconUnlock.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconLock from '@/core/components/icons/iconLock.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconLock from '@/core/components/Icons/IconLock.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

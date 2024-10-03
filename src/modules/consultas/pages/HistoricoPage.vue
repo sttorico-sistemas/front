@@ -15,9 +15,9 @@ import ConsultaMensalDesconto from '../components/ConsultasHistorico/ConsultaMen
 import ConsultasExport from '../components/ConsultasExport.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconFile from '@/core/components/icons/iconFile.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconFile from '@/core/components/Icons/IconFile.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)
@@ -175,22 +175,22 @@ const clearFilter = () => {
           <template #valor_desconto="data">
             <span :class="formatedCurrency(data.value.valor_desconto).color">{{
               formatedCurrency(data.value.valor_desconto).currency
-              }}</span>
+            }}</span>
           </template>
           <template #valor_enviado="data">
             <span :class="formatedCurrency(data.value.valor_enviado).color">{{
               formatedCurrency(data.value.valor_enviado).currency
-              }}</span>
+            }}</span>
           </template>
           <template #valor_descontado="data">
             <span :class="formatedCurrency(data.value.valor_descontado).color">{{
               formatedCurrency(data.value.valor_descontado).currency
-              }}</span>
+            }}</span>
           </template>
           <template #saldo_desconto="data">
             <span :class="formatedCurrency(data.value.saldo_desconto).color">{{
               formatedCurrency(data.value.saldo_desconto).currency
-              }}</span>
+            }}</span>
           </template>
         </vue3-datatable>
       </div>

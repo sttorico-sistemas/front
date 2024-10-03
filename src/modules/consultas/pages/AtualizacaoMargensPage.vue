@@ -9,8 +9,8 @@ import titulo from '@/core/components/Titulo.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

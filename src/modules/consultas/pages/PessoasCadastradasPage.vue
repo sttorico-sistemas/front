@@ -12,12 +12,12 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
 
 // Declarações
 const isOpenDialog = ref(false)

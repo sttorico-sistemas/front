@@ -12,14 +12,14 @@ import modalLayout from '@/core/components/Modal.vue'
 import PontoAtendimento from '../components/PontosAtendimento.vue'
 
 // Icons
-import IconCartaoCreditoServico from '@/core/components/icons/services/iconCartaoCreditoServico.vue'
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconEmprestimoServico from '@/core/components/icons/services/iconEmprestimosServicos.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconMensalidadeServico from '@/core/components/icons/services/iconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/icons/services/iconPlanoSaudeServico.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
-import IconSegurosServico from '@/core/components/icons/services/iconSegurosServico.vue'
+import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

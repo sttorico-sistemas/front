@@ -9,8 +9,8 @@ import LabelInput from '@/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconClose from '@/core/components/icons/iconClose.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconClose from '@/core/components/Icons/IconClose.vue'
 
 // Declarações
 const eventBus = inject('eventBus')

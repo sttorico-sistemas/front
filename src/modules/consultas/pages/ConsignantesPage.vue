@@ -12,14 +12,14 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import CadastroModalConsignante from 'src/modules/cadastro/components/Modal/CadastroConsignante.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconUnlock from '@/core/components/icons/iconUnlock.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconLock from '@/core/components/icons/iconLock.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconLock from '@/core/components/Icons/IconLock.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false);

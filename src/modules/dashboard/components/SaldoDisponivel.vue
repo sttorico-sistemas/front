@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 // Icons
-import calculatorIcon from '@/core/components/icons/iconCalculator2.vue'
+import calculatorIcon from '@/core/components/Icons/IconCalculator2.vue'
 
 // Script
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])

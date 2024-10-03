@@ -18,10 +18,10 @@ import Regulamento from '../components/Regulamento.vue'
 import LogsAlteracao from '../components/LogsAlteracao.vue'
 
 // Icons
-import IconClear from '@/core/components/icons/iconClear.vue'
-import IconCaretDown from '@/core/components/icons/iconCaretDown.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
-import IconPrinter from '@/core/components/icons/iconPrinter.vue'
+import IconClear from '@/core/components/Icons/IconClear.vue'
+import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

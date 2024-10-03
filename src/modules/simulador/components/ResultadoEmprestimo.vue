@@ -8,7 +8,7 @@ import titulo from '@/core/components/Titulo.vue'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconNote from '@/core/components/icons/iconNote.vue'
+import IconNote from '@/core/components/Icons/IconNote.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

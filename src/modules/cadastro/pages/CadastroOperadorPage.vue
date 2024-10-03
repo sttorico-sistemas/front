@@ -13,8 +13,8 @@ import ConsultasCadastroPessoa from 'src/modules/consultas/components/CadastroPe
 import CadastroPerfilOperador from '../components/PerfilOperador.vue'
 
 // Icons
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconCaretDown from '@/core/components/icons/iconCaretDown.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
 
 // Declarações
 const isDisabled = ref(true)

@@ -9,12 +9,12 @@ import modalLayout from '@/core/components/Modal.vue'
 import CadastrarIp from './Modal/CadastrarIpIntrucoesProcedimentos.vue'
 
 // Icons
-import IconDoc from '@/core/components/icons/iconFile.vue'
-import IconAdd from '@/core/components/icons/iconAdd.vue'
-import IconEdit from '@/core/components/icons/iconEdit.vue'
-import IconBlock from '@/core/components/icons/iconBlock.vue'
-import IconCheck from '@/core/components/icons/iconCheck.vue'
-import IconEye from '@/core/components/icons/iconEye.vue'
+import IconDoc from '@/core/components/Icons/IconFile.vue'
+import IconAdd from '@/core/components/Icons/IconAdd.vue'
+import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconEye from '@/core/components/Icons/IconEye.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false);
