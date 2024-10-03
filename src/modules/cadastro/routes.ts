@@ -2,8 +2,8 @@ import { RouteRecordRaw } from "vue-router";
 import CadastroConsignantePage from "./pages/CadastroConsignantePage.vue";
 import CadastroConsignatariaPage from "./pages/CadastroConsignatariaPage.vue";
 import CadastroOperadorPage from "./pages/CadastroOperadorPage.vue";
-import CadastroPerfilOperador from "src/views/components/cadastro/cadastro-perfil-operador.vue";
 import CadastroAdministradorPage from "./pages/CadastroAdministradorPage.vue";
+import CadastroPerfilOperadorPage from "./pages/CadastroPerfilOperadorPage.vue";
 
 export const cadastroRoutes: RouteRecordRaw[] = [
   {
@@ -28,7 +28,7 @@ export const cadastroRoutes: RouteRecordRaw[] = [
       {
         path: 'perfil-operador',
         name: 'cadastro-perfil-operador',
-        component: CadastroPerfilOperador,
+        component: CadastroPerfilOperadorPage,
       },
       {
         path: 'administrador',
