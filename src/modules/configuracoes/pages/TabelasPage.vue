@@ -3,15 +3,15 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/Titulo.vue'
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import modalLayout from '@/core/components/Modal.vue'
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import modalLayout from 'src/core/components/Modal.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
-import IconDelete from '@/core/components/Icons/IconDelete.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
+import IconDelete from 'src/core/components/Icons/IconDelete.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

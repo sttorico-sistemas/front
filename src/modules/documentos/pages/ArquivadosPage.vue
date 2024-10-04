@@ -1,15 +1,10 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/Titulo.vue'
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import IconFile from 'src/core/components/Icons/IconFile.vue'
 
-// Icons
-import IconFile from '@/core/components/Icons/IconFile.vue'
-
-// Declarações
 const selected = reactive<{ type: string; label: string }>({
 	type: '',
 	label: '',
@@ -21,7 +16,6 @@ const cols = reactive([
 	{ field: 'nome_arquivo', title: 'Nome do Arquivo', hide: false, },
 	{ field: 'autor', title: 'Autor', hide: false, },
 	{ field: 'documento', title: 'Documento', hide: false, sort: false },
-
 ])
 const rows = reactive([
 	{
@@ -40,14 +34,13 @@ const rows = reactive([
 	},
 ])
 
-// Script
 const filtered = (value: string = '') => {
 	if (value === '') return rows
-
 	if (selected.type === 'tipo_arquivo')
 		return rows.filter((item: any) => item.tipo_arquivo === value)
 }
 </script>
+
 <template>
 	<main>
 		<breadcrumbs :paginas="['Documentos', 'Arquivados']" />
@@ -74,11 +67,11 @@ const filtered = (value: string = '') => {
 						<tippy target="right" placement="right">Algum texto aqui {{ data.value.id }}</tippy>
 					</template>
 				</vue3-datatable>
-
 			</div>
 		</div>
 	</main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
 	.multiselect__placeholder {

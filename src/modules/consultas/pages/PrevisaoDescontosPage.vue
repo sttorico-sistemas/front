@@ -1,22 +1,15 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
+import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
-// Icons
-import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
-
-// Declarações
 const cols = reactive([
   { field: 'consignataria', title: 'Consignatária', hide: false, sort: false, },
   { field: 'tipo_servicos', title: 'Tipo de Serviços', hide: false, sort: false, },
@@ -52,7 +45,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const iconeService = (value: string) => {
   switch (value) {
     case 'emprestimo':
@@ -119,6 +111,7 @@ const iconeService = (value: string) => {
     </div>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

@@ -1,15 +1,13 @@
 <script setup>
-import { useMeta } from '@/core/composables/use-meta'
+import { useMeta } from 'src/core/composables/use-meta'
 
 useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
 </script>
 
 <template>
-	<div class="dashboard-layout">
-		<app-layout layout-name="default-layout">
-			<router-view></router-view>
-		</app-layout>
-	</div>
+	<app-layout layout-name="default-layout" class="dashboard-layout">
+		<router-view></router-view>
+	</app-layout>
 </template>
 
 <style lang="scss" scoped>

@@ -2,24 +2,24 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
-import modalLayout from '@/core/components/Modal.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 import PontoAtendimento from '../components/PontosAtendimento.vue'
 
 // Icons
-import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
+import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)
@@ -219,7 +219,7 @@ const parseRows = (): Array<object> => {
                 </image-name>
                 <tippy target="top" placement="top">{{
                   tipo_servico.nome
-                }}</tippy>
+                  }}</tippy>
               </template>
             </div>
           </template>

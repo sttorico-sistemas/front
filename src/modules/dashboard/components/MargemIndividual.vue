@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
-
 import MargemDetalhada from './MargemDetalhada.vue'
 import TotalReservado from './TotalReservado.vue'
 

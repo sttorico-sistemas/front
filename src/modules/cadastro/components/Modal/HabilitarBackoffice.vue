@@ -3,12 +3,12 @@ import { reactive } from 'vue'
 
 // Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/Titulo.vue'
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 
 // Icones
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
-import IconBlock from '@/core/components/Icons/IconBlock.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
+import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 
 // Declarações
 const cols = reactive([

@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import calculatorIcon from 'src/core/components/Icons/IconCalculator2.vue'
 
-// Icons
-import calculatorIcon from '@/core/components/Icons/IconCalculator2.vue'
-
-// Script
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])
-const servico = ref()
+const servico = ref('')
 </script>
 <template>
 	<div id="saldo_disponivel"

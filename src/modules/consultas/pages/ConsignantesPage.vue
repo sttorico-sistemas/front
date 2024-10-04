@@ -4,22 +4,22 @@ import router from 'src/core/router'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-import modalLayout from '@/core/components/Modal.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
 import CadastroModalConsignante from 'src/modules/cadastro/components/Modal/CadastroConsignante.vue'
 
 // Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
-import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
-import IconBlock from '@/core/components/Icons/IconBlock.vue'
-import IconLock from '@/core/components/Icons/IconLock.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
+import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
+import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import IconLock from 'src/core/components/Icons/IconLock.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false);

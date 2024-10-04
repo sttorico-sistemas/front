@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 
 // Icones
-import IconDoc from '@/core/components/Icons/IconFile.vue'
+import IconDoc from 'src/core/components/Icons/IconFile.vue'
 
 // Scripts
 const emits = defineEmits(['btnSave', 'btnCancelar'])

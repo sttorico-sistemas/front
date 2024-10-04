@@ -9,7 +9,7 @@ const props = defineProps({
 })
 
 // Componentes
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 const emits = defineEmits(['btnSave', 'btnCancelar'])

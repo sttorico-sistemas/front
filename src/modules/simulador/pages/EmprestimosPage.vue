@@ -1,28 +1,23 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
 import { required } from '@vuelidate/validators'
 import { useVuelidate } from '@vuelidate/core'
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-import InputValidation from '@/core/components/InputValidation.vue'
-import modalLayout from '@/core/components/Modal.vue'
-import StepByNumber from '@/core/components/StepByNumber.vue'
-
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import InputValidation from 'src/core/components/InputValidation.vue'
+import modalLayout from 'src/core/components/Modal.vue'
+import StepByNumber from 'src/core/components/StepByNumber.vue'
 import SimuladorResultadoEmprestimo from '../components/ResultadoEmprestimo.vue'
 
-// Icons
-
-// Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 const isSubmitForm = ref(false)
+
 const form = reactive({
 	vlrEmprestimo: '',
 	vlrParcela: '',
 	vlrPrazo: '',
 })
+
 const rules = {
 	form: {
 		vlrEmprestimo: { required },
@@ -32,11 +27,9 @@ const rules = {
 }
 const $v = useVuelidate(rules, { form })
 
-// Script
 const clear = () => {
 	$v.value.form.$reset()
 	isSubmitForm.value = false
-
 	form.vlrEmprestimo = ''
 	form.vlrParcela = ''
 	form.vlrPrazo = ''
@@ -44,13 +37,10 @@ const clear = () => {
 
 const simulate = () => {
 	isSubmitForm.value = true
-
 	$v.value.form.$touch()
-
 	if ($v.value.form.$invalid) {
 		return false
 	}
-
 	isOpenDialog.value = true
 }
 
@@ -130,4 +120,3 @@ const sendForm = () => { }
 		</modal-layout>
 	</main>
 </template>
-<style lang="scss" scoped></style>

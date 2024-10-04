@@ -3,14 +3,14 @@
 import { reactive, ref, inject } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconClose from '@/core/components/Icons/IconClose.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconClose from 'src/core/components/Icons/IconClose.vue'
 
 // Declarações
 const eventBus = inject('eventBus')

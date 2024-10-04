@@ -11,15 +11,15 @@ const props = defineProps({
 })
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 import ConsultasCadastroPessoaContato from './CadastroPessoaContato.vue'
 import ConsultasCadastroPessoaEndereco from './ConsultasCadastroPessoaEndereco.vue'
 
 // Icons
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 
 // Declarações
 const isDisabled = ref<boolean>(true)

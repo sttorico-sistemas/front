@@ -14,7 +14,7 @@ import ConsultasExport from './ConsultasExport.vue'
 import ImageName from './ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
 // Declaraçoes
 const cols = reactive([

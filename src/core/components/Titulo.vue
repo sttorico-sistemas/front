@@ -15,7 +15,7 @@ defineProps({
 })
 
 // Icons
-import IconInfo from '@/core/components/Icons/IconInfo.vue'
+import IconInfo from 'src/core/components/Icons/IconInfo.vue'
 </script>
 <template>
 	<div class="flex gap-12">

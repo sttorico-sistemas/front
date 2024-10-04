@@ -3,17 +3,17 @@ import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
-import modalLayout from '@/core/components/Modal.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 
 import CadastrarAnotacao from './Modal/CadastrarAnotacao.vue'
 
 // Icons
-import IconDoc from '@/core/components/Icons/IconFile.vue'
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
-import IconDelete from '@/core/components/Icons/IconDelete.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
+import IconDoc from 'src/core/components/Icons/IconFile.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
+import IconDelete from 'src/core/components/Icons/IconDelete.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false);

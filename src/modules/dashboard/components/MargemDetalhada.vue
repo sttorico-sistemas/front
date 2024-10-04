@@ -1,13 +1,9 @@
 <script setup lang="ts">
-import { PropType } from 'vue'
+import beneficsCardIcon from 'src/core/components/Icons/IconBeneficsCard.vue'
+import conveniosIcon from 'src/core/components/Icons/IconAgreements.vue'
+import creditCardIcon from 'src/core/components/Icons/IconCreditCard.vue'
+import currencyIcon from 'src/core/components/Icons/IconCurrency.vue'
 
-// Icons
-import beneficsCardIcon from '@/core/components/Icons/IconBeneficsCard.vue'
-import conveniosIcon from '@/core/components/Icons/IconAgreements.vue'
-import creditCardIcon from '@/core/components/Icons/IconCreditCard.vue'
-import currencyIcon from '@/core/components/Icons/IconCurrency.vue'
-
-// Scripts
 interface IMargemDetalhamento {
 	financeiro: number
 	convenios: number
@@ -15,12 +11,9 @@ interface IMargemDetalhamento {
 	cartao_beneficios: number
 }
 
-const props = defineProps({
-	detalhamento: {
-		type: Object as PropType<IMargemDetalhamento>,
-		required: true,
-	},
-})
+const props = defineProps<{
+	detalhamento: IMargemDetalhamento;
+}>()
 
 const color = [
 	{
@@ -49,6 +42,7 @@ const color = [
 	},
 ]
 </script>
+
 <template>
 	<div v-for="(value, key, id) in props.detalhamento" :key="key" class="w-full flex justify-between items-center mb-3">
 		<div class="flex items-center gap-1">

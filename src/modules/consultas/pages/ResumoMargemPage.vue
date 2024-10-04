@@ -1,25 +1,18 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-import loadingFixed from '@/core/components/LoadingFixed.vue'
-import modalLayout from '@/core/components/Modal.vue'
-
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import loadingFixed from 'src/core/components/LoadingFixed.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultaResumoMargemPrincipal from '../components/ResumoMargem/MargemPrincipal.vue'
 import ConsultaSaldoDisponivelMargem from '../components/ResumoMargem/SaldoDisponivelMargem.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Icons
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-
-// Declarações
-const isOpenDialog = ref<boolean>(false)
-const dataMargemAtualizada = ref<string>('23/10/2023')
+const isOpenDialog = ref(false)
+const dataMargemAtualizada = ref('23/10/2023')
 const cols = reactive([
   { field: 'tipo_margem', title: 'Tipo da Margem', hide: false, sort: false, },
   { field: 'limite', title: 'Limite %', hide: false, sort: false, },
@@ -63,7 +56,6 @@ const rows = reactive([
   },
 ])
 
-// Scripts
 const openModal = (id: number) => isOpenDialog.value = true
 
 const formatedCurrency = (value: number) => {
@@ -136,6 +128,7 @@ const formatedCurrency = (value: number) => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss">
 #saldo_disponivel {
   .saldo_disponivel__valor {

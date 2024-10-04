@@ -3,14 +3,14 @@ import { reactive, ref } from 'vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
 
 // Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

@@ -1,23 +1,17 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconNote from 'src/core/components/Icons/IconNote.vue'
 
-// Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconNote from '@/core/components/Icons/IconNote.vue'
-
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const prazo = ref<string>('')
+const prazo = ref('')
 const cols = reactive([
 	{ field: 'id', title: '#', hide: false },
 	{ field: 'ins_financeira', title: 'Instituição Financeira', hide: false },
@@ -54,10 +48,8 @@ const rows = reactive([
 	},
 ])
 
-// Script
 const clearFilter = () => {
 	prazo.value = ''
-
 	selected.label = ''
 	selected.type = ''
 }
@@ -116,6 +108,7 @@ const filtered = (value: string = '') => {
 		</div>
 	</main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
 	.multiselect__placeholder {

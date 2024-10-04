@@ -3,18 +3,18 @@
 import { ref } from 'vue'
 
 // Componentes
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
-import modalLayout from '@/core/components/Modal.vue'
-import titulo from '@/core/components/Titulo.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
+import modalLayout from 'src/core/components/Modal.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
 import ConsultaCadastroConsignante from 'src/modules/consultas/components/ConsultaCadastroConsignatarias.vue'
 
 // Icons
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
-import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
-import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
+import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

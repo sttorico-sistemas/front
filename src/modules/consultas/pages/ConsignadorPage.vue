@@ -2,10 +2,10 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from '@/core/components/Modal.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 import VueCollapsible from 'vue-height-collapsible/vue3'
 
 import ConsultasCadastroConsignador from '../components/CadastroPessoa/CadastroConsignador.vue'
@@ -15,17 +15,17 @@ import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
-import IconBlock from '@/core/components/Icons/IconBlock.vue'
-import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
-import IconUser from '@/core/components/Icons/IconUser.vue'
-import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
-import IconLock from '@/core/components/Icons/IconLock.vue'
-import IconFilter from '@/core/components/Icons/IconFilter.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
+import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
+import IconUser from 'src/core/components/Icons/IconUser.vue'
+import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
+import IconLock from 'src/core/components/Icons/IconLock.vue'
+import IconFilter from 'src/core/components/Icons/IconFilter.vue'
 
 // Declarações
 const accordians = reactive({

@@ -1,35 +1,30 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from '@/core/components/Modal.vue'
-
+import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasCadastroPessoa from '../components/CadastroPessoa/CadastroPessoa.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
+import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 
-// Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
-import IconBlock from '@/core/components/Icons/IconBlock.vue'
-
-// Declarações
 const isOpenDialog = ref(false)
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
-const nome = ref<string>('')
-const cpf = ref<string>('')
-const tp_vinculo = ref<string>('')
-const cidade = ref<string>('')
-const status = ref<string>('')
+const nome = ref('')
+const cpf = ref('')
+const tp_vinculo = ref('')
+const cidade = ref('')
+const status = ref('')
+
 const cols = reactive([
   { field: 'id', title: 'ID', hide: true },
   { field: 'nome', title: 'Nome', hide: false },
@@ -64,7 +59,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   nome.value = ''
   cpf.value = ''
@@ -85,6 +79,8 @@ const color = (value: string): string => {
     case 'Inativo':
       return 'bg-warning' // Inativo
     case 'Bloqueada':
+      return 'bg-secondary'
+    default:
       return 'bg-secondary'
   }
 }
@@ -108,7 +104,7 @@ const filtered = (value: string = '') => {
     return rows.filter((item: any) => item.status === value)
 }
 
-const parseRows = (): Array<object> => {
+const parseRows = () => {
   return rows.map((row) => {
     return {
       id: row.id,
@@ -123,7 +119,7 @@ const parseRows = (): Array<object> => {
   })
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
   return [
     { field: 'id', title: 'ID', hide: true },
     { field: 'nome', title: 'Nome', hide: false },
@@ -230,6 +226,7 @@ const parseCols = (): Array<object> => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

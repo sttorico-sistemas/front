@@ -2,9 +2,9 @@
 import { reactive, ref, onMounted, computed, inject } from 'vue'
 
 // Icons
-import IconClose from '@/core/components/Icons/IconClose.vue'
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
-import IconInfo from '@/core/components/Icons/IconInfo.vue'
+import IconClose from 'src/core/components/Icons/IconClose.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
+import IconInfo from 'src/core/components/Icons/IconInfo.vue'
 
 // Declarações
 const eventBus = inject('eventBus')

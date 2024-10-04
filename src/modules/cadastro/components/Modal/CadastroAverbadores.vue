@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 // Componentes
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 
 // Script
 const emits = defineEmits(['btnSave', 'btnCancelar'])

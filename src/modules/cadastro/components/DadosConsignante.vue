@@ -3,14 +3,14 @@
 import { ref } from 'vue'
 
 // Componentes
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
-import modalLayout from '@/core/components/Modal.vue'
-import titulo from '@/core/components/Titulo.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
+import modalLayout from 'src/core/components/Modal.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
 import CadastroModalConsignante from './Modal/CadastroConsignante.vue'
 
 // Icons
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

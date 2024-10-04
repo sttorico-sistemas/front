@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-// Componentes
-import InputReadonly from '@/core/components/Inputs/InputReadonly.vue'
-// Icons
-// Declarações
-// Scripts
+import InputReadonly from 'src/core/components/Inputs/InputReadonly.vue'
+
 const emits = defineEmits(['btnSave', 'btnClose'])
 </script>
+
 <template>
 	<main>
 		<div class="panel pb-0 mt-6">

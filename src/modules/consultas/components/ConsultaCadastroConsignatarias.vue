@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 // Componentes
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icons
-import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
-import IconConveniosServico from '@/core/components/Icons/Services/IconConveniosServicos.vue'
-import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
-import iconFinanciamentosServico from '@/core/components/Icons/Services/IconFinanciamentosServico.vue'
-import IconCartaoBeneficiosServico from '@/core/components/Icons/Services/IconCartaoBeneficiosServico.vue'
+import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconConveniosServico from 'src/core/components/Icons/Services/IconConveniosServicos.vue'
+import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
+import iconFinanciamentosServico from 'src/core/components/Icons/Services/IconFinanciamentosServico.vue'
+import IconCartaoBeneficiosServico from 'src/core/components/Icons/Services/IconCartaoBeneficiosServico.vue'
 
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>

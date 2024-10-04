@@ -2,10 +2,10 @@
 import { ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
 // Icons
-import calculatorIcon from '@/core/components/Icons/IconCalculator2.vue'
+import calculatorIcon from 'src/core/components/Icons/IconCalculator2.vue'
 
 // Declarações
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])

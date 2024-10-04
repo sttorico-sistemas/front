@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import VueCollapsible from 'vue-height-collapsible/vue3'
 
 import ConsignatariaHabilitadas from '../components/ConsignatariaHabilitadas.vue'
@@ -22,7 +22,7 @@ import restricoes from '../components/Restricoes.vue'
 import anotacoes from '../components/Anotacoes.vue'
 
 // Icons
-import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
+import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 
 // Declarações
 const accordians = reactive({

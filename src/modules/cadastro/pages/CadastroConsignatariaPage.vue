@@ -4,8 +4,8 @@ import router from 'src/core/router'
 import VueCollapsible from 'vue-height-collapsible/vue3'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 
 import ConsignatariaHabilitadas from '../components/ConsignatariaHabilitadas.vue'
@@ -18,10 +18,10 @@ import Regulamento from '../components/Regulamento.vue'
 import LogsAlteracao from '../components/LogsAlteracao.vue'
 
 // Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({

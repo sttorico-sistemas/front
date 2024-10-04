@@ -1,17 +1,14 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
-const margem = ref<string>('')
-const ano = ref<string>('2023')
+const margem = ref('')
+const ano = ref('2023')
 const headerChart = reactive({
   percent: '',
   title: '',
@@ -102,7 +99,6 @@ const chartOptions = reactive({
   },
 })
 
-// Scripts
 const fetchReservaMargem = () => {
   const data = [
     {
@@ -139,11 +135,11 @@ const fetchReservaMargem = () => {
   })
 }
 
-// LifeCycles
 onMounted(() => {
   fetchReservaMargem()
 })
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Consultas', 'Histórico da Reserva da Margem']" />
@@ -183,20 +179,20 @@ onMounted(() => {
               <h3 class="text-primary_3 text-xl font-semibold mb-5">
                 <span class="text-secondary text-xl font-bold">{{
                   headerChart.percent
-                  }}</span>
+                }}</span>
                 {{ headerChart.title }}
               </h3>
               <p class="text-sm">
                 Valor atual da Margem
                 <span class="text-secondary text-sm font-bold">{{
                   headerChart.valor
-                  }}</span>
+                }}</span>
               </p>
             </div>
             <div>
               <strong class="text-[#2196F3] text-4xl font-bold">{{
                 ano
-                }}</strong>
+              }}</strong>
             </div>
           </div>
           <apexchart type="area" height="484" :options="chartOptions" :series="series" />
@@ -205,6 +201,7 @@ onMounted(() => {
     </div>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

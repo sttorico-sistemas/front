@@ -26,10 +26,10 @@ const props = defineProps({
 })
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
-import modalLayout from '@/core/components/Modal.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 
 import cadastroModalHabilitarConsignatarias from './Modal/HabilitarConsignatarias.vue'
@@ -37,22 +37,22 @@ import modalHabilitarPontoVenda from './Modal/HabilitarPontoVenda.vue'
 import modalHabilitarBackoffice from './Modal/HabilitarBackoffice.vue'
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
-import IconLock from '@/core/components/Icons/IconLock.vue'
-import IconShieldCheck from '@/core/components/Icons/IconShieldCheck.vue'
-import IconShieldUser from '@/core/components/Icons/IconShieldUser.vue'
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
-import IconHabilitar from '@/core/components/Icons/IconHabilitar.vue'
-import IconDesabilitar from '@/core/components/Icons/IconDesabilitar.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
+import IconLock from 'src/core/components/Icons/IconLock.vue'
+import IconShieldCheck from 'src/core/components/Icons/IconShieldCheck.vue'
+import IconShieldUser from 'src/core/components/Icons/IconShieldUser.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
+import IconHabilitar from 'src/core/components/Icons/IconHabilitar.vue'
+import IconDesabilitar from 'src/core/components/Icons/IconDesabilitar.vue'
 
-import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
+import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

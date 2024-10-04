@@ -1,21 +1,15 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import titulo from '@/core/components/Titulo.vue'
-
+import titulo from 'src/core/components/Titulo.vue'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
+import IconNote from 'src/core/components/Icons/IconNote.vue'
 
-// Icons
-import IconNote from '@/core/components/Icons/IconNote.vue'
-
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const prazo = ref<string>('')
+const prazo = ref('')
 const cols = reactive([
 	{ field: 'id', title: '#', hide: false },
 	{ field: 'consignataria', title: 'Consignatária', sort: false, hide: false },
@@ -61,23 +55,21 @@ const rows = reactive([
 	},
 ])
 
-// Script
 const clearFilter = () => {
 	prazo.value = ''
-
 	selected.label = ''
 	selected.type = ''
 }
 
 const filtered = (value: string = '') => {
 	if (value === '') return rows
-
 	if (selected.type === 'prazo')
 		return rows.filter((item: any) => item.prazo_meses === value)
 }
 
 const emits = defineEmits(['btnSave', 'btnClose'])
 </script>
+
 <template>
 	<main>
 		<div class="panel mt-6">

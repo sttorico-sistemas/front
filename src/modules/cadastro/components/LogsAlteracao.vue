@@ -3,7 +3,7 @@ import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
+import titulo from 'src/core/components/Titulo.vue'
 
 // Declarações
 const cols = reactive([

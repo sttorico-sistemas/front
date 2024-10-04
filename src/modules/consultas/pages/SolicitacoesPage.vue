@@ -1,25 +1,19 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
-const status = ref<string>('')
+const status = ref('')
 const cols = reactive([
   { field: 'id', title: 'ID', hide: true },
   { field: 'data', title: 'Data', hide: false },
@@ -62,10 +56,8 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   status.value = ''
-
   selected.label = ''
   selected.type = ''
 }
@@ -87,7 +79,6 @@ const color = (id: number | string): string => {
 
 const filtered = (value: string = '') => {
   if (value === '') return rows
-
   if (selected.type === 'situacao')
     return rows.filter((item: any) => item.status.label === value)
 }
@@ -108,7 +99,7 @@ const parseRows = (): Array<object> => {
   })
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
   return [
     { field: 'id', title: 'ID', hide: true },
     { field: 'data', title: 'Data', hide: false },
@@ -119,6 +110,7 @@ const parseCols = (): Array<object> => {
   ]
 }
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Consultas', 'Solicitações']" />

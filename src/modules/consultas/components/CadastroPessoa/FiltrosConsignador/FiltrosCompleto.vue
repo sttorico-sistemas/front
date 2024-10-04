@@ -2,13 +2,13 @@
 import { reactive, ref } from 'vue'
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 // Icones
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconFilter from '@/core/components/Icons/IconFilter.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconFilter from 'src/core/components/Icons/IconFilter.vue'
 
 // Declarações
 

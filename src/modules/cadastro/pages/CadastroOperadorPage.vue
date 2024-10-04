@@ -3,18 +3,18 @@ import { reactive, ref } from 'vue'
 
 // Componentes
 import VueCollapsible from 'vue-height-collapsible/vue3'
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-import modalLayout from '@/core/components/Modal.vue'
-import LabelInput from '@/core/components/Inputs/InputLabel.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import modalLayout from 'src/core/components/Modal.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 import ConsultasCadastroPessoa from 'src/modules/consultas/components/CadastroPessoa/CadastroPessoa.vue'
 import CadastroPerfilOperador from '../components/PerfilOperador.vue'
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 
 // Declarações
 const isDisabled = ref(true)

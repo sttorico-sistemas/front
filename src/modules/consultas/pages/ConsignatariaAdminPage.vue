@@ -3,30 +3,30 @@ import { reactive, ref } from 'vue'
 import router from 'src/core/router'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from '@/core/components/Modal.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultaCadastroConsignante from '../components/ConsultaCadastroConsignatarias.vue'
 
 // Icons
-import IconCartaoCreditoServico from '@/core/components/Icons/Services/IconCartaoCreditoServico.vue'
-import IconEmprestimoServico from '@/core/components/Icons/Services/IconEmprestimosServicos.vue'
-import IconMensalidadeServico from '@/core/components/Icons/Services/IconMensalidadeServicos.vue'
-import IconPlanoSaudeServico from '@/core/components/Icons/Services/IconPlanoSaudeServico.vue'
-import IconSegurosServico from '@/core/components/Icons/Services/IconSegurosServico.vue'
+import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
+import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
+import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
+import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
+import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconEye from '@/core/components/Icons/IconEye.vue'
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
-import IconUnlock from '@/core/components/Icons/IconUnlock.vue'
-import IconBlock from '@/core/components/Icons/IconBlock.vue'
-import IconLock from '@/core/components/Icons/IconLock.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconEye from 'src/core/components/Icons/IconEye.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
+import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
+import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import IconLock from 'src/core/components/Icons/IconLock.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)
@@ -253,7 +253,7 @@ const parseRows = (): Array<object> => {
                 </image-name>
                 <tippy target="top" placement="top">{{
                   tipo_servico.nome
-                }}</tippy>
+                  }}</tippy>
               </template>
             </div>
           </template>

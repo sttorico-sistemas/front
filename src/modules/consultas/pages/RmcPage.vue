@@ -2,31 +2,24 @@
 import flatPickr from 'vue-flatpickr-component'
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
 import { reactive, ref } from 'vue'
-
 import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
-
-// Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
-
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import ConsultasDatatable from '../components/ConsultasDatatable.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultasPopper from '../components/ConsultasPopper.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconFile from 'src/core/components/Icons/IconFile.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconFile from '@/core/components/Icons/IconFile.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
-
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
-const consignacao = ref<string>('')
-const consignataria = ref<string>('')
-const status = ref<string>('')
-const dateSelected = ref<string>('')
+const consignacao = ref('')
+const consignataria = ref('')
+const status = ref('')
+const dateSelected = ref('')
 const cols = reactive([
   { field: 'rmc', title: 'RMC', isUnique: true, hide: false },
   { field: 'data', title: 'Data', hide: false },

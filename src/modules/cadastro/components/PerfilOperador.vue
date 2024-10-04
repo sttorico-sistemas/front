@@ -11,12 +11,12 @@ const props = defineProps({
 })
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 
 // Declarações

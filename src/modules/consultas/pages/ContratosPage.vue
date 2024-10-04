@@ -6,17 +6,17 @@ import { reactive, ref } from 'vue'
 import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
 
 // Componentes
-import breadcrumbs from '@/core/components/Breadcrumbs.vue'
-import titulo from '@/core/components/Titulo.vue'
+import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultasPopper from '../components/ConsultasPopper.vue'
 
 // Icons
-import IconClear from '@/core/components/Icons/IconClear.vue'
-import IconFile from '@/core/components/Icons/IconFile.vue'
-import IconPrinter from '@/core/components/Icons/IconPrinter.vue'
+import IconClear from 'src/core/components/Icons/IconClear.vue'
+import IconFile from 'src/core/components/Icons/IconFile.vue'
+import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
 // Declarações
 const selected = reactive<{ type: string; label: string }>({
@@ -283,7 +283,7 @@ const filtered = (value: string = '') => {
             <button>
               <strong class="text-primary_3-table">{{
                 data.value.n_contrato
-                }}</strong>
+              }}</strong>
             </button>
           </template>
           <template #status="data">

@@ -19,17 +19,17 @@ const props = defineProps({
 })
 
 // Componentes
-import titulo from '@/core/components/Titulo.vue'
-import modalLayout from '@/core/components/Modal.vue'
+import titulo from 'src/core/components/Titulo.vue'
+import modalLayout from 'src/core/components/Modal.vue'
 
 import CadastroModalGestor from './Modal/CadastroGestor.vue'
 
 // Icons
-import IconAdd from '@/core/components/Icons/IconAdd.vue'
-import IconEdit from '@/core/components/Icons/IconEdit.vue'
-import IconDelete from '@/core/components/Icons/IconDelete.vue'
-import IconBlock from '@/core/components/Icons/IconBlock.vue'
-import IconCheck from '@/core/components/Icons/IconCheck.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconEdit from 'src/core/components/Icons/IconEdit.vue'
+import IconDelete from 'src/core/components/Icons/IconDelete.vue'
+import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 
 // Declarações
 const isOpenDialog = ref<boolean>(false)

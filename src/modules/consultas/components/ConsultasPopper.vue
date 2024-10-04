@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import IconCaretDown from '@/core/components/Icons/IconCaretDown.vue'
+import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 import { PropType } from 'vue'
 
 defineProps({
