@@ -4,4 +4,5 @@ export type Col = {
   hide: boolean;
   isUnique?: boolean;
   sort?: boolean;
+  width?: string;
 }
