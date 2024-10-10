@@ -1,16 +1,13 @@
 <script lang="ts" setup>
-// Props
-const props = defineProps({
-  // TODO Refatorar para deixar como obrigátorio, passando o tipo também na tela de consignante
-  typeScreen: {
-    type: String,
-    default: 'consignante'
-  }
-})
-
-// Componentes
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
+
+withDefaults(defineProps<{
+  // TODO Refatorar para deixar como obrigátorio, passando o tipo também na tela de consignante
+  typeScreen?: string;
+}>(), {
+  typeScreen: 'consignante',
+});
 
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
@@ -20,12 +17,11 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
     <div class="panel mt-5 border border-primary_3-table">
       <label class="text-sm md:text-base text-primary_3-table m-0 mb-3">Dados do Contrato</label>
 
-      <label-input v-if="props.typeScreen === 'consignataria'" id="cod_contrato" label="Cód.Contrato"
-        class-label="text-sm" class-input="md:max-w-[200px] mb-3" layout="row" />
+      <label-input v-if="typeScreen === 'consignataria'" id="cod_contrato" label="Cód.Contrato" class-label="text-sm"
+        class-input="md:max-w-[200px] mb-3" layout="row" />
 
-      <label-select v-if="props.typeScreen === 'consignataria'" id="consignante" label="Consignante"
-        class-label="text-sm" class-select="w-full md:max-w-[400px] mb-3" layout="row"
-        :options="['consignante 1', 'consignante 2']" />
+      <label-select v-if="typeScreen === 'consignataria'" id="consignante" label="Consignante" class-label="text-sm"
+        class-select="w-full md:max-w-[400px] mb-3" layout="row" :options="['consignante 1', 'consignante 2']" />
 
       <label-select id="contrato" label="Tipo de Contrato" class-label="text-sm"
         class-select="w-full md:max-w-[400px] mb-3" layout="row"

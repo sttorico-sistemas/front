@@ -1,18 +1,14 @@
 <script lang="ts" setup>
-// Props
-defineProps({
-  // TODO Refatorar para deixar como obrigátorio, passando o tipo também na tela de consignante
-  typeScreen: {
-    type: String,
-    default: 'consignante'
-  }
-})
-
-// Componentes
-import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
+import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 
-// Script
+withDefaults(defineProps<{
+  // TODO Refatorar para deixar como obrigátorio, passando o tipo também na tela de consignante
+  typeScreen?: string;
+}>(), {
+  typeScreen: 'consignante',
+});
+
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 

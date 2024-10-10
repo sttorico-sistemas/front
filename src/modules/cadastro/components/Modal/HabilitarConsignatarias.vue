@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-// Componentes
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
-// Icons
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconConveniosServico from 'src/core/components/Icons/Services/IconConveniosServicos.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
@@ -13,7 +10,6 @@ import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosSe
 import iconFinanciamentosServico from 'src/core/components/Icons/Services/IconFinanciamentosServico.vue'
 import IconCartaoBeneficiosServico from 'src/core/components/Icons/Services/IconCartaoBeneficiosServico.vue'
 
-// Script
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 

@@ -1,40 +1,26 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { PropType, ref } from 'vue'
-
-// props
-const props = defineProps({
-	cols: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	rows: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	pagination: {
-		type: Boolean,
-		default: false,
-	},
-})
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import CadastroModalContrato from './Modal/CadastroContrato.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
+const props = withDefaults(defineProps<{
+	cols: Col[];
+	rows: Record<string, any>;
+	pagination?: boolean;
+}>(), {
+	pagination: false,
+});
+
 const isOpenDialog = ref(false)
 
-// Scripts
 const color = (value: string) => {
 	switch (value) {
 		case 'Ativo':
@@ -105,6 +91,7 @@ const color = (value: string) => {
 		</modal-layout>
 	</main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
 	.multiselect__placeholder {

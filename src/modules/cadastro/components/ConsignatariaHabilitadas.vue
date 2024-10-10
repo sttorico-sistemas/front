@@ -1,42 +1,13 @@
 <script lang="ts" setup>
 import { PropType, reactive, ref } from 'vue'
-
-// props
-const props = defineProps({
-	cols: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	rows: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	pagination: {
-		type: Boolean,
-		default: false,
-	},
-	title: {
-		type: String,
-		default: '',
-	},
-	typeScreen: {
-		type: String,
-		default: 'consignante',
-	},
-})
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
-
 import cadastroModalHabilitarConsignatarias from './Modal/HabilitarConsignatarias.vue'
 import modalHabilitarPontoVenda from './Modal/HabilitarPontoVenda.vue'
 import modalHabilitarBackoffice from './Modal/HabilitarBackoffice.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
@@ -47,28 +18,50 @@ import IconShieldUser from 'src/core/components/Icons/IconShieldUser.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconHabilitar from 'src/core/components/Icons/IconHabilitar.vue'
 import IconDesabilitar from 'src/core/components/Icons/IconDesabilitar.vue'
-
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
 import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
 import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
+type RowData = {
+	id: number;
+	consignante?: string;
+	consignataria?: { nome: string };
+	tipo_instituicao: string;
+	tipo_servicos: { nome: string }[];
+	data_habilitacao: string;
+	data_renovação: string;
+	status: string;
+	averbacao: string;
+}
+
+const props = withDefaults(defineProps<{
+	cols: Col[];
+	rows: RowData[];
+	pagination?: boolean;
+	title?: string;
+	typeScreen?: string;
+}>(), {
+	pagination: false,
+	title: '',
+	typeScreen: 'consignante',
+});
+
 const isOpenDialog = ref(false)
 const isOpenDialogPontoVenda = ref(false)
 const isOpenDialogBackOffice = ref(false)
-const selected = reactive<{ type: string, label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const consignante = ref<string>('')
-const servico = ref<string>('')
-const status = ref<string>('')
-const instituicao = ref<string>('')
-const averbacao = ref<string>('')
+const consignante = ref('')
+const servico = ref('')
+const status = ref('')
+const instituicao = ref('')
+const averbacao = ref('')
 
-// Script
 const clearFilter = () => {
 	servico.value = ''
 	status.value = ''
@@ -80,18 +73,18 @@ const clearFilter = () => {
 	selected.type = ''
 }
 
-const color = (value: string): string => {
+const color = (value: string): string | undefined => {
 	switch (value) {
 		case 'Ativo':
-			return 'bg-success' // Ativo
+			return 'bg-success'
 		case 'Liberada':
 			return 'bg-success'
 		case 'Inativo':
-			return 'bg-warning' // Inativo
+			return 'bg-warning'
 		case 'Bloqueada':
 			return 'bg-secondary'
 		case 'Desabilitado':
-			return 'bg-warning' // Inativo
+			return 'bg-warning'
 		case 'Habilitado':
 			return 'bg-success'
 	}
@@ -142,7 +135,7 @@ const iconeService = (value: string) => {
 	}
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = (): Col[] => {
 	return [
 		{ field: 'id', title: '#', hide: false, sort: false },
 		{ field: 'consignante', title: 'Consignante', hide: false },
@@ -155,19 +148,13 @@ const parseCols = (): Array<object> => {
 	]
 }
 
-const parseRows = (): Array<object> => {
+const parseRows = (): Record<string, any>[] => {
 	return props.rows.map((row) => {
 		const services = row.tipo_servicos.map((servico) => servico.nome)
-
-		let consignanteOuConsignataria = {}
-		if (row.consignante !== undefined)
-			consignanteOuConsignataria = { consignante: row.consignante }
-		else if (row.consignataria.nome !== undefined)
-			consignanteOuConsignataria = { consignataria: row.consignataria.nome }
-
 		return {
 			id: row.id,
-			...consignanteOuConsignataria,
+			consignante: row.consignante,
+			consignataria: row.consignataria,
 			tipo_instituicao: row.tipo_instituicao,
 			tipo_servicos: `${services}`,
 			data_habilitacao: row.data_habilitacao,
@@ -178,6 +165,7 @@ const parseRows = (): Array<object> => {
 	})
 }
 </script>
+
 <template>
 	<main>
 		<div class="panel">
@@ -331,6 +319,7 @@ const parseRows = (): Array<object> => {
 		</modal-layout>
 	</main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
 	.multiselect__placeholder {

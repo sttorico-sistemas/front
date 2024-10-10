@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 </script>
+
 <template>
   <main>
     <div class="panel py-4 mt-6 bg-[#EAEAEC]">

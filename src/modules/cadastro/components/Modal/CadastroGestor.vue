@@ -1,16 +1,12 @@
 <script lang="ts" setup>
-// Props
-defineProps({
-  typeScreen: {
-    type: String,
-    default: 'consignante',
-  },
-})
-
-// Componentes
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 
-// Script
+withDefaults(defineProps<{
+  typeScreen?: string;
+}>(), {
+  typeScreen: 'consignante',
+});
+
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 

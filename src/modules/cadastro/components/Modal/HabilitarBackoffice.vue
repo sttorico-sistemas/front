@@ -1,17 +1,13 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-
-// Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-
-// Icones
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'backoffice', title: 'Backoffice', hide: false, sort: true, },
   { field: 'setor', title: 'Setor', hide: false, sort: true, },
   { field: 'cidade', title: 'Cidade', hide: false, sort: true, },
@@ -35,17 +31,16 @@ const rows = reactive([
   },
 ])
 
-// Scripts
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 
 const color = (value: string): string => {
   switch (value) {
     case 'Ativo':
-      return 'bg-success' // Ativo
+      return 'bg-success'
     case 'Liberada':
       return 'bg-success'
     case 'Inativo':
-      return 'bg-warning' // Inativo
+      return 'bg-warning'
     case 'Bloqueada':
       return 'bg-secondary'
     default:

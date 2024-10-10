@@ -1,20 +1,11 @@
 <script lang="ts" setup>
-// Core
 import { ref } from 'vue'
-
-// Componentes
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 
-// Declarações
 const consignanteMaster = ref<string>('')
-
-// Script
 const clearOption = () => consignanteMaster.value = ''
-
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 

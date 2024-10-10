@@ -1,16 +1,10 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 import CadastrarConsignacao from './Modal/CadastrarConsignacao.vue'
-
-// Icons
-import IconDoc from 'src/core/components/Icons/IconFile.vue'
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
@@ -18,17 +12,17 @@ import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
 const isOpenDialog = ref(false);
-const selected = reactive<{ type: string, label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const tipoServico = ref<string>('')
-const classe = ref<string>('')
-const tipoConsignacao = ref<string>('')
-const cols = reactive([
+const tipoServico = ref('')
+const classe = ref('')
+const tipoConsignacao = ref('')
+const cols = reactive<Col[]>([
 	{ field: 'id', title: '#', hide: true, sort: false, },
 	{ field: 'servicos', title: 'Serviços', hide: false, sort: false, },
 	{ field: 'classe', title: 'Classe', hide: false, sort: false, },
@@ -40,6 +34,7 @@ const cols = reactive([
 	{ field: 'status', title: 'Status', hide: false, sort: false, },
 	{ field: 'actions', title: 'Ações', hide: false, sort: false, },
 ])
+
 const rows = reactive([
 	{
 		id: 1,
@@ -65,7 +60,6 @@ const rows = reactive([
 	},
 ])
 
-// Scripts
 const clearFilter = () => {
 	tipoServico.value = ''
 	classe.value = ''
@@ -97,7 +91,7 @@ const filtered = (value: string = '') => {
 		return rows.filter((item: any) => item.tipo_consignacao === value)
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = (): Col[] => {
 	return [
 		{ field: 'id', title: '#', hide: true, sort: false, },
 		{ field: 'servicos', title: 'Serviços', hide: false, sort: false, },
@@ -158,8 +152,9 @@ const parseCols = (): Array<object> => {
 			</div>
 
 			<div class="datatable">
-				<vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label).length"
-					:sortable="true" skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
+				<vue3-datatable :rows="filtered(selected.label)" :columns="cols"
+					:total-rows="filtered(selected.label)?.length ?? 0" :sortable="true"
+					skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
 					pagination-info="Mostrando {0} a {1} de {2} entradas">
 					<template #status="data">
 						<span class="flex justify-center badge !w-[80px] h-[22px]" :class="color(data.value.status)">{{

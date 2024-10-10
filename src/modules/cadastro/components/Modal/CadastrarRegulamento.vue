@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
-// Props
 const props = defineProps({
   title: String,
 })
 
-// Scripts
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 <template>

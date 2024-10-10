@@ -1,31 +1,23 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import CadastrarIp from './Modal/CadastrarIpIntrucoesProcedimentos.vue'
-
-// Icons
 import IconDoc from 'src/core/components/Icons/IconFile.vue'
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
 const isOpenDialog = ref(false);
-const selected = reactive<{ type: string, label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const normativo = ref<string>('')
-const numero = ref<string>('')
-const status = ref<string>('')
-const cols = reactive([
+const cols = reactive<Col[]>([
 	{ field: 'id', title: '#', hide: true, sort: false, },
 	{ field: 'dcto', title: 'Dcto', hide: false, sort: false, },
 	{ field: 'numero', title: 'Número', hide: false, sort: false, },

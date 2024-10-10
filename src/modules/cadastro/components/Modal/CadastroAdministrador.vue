@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-// Componentes
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
+
 <template>
   <main>
     <div class="panel border mt-5 border-primary_3-table">

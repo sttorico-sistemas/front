@@ -1,24 +1,18 @@
 <script lang="ts" setup>
-// Core
 import { ref } from 'vue'
-
-// Componentes
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import titulo from 'src/core/components/Titulo.vue'
-
 import ConsultaCadastroConsignante from 'src/modules/consultas/components/ConsultaCadastroConsignatarias.vue'
-
-// Icons
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
 import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
-// Declarações
 const isOpenDialog = ref(false)
 </script>
+
 <template>
   <main>
     <div class="panel mt-6">

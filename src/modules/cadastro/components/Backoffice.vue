@@ -1,16 +1,11 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
-
 import CadastroModalBackoffice from './Modal/CadastrarBackoffice.vue'
 import CadastroListagemModalBackoffice from './Modal/CadastrarListagemBackoffice.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
@@ -18,18 +13,18 @@ import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
 const isOpenDialog = ref(false)
 const isOpenDialogCadastroListagemBackoffice = ref(false)
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const setor = ref<string>('')
-const cidade = ref<string>('')
-const status = ref<string>('')
-const cols = reactive([
+const setor = ref('')
+const cidade = ref('')
+const status = ref('')
+const cols = reactive<Col[]>([
 	{ field: 'backoffice', title: 'Backoffice', hide: false, sort: false },
 	{ field: 'setor', title: 'Setor', hide: false },
 	{ field: 'cidade', title: 'Cidade', hide: false },
@@ -53,7 +48,6 @@ const rows = reactive([
 	},
 ])
 
-// Script
 const clearFilter = () => {
 	setor.value = ''
 	cidade.value = ''
@@ -63,14 +57,14 @@ const clearFilter = () => {
 	selected.type = ''
 }
 
-const color = (value: string): string => {
+const color = (value: string): string | undefined => {
 	switch (value) {
 		case 'Ativo':
-			return 'bg-success' // Ativo
+			return 'bg-success'
 		case 'Liberada':
 			return 'bg-success'
 		case 'Inativo':
-			return 'bg-warning' // Inativo
+			return 'bg-warning'
 	}
 }
 
@@ -87,7 +81,7 @@ const filtered = (value: string = '') => {
 		return rows.filter((item: any) => item.cidade === value)
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = (): Col[] => {
 	return [
 		{ field: 'id', title: '#', hide: false, sort: false },
 		{ field: 'backoffice', title: 'Backoffice', hide: false, sort: false },
@@ -97,6 +91,7 @@ const parseCols = (): Array<object> => {
 	]
 }
 </script>
+
 <template>
 	<main>
 		<div class="panel">
@@ -190,6 +185,7 @@ const parseCols = (): Array<object> => {
 		</modal-layout>
 	</main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
 	.multiselect__placeholder {
