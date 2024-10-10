@@ -1,29 +1,22 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-// Componentes
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconDelete from 'src/core/components/Icons/IconDelete.vue'
 
-// Declarações
 const logomarca = ref('')
 const messageErrors = ref<string[]>([])
 
-// Script
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 
-// Valida o tamanho em kb da imagem
 const fileSize = (size: number) => {
-  if (size > 512000) return false
-
+  if (size > 512000) {
+    return false;
+  }
   return true
 }
 
-// Valida o tamanho da imagem em px
-const filePixel = (e) => {
+const filePixel = (e: string) => {
   const image = new Image()
   image.src = e
 
@@ -70,6 +63,7 @@ const onFileDelete = () => {
   messageErrors.value = []
 }
 </script>
+
 <template>
   <main>
     <span class="text-xs">(Recomendado 150x150px (pixel) ou a mesma proporção. Tamanho máximo de 512kb.)</span>

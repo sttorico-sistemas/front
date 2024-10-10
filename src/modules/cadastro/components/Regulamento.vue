@@ -1,15 +1,10 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 import CadastrarRegulamento from './Modal/CadastrarRegulamento.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
@@ -17,22 +12,21 @@ import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
+import { Col } from 'types/col.d'
 
-// Props
-const props = defineProps({
-	title: String,
-	titleModal: String,
-	subTitleModal: String,
-})
+const props = defineProps<{
+	title: string;
+	titleModal: string;
+	subTitleModal: string;
+}>();
 
-// Declarações
 const isOpenDialog = ref(false);
-const selected = reactive<{ type: string, label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
 const servico = ref<string>('')
-const cols = reactive([
+const cols = reactive<Col[]>([
 	{ field: 'id', title: '#', hide: true, sort: false, },
 	{ field: 'servicos', title: 'Serviços', hide: false, sort: false, },
 	{ field: 'regra', title: 'Regra', hide: false, sort: false, },
@@ -58,7 +52,6 @@ const rows = reactive([
 	},
 ])
 
-// Scripts
 const clearFilter = () => {
 	servico.value = ''
 
@@ -82,7 +75,7 @@ const filtered = (value: string = '') => {
 		return rows.filter((item: any) => item.grupo_margem === value)
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
 	return [
 		{ field: 'id', title: '#', hide: true, sort: false, },
 		{ field: 'servicos', title: 'Serviços', hide: false, sort: false, },

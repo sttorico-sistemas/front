@@ -1,29 +1,23 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import VueCollapsible from 'vue-height-collapsible/vue3'
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
 import ConsultasCadastroPessoa from 'src/modules/consultas/components/CadastroPessoa/CadastroPessoa.vue'
 import CadastroPerfilOperador from '../components/PerfilOperador.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 
-// Declarações
 const isDisabled = ref(true)
 const isOpenDialog = ref(false)
 const accordians = reactive({
   perfilOperador: false,
 })
-
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Consultas', 'Operador']" />

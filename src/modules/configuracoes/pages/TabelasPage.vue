@@ -1,20 +1,15 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import titulo from 'src/core/components/Titulo.vue'
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconDelete from 'src/core/components/Icons/IconDelete.vue'
 
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
@@ -37,8 +32,7 @@ const rows = reactive([
   },
 ])
 
-// Script
-const tipo_tabela = ref('') 
+const tipoTabela = ref('')
 </script>
 
 <template>
@@ -51,7 +45,7 @@ const tipo_tabela = ref('')
           <titulo title="Cadastro de Tabelas Auxiliares Tabela" />
 
           <div class="header_actions flex items-center gap-20">
-            <multiselect v-model="tipo_tabela" :options="['Tabela 1', 'Tabela 2']"
+            <multiselect v-model="tipoTabela" :options="['Tabela 1', 'Tabela 2']"
               class="custom-multiselect min-w-[400px]" placeholder="Selecione Tabela" :searchable="false"
               :preselect-first="false" :allow-empty="false" selected-label="" select-label="" deselect-label=""
               @select="(selected.label = $event), (selected.type = 'tipo_tabela')" />
@@ -105,6 +99,7 @@ const tipo_tabela = ref('')
     </div>
   </modal-layout>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

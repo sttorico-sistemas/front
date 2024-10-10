@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import { reactive, ref } from 'vue'
-
-// Componentes
+import { reactive } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
+import { Col } from 'types/col';
 
-// Declarações
-const cols = reactive([
+const cols = reactive<Col[]>([
 	{ field: 'id', title: '#', hide: true, sort: false, },
 	{ field: 'data_hora', title: 'Data/Hora', hide: false, sort: false, },
 	{ field: 'tipo_acao', title: 'Tipo  de Ação', hide: false, sort: false, },

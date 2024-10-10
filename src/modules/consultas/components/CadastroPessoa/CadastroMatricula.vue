@@ -1,15 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-
-const props = withDefaults(defineProps<{
-  disabled?: boolean;
-}>(), {
-  disabled: true,
-});
-
 const emits = defineEmits(['btnSave', 'btnCancelar'])
 </script>
 

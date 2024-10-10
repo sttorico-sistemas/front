@@ -18,7 +18,6 @@ const contatos = reactive([
   }
 ])
 
-// Script
 const addContato = () => {
   if (contatos.length >= 3) {
     eventBus?.emit('alert', {
@@ -72,7 +71,7 @@ const removeContato = (index: number) => {
       <label-input v-model="contato.email" id="email" label="E-mail" :disabled="isDisabled" class-label="text-sm"
         class-input="md:w-[400px]" layout="row" />
       <div class="flex items-center gap-1">
-        <!-- TODO Descobrir por que aqui havia argumentos -->
+        <!-- TODO Descobrir por que aqui haviam argumentos -->
         <!-- <button @click="addContato(contato, contatos)" v-tippy:right class="flex self-end mb-2"> -->
         <button @click="addContato()" v-tippy:right class="flex self-end mb-2">
           <icon-add />

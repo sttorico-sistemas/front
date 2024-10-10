@@ -1,20 +1,11 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
-// Icones
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconFilter from 'src/core/components/Icons/IconFilter.vue'
-
-// Declarações
-
-// Scripts
-
 </script>
+
 <template>
   <div class="panel">
     <div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">

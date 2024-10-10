@@ -1,17 +1,11 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import CadastrarRegulamento from './Modal/CadastrarRegulamento.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 
-// Declarações
 const isOpenDialog = ref(false);
 
 const cols = reactive([
@@ -39,7 +33,6 @@ const rows = reactive([
 	},
 ])
 
-// Scripts
 const color = (value: string) => {
 	switch (value) {
 		case 'Ativo':

@@ -1,15 +1,10 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 import CadastrarMargem from './Modal/CadastrarMargem.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
@@ -18,14 +13,13 @@ import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 
-// Declarações
 const isOpenDialog = ref(false);
-const selected = reactive<{ type: string, label: string }>({
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const grupoMargem = ref<string>('')
-const status = ref<string>('')
+const grupoMargem = ref('')
+const status = ref('')
 const cols = reactive([
 	{ field: 'id', title: '#', hide: true, sort: false, },
 	{ field: 'grupo_margem', title: 'Grupo da Margem', hide: false, sort: false, },
@@ -57,7 +51,6 @@ const rows = reactive([
 	},
 ])
 
-// Scripts
 const clearFilter = () => {
 	grupoMargem.value = ''
 	status.value = ''
@@ -85,7 +78,7 @@ const filtered = (value: string = '') => {
 		return rows.filter((item: any) => item.status === value)
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
 	return [
 		{ field: 'id', title: '#', hide: true, sort: false, },
 		{ field: 'grupo_margem', title: 'Grupo da Margem', hide: false, sort: false, },

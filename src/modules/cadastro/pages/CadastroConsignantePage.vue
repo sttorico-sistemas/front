@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
-
-// Componentes
+import { reactive } from 'vue'
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import VueCollapsible from 'vue-height-collapsible/vue3'
-
 import ConsignatariaHabilitadas from '../components/ConsignatariaHabilitadas.vue'
 import ContratoSistema from '../components/ContratoSistema.vue'
 import DadosConsignante from '../components/DadosConsignante.vue'
@@ -20,11 +17,8 @@ import PontoVenda from '../components/PontoVenda.vue'
 import instrucoesProcedimentos from '../components/InstrucoesProcedimentos.vue'
 import restricoes from '../components/Restricoes.vue'
 import anotacoes from '../components/Anotacoes.vue'
-
-// Icons
 import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 
-// Declarações
 const accordians = reactive({
   dadosConsignante: false,
   contratoSistema: false,
@@ -195,9 +189,8 @@ const rowsOperadores = reactive([
     status: 'Ativo',
   },
 ])
-// Script
-
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Cadastro', 'Consignante']" />
@@ -381,4 +374,3 @@ const rowsOperadores = reactive([
     </div>
   </main>
 </template>
-<style lang="scss" scoped></style>

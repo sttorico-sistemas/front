@@ -1,42 +1,25 @@
 <script lang="ts" setup>
-// Core
-import { reactive, ref, onMounted, inject } from 'vue'
-
-// Props
-const props = defineProps({
-  matricula: {
-    type: Boolean,
-    default: true,
-  },
-  disabled: {
-    type: Boolean,
-    default: true,
-  }
-})
-
-// Componentes
+import { ref } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
 import ConsultasCadastroPessoaContato from './CadastroPessoaContato.vue'
 import ConsultasCadastroPessoaEndereco from './CadastroPessoaEndereco.vue'
 import ConsultasCadastroPessoaMatricula from './CadastroMatricula.vue'
-
-// Icons
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 
-// Declarações
-const isDisabled = ref(true)
+const props = withDefaults(defineProps<{
+  matricula?: boolean;
+  disabled?: boolean;
+}>(), {
+  disabled: true,
+  matricula: true,
+})
 
-// Script
+const isDisabled = ref(props.disabled)
 
 const emits = defineEmits(['btnSave', 'btnCancelar'])
-
-onMounted(() => {
-  isDisabled.value = props.disabled
-})
 </script>
+
 <template>
   <main>
     <div class="panel mt-5 border border-primary_3-table">

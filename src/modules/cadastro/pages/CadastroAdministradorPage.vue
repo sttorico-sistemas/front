@@ -2,23 +2,16 @@
 import { ref, reactive } from 'vue'
 import router from 'src/core/router'
 import VueCollapsible from 'vue-height-collapsible/vue3'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
-
 import PontoVenda from '../components/PontoVenda.vue'
 import DadosAdministrador from '../components/DadosAdministrador.vue'
 import instrucoesProcedimentos from '../components/InstrucoesProcedimentos.vue'
 import LogsAlteracao from '../components/LogsAlteracao.vue'
-
-// Icons
-import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
@@ -32,11 +25,11 @@ const accordians = reactive({
   ip: false,
   logs: false,
 })
-const contrato = ref<string>('')
-const consignante = ref<string>('')
-const data_inicial = ref<string>('')
-const data_final = ref<string>('')
-const status = ref<string>('')
+const contrato = ref('')
+const consignante = ref('')
+const data_inicial = ref('')
+const data_final = ref('')
+const status = ref('')
 
 const colsOperadores = reactive([
   { field: 'operador', title: 'Operador', hide: false, sort: false },
@@ -70,39 +63,8 @@ const rowsOperadores = reactive([
     status: 'Ativo',
   },
 ])
-
-// Script
-const filtered = (value: string = '') => {
-  if (value === '') return rowsContratoSistema
-
-  if (selected.type === 'contrato')
-    return rowsContratoSistema.filter((item: any) => item.tipo_contrato === value)
-
-  if (selected.type === 'consignante')
-    return rowsContratoSistema.filter((item: any) => item.tipo_consignante === value)
-
-  if (selected.type === 'data_inicial')
-    return rowsContratoSistema.filter((item: any) => item.data_inicial === value)
-
-  if (selected.type === 'data_final')
-    return rowsContratoSistema.filter((item: any) => item.data_final === value)
-
-  if (selected.type === 'status')
-    return rowsContratoSistema.filter((item: any) => item.status === value)
-}
-
-const clearFilter = () => {
-  contrato.value = ''
-  consignante.value = ''
-  data_inicial.value = ''
-  data_final.value = ''
-  status.value = ''
-
-  selected.label = ''
-  selected.type = ''
-}
-
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Cadastro', 'Administrador']" />

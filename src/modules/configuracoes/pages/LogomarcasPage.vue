@@ -1,27 +1,23 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import titulo from 'src/core/components/Titulo.vue'
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import ImageName from 'src/modules/consultas/components/ConsultasHistorico/DatatableColunaImageName.vue'
 import CadastrarLogomarca from '../components/CadastrarLogomarca.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconDelete from 'src/core/components/Icons/IconDelete.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
 })
-const instituicao = ref<string>('')
-const tipo_instituicao = ref<string>('')
+const instituicao = ref('')
+const tipo_instituicao = ref('')
 const isOpenDialog = ref(false)
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'logo', title: 'Logo', hide: false, },
   { field: 'instituicao', title: 'Instituição', hide: false, },
   { field: 'tipo_instituicao', title: 'Tipo de Instituição', hide: false, },
@@ -42,7 +38,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const filtered = (value: string = '') => {
   if (value === '') return rows
 
@@ -106,6 +101,7 @@ const filtered = (value: string = '') => {
     <cadastrar-logomarca @btn-cancelar="isOpenDialog = false" />
   </modal-layout>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

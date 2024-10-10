@@ -2,12 +2,9 @@
 import { ref, reactive } from 'vue'
 import router from 'src/core/router'
 import VueCollapsible from 'vue-height-collapsible/vue3'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
-
 import ConsignatariaHabilitadas from '../components/ConsignatariaHabilitadas.vue'
 import BackOffice from '../components/Backoffice.vue'
 import PontoVenda from '../components/PontoVenda.vue'
@@ -16,14 +13,11 @@ import DadosConsignataria from '../components/DadosConsignataria.vue'
 import ConsultaConsignataria from '../components/ConsultaConsignataria.vue'
 import Regulamento from '../components/Regulamento.vue'
 import LogsAlteracao from '../components/LogsAlteracao.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Declarações
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
@@ -39,11 +33,11 @@ const accordians = reactive({
   regrasServicos: false,
   logs: false,
 })
-const contrato = ref<string>('')
-const consignante = ref<string>('')
-const data_inicial = ref<string>('')
-const data_final = ref<string>('')
-const status = ref<string>('')
+const contrato = ref('')
+const consignante = ref('')
+const data_inicial = ref('')
+const data_final = ref('')
+const status = ref('')
 const colsContratoSistema = reactive([
   { field: 'cod', title: 'Cód. Contrato', hide: false, sort: true, },
   { field: 'tipo_contrato', title: 'Tipo Contrato', hide: false, sort: true, },
@@ -182,7 +176,6 @@ const rowsOperadores = reactive([
   },
 ])
 
-// Script
 const filtered = (value: string = '') => {
   if (value === '') return rowsContratoSistema
 
@@ -225,6 +218,7 @@ const parseColsContratoSistema = (): Array<object> => {
   ]
 }
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Cadastro', 'Consignatária ']" />

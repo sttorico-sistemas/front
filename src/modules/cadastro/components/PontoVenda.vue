@@ -1,43 +1,11 @@
 <script lang="ts" setup>
-import { PropType, reactive, ref } from 'vue'
-
-const props = defineProps({
-	cols: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	rows: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	pagination: {
-		type: Boolean,
-		default: false,
-	},
-	title: {
-		type: String,
-		default: 'Pontos de Vendas',
-	},
-	administrador: {
-		type: Boolean,
-		default: false,
-	},
-	btnAdd: {
-		type: Boolean,
-		default: true,
-	},
-})
-
-// Componentes
+import { reactive, ref } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
-
 import CadastroModalPontoVenda from './Modal/CadastroPontoVenda.vue'
 import CadastroModalOperadores from './Modal/CadastroOperadores.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
@@ -46,21 +14,36 @@ import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconResetPassword from 'src/core/components/Icons/IconResetPassword.vue'
+import { Col } from 'types/col';
 
-// Declarações
+const props = withDefaults(defineProps<{
+	cols: Col[];
+	rows: Record<string, any>[];
+	pagination?: boolean;
+	title?: string;
+	administrador?: boolean;
+	btnAdd?: boolean
+}>(), {
+	pagination: false,
+	title: 'Pontos de Vendas',
+	administrador: false,
+	btnAdd: true,
+})
+
 const isOpenDialog = ref(false)
 const isOpenDialogOperadores = ref(false)
-const selected = reactive<{ type: string; label: string }>({
+
+const selected = reactive({
 	type: '',
 	label: '',
 })
-const pdv = ref<string>('')
-const cidade = ref<string>('')
-const perfil = ref<string>('')
-const tipo_admin = ref<string>('')
-const status = ref<string>('')
 
-// Script
+const pdv = ref('')
+const cidade = ref('')
+const perfil = ref('')
+const tipo_admin = ref('')
+const status = ref('')
+
 const clearFilter = () => {
 	pdv.value = ''
 	cidade.value = ''
@@ -75,11 +58,11 @@ const clearFilter = () => {
 const color = (value: string): string => {
 	switch (value) {
 		case 'Ativo':
-			return 'bg-success' // Ativo
+			return 'bg-success'
 		case 'Liberada':
 			return 'bg-success'
 		case 'Inativo':
-			return 'bg-warning' // Inativo
+			return 'bg-warning'
 		default:
 			return 'bg-warning'
 	}
@@ -110,7 +93,7 @@ const filtered = (value: string = '') => {
 		return props.rows.filter((item: any) => item.tipo_administrador === value)
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
 	if (props.administrador) {
 		return [
 			{ field: 'id', title: '#', hide: false, sort: false },
@@ -133,9 +116,10 @@ const parseCols = (): Array<object> => {
 	]
 }
 
-const tp_operador = ref('');
+const tpOperador = ref('');
 const operador = ref('');
 </script>
+
 <template>
 	<main>
 		<div class="panel">
@@ -165,7 +149,7 @@ const operador = ref('');
 						class="custom-multiselect min-w-[200px]" placeholder="Nome" :searchable="false" :preselect-first="false"
 						:allow-empty="false" selected-label="" select-label="" deselect-label=""
 						@select="(selected.label = $event), (selected.type = 'operador')" />
-					<multiselect v-if="administrador" v-model="tp_operador" :options="['Suporte', 'Operacional']"
+					<multiselect v-if="administrador" v-model="tpOperador" :options="['Suporte', 'Operacional']"
 						class="custom-multiselect min-w-[120px]" placeholder="Tp Operador" :searchable="false"
 						:preselect-first="false" :allow-empty="false" selected-label="" select-label="" deselect-label=""
 						@select="(selected.label = $event), (selected.type = 'tp_operador')" />
@@ -248,6 +232,7 @@ const operador = ref('');
 		</modal-layout>
 	</main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
 	.multiselect__placeholder {

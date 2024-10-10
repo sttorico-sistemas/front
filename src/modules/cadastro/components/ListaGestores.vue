@@ -1,40 +1,25 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { PropType, ref } from 'vue'
-
-// props
-const props = defineProps({
-	cols: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	rows: {
-		type: Array as PropType<Object>,
-		required: true,
-	},
-	pagination: {
-		type: Boolean,
-		default: false,
-	},
-})
-
-// Componentes
+import { Col } from 'types/col.d'
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import CadastroModalGestor from './Modal/CadastroGestor.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconDelete from 'src/core/components/Icons/IconDelete.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 
-// Declarações
-const isOpenDialog = ref(false)
+const props = withDefaults(defineProps<{
+	cols: Col[];
+	rows: Record<string, any>;
+	pagination?: boolean;
+}>(), {
+	pagination: false,
+});
 
-// Scripts
+const isOpenDialog = ref(false)
 </script>
 
 <template>

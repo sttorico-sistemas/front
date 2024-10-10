@@ -1,25 +1,17 @@
 <script lang="ts" setup>
-// Core
 import { reactive, ref } from 'vue'
-
-// Props
-const props = defineProps({
-  addButton: {
-    type: Boolean,
-    default: false
-  }
-})
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import ConsultasExport from 'src/modules/consultas/components/ConsultasExport.vue'
 
-// Declarações
+const props = withDefaults(defineProps<{
+  addButton?: boolean;
+}>(), {
+  addButton: false,
+});
+
 const tp_operador = ref('')
 const cliente = ref('')
 const cols = reactive([
@@ -57,7 +49,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   tp_operador.value = ''
   cliente.value = ''
@@ -65,7 +56,13 @@ const clearFilter = () => {
   selected.label = ''
   selected.type = ''
 }
+const isOpenDialog = ref(false)
+const selected = reactive({
+  label: '',
+  type: ''
+})
 </script>
+
 <template>
   <main>
     <div class="panel">
@@ -149,6 +146,7 @@ const clearFilter = () => {
     </div>
   </main>
 </template>
+
 <style lang="scss" scoped>
 thead tr {
   font-size: 14px;

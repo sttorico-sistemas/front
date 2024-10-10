@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref, inject, Events } from 'vue'
+import { reactive, ref, inject } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
@@ -18,7 +18,6 @@ const enderecos = reactive([
   }
 ])
 
-// Script
 const addEndereco = () => {
   if (enderecos.length >= 3) {
     eventBus?.emit('alert', {
@@ -58,6 +57,7 @@ const removeEndereco = (index: number) => {
   enderecos.splice(index, 1)
 }
 </script>
+
 <template>
   <div class="panel my-3">
     <titulo title="Endereços" class="mb-6" />
@@ -72,7 +72,7 @@ const removeEndereco = (index: number) => {
       <label-select id="uf" label="UF" :disabled="isDisabled" class-label="text-sm" class-select="md:w-[70px]"
         layout="row" :options="['SP', 'RJ', 'MG', 'ES']" />
       <div class="flex items-center gap-1">
-        <!-- TODO descobrir por que havia argumentos -->
+        <!-- TODO descobrir por que haviam argumentos -->
         <!-- <button @click="addEndereco(endereco, enderecos)" v-tippy:right class="flex self-end mb-2"> -->
         <button @click="addEndereco()" v-tippy:right class="flex self-end mb-2">
           <icon-add />

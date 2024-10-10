@@ -1,20 +1,9 @@
 <script lang="ts" setup>
-// Core
-import { reactive, ref } from 'vue'
-
-// Componentes
-import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconFilter from 'src/core/components/Icons/IconFilter.vue'
-
-// Declarações
-
-// Script
-
 </script>
+
 <template>
   <main>
     <div class="panel py-4 mt-6 bg-[#EAEAEC]">
