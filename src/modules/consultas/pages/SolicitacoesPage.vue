@@ -8,13 +8,14 @@ import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import { Col } from 'types/col.d'
 
 const selected = reactive({
   type: '',
   label: '',
 })
 const status = ref('')
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'id', title: 'ID', hide: true },
   { field: 'data', title: 'Data', hide: false },
   { field: 'protocolo', title: 'Protocolo', hide: false },
@@ -165,6 +166,7 @@ const parseCols = () => {
     </div>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

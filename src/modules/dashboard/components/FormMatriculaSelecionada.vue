@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 
 const optionsMatriculas = ref([123456, 11111, 22222, 333333])
-const matricula = ref < Number | undefined > (undefined);
+const matricula = ref < number | undefined > (undefined);
 </script>
 
 <template>

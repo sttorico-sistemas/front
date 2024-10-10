@@ -20,8 +20,8 @@ import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
-const isOpenDialogCadastroListagemBackoffice = ref<boolean>(false)
+const isOpenDialog = ref(false)
+const isOpenDialogCadastroListagemBackoffice = ref(false)
 const selected = reactive<{ type: string; label: string }>({
 	type: '',
 	label: '',

@@ -9,7 +9,7 @@ import modalLayout from 'src/core/components/Modal.vue'
 import StepByNumber from 'src/core/components/StepByNumber.vue'
 import SimuladorResultadoCalculo from '../components/ResultadoCalculo.vue'
 
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 const isSubmitForm = ref(false)
 const form = reactive({
 	vlrEmprestimo: '',

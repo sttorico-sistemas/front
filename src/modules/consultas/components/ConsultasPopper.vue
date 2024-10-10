@@ -1,18 +1,15 @@
 <script lang="ts" setup>
 import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
-import { PropType } from 'vue'
+import { Col } from 'types/col.d';
 
-defineProps({
-	label: {
-		type: String,
-		default: '',
-	},
-	options: {
-		type: Object as PropType<any>,
-		required: true,
-	},
+withDefaults(defineProps<{
+	label?: string;
+	options: Col[]
+}>(), {
+	label: '',
 })
 </script>
+
 <template>
 	<div class="dropdown">
 		<Popper placement="bottom-end" offset-distance="0" class="align-middle">

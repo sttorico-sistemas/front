@@ -1,19 +1,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
-
-// Icons
 import calculatorIcon from 'src/core/components/Icons/IconCalculator2.vue'
 
-// Declarações
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])
 const servico = ref()
 
-// Scripts
 const clear = () => servico.value = ''
 </script>
+
 <template>
 	<div class="panel pb-0 mt-6">
 		<div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-3 gap-5">

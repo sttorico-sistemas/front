@@ -2,24 +2,9 @@
 import { reactive } from 'vue'
 import MargemDetalhada from './MargemDetalhada.vue'
 import TotalReservado from './TotalReservado.vue'
+import { Margem } from 'types/margem.d'
 
-interface IMargemDetalhamento {
-	financeiro: number
-	convenios: number
-	cartao_credito: number
-	cartao_beneficios: number
-}
-
-interface IMargens {
-	id: number
-	titulo: string
-	valor: number
-	porcentagem: number
-	total_reservado: number
-	detalhamento: IMargemDetalhamento
-}
-
-const margens = reactive<IMargens[]>([
+const margens = reactive<Margem[]>([
 	{
 		id: 1,
 		titulo: 'Total da Margem Principal',
@@ -98,7 +83,7 @@ const bgColor = (value: number) => {
 			<h3>Detalhamento da Margem Reservada</h3>
 
 			<div class="w-full bg-white rounded border border-[#e0e6ed] pr-2 pl-1 py-3">
-				<margem-detalhada :detalhamento="margem.detalhamento" />
+				<margem-detalhada v-if="margem.detalhamento" :detalhamento="margem.detalhamento" />
 			</div>
 		</div>
 	</div>

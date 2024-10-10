@@ -32,7 +32,7 @@ import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 
 // Scripts
 </script>

@@ -16,7 +16,7 @@ import IconDelete from 'src/core/components/Icons/IconDelete.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false);
+const isOpenDialog = ref(false);
 const cols = reactive([
 	{ field: 'id', title: '#', hide: true, sort: false, },
 	{ field: 'dcto', title: 'Dcto', hide: false, sort: false, },

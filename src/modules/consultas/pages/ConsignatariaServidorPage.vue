@@ -1,17 +1,12 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import PontoAtendimento from '../components/PontosAtendimento.vue'
-
-// Icons
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
@@ -21,15 +16,14 @@ import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoS
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
-// Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 const idPontoAtendimento = ref<number>(0)
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
 })
-const servico = ref<string>('')
-const status = ref<string>('')
+const servico = ref('')
+const status = ref('')
 const cols = reactive([
   { field: 'consignataria', title: 'Consignatária', hide: false },
   { field: 'tipo_instituicao', title: 'Tipo Instituição', hide: false },
@@ -90,7 +84,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   servico.value = ''
   status.value = ''
@@ -102,9 +95,9 @@ const clearFilter = () => {
 const color = (id: number | string): string => {
   switch (id) {
     case 1:
-      return 'bg-success' // Ativo
+      return 'bg-success'
     case 2:
-      return 'bg-warning' // Inativo
+      return 'bg-warning'
     default:
       return '#E0E6ED'
   }
@@ -168,6 +161,7 @@ const parseRows = (): Array<object> => {
   })
 }
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Consultas', 'Consignatárias']" />
@@ -219,7 +213,7 @@ const parseRows = (): Array<object> => {
                 </image-name>
                 <tippy target="top" placement="top">{{
                   tipo_servico.nome
-                  }}</tippy>
+                }}</tippy>
               </template>
             </div>
           </template>
@@ -245,6 +239,7 @@ const parseRows = (): Array<object> => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

@@ -1,24 +1,17 @@
 <script lang="ts" setup>
-	const props = defineProps({
-		image: {
-			type: String,
-			default: '',
-		},
-		name: {
-			type: String,
-			default: '',
-		},
-		description: {
-			type: String,
-			default: '',
-		},
-	})
+const props = withDefaults(defineProps<{
+	image?: string;
+	name?: string;
+	description?: string;
+}>(), {
+	image: '',
+	name: '',
+	description: '',
+});
 </script>
+
 <template>
-	<div
-		class="flex items-center gap-1 justify-left"
-		:class="!props.name.length ? '_justify-center' : '_justify-left'"
-	>
+	<div class="flex items-center gap-1 justify-left" :class="!props.name.length ? '_justify-center' : '_justify-left'">
 		<slot />
 		<img class="w-30 h-30 rounded-full object-cover" :src="props.image" />
 		<div>

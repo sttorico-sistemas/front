@@ -1,21 +1,14 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import modalLayout from 'src/core/components/Modal.vue'
 import VueCollapsible from 'vue-height-collapsible/vue3'
-
 import ConsultasCadastroConsignador from '../components/CadastroPessoa/CadastroConsignador.vue'
 import FiltroCompleto from '../components/CadastroPessoa/FiltrosConsignador/FiltrosCompleto.vue'
 import FiltroSimples from '../components/CadastroPessoa/FiltrosConsignador/FiltrosSimples.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
-import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
-
-// Icons
-import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
@@ -27,7 +20,6 @@ import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
 import IconLock from 'src/core/components/Icons/IconLock.vue'
 import IconFilter from 'src/core/components/Icons/IconFilter.vue'
 
-// Declarações
 const accordians = reactive({
   consignadores: false,
   filtros: false,
@@ -62,32 +54,22 @@ const rows = reactive([
   },
 ])
 
-// Script
-const clearFilter = () => {
-  nome.value = ''
-  cpf.value = ''
-  consignante.value = ''
-  averbador.value = ''
-  status.value = ''
+const clearFilter = () => { }
 
-  selected.label = ''
-  selected.type = ''
-}
-
-const color = (value: string): string => {
+const color = (value: string): string | undefined => {
   switch (value) {
     case 'Ativo':
-      return 'bg-success' // Ativo
+      return 'bg-success'
     case 'Liberada':
       return 'bg-success'
     case 'Inativo':
-      return 'bg-warning' // Inativo
+      return 'bg-warning'
     case 'Bloqueada':
       return 'bg-secondary'
   }
 }
 
-const parseRows = (): Array<object> => {
+const parseRows = () => {
   return rows.map((row) => {
     return {
       id: row.id,
@@ -104,7 +86,7 @@ const parseRows = (): Array<object> => {
   })
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
   return [
     { field: 'id', title: 'ID', hide: true },
     { field: 'consignador', title: 'Consignador', hide: false },
@@ -237,6 +219,7 @@ const parseCols = (): Array<object> => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

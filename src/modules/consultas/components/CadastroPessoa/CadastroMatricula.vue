@@ -1,37 +1,18 @@
 <script lang="ts" setup>
-// Core
-import { reactive, ref, onMounted, inject } from 'vue'
+import { ref } from 'vue'
 
-// Props
-const props = defineProps({
-  disabled: {
-    type: Boolean,
-    default: true,
-  }
-})
-
-// Componentes
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
-import ConsultasCadastroPessoaContato from './CadastroPessoaContato.vue'
-import ConsultasCadastroPessoaEndereco from './ConsultasCadastroPessoaEndereco.vue'
-
-// Icons
-import IconEdit from 'src/core/components/Icons/IconEdit.vue'
-
-// Declarações
-const isDisabled = ref<boolean>(true)
-
-// Script
+const props = withDefaults(defineProps<{
+  disabled?: boolean;
+}>(), {
+  disabled: true,
+});
 
 const emits = defineEmits(['btnSave', 'btnCancelar'])
-
-onMounted(() => {
-  isDisabled.value = props.disabled
-})
 </script>
+
 <template>
   <main>
     <div class="panel">

@@ -2,31 +2,24 @@
 import flatPickr from 'vue-flatpickr-component'
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
 import { reactive, ref } from 'vue'
-
 import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultasPopper from '../components/ConsultasPopper.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconFile from 'src/core/components/Icons/IconFile.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Declarações
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
 })
-const servico = ref<string>('')
-const consignataria = ref<string>('')
-const status = ref<string>('')
-const dateSelected = ref<string>('')
+const servico = ref('')
+const consignataria = ref('')
+const status = ref('')
+const dateSelected = ref('')
 const cols = reactive([
   { field: 'rmc', title: 'RMC', hide: false },
   { field: 'data', title: 'Data', hide: false },
@@ -161,7 +154,6 @@ const flatPickrConfig = reactive({
   ],
 })
 
-// Scripts
 const clearFilter = () => {
   servico.value = ''
   consignataria.value = ''
@@ -175,13 +167,13 @@ const clearFilter = () => {
 const color = (id: number | string): string => {
   switch (id) {
     case 1:
-      return 'bg-info' // Reservada
+      return 'bg-info'
     case 2:
-      return 'bg-danger' // Suspensa
+      return 'bg-danger'
     case 3:
-      return 'bg-secondary' // Baixada
+      return 'bg-secondary'
     case 4:
-      return 'bg-warning' // Cancelada
+      return 'bg-warning'
     default:
       return '#E0E6ED'
   }
@@ -202,9 +194,6 @@ const filtered = (value: string = '') => {
   if (selected.type === 'date')
     return rows.filter((item: any) => item.data === value)
 }
-
-// Computed
-// const disabledButtonClear = computed(() => !!selected.label)
 </script>
 
 <template>

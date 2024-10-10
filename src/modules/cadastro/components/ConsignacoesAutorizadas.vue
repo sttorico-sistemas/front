@@ -20,7 +20,7 @@ import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false);
+const isOpenDialog = ref(false);
 const selected = reactive<{ type: string, label: string }>({
 	type: '',
 	label: '',

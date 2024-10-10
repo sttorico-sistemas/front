@@ -1,23 +1,15 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-
-// Props
-defineProps({
-  id: {
-    type: Number,
-    required: true,
-  },
-})
-
-// Componentes
 import ConsultasExport from './ConsultasExport.vue'
 import ImageName from './ConsultasHistorico/DatatableColunaImageName.vue'
-
-// Icons
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import { Col } from 'types/col.d';
 
-// Declaraçoes
-const cols = reactive([
+defineProps<{
+  id: number;
+}>()
+
+const cols = reactive<Col[]>([
   { field: 'local', title: 'Local', hide: false },
   { field: 'endereco', title: 'Endereço', hide: false },
   { field: 'telefone', title: 'Telefone', hide: false },

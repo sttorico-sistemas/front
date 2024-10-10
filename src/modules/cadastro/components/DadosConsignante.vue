@@ -13,7 +13,7 @@ import CadastroModalConsignante from './Modal/CadastroConsignante.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 </script>
 <template>
   <main>

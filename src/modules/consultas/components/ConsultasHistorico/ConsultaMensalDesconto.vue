@@ -1,12 +1,8 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import ConsultasExport from '../ConsultasExport.vue'
 import ImageName from './DatatableColunaImageName.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
-// Icons
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
 import IconFile from 'src/core/components/Icons/IconFile.vue'
@@ -15,7 +11,6 @@ import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoS
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
-// Declarações
 const cols = reactive([
 	{ field: 'consignataria', title: 'Consignatária', hide: false },
 	{ field: 'tipo_servico', title: 'Tipo de Serviço', hide: false },
@@ -121,7 +116,7 @@ const columns = reactive({
 	Observações: 'observacao',
 })
 
-const dateSelected = ref<string>('')
+const dateSelected = ref('')
 
 const filterDate = () => {
 	if (dateSelected.value === '' || dateSelected.value === null) return rows

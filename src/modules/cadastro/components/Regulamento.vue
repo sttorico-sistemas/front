@@ -26,7 +26,7 @@ const props = defineProps({
 })
 
 // Declarações
-const isOpenDialog = ref<boolean>(false);
+const isOpenDialog = ref(false);
 const selected = reactive<{ type: string, label: string }>({
 	type: '',
 	label: '',

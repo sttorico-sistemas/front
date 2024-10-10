@@ -48,8 +48,8 @@ import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconResetPassword from 'src/core/components/Icons/IconResetPassword.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
-const isOpenDialogOperadores = ref<boolean>(false)
+const isOpenDialog = ref(false)
+const isOpenDialogOperadores = ref(false)
 const selected = reactive<{ type: string; label: string }>({
 	type: '',
 	label: '',

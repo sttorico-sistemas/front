@@ -55,9 +55,9 @@ import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoS
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
-const isOpenDialogPontoVenda = ref<boolean>(false)
-const isOpenDialogBackOffice = ref<boolean>(false)
+const isOpenDialog = ref(false)
+const isOpenDialogPontoVenda = ref(false)
+const isOpenDialogBackOffice = ref(false)
 const selected = reactive<{ type: string, label: string }>({
 	type: '',
 	label: '',

@@ -13,8 +13,8 @@ import CadastroModalAdministrador from './Modal/CadastroAdministrador.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
-const isDisabled = ref<boolean>(true)
+const isOpenDialog = ref(false)
+const isDisabled = ref(true)
 </script>
 <template>
   <main>

@@ -32,7 +32,7 @@ import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 
 // Scripts
 const color = (value: string) => {

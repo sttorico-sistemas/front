@@ -1,24 +1,18 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Declarações
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
 })
-const margem = ref<string>('')
-const margemTitlePercent = ref<string>('')
+const margem = ref('')
+const margemTitlePercent = ref('')
 const cols = reactive([
   { field: 'data', title: 'Data', hide: false },
   { field: 'protocolo', title: 'Protocolo', hide: false },
@@ -90,7 +84,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   margem.value = ''
 
@@ -104,7 +97,7 @@ const filtered = (value: string = '') => {
     return rows[0].margem35
   }
 
-  const data = rows.reduce((margem, margens: any) => {
+  const data = rows.reduce((margem: any[], margens: any) => {
     if (margens[value]) {
       margemTitlePercent.value = margens.titulo
       margem.push(...margens[value])
@@ -116,6 +109,7 @@ const filtered = (value: string = '') => {
   return data
 }
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Consultas', 'Atualização das Margens']" />
@@ -151,8 +145,8 @@ const filtered = (value: string = '') => {
           </div>
 
           <div>
-            <consultas-export v-tippy:top :cols="cols" :rows="rows[0].margem35" :filename="margemTitlePercent"
-              export-type="print">
+            <consultas-export v-if="rows[0].margem35" v-tippy:top :cols="cols" :rows="rows[0].margem35"
+              :filename="margemTitlePercent" export-type="print">
               <template #icon>
                 <icon-printer class="w-5 h-5" />
               </template>
@@ -172,6 +166,7 @@ const filtered = (value: string = '') => {
     </div>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

@@ -2,16 +2,11 @@
 import { reactive, ref } from 'vue'
 import router from 'src/core/router'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
 import CadastroModalConsignante from 'src/modules/cadastro/components/Modal/CadastroConsignante.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
@@ -21,18 +16,17 @@ import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconLock from 'src/core/components/Icons/IconLock.vue'
 
-// Declarações
-const isOpenDialog = ref<boolean>(false);
+const isOpenDialog = ref(false);
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
 })
-const consignante = ref<string>('')
-const cidade = ref<string>('')
-const tp_entidade = ref<string>('')
-const data_final = ref<string>('')
-const status = ref<string>('')
-const averbacao = ref<string>('')
+const consignante = ref('')
+const cidade = ref('')
+const tp_entidade = ref('')
+const data_final = ref('')
+const status = ref('')
+const averbacao = ref('')
 const cols = reactive([
   { field: 'consignante', title: 'Consignante', hide: false, },
   { field: 'tp_entidade', title: 'Tp Entidade', hide: false, },
@@ -66,7 +60,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   consignante.value = ''
   cidade.value = ''
@@ -82,13 +75,13 @@ const clearFilter = () => {
 const color = (id: number | string): string => {
   switch (id) {
     case 'Ativo':
-      return 'bg-success' // Ativo
+      return 'bg-success'
     case 'Inativo':
-      return 'bg-warning' // Inativo
+      return 'bg-warning'
     case 'Bloqueada':
-      return 'bg-secondary' // Bloqueada
+      return 'bg-secondary'
     case 'Liberada':
-      return 'bg-success' // Liberada
+      return 'bg-success'
     default:
       return 'bg-success'
   }
@@ -116,7 +109,7 @@ const filtered = (value: string = '') => {
     return rows.filter((item: any) => item.averbacao === value)
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
   return [
     { field: 'consignante', title: 'Consignante', hide: false },
     { field: 'tp_entidade', title: 'Tp Entidade', hide: false },
@@ -128,6 +121,7 @@ const parseCols = (): Array<object> => {
   ]
 }
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Cadastro', 'Consignantes']" />
@@ -232,6 +226,7 @@ const parseCols = (): Array<object> => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

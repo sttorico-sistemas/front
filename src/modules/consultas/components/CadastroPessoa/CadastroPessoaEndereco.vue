@@ -1,20 +1,14 @@
 <script lang="ts" setup>
-// Core
-import { reactive, ref, inject } from 'vue'
-
-// Componentes
+import { reactive, ref, inject, Events } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
-
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClose from 'src/core/components/Icons/IconClose.vue'
+import { Emitter, EventType } from 'mitt'
 
-// Declarações
-const eventBus = inject('eventBus')
-const isDisabled = ref<boolean>(false)
+const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus')
+const isDisabled = ref(false)
 const enderecos = reactive([
   {
     tipoEndereco: '',
@@ -27,7 +21,7 @@ const enderecos = reactive([
 // Script
 const addEndereco = () => {
   if (enderecos.length >= 3) {
-    eventBus.emit('alert', {
+    eventBus?.emit('alert', {
       type: 'danger',
       message: 'Limite máximo de contato é de 3'
     })
@@ -36,7 +30,7 @@ const addEndereco = () => {
   }
 
   if (!enderecos[0].endereco.length && !enderecos[0].cidade.length) {
-    eventBus.emit('alert', {
+    eventBus?.emit('alert', {
       type: 'danger',
       message: 'Preencha os campos obrigatórios!'
     })
@@ -54,7 +48,7 @@ const addEndereco = () => {
 
 const removeEndereco = (index: number) => {
   if (enderecos.length === 1) {
-    eventBus.emit('alert', {
+    eventBus?.emit('alert', {
       type: 'danger',
       message: 'Não foi possivel remover contato'
     })
@@ -68,7 +62,7 @@ const removeEndereco = (index: number) => {
   <div class="panel my-3">
     <titulo title="Endereços" class="mb-6" />
 
-    <div v-for="(endereco, id) in enderecos" :key="`endereco-${id}`" class="flex-col md:flex-row flex gap-2.5">
+    <div v-for="(endereco, index) in enderecos" :key="`endereco-${index}`" class="flex-col md:flex-row flex gap-2.5">
       <label-select id="tipo_endereco" label="Tipo Endereço" :disabled="isDisabled" class-label="text-sm"
         class-select="md:w-[200px]" layout="row" :options="['Rua', 'Comunidade', 'Condominio']" />
       <label-input v-model="endereco.endereco" id="endereco" label="Endereço" :disabled="isDisabled"
@@ -78,7 +72,9 @@ const removeEndereco = (index: number) => {
       <label-select id="uf" label="UF" :disabled="isDisabled" class-label="text-sm" class-select="md:w-[70px]"
         layout="row" :options="['SP', 'RJ', 'MG', 'ES']" />
       <div class="flex items-center gap-1">
-        <button @click="addEndereco(endereco, enderecos)" v-tippy:right class="flex self-end mb-2">
+        <!-- TODO descobrir por que havia argumentos -->
+        <!-- <button @click="addEndereco(endereco, enderecos)" v-tippy:right class="flex self-end mb-2"> -->
+        <button @click="addEndereco()" v-tippy:right class="flex self-end mb-2">
           <icon-add />
         </button>
         <button @click="removeEndereco(index)" class="flex self-end mb-2">

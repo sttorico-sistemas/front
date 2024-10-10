@@ -20,7 +20,7 @@ const selected = reactive<{ type: string; label: string }>({
 })
 const instituicao = ref<string>('')
 const tipo_instituicao = ref<string>('')
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 const cols = reactive([
   { field: 'logo', title: 'Logo', hide: false, },
   { field: 'instituicao', title: 'Instituição', hide: false, },

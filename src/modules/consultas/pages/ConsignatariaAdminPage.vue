@@ -1,24 +1,18 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import router from 'src/core/router'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import modalLayout from 'src/core/components/Modal.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ConsultaCadastroConsignante from '../components/ConsultaCadastroConsignatarias.vue'
-
-// Icons
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
 import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
 import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
-
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
@@ -28,17 +22,16 @@ import IconUnlock from 'src/core/components/Icons/IconUnlock.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconLock from 'src/core/components/Icons/IconLock.vue'
 
-// Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 const selected = reactive<{ type: string; label: string }>({
   type: '',
   label: '',
 })
-const consignataria = ref<string>('')
-const instituicao = ref<string>('')
-const servico = ref<string>('')
-const status = ref<string>('')
-const averbacao = ref<string>('')
+const consignataria = ref('')
+const instituicao = ref('')
+const servico = ref('')
+const status = ref('')
+const averbacao = ref('')
 const cols = reactive([
   { field: 'consignataria', title: 'Consignatária', hide: false, },
   { field: 'tipo_instituicao', title: 'Tp Instituição', hide: false, },
@@ -91,7 +84,6 @@ const rows = reactive([
   },
 ])
 
-// Script
 const clearFilter = () => {
   consignataria.value = ''
   instituicao.value = ''
@@ -106,11 +98,11 @@ const clearFilter = () => {
 const color = (value: string): string => {
   switch (value) {
     case 'Ativo':
-      return 'bg-success' // Ativo
+      return 'bg-success'
     case 'Liberada':
       return 'bg-success'
     case 'Inativo':
-      return 'bg-warning' // Inativo
+      return 'bg-warning'
     case 'Bloqueada':
       return 'bg-secondary'
     default:
@@ -163,7 +155,7 @@ const iconeService = (value: string) => {
   }
 }
 
-const parseCols = (): Array<object> => {
+const parseCols = () => {
   return [
     { field: 'consignataria', title: 'Consignatária', hide: false, },
     { field: 'tipo_instituicao', title: 'Tp Instituição', hide: false, },
@@ -174,7 +166,7 @@ const parseCols = (): Array<object> => {
   ]
 }
 
-const parseRows = (): Array<object> => {
+const parseRows = () => {
   return rows.map((row) => {
     const services = row.tipo_servicos.map((servico) => servico.nome)
 
@@ -253,7 +245,7 @@ const parseRows = (): Array<object> => {
                 </image-name>
                 <tippy target="top" placement="top">{{
                   tipo_servico.nome
-                  }}</tippy>
+                }}</tippy>
               </template>
             </div>
           </template>
@@ -302,6 +294,7 @@ const parseRows = (): Array<object> => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {

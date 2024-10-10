@@ -13,6 +13,7 @@ import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
+import { Col } from 'types/col.d'
 
 const isOpenDialog = ref(false)
 const selected = reactive({
@@ -25,7 +26,7 @@ const tp_vinculo = ref('')
 const cidade = ref('')
 const status = ref('')
 
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'id', title: 'ID', hide: true },
   { field: 'nome', title: 'Nome', hide: false },
   { field: 'cpf', title: 'CPF', hide: false },

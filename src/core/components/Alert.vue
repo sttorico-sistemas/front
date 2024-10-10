@@ -7,7 +7,7 @@ import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconInfo from 'src/core/components/Icons/IconInfo.vue'
 
 // Declarações
-const eventBus = inject('eventBus')
+const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus')
 const message = ref<string>('')
 const type = ref<string>('info')
 

@@ -10,10 +10,11 @@ import ConsultaResumoMargemPrincipal from '../components/ResumoMargem/MargemPrin
 import ConsultaSaldoDisponivelMargem from '../components/ResumoMargem/SaldoDisponivelMargem.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import { Col } from 'types/col.d'
 
 const isOpenDialog = ref(false)
 const dataMargemAtualizada = ref('23/10/2023')
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'tipo_margem', title: 'Tipo da Margem', hide: false, sort: false, },
   { field: 'limite', title: 'Limite %', hide: false, sort: false, },
   { field: 'valor_margem', title: 'Valor Margem', hide: false, sort: false, },

@@ -17,7 +17,7 @@ import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensa
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 </script>
 <template>
   <main>

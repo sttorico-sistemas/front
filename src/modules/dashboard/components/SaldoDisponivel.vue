@@ -5,6 +5,7 @@ import calculatorIcon from 'src/core/components/Icons/IconCalculator2.vue'
 const optionsServicos = ref(['Servico 1', 'Servico 2', 'Servico 3'])
 const servico = ref('')
 </script>
+
 <template>
 	<div id="saldo_disponivel"
 		class="panel flex flex-col max-h-[244px] xl:row-start-2 xl:row-span-8 col-span-12 md:col-span-6 lg:col-span-3 xl:col-span-3 px-3">
@@ -30,6 +31,7 @@ const servico = ref('')
 		</div>
 	</div>
 </template>
+
 <style lang="scss">
 #saldo_disponivel.panel {
 	h2 {

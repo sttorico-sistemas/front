@@ -1,27 +1,21 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import ConsultasExport from '../components/ConsultasExport.vue'
-
-// Icons
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
+const selected = reactive({
   type: '',
   label: '',
 })
-const isOpenDialog = ref<boolean>(false)
-const consignante = ref<string>('')
+const isOpenDialog = ref(false)
+const consignante = ref('')
 const cols = reactive([
   { field: 'consignante_master', title: 'Consignante Master', hide: false },
   { field: 'actions', title: 'Ações', hide: false, sort: false, },
@@ -95,7 +89,9 @@ const clearFilter = () => {
       </div>
 
       <div class="datatable mb-[344px]">
-        <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
+        <!-- TODO descobrir o por que essas funções tinham argumentos -->
+        <!-- <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length" -->
+        <vue3-datatable :rows="filtered()" :columns="cols" :total-rows="filtered()?.length"
           :sortable="true" skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
           pagination-info="Mostrando {0} a {1} de {2} entradas">
           <template #actions="data">

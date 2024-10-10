@@ -1,13 +1,8 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive } from 'vue';
-
 import router from 'src/core/router'
-
-// Componentes
 import ImageName from '../ConsultasHistorico/DatatableColunaImageName.vue'
-
-// Icons
 import IconEye from 'src/core/components/Icons/IconEye.vue'
 import IconCartaoCreditoServico from 'src/core/components/Icons/Services/IconCartaoCreditoServico.vue'
 import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmprestimosServicos.vue'
@@ -16,7 +11,6 @@ import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensa
 import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
 
-// Declarações
 const cols = reactive([
 	{ field: 'tipo_servicos', title: 'Tipo de Serviço', hide: false, sort: false, },
 	{ field: 'valor_reservado', title: 'Vlr Reservado', hide: false, sort: false, },
@@ -45,7 +39,6 @@ const rows = reactive([
 	},
 ])
 
-// Script
 const iconeService = (value: string) => {
 	console.log(value)
 	switch (value) {
@@ -72,6 +65,7 @@ const iconeService = (value: string) => {
 	}
 }
 </script>
+
 <template>
 	<div class="panel mt-5 flex justify-between">
 		<div

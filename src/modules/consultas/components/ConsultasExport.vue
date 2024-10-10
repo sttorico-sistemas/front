@@ -1,32 +1,24 @@
 <script lang="ts" setup>
 import { capitalizeString } from 'src/core/utils/capitalize_string'
+import { Col } from 'types/col.d';
 
-const props = defineProps({
-	name: {
-		type: String,
-		default: '',
-	},
-	filename: {
-		type: String,
-		default: 'Relatório Impresso',
-	},
-	cols: {
-		type: Object,
-		required: true,
-	},
-	rows: {
-		type: Object,
-		required: true,
-	},
-	exportType: {
-		type: String,
-		required: true,
-	},
-	icon: {
-		type: String,
-		default: '',
-	},
-})
+type Row = {
+	label?: string;
+	[key: string]: any;
+}
+
+const props = withDefaults(defineProps<{
+	name?: string;
+	filename?: string;
+	cols: Col[];
+	rows: Row[],
+	exportType: string;
+	icon?: string;
+}>(), {
+	name: '',
+	filename: 'Relatório Impresso',
+	icon: '',
+});
 
 const exportTable = (type: string) => {
 	const columns: any = props.cols.map((d: any) => d.field)
@@ -43,7 +35,7 @@ const exportTable = (type: string) => {
 		rowhtml += '</tr></thead>'
 		rowhtml += '<tbody>'
 
-		records.map((item: any) => {
+		records.map((item) => {
 			rowhtml += '<tr>'
 			columns.map((d: any) => {
 				let val = item[d] ? item[d] : ''
@@ -68,7 +60,6 @@ const exportTable = (type: string) => {
 		winPrint.document.close()
 		winPrint.focus()
 		winPrint.print()
-		// winPrint.close()
 	}
 }
 </script>

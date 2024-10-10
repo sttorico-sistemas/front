@@ -27,7 +27,7 @@ import ConsultasCadastroPessoaMatricula from './CadastroMatricula.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 
 // Declarações
-const isDisabled = ref<boolean>(true)
+const isDisabled = ref(true)
 
 // Script
 

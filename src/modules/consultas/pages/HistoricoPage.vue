@@ -3,25 +3,19 @@ import flatPickr from 'vue-flatpickr-component'
 import monthSelectPlugin from 'flatpickr/dist/plugins/monthSelect/index.js'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive, ref } from 'vue'
-
 import { Portuguese } from 'flatpickr/dist/l10n/pt.js'
-
-// Componentes
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
-
 import ConsultaMensalDesconto from '../components/ConsultasHistorico/ConsultaMensalDesconto.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
-
-// Icons
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconFile from 'src/core/components/Icons/IconFile.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import { Col } from 'types/col.d'
 
-// Declarações
-const isOpenDialog = ref<boolean>(false)
-const cols = reactive([
+const isOpenDialog = ref(false)
+const cols = reactive<Col[]>([
   { field: 'mes', title: 'Mês', hide: false },
   { field: 'valor_desconto', title: 'Valor desconto', hide: false },
   { field: 'valor_enviado', title: 'Valor enviado', hide: false },
@@ -80,7 +74,7 @@ const columns = reactive({
   Status: 'status.label',
 })
 
-const dateSelected = ref<string>('')
+const dateSelected = ref('')
 const flatPickrConfig = reactive({
   locale: Portuguese,
   plugins: [
@@ -175,22 +169,22 @@ const clearFilter = () => {
           <template #valor_desconto="data">
             <span :class="formatedCurrency(data.value.valor_desconto).color">{{
               formatedCurrency(data.value.valor_desconto).currency
-              }}</span>
+            }}</span>
           </template>
           <template #valor_enviado="data">
             <span :class="formatedCurrency(data.value.valor_enviado).color">{{
               formatedCurrency(data.value.valor_enviado).currency
-              }}</span>
+            }}</span>
           </template>
           <template #valor_descontado="data">
             <span :class="formatedCurrency(data.value.valor_descontado).color">{{
               formatedCurrency(data.value.valor_descontado).currency
-              }}</span>
+            }}</span>
           </template>
           <template #saldo_desconto="data">
             <span :class="formatedCurrency(data.value.saldo_desconto).color">{{
               formatedCurrency(data.value.saldo_desconto).currency
-              }}</span>
+            }}</span>
           </template>
         </vue3-datatable>
       </div>

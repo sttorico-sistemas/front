@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { Margem } from 'types/margem.d';
 import { reactive } from 'vue'
 
-const margens = reactive([
+const margens = reactive<Margem[]>([
 	{
 		id: 1,
 		titulo: 'Margem Principal',
@@ -58,6 +59,7 @@ const color = (value: number) => {
 		</div>
 	</div>
 </template>
+
 <style lang="scss" scoped>
 #margem_consolidado.panel {
 	h2 {

@@ -12,7 +12,7 @@ import CadastrarRegulamento from './Modal/CadastrarRegulamento.vue'
 import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 
 // Declarações
-const isOpenDialog = ref<boolean>(false);
+const isOpenDialog = ref(false);
 
 const cols = reactive([
 	{ field: 'id', title: '#', hide: true, sort: false, },

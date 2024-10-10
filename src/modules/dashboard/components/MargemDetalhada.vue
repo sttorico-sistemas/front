@@ -3,16 +3,10 @@ import beneficsCardIcon from 'src/core/components/Icons/IconBeneficsCard.vue'
 import conveniosIcon from 'src/core/components/Icons/IconAgreements.vue'
 import creditCardIcon from 'src/core/components/Icons/IconCreditCard.vue'
 import currencyIcon from 'src/core/components/Icons/IconCurrency.vue'
-
-interface IMargemDetalhamento {
-	financeiro: number
-	convenios: number
-	cartao_credito: number
-	cartao_beneficios: number
-}
+import { MargemDetalhamento } from 'types/margem.d';
 
 const props = defineProps<{
-	detalhamento: IMargemDetalhamento;
+	detalhamento: MargemDetalhamento;
 }>()
 
 const color = [

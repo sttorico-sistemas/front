@@ -11,6 +11,7 @@ import ConsultasPopper from '../components/ConsultasPopper.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconFile from 'src/core/components/Icons/IconFile.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import { Col } from 'types/col.d';
 
 const selected = reactive({
   type: '',
@@ -20,7 +21,7 @@ const consignacao = ref('')
 const consignataria = ref('')
 const status = ref('')
 const dateSelected = ref('')
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'rmc', title: 'RMC', isUnique: true, hide: false },
   { field: 'data', title: 'Data', hide: false },
   { field: 'tipo_rmc', title: 'Tipo RMC', hide: false },

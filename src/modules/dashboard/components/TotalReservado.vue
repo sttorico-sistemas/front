@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = withDefaults(
 	defineProps<{
-		totalReservado: number;
+		totalReservado?: number;
 	}>(),
 	{
 		totalReservado: 0,

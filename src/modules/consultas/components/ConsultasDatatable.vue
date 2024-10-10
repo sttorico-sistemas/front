@@ -1,28 +1,18 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
-
-// Componentes
 import modalLayout from 'src/core/components/Modal.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
+import { Col } from 'types/col.d';
 
-// Props
-const props = defineProps({
-  cols: {
-    type: Object,
-    required: true,
-  },
-  rows: {
-    type: Array,
-    required: true,
-  },
-  selected: {
-    type: Object,
-    default: () => { },
-  },
-})
+const props = withDefaults(defineProps<{
+  cols: Col[];
+  rows: Record<string, any>[];
+  selected?: Record<string, any>;
+}>(), {
+  selected: () => ({}),
+});
 
-// Declaração
-const isOpenDialog = ref<boolean>(false)
+const isOpenDialog = ref(false)
 const columnsModal = reactive([
   { field: 'rmc', title: 'RMC', hide: false },
   { field: 'data', title: 'Data', hide: false },
@@ -503,17 +493,16 @@ const rowsModal = reactive([
   },
 ])
 
-// Scripts
 const color = (id: number | string): string => {
   switch (id) {
     case 1:
-      return 'bg-info' // Reservada
+      return 'bg-info'
     case 2:
-      return 'bg-danger' // Suspensa
+      return 'bg-danger'
     case 3:
-      return 'bg-secondary' // Baixada
+      return 'bg-secondary'
     case 4:
-      return 'bg-warning' // Cancelada
+      return 'bg-warning'
     default:
       return '#E0E6ED'
   }
@@ -534,8 +523,6 @@ const filtered = (value: string = '') => {
   if (props.selected.type === 'date')
     return props.rows.filter((item: any) => item.data === value)
 }
-
-// fonte: https://vue3-datatable-document.vercel.app/skeleton-loader
 </script>
 
 <template>

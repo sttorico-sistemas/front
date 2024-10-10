@@ -9,8 +9,9 @@ import IconEmprestimoServico from 'src/core/components/Icons/Services/IconEmpres
 import IconMensalidadeServico from 'src/core/components/Icons/Services/IconMensalidadeServicos.vue'
 import IconPlanoSaudeServico from 'src/core/components/Icons/Services/IconPlanoSaudeServico.vue'
 import IconSegurosServico from 'src/core/components/Icons/Services/IconSegurosServico.vue'
+import { Col } from 'types/col.d'
 
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'consignataria', title: 'Consignatária', hide: false, sort: false, },
   { field: 'tipo_servicos', title: 'Tipo de Serviços', hide: false, sort: false, },
   { field: 'contrato', title: 'Contrato', hide: false },
@@ -68,6 +69,7 @@ const iconeService = (value: string) => {
   }
 }
 </script>
+
 <template>
   <main>
     <breadcrumbs :paginas="['Simulador', 'Previsão de Descontos']" />
