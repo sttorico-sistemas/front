@@ -14,7 +14,7 @@ import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import IconResetPassword from 'src/core/components/Icons/IconResetPassword.vue'
-import { Col } from 'types/col';
+import { Col } from 'types/col.d';
 
 const props = withDefaults(defineProps<{
 	cols: Col[];

@@ -1,5 +1,5 @@
 <script setup>
-import { useMeta } from 'src/core/composables/use-meta'
+import { useMeta } from 'src/core/composables/use_meta'
 
 useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
 </script>

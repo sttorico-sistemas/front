@@ -2,7 +2,7 @@
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import { reactive } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
-import { Col } from 'types/col';
+import { Col } from 'types/col.d';
 
 const cols = reactive<Col[]>([
 	{ field: 'id', title: '#', hide: true, sort: false, },

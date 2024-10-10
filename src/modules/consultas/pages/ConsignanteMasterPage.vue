@@ -9,6 +9,7 @@ import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import { Col } from 'types/col.d'
 
 const selected = reactive({
   type: '',
@@ -16,7 +17,7 @@ const selected = reactive({
 })
 const isOpenDialog = ref(false)
 const consignante = ref('')
-const cols = reactive([
+const cols = reactive<Col[]>([
   { field: 'consignante_master', title: 'Consignante Master', hide: false },
   { field: 'actions', title: 'Ações', hide: false, sort: false, },
 ])
@@ -91,8 +92,8 @@ const clearFilter = () => {
       <div class="datatable mb-[344px]">
         <!-- TODO descobrir o por que essas funções tinham argumentos -->
         <!-- <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length" -->
-        <vue3-datatable :rows="filtered()" :columns="cols" :total-rows="filtered()?.length"
-          :sortable="true" skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
+        <vue3-datatable :rows="filtered()" :columns="cols" :total-rows="filtered()?.length" :sortable="true"
+          skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
           pagination-info="Mostrando {0} a {1} de {2} entradas">
           <template #actions="data">
             <button v-tippy:right type="button" class="text-xs m-1">
@@ -122,6 +123,7 @@ const clearFilter = () => {
     </modal-layout>
   </main>
 </template>
+
 <style lang="scss" scoped>
 .header_actions:deep(.custom-multiselect) {
   .multiselect__placeholder {
