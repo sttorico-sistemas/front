@@ -1,25 +1,25 @@
 <script lang="ts" setup>
-import { reactive, ref, onMounted, computed, inject } from 'vue'
-
-// Icons
+import { ref, onMounted, inject } from 'vue'
 import IconClose from 'src/core/components/Icons/IconClose.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconInfo from 'src/core/components/Icons/IconInfo.vue'
+import { Emitter, EventType } from 'mitt';
 
-// Declarações
-const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus')
+const eventBus = inject<Emitter<Record<EventType, any>>>('eventBus')
 const message = ref<string>('')
 const type = ref<string>('info')
 
-// Scripts
-const showAlert = (e) => {
+const showAlert = (e: {
+  message: string;
+  type: string;
+}) => {
   message.value = e.message
   type.value = e.type
   setTimeout(() => message.value = '', 4000)
 }
 
 onMounted(() => {
-  eventBus.on('alert', showAlert)
+  eventBus?.on('alert', showAlert)
 })
 
 const setupAlert = () => {

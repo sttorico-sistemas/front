@@ -1,22 +1,24 @@
 <script setup lang="ts">
-const props = defineProps({
-  paginas: {
-    type: Array<string>,
-    required: true,
-  },
-})
+defineProps<{
+  paginas: string[];
+}>()
 
-const separator = (id: number) =>
-  id !== 0 ? 'before:content-["/"] before:px-1.5' : ''
+const separatorClass = (index: number) => {
+  if (index) {
+    return 'before:content-["/"] before:px-1.5';
+  }
+  return '';
+}
 </script>
 
 <template>
   <ol class="flex">
-    <li v-for="(pagina, id) in props.paginas" :key="id" :class="separator(id)">
+    <li v-for="(pagina, index) in paginas" :key="index" :class="separatorClass(index)">
       <a href="javascript:;">{{ pagina }}</a>
     </li>
   </ol>
 </template>
+
 <style lang="scss" scoped>
 ol {
   color: #0e1726;

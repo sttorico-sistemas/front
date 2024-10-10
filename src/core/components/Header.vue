@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
-// Components
 import IconAcademic from 'src/core/components/Icons/IconAcademic.vue'
 import IconArrowDown from 'src/core/components/Icons/IconArrowDown.vue'
 import IconCalculator from 'src/core/components/Icons/IconCalculator.vue'
 import IconCalendar from 'src/core/components/Icons/IconCalendar.vue'
 import IconChat from 'src/core/components/Icons/IconChat.vue'
-import IconConversation from 'src/core/components/Icons/IconConversation.vue'
 import IconDocuments from 'src/core/components/Icons/IconDocuments.vue'
 import IconExit from 'src/core/components/Icons/IconExit.vue'
 import IconHelp from 'src/core/components/Icons/IconHelp.vue'
@@ -19,13 +16,13 @@ import IconProfile from 'src/core/components/Icons/IconProfile.vue'
 import IconSearch from 'src/core/components/Icons/IconSearch.vue'
 import IconConfig from 'src/core/components/Icons/IconConfig.vue'
 
-// Scripts
-const showMenu = ref<string>('')
+const showMenu = ref('')
 
 const toggleShow = (value: string) => {
   showMenu.value = showMenu.value === value ? '' : value
 }
 </script>
+
 <template>
   <header>
     <div class="menu flex-wrap">

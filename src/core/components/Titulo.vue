@@ -1,22 +1,17 @@
 <script lang="ts" setup>
-defineProps({
-	title: {
-		type: String,
-		default: '',
-	},
-	classStyle: {
-		type: String,
-		default: 'text-lg font-semibold text-primary_3-table',
-	},
-	infoMessage: {
-		type: String,
-		default: '',
-	},
-})
-
-// Icons
 import IconInfo from 'src/core/components/Icons/IconInfo.vue'
+
+withDefaults(defineProps<{
+	title?: string;
+	classStyle?: string;
+	infoMessage?: string;
+}>(), {
+	title: '',
+	classStyle: 'text-lg font-semibold text-primary_3-table',
+	infoMessage: '',
+});
 </script>
+
 <template>
 	<div class="flex gap-12">
 		<h5 :class="classStyle">

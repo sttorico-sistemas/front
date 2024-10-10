@@ -1,13 +1,20 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const currentYear = computed(() => new Date().getFullYear());
+</script>
+
 <template>
   <footer class="footer">
     <p class="footer__title">
-      © 2023. Sttórico Sistemas Ltda. Todos direitos reservados.
+      © {{ currentYear }}. Sttórico Sistemas Ltda. Todos direitos reservados.
     </p>
     <div class="footer__arrow_up">
       <img src="/assets/svg/arrowUp.svg" alt="vá para cima" />
     </div>
   </footer>
 </template>
+
 <style lang="scss">
 .footer {
   display: flex;
