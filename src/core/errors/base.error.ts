@@ -1,5 +1,4 @@
 import { AxiosError } from "axios";
-import { InternalError } from "../errors/internal_error";
 
 export class BaseError {
   public code?: number;
@@ -21,14 +20,18 @@ export class BaseError {
   }
 
   static fromHttpError(e: unknown): BaseError {
-    if (e! instanceof AxiosError) {
-      throw new InternalError();
+    if (e instanceof AxiosError) {
+      const error = e as AxiosError;
+      return new BaseError({
+        code: error.response?.status,
+        message: (error.response?.data as any).message,
+        errors: (error.response?.data as any).error ?? {},
+      });
     }
-    const error = e as AxiosError;
-    return new BaseError({
-      code: error.response?.status,
-      message: (error.response?.data as any).message,
-      errors: (error.response?.data as any).error ?? {},
+    throw new BaseError({
+      code: 500,
+      message: 'Erro interno da aplicação.',
+      errors: {},
     });
   }
 }
