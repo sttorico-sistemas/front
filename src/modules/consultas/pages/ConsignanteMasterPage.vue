@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import modalLayout from 'src/core/components/Modal.vue'
@@ -9,7 +9,16 @@ import IconAdd from 'src/core/components/Icons/IconAdd.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
+import FormField from 'src/core/components/FormField.vue'
 import { Col } from 'types/col.d'
+import { consignanteMasterStore } from '../stores/consignante_master.store'
+import AppButton from 'src/core/components/AppButton.vue'
+import CircularProgress from 'src/core/components/CircularProgress.vue'
+import { ConsignanteMaster } from '../types/consignante_master.d'
+
+const saving = ref(false);
+const store = consignanteMasterStore();
+const loadingConsignantesMaster = ref(true);
 
 const selected = reactive({
   type: '',
@@ -17,10 +26,12 @@ const selected = reactive({
 })
 const isOpenDialog = ref(false)
 const consignante = ref('')
+
 const cols = reactive<Col[]>([
-  { field: 'consignante_master', title: 'Consignante Master', hide: false },
+  { field: 'nome', title: 'Consignante Master', hide: false },
   { field: 'actions', title: 'Ações', hide: false, sort: false, },
 ])
+
 const rows = reactive([
   {
     id: 1,
@@ -42,12 +53,53 @@ const filtered = () => {
 
 const parseCols = [
   { field: 'id', title: 'ID', hide: false },
-  { field: 'consignante_master', title: 'Consignante Master', hide: false },
+  { field: 'nome', title: 'Consignante Master', hide: false },
 ]
 
 const clearFilter = () => {
   consignante.value = ''
 }
+
+const consignanteMasterName = ref('');
+const editingConsignanteMaster = ref<ConsignanteMaster | undefined>(undefined);
+
+const openEditor = (consignanteMaster?: ConsignanteMaster) => {
+  store.clearError();
+  if (consignanteMaster) {
+    editingConsignanteMaster.value = consignanteMaster;
+    consignanteMasterName.value = consignanteMaster.nome;
+    isOpenDialog.value = true;
+    return;
+  }
+  editingConsignanteMaster.value = undefined;
+  consignanteMasterName.value = '';
+  isOpenDialog.value = true;
+}
+
+const saveConsignanteMaster = async () => {
+  store.clearError();
+  saving.value = true;
+
+  if (editingConsignanteMaster.value) {
+    await store.updateConsignanteMaster({
+      id: editingConsignanteMaster.value.id,
+      name: consignanteMasterName.value,
+    });
+  } else {
+    await store.createConsignanteMaster(consignanteMasterName.value);
+  }
+
+  if (!store.error) {
+    isOpenDialog.value = false
+  }
+  saving.value = false;
+}
+
+onMounted(async () => {
+  loadingConsignantesMaster.value = true;
+  await store.getAllConsignantes();
+  loadingConsignantesMaster.value = false;
+})
 </script>
 
 <template>
@@ -58,7 +110,7 @@ const clearFilter = () => {
       <div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
         <div class="flex items-center gap-14">
           <titulo title="Consignante Master" />
-          <button @click="isOpenDialog = true" v-tippy:right>
+          <button @click="openEditor()" v-tippy:right>
             <icon-add />
           </button>
           <tippy target="right" placement="right">Cadastre um novo Consignatario Master</tippy>
@@ -78,8 +130,8 @@ const clearFilter = () => {
           </div>
 
           <div class="w-5 h-5">
-            <consultas-export v-tippy:top :cols="parseCols" :rows="rows" filename="Extrato Anual dos Descontos"
-              export-type="print">
+            <consultas-export v-tippy:top :cols="parseCols" :rows="store.consignantesMaster"
+              filename="Extrato Anual dos Descontos" export-type="print">
               <template #icon>
                 <icon-printer class="w-5 h-5" />
               </template>
@@ -89,35 +141,35 @@ const clearFilter = () => {
         </div>
       </div>
 
-      <div class="datatable mb-[344px]">
+      <div class="datatable mb-[344px]" v-if="!loadingConsignantesMaster">
         <!-- TODO descobrir o por que essas funções tinham argumentos -->
         <!-- <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length" -->
-        <vue3-datatable :rows="filtered()" :columns="cols" :total-rows="filtered()?.length" :sortable="true"
-          skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
+        <vue3-datatable :rows="store.consignantesMaster" :columns="cols" :total-rows="store.consignantesMaster.length"
+          :sortable="true" skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
           pagination-info="Mostrando {0} a {1} de {2} entradas">
           <template #actions="data">
-            <button v-tippy:right type="button" class="text-xs m-1">
+            <button v-tippy:right type="button" class="text-xs m-1" @click="openEditor(data.value)">
               <icon-edit class="w-5 h-5 text-primary_3-table" />
             </button>
-            <tippy target="right" placement="right">Editar {{ data.value.consignante_master }}</tippy>
+            <tippy target="right" placement="right">Editar {{ data.value.nome }}</tippy>
           </template>
         </vue3-datatable>
       </div>
+      <circular-progress v-else class="flex justify-center pb-5"></circular-progress>
     </div>
 
     <modal-layout :is-open="isOpenDialog" title="Cadastrar Consignante Master" size="max-w-[458px]"
       @btn-close="isOpenDialog = false">
       <form>
-        <div>
-          <label for="name" class="text-sm">Nome</label>
-          <input id="name" type="text" class="form-input" />
-        </div>
+        <form-field v-model="consignanteMasterName" :message="store.error" :error="!!store.error"
+          label="Nome"></form-field>
         <div class="flex justify-center gap-12 mt-8">
-          <button type="button" class="w-24 text-xs btn border border-primary_3-table shadow-none text-primary_3-table"
-            @click="isOpenDialog = false">
+          <app-button variant="outlined" density="comfortable" @click="isOpenDialog = false" width="24"
+            :disabled="saving">
             Cancelar
-          </button>
-          <button type="button" class="w-24 text-xs btn bg-primary_3-table shadow-none text-white">Salvar</button>
+          </app-button>
+          <app-button width="24" variant="flat" density="comfortable" :loading="saving"
+            @click="saveConsignanteMaster()">Salvar</app-button>
         </div>
       </form>
     </modal-layout>

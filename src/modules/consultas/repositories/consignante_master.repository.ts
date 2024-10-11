@@ -8,7 +8,7 @@ export class ConsignanteMasterRepository {
 
   async getAllConsignantesMaster(): Promise<ConsignanteMaster[]> {
     try {
-      const response = await this.http.get('/consignataria-master');
+      const response = await this.http.get('/consignante-master');
       return (response.data as Record<string, any>[]).map(
         (e) => ConsignanteMasterModel.fromRecord(e)
       );
@@ -36,7 +36,9 @@ export class ConsignanteMasterRepository {
     name: string;
   }): Promise<void> {
     try {
-      await this.http.post('/consignataria-master', data);
+      await this.http.post('/consignante-master', {
+        nome: data.name,
+      });
     } catch (error) {
       throw BaseError.fromHttpError(error);
     }
