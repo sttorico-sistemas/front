@@ -155,7 +155,7 @@ onMounted(async () => {
           </template>
         </vue3-datatable>
       </div>
-      <circular-progress v-else class="flex justify-center pb-5"></circular-progress>
+      <circular-progress v-else class="flex justify-center pb-5" :size="50"></circular-progress>
     </div>
 
     <modal-layout :is-open="isOpenDialog" title="Cadastrar Consignante Master" size="max-w-[458px]"

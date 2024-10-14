@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
   maxHeight?: string | number;
   minHeight?: string | number;
   minWidth?: string | number;
-  position?: 'static' | 'relative' | 'fixed' | 'absolute' | 'sticky' | undefined;
+  position?: 'static' | 'relative' | 'fixed' | 'absolute' | 'sticky';
   to?: string;
   rounded?: number | { top: number; bottom: number; left: number; right: number; } | { horizontal: number; vertical: number; };
   loading?: boolean;
@@ -124,7 +124,7 @@ const handleClick = (e: MouseEvent) => {
     shadowClass,
   ]" :disabled="disabled || loading" @click="(e) => handleClick(e)">
     <template v-if="loading">
-      <circular-progress :size="6" color="fill-blue-600" />
+      <circular-progress :size="20" />
     </template>
     <template v-else>
       <slot />
