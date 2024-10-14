@@ -2,6 +2,7 @@
 	import { useRoute } from 'vue-router'
 	import { onMounted, shallowRef, watch } from 'vue'
 
+	import mainLayout from '@components/layout/mainLayout.vue'
 	import SimuladorCalculadora from '../components/simulador/simulador-calculadora.vue'
 	import SimuladorEmprestimos from '../components/simulador/simulador-emprestimos.vue'
 	import SimuladorTaxaJuros from '../components/simulador/simulador-taxa-juros.vue'
@@ -30,5 +31,7 @@
 </script>
 
 <template>
-	<component :is="currentComponent" />
+	<main-layout>
+		<component :is="currentComponent" />
+	</main-layout>
 </template>

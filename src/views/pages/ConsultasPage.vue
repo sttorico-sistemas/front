@@ -2,6 +2,7 @@
 	import { useRoute } from 'vue-router'
 	import { onMounted, shallowRef, watch } from 'vue'
 
+	import mainLayout from '@components/layout/mainLayout.vue'
 	import consultasAtualizacaoMargens from '../components/consultas/consultas-atualizacao-margens.vue'
 	import ConsultasConsignataria from '../components/consultas/consultas-consignataria.vue'
 	import ConsultasContratos from '../components/consultas/consultas-contrato.vue'
@@ -75,5 +76,7 @@
 </script>
 
 <template>
-	<component :is="currentComponent" />
+	<main-layout>
+		<component :is="currentComponent" />
+	</main-layout>
 </template>

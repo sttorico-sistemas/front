@@ -1,5 +1,5 @@
 <template>
-	<footer class="footer">
+	<footer class="footer mt-16">
 		<p class="footer__title">
 			© 2023. Sttórico Sistemas Ltda. Todos direitos reservados.
 		</p>
