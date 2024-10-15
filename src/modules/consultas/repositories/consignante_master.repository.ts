@@ -2,16 +2,25 @@ import { useAxios } from "src/core/composables/use_axios";
 import { ConsignanteMaster } from "../types/consignante_master";
 import { ConsignanteMasterModel } from "../models/consignante_master.model";
 import { BaseError } from "src/core/errors/base.error";
+import { PaginatedResultOutput, PaginationArgs } from "src/core/types/pagination.type.d";
 
 export class ConsignanteMasterRepository {
   private http = useAxios();
 
-  async getAllConsignantesMaster(): Promise<ConsignanteMaster[]> {
+  async getAllConsignantesMaster(pagination?: PaginationArgs): Promise<PaginatedResultOutput<ConsignanteMaster>> {
     try {
-      const response = await this.http.get('/consignante-master');
-      return (response.data as Record<string, any>[]).map(
-        (e) => ConsignanteMasterModel.fromRecord(e)
-      );
+      const response = await this.http.get('/consignante-master', {
+        params: {
+          'per_page': pagination?.limit ?? 10,
+          'page': pagination?.page ?? 1
+        }
+      });
+      return {
+        total: response.data.data.meta.total,
+        items: (response.data.data.data as []).map(
+          (e) => ConsignanteMasterModel.fromRecord(e),
+        ),
+      }
     } catch (error) {
       throw BaseError.fromHttpError(error);
     }
