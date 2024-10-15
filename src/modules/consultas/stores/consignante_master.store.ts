@@ -9,53 +9,78 @@ const consignanteMasterRepository = new ConsignanteMasterRepository();
 export const consignanteMasterStore = defineStore('consignanteMaster', {
   state: () => ({
     consignantesMaster: <ConsignanteMaster[]>[],
-    total: 0,
-    page: 1,
-    limit: 10,
+    pagination: {
+      limit: 10,
+      page: 1,
+      total: 0,
+    },
+    // TODO está carregando todos para o filtro funcionar. Buscar alternativas.
+    consignantesFilter: <string[]>[],
+    filter: '',
     loadingConsignantesMaster: true,
     error: '',
   }),
   actions: {
-    async getAllConsignantes(pagination?: PaginationArgs) {
+    async applyFilter(query: string) {
+      this.filter = query;
+      await this.getAllConsignantes({
+        limit: this.pagination.limit,
+        page: 1,
+      }, query,);
+    },
+    async clearFilter() {
+      this.filter = '';
+      await this.getAllConsignantes(this.pagination);
+    },
+    async getAllConsignantes(pagination?: PaginationArgs, query?: string) {
       try {
         this.loadingConsignantesMaster = true;
         const response = await consignanteMasterRepository.getAllConsignantesMaster({
-          page: pagination?.page ?? this.page,
-          limit: pagination?.limit ?? this.limit,
-        });
+          page: pagination?.page ?? this.pagination.page,
+          limit: pagination?.limit ?? this.pagination.limit,
+        },
+          query,
+        );
         this.consignantesMaster = response.items;
-        this.page = pagination?.page ?? this.page;
-        this.total = response.total;
+        this.pagination.page = pagination?.page ?? this.pagination.page;
+        this.pagination.total = response.total;
+        if (!this.filter) {
+          const filterResponse = await consignanteMasterRepository.getAllConsignantesMaster({
+            page: 1,
+            limit: response.total,
+          });
+          this.consignantesFilter = filterResponse.items.map((e) => e.nome);
+        }
       } catch (error) {
         console.error(error);
-      } finally{
+      } finally {
         this.loadingConsignantesMaster = false;
       }
     },
     async nextPage() {
       await this.getAllConsignantes({
-        page: this.page++,
-        limit: this.limit,
+        page: this.pagination.page++,
+        limit: this.pagination.limit,
       });
     },
     async previousPage() {
       await this.getAllConsignantes({
-        page: this.page--,
-        limit: this.limit,
+        page: this.pagination.page--,
+        limit: this.pagination.limit,
       })
     },
     async goToPage(page: number) {
       await this.getAllConsignantes({
         page,
-        limit: this.limit,
+        limit: this.pagination.limit,
       });
-      this.page = page;
+      this.pagination.page = page;
     },
     async setLimit(limit: number) {
-      this.limit = limit;
+      this.pagination.limit = limit;
       this.getAllConsignantes({
         limit: limit,
-        page: this.page,
+        page: this.pagination.page,
       });
     },
     async createConsignanteMaster(name: string) {
@@ -88,6 +113,20 @@ export const consignanteMasterStore = defineStore('consignanteMaster', {
     },
     clearError() {
       this.error = '';
+    }
+  },
+  getters: {
+    page(): number {
+      if (this.filter) {
+        return 1;
+      }
+      return this.pagination.page;
+    },
+    limit(): number {
+      return this.pagination.limit;
+    },
+    total(): number {
+      return this.pagination.total;
     }
   },
 });

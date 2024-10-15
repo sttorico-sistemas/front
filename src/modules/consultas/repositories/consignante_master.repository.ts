@@ -7,12 +7,13 @@ import { PaginatedResultOutput, PaginationArgs } from "src/core/types/pagination
 export class ConsignanteMasterRepository {
   private http = useAxios();
 
-  async getAllConsignantesMaster(pagination?: PaginationArgs): Promise<PaginatedResultOutput<ConsignanteMaster>> {
+  async getAllConsignantesMaster(pagination?: PaginationArgs, query?: string): Promise<PaginatedResultOutput<ConsignanteMaster>> {
     try {
       const response = await this.http.get('/consignante-master', {
         params: {
           'per_page': pagination?.limit ?? 10,
-          'page': pagination?.page ?? 1
+          'page': pagination?.page ?? 1,
+          'search': query,
         }
       });
       return {

@@ -14,6 +14,7 @@ import { Col } from 'types/col.d'
 import { consignanteMasterStore } from '../stores/consignante_master.store'
 import AppButton from 'src/core/components/AppButton.vue'
 import { ConsignanteMaster } from '../types/consignante_master.d'
+import { computed } from '@vue/reactivity'
 
 const saving = ref(false);
 const store = consignanteMasterStore();
@@ -23,31 +24,22 @@ const selected = reactive({
   label: '',
 })
 const isOpenDialog = ref(false)
-const consignante = ref('')
+const consignanteFilter = ref('')
 
 const cols = reactive<Col[]>([
   { field: 'nome', title: 'Consignante Master', hide: false },
   { field: 'actions', title: 'Ações', hide: false, sort: false, },
 ])
 
-const rows = reactive([
-  {
-    id: 1,
-    consignante_master: 'MUNIC DE ALMIRANTE TAMANDARÉ',
-  },
-  {
-    id: 2,
-    consignante_master: 'MUNIC DE CAMBORIÚ',
-  },
-])
+const filtered = computed(() => {
+  if (!consignanteFilter.value) {
+    return store.consignantesMaster;
+  };
 
-const filtered = () => {
-  if (consignante.value === '' || consignante.value === null) return rows
-
-  return rows.filter(
-    (consignantes: any) => consignantes.consignante_master === consignante.value,
-  )
-}
+  return store.consignantesMaster.filter(
+    (consignante) => consignante.nome === consignanteFilter.value,
+  );
+});
 
 const parseCols = [
   { field: 'id', title: 'ID', hide: false },
@@ -55,7 +47,7 @@ const parseCols = [
 ]
 
 const clearFilter = () => {
-  consignante.value = ''
+  consignanteFilter.value = ''
 }
 
 const consignanteMasterName = ref('');
@@ -113,21 +105,20 @@ onMounted(async () => {
         </div>
 
         <div class="header_actions flex items-center gap-5 ltr:ml-auto rtl:mr-auto">
-          <multiselect v-model="consignante" :options="['MUNIC DE ALMIRANTE TAMANDARÉ', 'MUNIC DE CAMBORIÚ']"
+          <multiselect :model-value="store.filter" :options="store.consignantesFilter"
             class="custom-multiselect min-w-[250px]" placeholder="Selecione Consignante Master" :searchable="false"
             :preselect-first="false" :allow-empty="false" selected-label="" select-label="" deselect-label=""
-            @select="(selected.label = $event), (selected.type = 'consignante')" />
-
+            @select="store.applyFilter($event)" />
           <div>
-            <button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
+            <button v-tippy:top type="button" class="text-xs m-1" @click="store.clearFilter()">
               <icon-clear class="w-5 h-5 text-primary_3-table" />
             </button>
             <tippy target="top" placement="top">Limpar pesquisa</tippy>
           </div>
 
           <div class="w-5 h-5">
-            <consultas-export v-tippy:top :cols="parseCols" :rows="store.consignantesMaster"
-              filename="Extrato Anual dos Descontos" export-type="print">
+            <consultas-export v-tippy:top :cols="parseCols" :rows="filtered" filename="Extrato Anual dos Descontos"
+              export-type="print">
               <template #icon>
                 <icon-printer class="w-5 h-5" />
               </template>
