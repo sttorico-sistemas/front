@@ -90,7 +90,7 @@ const shadowClass = computed(() => {
   if (props.variant === 'elevated' && props.elevation !== undefined) {
     return `shadow-lg shadow-opacity-${props.elevation}`;
   }
-  if (props.variant === 'outlined') {
+  if (props.variant === 'outlined' || props.elevation === 0) {
     return 'shadow-none';
   }
   return '';
@@ -109,7 +109,7 @@ const handleClick = (e: MouseEvent) => {
 <template>
   <button :class="[
     'btn',
-    block ? 'w-full' : width ? `w-${width}` : 'w-auto',
+    block ? 'w-full' : width ? `w-[${width}]` : 'w-auto',
     height ? `h-[${height}px]` : '',
     maxWidth ? `max-w-[${maxWidth}px]` : '',
     maxHeight ? `max-h-[${maxHeight}px]` : '',
