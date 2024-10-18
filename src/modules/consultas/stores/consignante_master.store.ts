@@ -44,7 +44,7 @@ export const consignanteMasterStore = defineStore('consignanteMaster', {
         this.consignantesMaster = response.items;
         this.pagination.page = pagination?.page ?? this.pagination.page;
         this.pagination.total = response.total;
-        if (!this.filter) {
+        if (!this.filter && this.pagination.total) {
           const filterResponse = await consignanteMasterRepository.getAllConsignantesMaster({
             page: 1,
             limit: response.total,
