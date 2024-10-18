@@ -1,5 +1,8 @@
 export type TableValue = {
   id: number;
-  tableId: string;
-  value: string;
+  nome: string;
+  tableUrl?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  deletedAt?: Date;
 }

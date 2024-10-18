@@ -1,40 +1,57 @@
+import { useAxios } from "src/core/composables/use_axios";
+import { Table } from "../types/table.d";
 import { TableValue } from "../types/table_value.d";
+import { BaseError } from "src/core/errors/base.error";
+import { TableModel } from "../models/table.model";
+import { TableValueModel } from "../models/table_value.model";
 
 export class TabelasAuxiliaresRepository {
-  async createTableValue(tableValue: TableValue): Promise<TableValue> {
-    const storageKey = `table.${tableValue.tableId}`;
+  private http = useAxios();
 
-    const currentValues = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as TableValue[];
-    currentValues.unshift(tableValue);
-    localStorage.setItem(storageKey, JSON.stringify(currentValues));
-    return tableValue;
+  async createTableValue(tableValue: TableValue): Promise<TableValue> {
+    try {
+      const response = await this.http.post(`/${tableValue.tableUrl}`, {
+        nome: tableValue.nome,
+      });
+      return TableValueModel.fromRecord(response.data.data);
+    } catch (error) {
+      throw BaseError.fromHttpError(error);
+    }
   }
 
   async deleteTableValue(tableId: string, valueId: number): Promise<void> {
-    const storageKey = `table.${tableId}`;
-    const currentValues = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as TableValue[];
-
-    const updatedValues = currentValues.filter((item) => item.id !== valueId);
-    localStorage.setItem(storageKey, JSON.stringify(updatedValues));
+    console.log(tableId, valueId)
+    return;
   }
 
   async updateTableValue(tableValue: TableValue): Promise<TableValue | null> {
-    const storageKey = `table.${tableValue.tableId}`;
-    const currentValues = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as TableValue[];
-
-    const index = currentValues.findIndex((item) => item.id === tableValue.id);
-    if (index !== -1) {
-      currentValues[index] = tableValue;
-      localStorage.setItem(storageKey, JSON.stringify(currentValues));
-      return tableValue;
+    try {
+      await this.http.put(`/${tableValue.tableUrl}/${tableValue.id}`, {
+        nome: tableValue.nome,
+      });
+      return null;
+    } catch (error) {
+      throw BaseError.fromHttpError(error);
     }
-
-    return null;
   }
 
-  async getAllTableValues(tableId: string): Promise<TableValue[]> {
-    const storageKey = `table.${tableId}`;
-    const currentValues = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as TableValue[];
-    return currentValues;
+  async getAllTableValues(tableUrl: string): Promise<TableValue[]> {
+    try {
+      const response = await this.http.get(`/${tableUrl}`)
+      const values = response.data.data.map((e: Record<string, any>) => TableValueModel.fromRecord(e));
+      return values;
+    } catch (error) {
+      throw BaseError.fromHttpError(error);
+    }
+  }
+
+  async getAllTables(): Promise<Table[]> {
+    try {
+      const response = await this.http.get('/auxiliar');
+      const tables = response.data.data.map((e: Record<string, any>) => TableModel.fromRecord(e));
+      return tables;
+    } catch (error) {
+      throw BaseError.fromHttpError(error);
+    }
   }
 }

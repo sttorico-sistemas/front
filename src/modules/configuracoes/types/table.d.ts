@@ -1,4 +1,8 @@
 export type Table = {
-  id: string;
+  id: number;
   name: string;
+  url: string;
+  deletedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

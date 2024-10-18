@@ -2,26 +2,14 @@ import { defineStore } from "pinia";
 import { TableValue } from "../types/table_value.d";
 import { Table } from "../types/table";
 import { TabelasAuxiliaresRepository } from "../repositories/tabelas_auxiliares.repository";
+import { BaseError } from "src/core/errors/base.error";
 
 const tabelasAuxiliaresRepository = new TabelasAuxiliaresRepository();
 
 export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
   state: () => ({
-    selectedTable: 'tipos_contrato',
-    tables: <Table[]>[
-      {
-        id: 'tipos_contrato',
-        name: 'Tipos de Contrato',
-      },
-      {
-        id: 'tipos_endereco',
-        name: 'Tipos de Endereço'
-      },
-      {
-        id: 'tipos_entidade',
-        name: 'Tipos de Entidade',
-      },
-    ],
+    selectedTable: '',
+    tables: <Table[]>[],
     error: '',
     values: <TableValue[]>[],
     showEditor: false,
@@ -32,51 +20,81 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
     }>{
         value: '',
       },
-    editingType: 'tipos_contrato',
+    editingType: '',
     saving: false,
   }),
   actions: {
+    async getTables() {
+      this.loadingData = true;
+      const tables = await tabelasAuxiliaresRepository.getAllTables();
+      this.tables = tables;
+      this.selectedTable = tables[0]?.url;
+      this.loadingData = false;
+      await this.getValues();
+    },
     async getValues() {
       this.loadingData = true;
       const values = await tabelasAuxiliaresRepository.getAllTableValues(this.selectedTable);
       this.values = values;
       this.loadingData = false;
     },
-    async setSelectedTable(id: string) {
-      if (typeof id === 'string') {
-        this.selectedTable = this.tables.find((e) => e.name === id)?.id ?? 'tipos_contrato';
+    async setSelectedTable(url: string) {
+      if (typeof url === 'string') {
+        this.selectedTable = this.tables.find((e) => e.name === url)?.url ?? 'tipo-entidade';
       } else {
-        this.selectedTable = id;
+        this.selectedTable = url;
       }
       await this.getValues();
     },
-    toggleEditor(show?: boolean) {
+    toggleEditor(show?: boolean, id?: number) {
       this.editingTableValue.value = '';
       this.editingType = this.selectedTable;
+      if (id) {
+        const value = this.values.find((e) => e.id === id)?.nome;
+        if (value) {
+          this.editingTableValue.id = id;
+          this.editingTableValue.value = value;
+        }
+      }
       this.showEditor = show ?? !this.showEditor;
     },
     updateEditingName(value: string) {
       this.editingTableValue.value = value;
     },
     updateEditingType(value: string) {
-      this.editingType = this.tables.find((e) => e.name === value)?.id ?? 'tipos_contrato';;
+      this.editingType = this.tables.find((e) => e.name === value)?.url ?? 'tipo-entidade';;
     },
     async saveType() {
-      if (!this.editingTableValue.value) {
-        this.error = 'Este campo é obrigatório.'
-        return;
+      try {
+        if (!this.editingTableValue.value) {
+          this.error = 'Este campo é obrigatório.'
+          return;
+        }
+        this.error = '';
+        this.saving = true;
+        if (this.editingTableValue.id) {
+          await tabelasAuxiliaresRepository.updateTableValue({
+            id: this.editingTableValue.id,
+            tableUrl: this.editingType,
+            nome: this.editingTableValue.value,
+          });
+        } else {
+          await tabelasAuxiliaresRepository.createTableValue({
+            id: 1,
+            tableUrl: this.editingType,
+            nome: this.editingTableValue.value,
+          })
+        }
+        this.selectedTable = this.editingType;
+        await this.getValues();
+        this.showEditor = false;
+      } catch (error) {
+        if (error instanceof BaseError) {
+          this.error = error.message;
+        }
+      } finally {
+        this.saving = false;
       }
-      this.error = '';
-      this.saving = true;
-      await tabelasAuxiliaresRepository.createTableValue({
-        id: 1,
-        tableId: this.tables.find((e) => e.name === this.editingType)?.id ?? 'tipos_contrato',
-        value: this.editingTableValue.value,
-      })
-      await this.getValues();
-      this.saving = false;
-      this.selectedTable = this.editingType;
-      this.showEditor = false;
     }
   }
 });

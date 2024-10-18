@@ -20,12 +20,12 @@ const selected = reactive({
 
 const cols = reactive<Col[]>([
   { field: 'id', title: 'Código', hide: false, },
-  { field: 'value', title: 'Descrição', hide: false, },
+  { field: 'nome', title: 'Descrição', hide: false, },
   { field: 'actions', title: 'Ação', hide: false, },
 ]);
 
 onMounted(async () => {
-  await store.getValues();
+  await store.getTables();
 });
 </script>
 
@@ -36,7 +36,7 @@ onMounted(async () => {
 
       <div class="header_actions flex items-center gap-20">
         <multiselect @update:model-value="store.setSelectedTable($event)"
-          :model-value="store.tables.find(e => e.id === store.selectedTable)?.name"
+          :model-value="store.tables.find(e => e.url === store.selectedTable)?.name"
           :options="store.tables.map(e => e.name)" class="custom-multiselect md:min-w-[400px]"
           placeholder="Selecione Tabela" :searchable="false" :allow-empty="false" selected-label="" select-label=""
           deselect-label="" @select="(selected.label = $event), (selected.type = 'tipo_tabela')" />
@@ -56,10 +56,10 @@ onMounted(async () => {
         <template #actions="data">
           <div class="flex gap-2">
             <div>
-              <button v-tippy:right type="button" class="text-xs m-1">
+              <button v-tippy:right type="button" class="text-xs m-1" @click="store.toggleEditor(true, data.value.id)">
                 <icon-edit class="w-5 h-5 text-primary_3-table" />
               </button>
-              <tippy target="right" placement="right">Editar</tippy>
+              <tippy target="right" placement="right">Editar {{ data.value.nome }}</tippy>
             </div>
             <div>
               <button v-tippy:right type="button" class="text-xs m-1">
@@ -74,7 +74,7 @@ onMounted(async () => {
     <modal-layout :is-open="store.showEditor" title="Adicionar Novo Tipo" size="max-w-[440px]"
       @btn-close="store.toggleEditor(false)">
       <div class="flex flex-col">
-        <multiselect :model-value="store.tables.find(e => e.id === store.editingType)?.name"
+        <multiselect :model-value="store.tables.find(e => e.url === store.editingType)?.name"
           @update:model-value="store.updateEditingType($event)" :options="store.tables.map((e) => e.name)"
           class="custom-multiselect md:min-w-[80px] pb-4" :searchable="false" placeholder="Tipo de dado"
           :allow-empty="false" selected-label="" select-label="" deselect-label="">
