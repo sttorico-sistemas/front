@@ -19,10 +19,6 @@ import { computed } from '@vue/reactivity'
 const saving = ref(false);
 const store = consignanteMasterStore();
 
-const selected = reactive({
-  type: '',
-  label: '',
-})
 const isOpenDialog = ref(false)
 const consignanteFilter = ref('')
 
@@ -45,10 +41,6 @@ const parseCols = [
   { field: 'id', title: 'ID', hide: false },
   { field: 'nome', title: 'Consignante Master', hide: false },
 ]
-
-const clearFilter = () => {
-  consignanteFilter.value = ''
-}
 
 const consignanteMasterName = ref('');
 const editingConsignanteMaster = ref<ConsignanteMaster | undefined>(undefined);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
 import modalLayout from 'src/core/components/Modal.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
 import Titulo from 'src/core/components/Titulo.vue'
@@ -22,7 +22,11 @@ const cols = reactive<Col[]>([
   { field: 'id', title: 'Código', hide: false, },
   { field: 'value', title: 'Descrição', hide: false, },
   { field: 'actions', title: 'Ação', hide: false, },
-])
+]);
+
+onMounted(async () => {
+  await store.getValues();
+});
 </script>
 
 <template>
@@ -34,9 +38,8 @@ const cols = reactive<Col[]>([
         <multiselect @update:model-value="store.setSelectedTable($event)"
           :model-value="store.tables.find(e => e.id === store.selectedTable)?.name"
           :options="store.tables.map(e => e.name)" class="custom-multiselect md:min-w-[400px]"
-          placeholder="Selecione Tabela" :searchable="false" :preselect-first="false" :allow-empty="false"
-          selected-label="" select-label="" deselect-label=""
-          @select="(selected.label = $event), (selected.type = 'tipo_tabela')" />
+          placeholder="Selecione Tabela" :searchable="false" :allow-empty="false" selected-label="" select-label=""
+          deselect-label="" @select="(selected.label = $event), (selected.type = 'tipo_tabela')" />
 
         <button @click="store.toggleEditor(true)" v-tippy:right>
           <icon-add />
@@ -46,9 +49,10 @@ const cols = reactive<Col[]>([
     </div>
 
     <div class="datatable pb-1">
-      <vue3-datatable :rows="store.values" :columns="cols" :total-rows="store.values.length" :sortable="true"
-        skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-        pagination-info="Mostrando {0} a {1} de {2} entradas" :pagination="false">
+      <vue3-datatable :loading="store.loadingData" :rows="store.values" :columns="cols"
+        :total-rows="store.values.length" :sortable="true" skin="whitespace-nowrap bh-table-striped"
+        no-data-content="Nenhum dado foi encontrado" pagination-info="Mostrando {0} a {1} de {2} entradas"
+        :pagination="true" :page-size="100">
         <template #actions="data">
           <div class="flex gap-2">
             <div>
@@ -70,12 +74,13 @@ const cols = reactive<Col[]>([
     <modal-layout :is-open="store.showEditor" title="Adicionar Novo Tipo" size="max-w-[440px]"
       @btn-close="store.toggleEditor(false)">
       <div class="flex flex-col">
-        <multiselect :options="store.tables.map((e) => e.name)" class="custom-multiselect md:min-w-[80px] pb-4"
-          :searchable="false" placeholder="Tipo de dado" :preselect-first="false" :allow-empty="false" selected-label=""
-          select-label="" deselect-label="">
+        <multiselect :model-value="store.tables.find(e => e.id === store.editingType)?.name"
+          @update:model-value="store.updateEditingType($event)" :options="store.tables.map((e) => e.name)"
+          class="custom-multiselect md:min-w-[80px] pb-4" :searchable="false" placeholder="Tipo de dado"
+          :allow-empty="false" selected-label="" select-label="" deselect-label="">
         </multiselect>
-        <form-field :model-value="store.editingTypeName" @update:model-value="store.updateEditingName($event)"
-          label="Novo tipo de dado"></form-field>
+        <form-field :model-value="store.editingTableValue.value" @update:model-value="store.updateEditingName($event)"
+          :message="store.error" :error="!!store.error" label="Novo tipo de dado"></form-field>
       </div>
 
       <div class="flex justify-center items-center gap-12 mt-8">
@@ -83,7 +88,8 @@ const cols = reactive<Col[]>([
           @click="store.toggleEditor(false)">
           Cancelar
         </app-button>
-        <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving">Salvar</app-button>
+        <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving"
+          @click="store.saveType()">Salvar</app-button>
         <!-- <button type="button"
           class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
           @click="store.toggleEditor(false)" :disabled="store.saving">Cancelar</button>

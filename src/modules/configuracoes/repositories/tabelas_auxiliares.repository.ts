@@ -10,7 +10,7 @@ export class TabelasAuxiliaresRepository {
     return tableValue;
   }
 
-  async deleteTableValue(tableId: number, valueId: number): Promise<void> {
+  async deleteTableValue(tableId: string, valueId: number): Promise<void> {
     const storageKey = `table.${tableId}`;
     const currentValues = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as TableValue[];
 
@@ -32,7 +32,7 @@ export class TabelasAuxiliaresRepository {
     return null;
   }
 
-  async getAllTableValues(tableId: number): Promise<TableValue[]> {
+  async getAllTableValues(tableId: string): Promise<TableValue[]> {
     const storageKey = `table.${tableId}`;
     const currentValues = JSON.parse(localStorage.getItem(storageKey) ?? '[]') as TableValue[];
     return currentValues;
