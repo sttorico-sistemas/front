@@ -34,7 +34,7 @@
 
 	import cadastroModalHabilitarConsignatarias from '../cadastro-modal-habilitar-consignatarias/cadastro-modal-habilitar-consignatarias.vue'
 	import modalHabilitarPontoVenda from '../modal-habilitar-ponto-venda/modal-habilitar-ponto-venda.vue'
-	import modalHabilitarBackoffice from '../modal-habilitar-backoffice/modal-habilitar-backoffice.vue'
+	import modalListarBackoffice from '../modal-listar-backoffice/modal-listar-backoffice.vue'
 
 	// Icons
   import IconAdd from '@icons/iconAdd.vue'
@@ -450,15 +450,12 @@
 		</modal-layout>
 
 		<modal-layout
-			title="Habilitar Backoffice para Consignante"
+			title="Backoffice Habilitados"
 			:is-open="isOpenDialogBackOffice"
 			size="max-w-full"
 			@btn-close="isOpenDialogBackOffice = false"
 		>
-			<template #icon>
-				<component :is="IconShieldCheck" />
-			</template>
-			<modal-habilitar-backoffice @btn-cancelar="isOpenDialogBackOffice = false" />
+			<modal-listar-backoffice @btn-cancelar="isOpenDialogBackOffice = false" />
 		</modal-layout>
 	</main>
 </template>
