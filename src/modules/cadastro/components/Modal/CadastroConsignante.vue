@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 import IconClear from 'src/core/components/Icons/IconClear.vue'
+import CadastroEndereco from 'src/modules/consultas/components/CadastroEndereco.vue';
+import FormField from 'src/core/components/FormField.vue';
 
 const consignanteMaster = ref<string>('')
 const clearOption = () => consignanteMaster.value = ''
@@ -48,20 +49,12 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
       <label-input id="nome" label="Nome" class-label="text-sm" class-input="md:max-w-[420px]" layout="col" />
       <label-input id="nome_curto" label="Nome curto" class-label="text-sm" class-input="md:max-w-[250px]"
         layout="col" />
-      <label-select id="tipo_endereco" label="Tipo de Endereço" class-label="text-sm" class-select="md:max-w-[250px]"
-        layout="col" :options="['Av', 'Alameda', 'Beco', 'Comunidade', 'Estrada', 'Rua']" />
-      <label-input id="endereco" label="Endereço Completo" class-label="text-sm" class-input="md:max-w-[620px]"
-        layout="col" />
+      <cadastro-endereco flat :show-title="false" class="my-3"></cadastro-endereco>
 
       <div class="flex flex-col md:flex-row items-center mb-3">
-        <label for="cidade" class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left">Cidade</label>
-        <input id="cidade" type="text" class="form-input mb-3 md:mb-0 md:max-w-[250px] h-[38px]" />
-
-        <label for="uf" class="mb-0 md:mr-4 md:ml-8 w-full md:w-auto text-sm text-left">UF</label>
-        <input id="uf" type="text" class="form-input mb-3 md:mb-0 md:max-w-[50px] h-[38px]" />
-
-        <label for="cep" class="mb-0 md:mr-4 md:ml-8 w-full md:w-auto text-sm text-left">CEP</label>
-        <input id="cep" type="text" class="form-input mb-3 md:mb-0 md:max-w-[150px] h-[38px]" />
+        <label for="cep" class="mb-0 md:mr-11 w-full md:w-1/5 text-sm text-left">CEP</label>
+        <input id="cep" type="text" class="form-input mb-3 md:mb-0 md:max-w-full h-[38px]" />
+        <!-- <form-field label="CEP"></form-field> -->
       </div>
 
       <div class="flex flex-col md:flex-row items-center mb-3">
