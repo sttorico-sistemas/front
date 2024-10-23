@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { TableValue } from "../types/table_value.d";
-import { Table } from "../types/table";
+import { Table, TableURL } from "../types/table";
 import { TabelasAuxiliaresRepository } from "../repositories/tabelas_auxiliares.repository";
 import { BaseError } from "src/core/errors/base.error";
 
@@ -32,11 +32,40 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
       this.loadingData = false;
       await this.getValues();
     },
-    async getValues() {
+    async getValues(tableId?: TableURL) {
       this.loadingData = true;
-      const values = await tabelasAuxiliaresRepository.getAllTableValues(this.selectedTable);
+      const values = await tabelasAuxiliaresRepository.getAllTableValues(tableId ?? this.selectedTable);
       this.values = values;
       this.loadingData = false;
+      // TODO remover dados mockados
+      if (!values.length) {
+        if (tableId === 'tipo-endereco')
+          return [
+            {
+              id: 1,
+              nome: 'Apartamento',
+              tableUrl: tableId,
+            },
+            {
+              id: 2,
+              nome: 'Estabelecimento',
+              tableUrl: tableId,
+            }
+          ];
+        return [
+          {
+            id: 1,
+            nome: 'WhatsApp',
+            tableUrl: tableId,
+          },
+          {
+            id: 2,
+            nome: 'Transmissão',
+            tableUrl: tableId,
+          }
+        ]
+      }
+      return values;
     },
     async setSelectedTable(url: string) {
       if (typeof url === 'string') {
