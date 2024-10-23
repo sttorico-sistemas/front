@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
-import ConsultasCadastroPessoaContato from './CadastroPessoaContato.vue'
-import ConsultasCadastroPessoaEndereco from './CadastroPessoaEndereco.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
+import CadastroEndereco from '../CadastroEndereco.vue';
+import CadastroContato from '../CadastroContato.vue';
 
 const props = withDefaults(defineProps<{
   disabled?: boolean;
@@ -41,9 +41,8 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
         </div>
       </div>
 
-      <consultas-cadastro-pessoa-contato />
-
-      <consultas-cadastro-pessoa-endereco />
+      <cadastro-contato></cadastro-contato>
+      <cadastro-endereco></cadastro-endereco>
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button type="button"
