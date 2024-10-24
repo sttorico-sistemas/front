@@ -1,18 +1,32 @@
 import { defineStore } from "pinia";
-import { useAxios } from "src/core/composables/use_axios";
+import { LocationState, StateCities } from "../types/location_state.d";
+import { LocationRepository } from "../repositories/location.repository";
 
-const http = useAxios();
+const locationRepository = new LocationRepository()
 
 export const locationStore = defineStore('locationStore', {
   state: () => ({
-    states: <string[]>[],
-    cities: <string[]>[],
+    states: <LocationState[]>[],
+    cities: <StateCities>{},
   }),
   actions: {
-    async getStates() {
-      const response = await http.get('/estados');
-      const states = response.data.data.map((e: Record<string, any>) => e.nome)
-      this.states = states;
+    async getStates(): Promise<LocationState[]> {
+      if (!this.states.length) {
+        const states = await locationRepository.getStates();
+        this.states = states;
+      }
+      return this.states;
+    },
+    async getStateCitites(stateId: number): Promise<void> {
+      const state = this.states.find((e) => e.id === stateId);
+      if (!state) {
+        return;
+      }
+      if (this.cities[state.uf]?.length) {
+        return;
+      }
+      const cities = await locationRepository.getStateCities(stateId);
+      this.cities[state.uf] = cities;
     }
   }
 });
