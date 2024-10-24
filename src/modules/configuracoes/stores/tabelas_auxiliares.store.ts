@@ -13,6 +13,7 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
     error: '',
     values: <TableValue[]>[],
     showEditor: false,
+    showDeleteDialog: false,
     loadingData: true,
     editingTableValue: <{
       id?: number;
@@ -37,34 +38,6 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
       const values = await tabelasAuxiliaresRepository.getAllTableValues(tableId ?? this.selectedTable);
       this.values = values;
       this.loadingData = false;
-      // TODO remover dados mockados
-      if (!values.length) {
-        if (tableId === 'tipo-endereco')
-          return [
-            {
-              id: 1,
-              nome: 'Apartamento',
-              tableUrl: tableId,
-            },
-            {
-              id: 2,
-              nome: 'Estabelecimento',
-              tableUrl: tableId,
-            }
-          ];
-        return [
-          {
-            id: 1,
-            nome: 'WhatsApp',
-            tableUrl: tableId,
-          },
-          {
-            id: 2,
-            nome: 'Transmissão',
-            tableUrl: tableId,
-          }
-        ]
-      }
       return values;
     },
     async setSelectedTable(url: string) {
@@ -87,11 +60,40 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
       }
       this.showEditor = show ?? !this.showEditor;
     },
+    toggleDeleteDialog(show?: boolean, id?: number) {
+      this.editingTableValue.value = '';
+      this.editingType = this.selectedTable;
+      if (id) {
+        const value = this.values.find((e) => e.id === id)?.nome;
+        if (value) {
+          this.editingTableValue.id = id;
+          this.editingTableValue.value = value;
+        }
+      }
+      this.showDeleteDialog = show ?? !this.showDeleteDialog;
+    },
     updateEditingName(value: string) {
       this.editingTableValue.value = value;
     },
     updateEditingType(value: string) {
       this.editingType = this.tables.find((e) => e.name === value)?.url ?? 'tipo-entidade';;
+    },
+    async deleteType() {
+      try {
+        if (!this.editingTableValue.id) {
+          return;
+        }
+        this.saving = true;
+        await tabelasAuxiliaresRepository.deleteTableValue(this.editingType, this.editingTableValue.id);
+        await this.getValues();
+        this.showDeleteDialog = false;
+      } catch (error) {
+        if (error instanceof BaseError) {
+          this.error = error.message;
+        }
+      } finally {
+        this.saving = false;
+      }
     },
     async saveType() {
       try {

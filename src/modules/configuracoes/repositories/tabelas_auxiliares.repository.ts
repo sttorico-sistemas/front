@@ -19,9 +19,12 @@ export class TabelasAuxiliaresRepository {
     }
   }
 
-  async deleteTableValue(tableId: string, valueId: number): Promise<void> {
-    console.log(tableId, valueId)
-    return;
+  async deleteTableValue(tableUrl: string, valueId: number): Promise<void> {
+    try {
+      await this.http.delete(`/${tableUrl}/${valueId}`);
+    } catch (error) {
+      throw BaseError.fromHttpError(error);
+    }
   }
 
   async updateTableValue(tableValue: TableValue): Promise<TableValue | null> {

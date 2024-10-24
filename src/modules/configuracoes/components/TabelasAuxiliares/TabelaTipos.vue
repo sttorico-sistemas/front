@@ -10,6 +10,7 @@ import { tabelasAuxiliaresStore } from '../../stores/tabelas_auxiliares.store'
 import FormField from 'src/core/components/FormField.vue'
 import AppButton from 'src/core/components/AppButton.vue'
 import { Col } from 'types/col.d'
+import AppDialog from 'src/core/components/AppDialog.vue';
 
 const store = tabelasAuxiliaresStore();
 
@@ -62,10 +63,12 @@ onMounted(async () => {
               <tippy target="right" placement="right">Editar {{ data.value.nome }}</tippy>
             </div>
             <div>
-              <button v-tippy:right type="button" class="text-xs m-1">
+              <button v-tippy:right type="button" class="text-xs m-1"
+                @click="store.toggleDeleteDialog(true, data.value.id)">
                 <icon-delete class="w-5 h-5 text-primary_3-table" />
               </button>
-              <tippy target="right" placement="right">Deletar</tippy>
+              <tippy target="right" placement="right">Deletar
+              </tippy>
             </div>
           </div>
         </template>
@@ -90,13 +93,27 @@ onMounted(async () => {
         </app-button>
         <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving"
           @click="store.saveType()">Salvar</app-button>
-        <!-- <button type="button"
-          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
-          @click="store.toggleEditor(false)" :disabled="store.saving">Cancelar</button>
-        <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs"
-          :loading="store.saving">Salvar</button> -->
       </div>
     </modal-layout>
+
+    <app-dialog :model-value="store.showDeleteDialog" @update:model-value="store.toggleDeleteDialog()">
+      <template #title>
+        Deseja apagar "{{ store.editingTableValue.value }}"?
+      </template>
+
+      A ação não poderá ser desfeita.
+
+      <template #actions>
+        <app-button class="mr-3" density="comfortable" :elevation="0" @click="store.deleteType()"
+          :loading="store.saving">
+          Apagar
+        </app-button>
+        <app-button @click="store.toggleDeleteDialog()" variant="outlined" density="comfortable"
+          :disabled="store.saving">
+          Cancelar
+        </app-button>
+      </template>
+    </app-dialog>
   </div>
 </template>
 
