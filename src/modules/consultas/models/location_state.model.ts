@@ -1,10 +1,10 @@
 import { BaseModel } from "src/core/models/base.model";
-import { LocationState } from "../types/location_state.d";
+import { LocationState, StateUf } from "../types/location_state.d";
 
 export class LocationStateModel extends BaseModel implements LocationState {
   public id: number;
   public name: string;
-  public uf: string;
+  public uf: StateUf;
   public createdAt: string;
   public updatedAt: string;
   public deletedAt: string;
@@ -13,7 +13,7 @@ export class LocationStateModel extends BaseModel implements LocationState {
   constructor(private props: {
     id: number;
     name: string;
-    uf: string;
+    uf: StateUf;
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
