@@ -3,6 +3,7 @@ import { TableValue } from "../types/table_value.d";
 import { Table, TableURL } from "../types/table";
 import { TabelasAuxiliaresRepository } from "../repositories/tabelas_auxiliares.repository";
 import { BaseError } from "src/core/errors/base.error";
+import Swal from "sweetalert2";
 
 const tabelasAuxiliaresRepository = new TabelasAuxiliaresRepository();
 
@@ -87,6 +88,12 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
         await tabelasAuxiliaresRepository.deleteTableValue(this.editingType, this.editingTableValue.id);
         await this.getValues();
         this.showDeleteDialog = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Configuração Apagada!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } catch (error) {
         if (error instanceof BaseError) {
           this.error = error.message;
@@ -119,6 +126,12 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
         this.selectedTable = this.editingType;
         await this.getValues();
         this.showEditor = false;
+        Swal.fire({
+          icon: 'success',
+          title: 'Configuração Salva!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } catch (error) {
         if (error instanceof BaseError) {
           this.error = error.message;
