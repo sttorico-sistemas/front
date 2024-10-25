@@ -74,7 +74,7 @@ onMounted(async () => {
         </template>
       </vue3-datatable>
     </div>
-    <modal-layout :is-open="store.showEditor" title="Adicionar Novo Tipo" size="max-w-[440px]"
+    <!-- <modal-layout :is-open="store.showEditor" title="Adicionar Novo Tipo" size="max-w-[440px]"
       @btn-close="store.toggleEditor(false)">
       <div class="flex flex-col">
         <multiselect :model-value="store.tables.find(e => e.url === store.editingType)?.name"
@@ -94,7 +94,31 @@ onMounted(async () => {
         <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving"
           @click="store.saveType()">Salvar</app-button>
       </div>
-    </modal-layout>
+    </modal-layout> -->
+
+    <app-dialog :model-value="store.showEditor" @update:model-value="store.toggleEditor($event)" width="400px">
+      <template #title>
+        Adicionar Novo Tipo
+      </template>
+      <div class="flex flex-col">
+        <multiselect :model-value="store.tables.find(e => e.url === store.editingType)?.name"
+          @update:model-value="store.updateEditingType($event)" :options="store.tables.map((e) => e.name)"
+          class="custom-multiselect md:min-w-[80px] pb-4" :searchable="false" placeholder="Tipo de dado"
+          :allow-empty="false" selected-label="" select-label="" deselect-label="">
+        </multiselect>
+        <form-field :model-value="store.editingTableValue.value" @update:model-value="store.updateEditingName($event)"
+          :message="store.error" :error="!!store.error" label="Novo tipo de dado" @submit="store.saveType()"
+          :disabled="store.saving" />
+      </div>
+      <template #actions>
+        <app-button density="comfortable" variant="outlined" width="86px" :disabled="store.saving"
+          @click="store.toggleEditor(false)" class="mr-2">
+          Cancelar
+        </app-button>
+        <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving"
+          @click="store.saveType()">Salvar</app-button>
+      </template>
+    </app-dialog>
 
     <app-dialog :model-value="store.showDeleteDialog" @update:model-value="store.toggleDeleteDialog()">
       <template #title>
