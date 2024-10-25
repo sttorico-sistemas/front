@@ -15,11 +15,12 @@ import { consignanteMasterStore } from '../stores/consignante_master.store'
 import AppButton from 'src/core/components/AppButton.vue'
 import { ConsignanteMaster } from '../types/consignante_master.d'
 import { computed } from '@vue/reactivity'
+import AppDialog from 'src/core/components/AppDialog.vue';
 
 const saving = ref(false);
 const store = consignanteMasterStore();
 
-const isOpenDialog = ref(false)
+const showDialog = ref(false)
 const consignanteFilter = ref('')
 
 const cols = reactive<Col[]>([
@@ -50,17 +51,18 @@ const openEditor = (consignanteMaster?: ConsignanteMaster) => {
   if (consignanteMaster) {
     editingConsignanteMaster.value = consignanteMaster;
     consignanteMasterName.value = consignanteMaster.nome;
-    isOpenDialog.value = true;
+    showDialog.value = true;
     return;
   }
   editingConsignanteMaster.value = undefined;
   consignanteMasterName.value = '';
-  isOpenDialog.value = true;
+  showDialog.value = true;
 }
 
 const saveConsignanteMaster = async () => {
   store.clearError();
   saving.value = true;
+  console.log('deu submit');
 
   if (editingConsignanteMaster.value) {
     await store.updateConsignanteMaster({
@@ -72,7 +74,7 @@ const saveConsignanteMaster = async () => {
   }
 
   if (!store.error) {
-    isOpenDialog.value = false
+    showDialog.value = false
   }
   saving.value = false;
 }
@@ -119,10 +121,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-
       <div class="datatable mb-[344px]">
-        <!-- TODO descobrir o por que essas funções tinham argumentos -->
-        <!-- <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length" -->
         <vue3-datatable :rows="store.consignantesMaster" :columns="cols" :total-rows="store.total" :sortable="true"
           skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
           pagination-info="Mostrando {0} a {1} de {2} entradas" :loading="store.loadingConsignantesMaster"
@@ -138,21 +137,21 @@ onMounted(async () => {
       </div>
     </div>
 
-    <modal-layout :is-open="isOpenDialog" title="Cadastrar Consignante Master" size="max-w-[458px]"
-      @btn-close="isOpenDialog = false">
-      <form>
-        <form-field v-model="consignanteMasterName" :message="store.error" :error="!!store.error"
-          label="Nome"></form-field>
-        <div class="flex justify-center gap-12 mt-8">
-          <app-button variant="outlined" density="comfortable" @click="isOpenDialog = false" width="24"
-            :disabled="saving">
-            Cancelar
-          </app-button>
-          <app-button width="24" variant="flat" density="comfortable" :loading="saving"
-            @click="saveConsignanteMaster()">Salvar</app-button>
-        </div>
-      </form>
-    </modal-layout>
+    <app-dialog v-model="showDialog" width="458px">
+      <template #title>
+        Cadastrar Consignante Master
+      </template>
+      <form-field v-model="consignanteMasterName" :message="store.error" :error="!!store.error" label="Nome"
+        @submit="saveConsignanteMaster()" :disabled="saving" />
+      <template #actions>
+        <app-button class="mr-2" variant="outlined" density="comfortable" @click="showDialog = false" width="24"
+          :disabled="saving">
+          Cancelar
+        </app-button>
+        <app-button width="24" variant="flat" density="comfortable" :loading="saving"
+          @click="saveConsignanteMaster()">Salvar</app-button>
+      </template>
+    </app-dialog>
   </main>
 </template>
 

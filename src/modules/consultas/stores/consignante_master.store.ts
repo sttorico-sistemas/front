@@ -3,6 +3,7 @@ import { ConsignanteMasterRepository } from "../repositories/consignante_master.
 import { ConsignanteMaster } from "../types/consignante_master";
 import { BaseError } from "src/core/errors/base.error";
 import { PaginationArgs } from "src/core/types/pagination.type";
+import Swal from "sweetalert2";
 
 const consignanteMasterRepository = new ConsignanteMasterRepository();
 
@@ -85,10 +86,21 @@ export const consignanteMasterStore = defineStore('consignanteMaster', {
     },
     async createConsignanteMaster(name: string) {
       try {
+        if (!name) {
+          this.error = 'Este campo é obrigatório.'
+          return;
+        }
+        this.error = '';
         await consignanteMasterRepository.createConsignanteMaster({
           name,
         });
         await this.getAllConsignantes();
+        Swal.fire({
+          icon: 'success',
+          title: 'Consignante master criado!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } catch (error) {
         if (error instanceof BaseError) {
           this.error = error.message;
@@ -105,6 +117,12 @@ export const consignanteMasterStore = defineStore('consignanteMaster', {
           nome: data.name,
         });
         await this.getAllConsignantes();
+        Swal.fire({
+          icon: 'success',
+          title: 'Consignante master atualizado!',
+          showConfirmButton: false,
+          timer: 1500,
+        });
       } catch (error) {
         if (error instanceof BaseError) {
           this.error = error.message;

@@ -1,127 +1,152 @@
 <script lang="ts" setup>
-import { ref, inject, onMounted, watch } from 'vue';
-import titulo from 'src/core/components/Titulo.vue';
-import LabelInput from 'src/core/components/Inputs/InputLabel.vue';
-import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue';
-import IconAdd from 'src/core/components/Icons/IconAdd.vue';
-import IconClose from 'src/core/components/Icons/IconClose.vue';
-import { Emitter, EventType } from 'mitt';
-import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from 'src/modules/configuracoes/stores/tabelas_auxiliares.store';
-import { TableValue } from 'src/modules/configuracoes/types/table_value';
-import { locationStore as _locationStore } from '../stores/location.store';
-import { LocationState } from '../types/location_state.d';
+import { inject, onMounted, ref, watch } from 'vue'
+import titulo from 'src/core/components/Titulo.vue'
+import IconAdd from 'src/core/components/Icons/IconAdd.vue'
+import IconClose from 'src/core/components/Icons/IconClose.vue'
+import { Emitter, EventType } from 'mitt'
+import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from 'src/modules/configuracoes/stores/tabelas_auxiliares.store'
+import { TableValue } from 'src/modules/configuracoes/types/table_value'
+import { locationStore as _locationStore } from '../stores/location.store'
+import {
+  LocationState,
+  StateUf,
+} from '../types/location_state.d'
+import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue'
+import FormField from 'src/core/components/FormField.vue'
 
-const props = withDefaults(defineProps<{
-  flat?: boolean;
-  showTitle?: boolean;
-  modelValue?: {
-    addressType: string;
-    address: string;
-    city: string;
-    uf: string;
-  }[];
-}>(), {
-  flat: false,
-  showTitle: true,
-  modelValue: () => [
-    {
-      address: '',
-      addressType: '',
-      city: '',
-      uf: '',
-    }
-  ],
-});
+const props = withDefaults(
+  defineProps<{
+    flat?: boolean
+    showTitle?: boolean
+    modelValue?: {
+      addressType: string;
+      address: string;
+      city: string;
+      loadingCities: boolean;
+      uf?: StateUf;
+    }[];
+  }>(),
+  {
+    flat: false,
+    showTitle: true,
+    modelValue: () => [
+      {
+        address: '',
+        addressType: '',
+        loadingCities: false,
+        city: '',
+      },
+    ],
+  },
+)
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
-const tabelasAuxiliaresStore = _tabelasAuxiliaresStore();
-const locationStore = _locationStore();
+const tabelasAuxiliaresStore = _tabelasAuxiliaresStore()
+const locationStore = _locationStore()
 
-const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus');
-const isDisabled = ref(true);
+const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus')
+const isDisabled = ref(true)
 
-const addressTypes = ref<TableValue[]>([]);
-const states = ref<LocationState[]>([]);
+const addressTypes = ref<TableValue[]>([])
+const states = ref<LocationState[]>([])
 
-const addresses = ref(props.modelValue);
+const addresses = ref(Array.from(props.modelValue))
 
-const addEndereco = () => {
+const addAddress = () => {
   if (addresses.value.length >= 3) {
     eventBus?.emit('alert', {
       type: 'danger',
       message: 'Limite máximo de contato é de 3',
-    });
-    return false;
+    })
+    return false
   }
 
-  const lastAddress = addresses.value[addresses.value.length - 1];
+  const lastAddress = addresses.value[addresses.value.length - 1]
 
-  if (!lastAddress.address && !lastAddress.city) {
+  if (!lastAddress.address || !lastAddress.city) {
     eventBus?.emit('alert', {
       type: 'danger',
       message: 'Preencha os campos obrigatórios!',
-    });
-    return false;
+    })
+    return false
   }
 
   addresses.value.push({
     addressType: '',
     address: '',
     city: '',
-    uf: '',
-  });
-};
+    loadingCities: false,
+  })
+}
 
-const removeEndereco = (index: number) => {
+const removeAddress = (index: number) => {
   if (addresses.value.length === 1) {
     eventBus?.emit('alert', {
       type: 'danger',
       message: 'Não foi possível remover contato',
-    });
-    return false;
+    })
+    return false
   }
 
-  addresses.value.splice(index, 1);
-};
+  addresses.value.splice(index, 1)
+}
+
+const loadCities = async (stateUf?: StateUf) => {
+  const state = states.value.find((e) => e.uf === stateUf)
+  if (state) {
+    const address = addresses.value.find((e) => e.uf === state.uf);
+    address!.loadingCities = true;
+    await locationStore.getStateCitites(state.id);
+    address!.loadingCities = false;
+  }
+}
 
 onMounted(async () => {
-  isDisabled.value = true;
-  addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco');;
-  states.value = await locationStore.getStates();
-  isDisabled.value = false;
-});
+  isDisabled.value = true
+  addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco')
+  states.value = await locationStore.getStates()
+  isDisabled.value = false
+})
 
-watch(() => props.modelValue, (value) => {
-  addresses.value = value;
-}, {
-  deep: true,
-});
+watch(
+  () => props.modelValue,
+  (value) => {
+    addresses.value = value
+  },
+  {
+    deep: true,
+  },
+)
 
-watch(addresses, (value) => {
-  emit('update:modelValue', value);
-}, {
-  deep: true,
-});
+watch(
+  addresses,
+  (value) => {
+    emit('update:modelValue', value)
+  },
+  {
+    deep: true,
+  },
+)
 </script>
 
 <template>
   <div :class="flat ? '' : 'panel my-3'">
     <titulo v-if="showTitle" title="Endereços" class="mb-6" />
     <div v-for="(address, index) in addresses" :key="`endereco-${index}`" class="flex flex-wrap gap-4 w-full my-3">
-      <label-select id="tipo_endereco" label="Tipo Endereço" :disabled="isDisabled" class-label="text-sm"
-        class-select="w-full md:flex-grow md:w-50" layout="row" :options="addressTypes.map((e) => e.nome)" />
-      <label-input v-model="address.address" id="endereco" label="Endereço" :disabled="isDisabled" class-label="text-sm"
-        class-input="w-full md:flex-grow" layout="row" />
-      <label-input v-model="address.city" id="cidade" label="Cidade" :disabled="isDisabled" class-label="text-sm"
-        class-input="w-full md:flex-grow md:w-40" layout="row" />
-      <label-select id="uf" label="UF" :disabled="isDisabled" class-label="text-sm" class-select="w-full md:w-20"
-        layout="row" :options="states.map((e) => e.uf)" />
+      <app-select-input v-model="address.addressType" label="Tipo Endereço" :disabled="isDisabled"
+        :items="addressTypes.map((e) => e.nome)" />
+      <form-field v-model="address.address" label="Endereço" :disabled="isDisabled"></form-field>
+      <app-select-input v-model="address.uf" @update:model-value="loadCities(address.uf)"
+        :items="states.map((e) => e.uf)" :disabled="isDisabled" label="UF" density="comfortable" width="100px" />
+      <app-select-input v-model="address.city" width="180px" label="Cidade"
+        :disabled="!address.uf || isDisabled || address.loadingCities || !locationStore.cities[address.uf]?.length"
+        :items="address.uf ? locationStore.cities[address.uf]?.map((e) => e.name) : []" />
       <div class="flex items-center gap-2 w-full md:w-auto">
-        <button @click="addEndereco()" v-tippy:right class="flex self-end" v-if="index === addresses.length - 1">
+        <button v-if="index === addresses.length - 1" v-tippy:right class="flex self-end" @click="addAddress()">
           <icon-add />
         </button>
-        <button @click="removeEndereco(index)" class="flex self-end">
+        <button class="flex self-end" @click="removeAddress(index)">
           <icon-close />
         </button>
       </div>
