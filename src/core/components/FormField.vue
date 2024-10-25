@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{
   placeholder?: string;
   message?: string;
   error?: boolean;
+  disabled?: boolean;
 }>(), {
   label: '',
   modelValue: '',
@@ -19,9 +20,10 @@ const props = withDefaults(defineProps<{
   placeholder: '',
   message: '',
   error: false,
+  disabled: false,
 })
 
-defineEmits(['update:modelValue'])
+defineEmits(['update:modelValue', 'submit']);
 
 const randomId = computed(() => {
   return uniqid('input-');
@@ -36,8 +38,9 @@ const randomId = computed(() => {
       {{ label }}
     </label>
     <input :id="id ?? randomId" :type="type" :value="modelValue" :placeholder="placeholder"
-      :class="`form-input ${props.class}`"
-      @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)">
+      :class="`form-input ${props.class}`" :disabled="disabled"
+      @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+      @keydown.enter="$emit('submit')">
     <div v-if="message">
       <p class="text-danger mt-1">{{ message }}</p>
     </div>
