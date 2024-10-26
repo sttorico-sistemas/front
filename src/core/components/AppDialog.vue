@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineEmits, defineProps, withDefaults } from 'vue';
+import { withDefaults } from 'vue';
 
 const props = withDefaults(defineProps<{
   modelValue?: boolean;
