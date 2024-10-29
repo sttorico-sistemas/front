@@ -1,10 +1,10 @@
 import { BaseModel } from "src/core/models/base.model";
-import { LocationCity } from "../types/location_city.d";
+import { Cidade } from "../types/cidade.d";
 
-export class LocationCityModel extends BaseModel implements LocationCity {
+export class CidadeModel extends BaseModel implements Cidade {
   public id: number;
-  public name: string;
-  public stateId: number;
+  public nome: string;
+  public estadoId: number;
   public ibgeId: number;
   public createdAt: Date;
   public updatedAt: Date;
@@ -12,8 +12,8 @@ export class LocationCityModel extends BaseModel implements LocationCity {
 
   constructor(private props: {
     id: number;
-    name: string;
-    stateId: number;
+    nome: string;
+    estadoId: number;
     ibgeId: number;
     createdAt: Date;
     updatedAt: Date;
@@ -21,8 +21,8 @@ export class LocationCityModel extends BaseModel implements LocationCity {
   }) {
     super();
     this.id = this.props.id;
-    this.name = this.props.name;
-    this.stateId = this.props.stateId;
+    this.nome = this.props.nome;
+    this.estadoId = this.props.estadoId;
     this.ibgeId = this.props.ibgeId;
     this.createdAt = this.props.createdAt;
     this.updatedAt = this.props.updatedAt;
@@ -32,8 +32,8 @@ export class LocationCityModel extends BaseModel implements LocationCity {
   toRecord(): Record<string, any> {
     return {
       id: this.id,
-      nome: this.name,
-      estado_id: this.stateId,
+      nome: this.nome,
+      estado_id: this.estadoId,
       ibge_id: this.ibgeId,
       created_at: this.createdAt,
       updated_at: this.updatedAt,
@@ -41,11 +41,11 @@ export class LocationCityModel extends BaseModel implements LocationCity {
     }
   }
 
-  static fromRecord(record: Record<string, any>): LocationCityModel {
-    return new LocationCityModel({
+  static fromRecord(record: Record<string, any>): CidadeModel {
+    return new CidadeModel({
       id: record.id,
-      name: record.nome,
-      stateId: record.estado_id,
+      nome: record.nome,
+      estadoId: record.estado_id,
       ibgeId: record.ibge_id,
       createdAt: new Date(record.created_at),
       updatedAt: new Date(record.updated_at),

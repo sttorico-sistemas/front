@@ -1,18 +1,18 @@
 import { defineStore } from "pinia";
-import { LocationState, StateCities } from "../types/location_state.d";
-import { LocationRepository } from "../repositories/location.repository";
+import { Estado, EstadoCidades } from "../types/estado.d";
+import { LocalizacaoRepository } from "../repositories/localizacao.repository";
 
-const locationRepository = new LocationRepository()
+const localizacaoRepository = new LocalizacaoRepository()
 
 export const locationStore = defineStore('locationStore', {
   state: () => ({
-    states: <LocationState[]>[],
-    cities: <StateCities>{},
+    states: <Estado[]>[],
+    cities: <EstadoCidades>{},
   }),
   actions: {
-    async getStates(): Promise<LocationState[]> {
+    async getStates(): Promise<Estado[]> {
       if (!this.states.length) {
-        const states = await locationRepository.getStates();
+        const states = await localizacaoRepository.getEstados();
         this.states = states;
       }
       return this.states;
@@ -25,7 +25,7 @@ export const locationStore = defineStore('locationStore', {
       if (this.cities[state.uf]?.length) {
         return;
       }
-      const cities = await locationRepository.getStateCities(stateId);
+      const cities = await localizacaoRepository.getEstadoCidades(stateId);
       this.cities[state.uf] = cities;
     }
   }

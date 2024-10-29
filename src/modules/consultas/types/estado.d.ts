@@ -1,6 +1,6 @@
-import { LocationCity } from "./location_city";
+import { Cidade } from "./cidade";
 
-export type StateUf =
+export type EstadoUf =
   | 'RO'
   | 'AC'
   | 'AM'
@@ -29,14 +29,14 @@ export type StateUf =
   | 'GO'
   | 'DF';
 
-export type StateCities = {
-  [key in StateUf]?: LocationCity[];
+export type EstadoCidades = {
+  [key in EstadoUf]?: Cidade[];
 };
 
-export interface LocationState {
+export interface Estado {
   id: number;
-  name: string;
-  uf: StateUf;
+  nome: string;
+  uf: EstadoUf;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;

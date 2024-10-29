@@ -6,11 +6,6 @@ import IconClose from 'src/core/components/Icons/IconClose.vue'
 import { Emitter, EventType } from 'mitt'
 import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from 'src/modules/configuracoes/stores/tabelas_auxiliares.store'
 import { TableValue } from 'src/modules/configuracoes/types/table_value'
-import { locationStore as _locationStore } from '../stores/location.store'
-import {
-  LocationState,
-  StateUf,
-} from '../types/location_state.d'
 import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue'
 import FormField from 'src/core/components/FormField.vue'
 
@@ -23,7 +18,7 @@ const props = withDefaults(
       address: string;
       city: string;
       loadingCities: boolean;
-      uf?: StateUf;
+      uf?: EstadoUf;
     }[];
   }>(),
   {
@@ -92,7 +87,7 @@ const removeAddress = (index: number) => {
   addresses.value.splice(index, 1)
 }
 
-const loadCities = async (stateUf?: StateUf) => {
+const loadCities = async (stateUf?: EstadoUf) => {
   const state = states.value.find((e) => e.uf === stateUf)
   if (state) {
     const address = addresses.value.find((e) => e.uf === state.uf);
@@ -107,6 +102,14 @@ onMounted(async () => {
   addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco')
   states.value = await locationStore.getStates()
   isDisabled.value = false
+  if (!props.modelValue.length) {
+    addresses.value.push({
+      address: '',
+      addressType: '',
+      loadingCities: false,
+      city: '',
+    },);
+  }
 })
 
 watch(

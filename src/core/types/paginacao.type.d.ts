@@ -1,4 +1,4 @@
-export type PaginationArgs = {
+export type PaginacaoArgs = {
   page: number;
   limit: number;
 };

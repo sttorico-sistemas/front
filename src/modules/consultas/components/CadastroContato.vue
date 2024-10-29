@@ -39,15 +39,6 @@ const contactTypes = ref<TableValue[]>([]);
 const contacts = ref(props.modelValue);
 
 const addContato = () => {
-  if (contacts.value.length >= 3) {
-    eventBus?.emit('alert', {
-      type: 'danger',
-      message: 'Limite máximo de contato é de 3'
-    })
-
-    return false
-  }
-
   if (!contacts.value[0].celular.length && !contacts.value[0].email.length) {
     eventBus?.emit('alert', {
       type: 'danger',
@@ -82,6 +73,14 @@ onMounted(async () => {
   const contactTypesResponse = await store.getValues('tipo-contato');
   contactTypes.value = contactTypesResponse;
   isDisabled.value = false;
+  if (!props.modelValue.length) {
+    contacts.value.push({
+      contactType: '',
+      telefone: '',
+      celular: '',
+      email: '',
+    });
+  }
 });
 
 watch(() => props.modelValue, (value) => {

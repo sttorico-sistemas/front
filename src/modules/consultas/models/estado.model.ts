@@ -1,10 +1,10 @@
 import { BaseModel } from "src/core/models/base.model";
-import { LocationState, StateUf } from "../types/location_state.d";
+import { Estado, EstadoUf } from "../types/estado";
 
-export class LocationStateModel extends BaseModel implements LocationState {
+export class EstadoModel extends BaseModel implements Estado {
   public id: number;
-  public name: string;
-  public uf: StateUf;
+  public nome: string;
+  public uf: EstadoUf;
   public createdAt: string;
   public updatedAt: string;
   public deletedAt: string;
@@ -12,8 +12,8 @@ export class LocationStateModel extends BaseModel implements LocationState {
 
   constructor(private props: {
     id: number;
-    name: string;
-    uf: StateUf;
+    nome: string;
+    uf: EstadoUf;
     createdAt: string;
     updatedAt: string;
     deletedAt: string;
@@ -21,7 +21,7 @@ export class LocationStateModel extends BaseModel implements LocationState {
   }) {
     super();
     this.id = this.props.id;
-    this.name = this.props.name;
+    this.nome = this.props.nome;
     this.uf = this.props.uf;
     this.createdAt = this.props.createdAt;
     this.updatedAt = this.props.updatedAt;
@@ -29,10 +29,10 @@ export class LocationStateModel extends BaseModel implements LocationState {
     this.ibgeId = this.props.ibgeId;
   }
 
-  static fromRecord(record: Record<string, any>): LocationState {
-    return new LocationStateModel({
+  static fromRecord(record: Record<string, any>): EstadoModel {
+    return new EstadoModel({
       id: record.id,
-      name: record.nome,
+      nome: record.nome,
       uf: record.uf,
       createdAt: record.created_at,
       updatedAt: record.updated_at,
@@ -44,7 +44,7 @@ export class LocationStateModel extends BaseModel implements LocationState {
   toRecord(): Record<string, any> {
     return {
       id: this.id,
-      nome: this.name,
+      nome: this.nome,
       uf: this.uf,
       created_at: this.createdAt,
       updated_at: this.updatedAt,

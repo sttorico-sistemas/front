@@ -1,7 +1,7 @@
-export interface LocationCity {
+export interface Cidade {
   id: number;
-  name: string;
-  stateId: number;
+  nome: string;
+  estadoId: number;
   ibgeId: number;
   createdAt: Date;
   updatedAt: Date;

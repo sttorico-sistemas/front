@@ -14,6 +14,9 @@ import IconPrinter from 'src/core/components/Icons/IconPrinter.vue'
 import IconCheck from 'src/core/components/Icons/IconCheck.vue'
 import IconBlock from 'src/core/components/Icons/IconBlock.vue'
 import { Col } from 'types/col.d'
+import { pessoaStore } from '../stores/pessoa.store'
+
+const store = pessoaStore();
 
 const isOpenDialog = ref(false)
 const selected = reactive({
@@ -188,9 +191,11 @@ const parseCols = () => {
       </div>
 
       <div class="datatable">
-        <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
-          :sortable="true" skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-          pagination-info="Mostrando {0} a {1} de {2} entradas">
+        <vue3-datatable :rows="store.pessoas" :columns="cols" :total-rows="store.total" :sortable="true"
+          skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
+          pagination-info="Mostrando {0} a {1} de {2} entradas" :loading="store.loadingPessoas" :page="store.pagina"
+          :page-size="store.limite" @change="(e: any) => store.goToPage(e.current_page)"
+          @page-size-change="(e: number) => store.setLimit(e)" :is-server-mode="true">
           <template #solicitado="data">
             <image-name image="https://placehold.co/30x30" :name="data.value.solicitado.nome" />
           </template>

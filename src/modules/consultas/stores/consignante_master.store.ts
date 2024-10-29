@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ConsignanteMasterRepository } from "../repositories/consignante_master.repository";
 import { ConsignanteMaster } from "../types/consignante_master";
 import { BaseError } from "src/core/errors/base.error";
-import { PaginationArgs } from "src/core/types/pagination.type";
+import { PaginacaoArgs } from "src/core/types/paginacao.type";
 import Swal from "sweetalert2";
 
 const consignanteMasterRepository = new ConsignanteMasterRepository();
@@ -33,7 +33,7 @@ export const consignanteMasterStore = defineStore('consignanteMaster', {
       this.filter = '';
       await this.getAllConsignantes(this.pagination);
     },
-    async getAllConsignantes(pagination?: PaginationArgs, query?: string) {
+    async getAllConsignantes(pagination?: PaginacaoArgs, query?: string) {
       try {
         this.loadingConsignantesMaster = true;
         const response = await consignanteMasterRepository.getAllConsignantesMaster({
@@ -52,8 +52,6 @@ export const consignanteMasterStore = defineStore('consignanteMaster', {
           });
           this.consignantesFilter = filterResponse.items.map((e) => e.nome);
         }
-      } catch (error) {
-        console.error(error);
       } finally {
         this.loadingConsignantesMaster = false;
       }

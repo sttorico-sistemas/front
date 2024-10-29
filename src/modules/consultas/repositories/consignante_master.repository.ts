@@ -2,12 +2,12 @@ import { useAxios } from "src/core/composables/use_axios";
 import { ConsignanteMaster } from "../types/consignante_master";
 import { ConsignanteMasterModel } from "../models/consignante_master.model";
 import { BaseError } from "src/core/errors/base.error";
-import { PaginatedResultOutput, PaginationArgs } from "src/core/types/pagination.type.d";
+import { PaginatedResultOutput, PaginacaoArgs } from "src/core/types/paginacao.type.d";
 
 export class ConsignanteMasterRepository {
   private http = useAxios();
 
-  async getAllConsignantesMaster(pagination?: PaginationArgs, query?: string): Promise<PaginatedResultOutput<ConsignanteMaster>> {
+  async getAllConsignantesMaster(pagination?: PaginacaoArgs, query?: string): Promise<PaginatedResultOutput<ConsignanteMaster>> {
     try {
       const response = await this.http.get('/consignante-master', {
         params: {

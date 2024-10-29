@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import titulo from 'src/core/components/Titulo.vue'
 import LabelInput from 'src/core/components/Inputs/InputLabel.vue'
 import IconEdit from 'src/core/components/Icons/IconEdit.vue'
 import CadastroEndereco from '../CadastroEndereco.vue';
 import CadastroContato from '../CadastroContato.vue';
+import { pessoaStore } from '../../stores/pessoa.store';
+import FormField from 'src/core/components/FormField.vue';
+import { Person } from '../../types/pessoa';
 
 const props = withDefaults(defineProps<{
   disabled?: boolean;
@@ -12,8 +15,19 @@ const props = withDefaults(defineProps<{
   disabled: true,
 });
 
+const store = pessoaStore();
+
 const isDisabled = ref(props.disabled)
 const emits = defineEmits(['btnSave', 'btnCancelar'])
+
+const pessoa = ref({
+  name: '',
+  cpf: '',
+  addresses: [],
+  contacts: [],
+  contratante: '',
+  vinculo: '',
+});
 </script>
 
 <template>
@@ -30,19 +44,15 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
       <div class="panel">
         <titulo title="Dados da Pessoa" class="mb-6" />
         <div class="flex flex-col md:flex-row gap-2.5">
-          <label-input type="cpf" id="cpf" label="CPF" :disabled="isDisabled" class-label="text-sm"
-            class-input="md:max-w-[150px]" layout="row" />
-          <label-input id="nome" label="Nome" :disabled="isDisabled" class-label="text-sm"
-            class-input="md:min-w-[400px]" layout="row" />
-          <label-input id="vinculo" label="Vínculo" :disabled="isDisabled" class-label="text-sm"
-            class-input="md:max-w-[200px]" layout="row" />
-          <label-input id="contratante" label="Contratante" :disabled="isDisabled" class-label="text-sm"
-            class-input="md:w-[300px]" layout="row" />
+          <form-field :disabled="isDisabled" v-model="pessoa.cpf" max-width="150px" label="CPF" />
+          <form-field :disabled="isDisabled" v-model="pessoa.name" min-width="400px" label="Nome" />
+          <form-field :disabled="isDisabled" v-model="pessoa.vinculo" max-width="200px" label="Vínculo" />
+          <form-field :disabled="isDisabled" v-model="pessoa.contratante" width="300px" label="Contratante" />
         </div>
       </div>
 
-      <cadastro-contato></cadastro-contato>
-      <cadastro-endereco></cadastro-endereco>
+      <cadastro-contato v-model="pessoa.contacts" />
+      <cadastro-endereco v-model="pessoa.addresses" />
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button type="button"
