@@ -4,7 +4,7 @@ import { LocalizacaoRepository } from "../repositories/localizacao.repository";
 
 const localizacaoRepository = new LocalizacaoRepository()
 
-export const locationStore = defineStore('locationStore', {
+export const localizacaoStore = defineStore('locationStore', {
   state: () => ({
     states: <Estado[]>[],
     cities: <EstadoCidades>{},
