@@ -6,7 +6,7 @@ import TabelaTipos from '../components/TabelasAuxiliares/TabelaTipos.vue';
 
 <template>
   <main>
-    <breadcrumbs :paginas="['Configuraçõess', 'Tabelas Auxiliares']" />
+    <breadcrumbs :paginas="['Configurações', 'Tabelas Auxiliares']" />
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-20">
       <tabela-tipos />
