@@ -3,7 +3,6 @@ import { reactive, ref } from 'vue'
 import breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 import titulo from 'src/core/components/Titulo.vue'
 import Vue3Datatable from '@bhplugin/vue3-datatable'
-import modalLayout from 'src/core/components/Modal.vue'
 import ConsultasCadastroPessoa from '../components/CadastroPessoa/CadastroPessoa.vue'
 import ConsultasExport from '../components/ConsultasExport.vue'
 import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue'
@@ -18,7 +17,6 @@ import { pessoaStore } from '../stores/pessoa.store'
 
 const store = pessoaStore();
 
-const isOpenDialog = ref(false)
 const selected = reactive({
   type: '',
   label: '',
@@ -77,11 +75,11 @@ const clearFilter = () => {
 const color = (value: string): string => {
   switch (value) {
     case 'Ativo':
-      return 'bg-success' // Ativo
+      return 'bg-success'
     case 'Liberada':
       return 'bg-success'
     case 'Inativo':
-      return 'bg-warning' // Inativo
+      return 'bg-warning'
     case 'Bloqueada':
       return 'bg-secondary'
     default:
@@ -144,7 +142,7 @@ const parseCols = () => {
 
         <div class="flex items-center gap-14">
           <titulo title="Pessoas Cadastradas" />
-          <button @click="isOpenDialog = true" v-tippy:right>
+          <button @click="store.toggleEditor(true)" v-tippy:right>
             <icon-add />
           </button>
           <tippy target="right" placement="right">Cadastre uma nova pessoa</tippy>
@@ -206,7 +204,7 @@ const parseCols = () => {
           <template #acao="data">
             <div class="flex">
               <div>
-                <button v-tippy:right type="button" class="text-xs m-1" @click="isOpenDialog = true">
+                <button v-tippy:right type="button" class="text-xs m-1" @click="store.toggleEditor(true)">
                   <icon-eye class="w-5 h-5 text-primary_3-table" />
                 </button>
                 <tippy target="right" placement="right">ver {{ data.value.id }}</tippy>
@@ -227,9 +225,9 @@ const parseCols = () => {
       </div>
     </div>
 
-    <modal-layout :is-open="isOpenDialog" size="max-w-full" @btn-close="isOpenDialog = false">
-      <consultas-cadastro-pessoa @btn-cancelar="isOpenDialog = false" />
-    </modal-layout>
+    <consultas-cadastro-pessoa />
+    <!-- <modal-layout :is-open="isOpenDialog" size="max-w-full" @btn-close="isOpenDialog = false"> -->
+    <!-- </modal-layout> -->
   </main>
 </template>
 
