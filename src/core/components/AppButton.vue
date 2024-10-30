@@ -30,7 +30,7 @@ const props = withDefaults(defineProps<{
   density: 'default',
   disabled: false,
   loading: false,
-  elevation: 2,
+  elevation: 0,
 });
 
 const variantClass = computed(() => {
@@ -71,15 +71,20 @@ const positionClass = computed(() => {
 
 const roundedClass = computed(() => {
   if (typeof props.rounded === 'number') {
-    return `rounded-${props.rounded}`;
+    return `rounded-[${props.rounded}px]`;
   }
   if (typeof props.rounded === 'object') {
-    if ('horizontal' in props.rounded && 'vertical' in props.rounded) {
-      return `rounded-t-${props.rounded.vertical} rounded-b-${props.rounded.horizontal}`;
-    }
-    return '';
+    const { top, bottom, left, right, horizontal, vertical } = props.rounded as any;
+    return [
+      top ? `rounded-t-[${top}px]` : '',
+      bottom ? `rounded-b-[${bottom}px]` : '',
+      left ? `rounded-l-[${left}px]` : '',
+      right ? `rounded-r-[${right}px]` : '',
+      horizontal ? `rounded-l-[${horizontal}px] rounded-r-[${horizontal}px]` : '',
+      vertical ? `rounded-t-[${vertical}px] rounded-b-[${vertical}px]` : '',
+    ].filter(Boolean).join(' ');
   }
-  return 'rounded-4';
+  return 'rounded-lg';
 });
 
 const colorClass = computed(() => {
@@ -87,7 +92,7 @@ const colorClass = computed(() => {
 });
 
 const shadowClass = computed(() => {
-  if (props.variant === 'elevated' && props.elevation !== undefined) {
+  if (props.variant === 'elevated' && props.elevation) {
     return `shadow-lg shadow-opacity-${props.elevation}`;
   }
   if (props.variant === 'outlined' || props.elevation === 0) {
