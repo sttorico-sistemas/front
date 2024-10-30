@@ -8,16 +8,18 @@ import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from 'src/modules/c
 import { TableValue } from 'src/modules/configuracoes/types/table_value'
 import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue'
 import FormField from 'src/core/components/FormField.vue'
+import { Estado, EstadoCidades, EstadoUf } from '../types/estado'
+import { localizacaoStore as _localizacaoStore } from '../stores/localizacao.store'
 
 const props = withDefaults(
   defineProps<{
     flat?: boolean
     showTitle?: boolean
     modelValue?: {
-      addressType: string;
-      address: string;
-      city: string;
-      loadingCities: boolean;
+      tipoEndereco: string;
+      endereco: string;
+      cidade: string;
+      loadingCidades: boolean;
       uf?: EstadoUf;
     }[];
   }>(),
@@ -26,10 +28,10 @@ const props = withDefaults(
     showTitle: true,
     modelValue: () => [
       {
-        address: '',
-        addressType: '',
-        loadingCities: false,
-        city: '',
+        endereco: '',
+        tipoEndereco: '',
+        loadingCidades: false,
+        cidade: '',
       },
     ],
   },
@@ -38,13 +40,13 @@ const props = withDefaults(
 const emit = defineEmits(['update:modelValue'])
 
 const tabelasAuxiliaresStore = _tabelasAuxiliaresStore()
-const locationStore = _locationStore()
+const localizacaoStore = _localizacaoStore()
 
 const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus')
 const isDisabled = ref(true)
 
 const addressTypes = ref<TableValue[]>([])
-const states = ref<LocationState[]>([])
+const states = ref<Estado[]>([])
 
 const addresses = ref(Array.from(props.modelValue))
 
@@ -59,7 +61,7 @@ const addAddress = () => {
 
   const lastAddress = addresses.value[addresses.value.length - 1]
 
-  if (!lastAddress.address || !lastAddress.city) {
+  if (!lastAddress.endereco || !lastAddress.cidade) {
     eventBus?.emit('alert', {
       type: 'danger',
       message: 'Preencha os campos obrigatórios!',
@@ -68,10 +70,10 @@ const addAddress = () => {
   }
 
   addresses.value.push({
-    addressType: '',
-    address: '',
-    city: '',
-    loadingCities: false,
+    tipoEndereco: '',
+    endereco: '',
+    cidade: '',
+    loadingCidades: false,
   })
 }
 
@@ -91,23 +93,23 @@ const loadCities = async (stateUf?: EstadoUf) => {
   const state = states.value.find((e) => e.uf === stateUf)
   if (state) {
     const address = addresses.value.find((e) => e.uf === state.uf);
-    address!.loadingCities = true;
-    await locationStore.getStateCitites(state.id);
-    address!.loadingCities = false;
+    address!.loadingCidades = true;
+    await localizacaoStore.getStateCitites(state.id);
+    address!.loadingCidades = false;
   }
 }
 
 onMounted(async () => {
   isDisabled.value = true
   addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco')
-  states.value = await locationStore.getStates()
+  states.value = await localizacaoStore.getStates()
   isDisabled.value = false
   if (!props.modelValue.length) {
     addresses.value.push({
-      address: '',
-      addressType: '',
-      loadingCities: false,
-      city: '',
+      endereco: '',
+      tipoEndereco: '',
+      loadingCidades: false,
+      cidade: '',
     },);
   }
 })
@@ -143,8 +145,8 @@ watch(
       <app-select-input v-model="address.uf" @update:model-value="loadCities(address.uf)"
         :items="states.map((e) => e.uf)" :disabled="isDisabled" label="UF" density="comfortable" width="100px" />
       <app-select-input v-model="address.city" width="180px" label="Cidade"
-        :disabled="!address.uf || isDisabled || address.loadingCities || !locationStore.cities[address.uf]?.length"
-        :items="address.uf ? locationStore.cities[address.uf]?.map((e) => e.name) : []" />
+        :disabled="!address.uf || isDisabled || address.loadingCidades || !localizacaoStore.cities[address.uf as EstadoUf]?.length"
+        :items="address.uf ? localizacaoStore.cities[address.uf as EstadoUf]?.map((e) => e.nome) : []" />
       <div class="flex items-center gap-2 w-full md:w-auto">
         <button v-if="index === addresses.length - 1" v-tippy:right class="flex self-end" @click="addAddress()">
           <icon-add />
