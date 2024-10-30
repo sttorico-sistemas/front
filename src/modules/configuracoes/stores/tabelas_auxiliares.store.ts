@@ -31,8 +31,16 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
       const tables = await tabelasAuxiliaresRepository.getAllTables();
       this.tables = tables;
       this.selectedTable = tables[0]?.url;
+      if (this.selectedTable) {
+        return await this.getValues();
+      }
       this.loadingData = false;
-      await this.getValues();
+      Swal.fire({
+        icon: 'error',
+        title: 'Nenhum tipo cadastrado.',
+        showConfirmButton: false,
+        timer: 1500,
+      })
     },
     async getValues(tableId?: TableURL) {
       this.loadingData = true;
