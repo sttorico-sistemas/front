@@ -26,9 +26,13 @@ export const pessoaStore = defineStore('pessoaStore', {
       vinculo: '',
     },
     loadingPessoas: false,
+    showEditor: false,
     error: '',
   }),
   actions: {
+    toggleEditor(show?: boolean) {
+      this.showEditor = show ?? !this.showEditor;
+    },
     async applyFilter<K extends keyof FiltrosPessoa>(key: K) { },
     async clearFilter() { },
     async getAllPessoas(pagination?: PaginacaoArgs) {
@@ -92,6 +96,7 @@ export const pessoaStore = defineStore('pessoaStore', {
           await pessoaRepository.createPerson(pessoa);
         }
         await this.getAllPessoas();
+        this.showEditor = false;
         Swal.fire({
           icon: 'success',
           title: 'Pessoa criada!',
