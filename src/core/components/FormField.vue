@@ -18,6 +18,7 @@ const props = withDefaults(defineProps<{
   maxHeight?: string;
   width?: string;
   height?: string;
+  mask?: 'cel' | 'tel' | 'cpf' | 'cnpj' | string;
 }>(), {
   label: '',
   modelValue: '',
@@ -34,6 +35,17 @@ defineEmits(['update:modelValue', 'submit']);
 const randomId = computed(() => {
   return uniqid('input-');
 });
+
+const mask = computed(() => {
+  switch (props.mask) {
+    case '':
+      
+      break;
+  
+    default:
+      break;
+  }
+})
 </script>
 
 <template>
