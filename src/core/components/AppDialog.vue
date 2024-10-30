@@ -53,7 +53,6 @@ const closeModal = () => {
 
         <div class="px-5 pb-5 flex justify-end items-center mt-5">
           <slot name="actions">
-            <button type="button" class="btn btn-outline-danger" @click="closeModal">Close</button>
           </slot>
         </div>
       </div>
