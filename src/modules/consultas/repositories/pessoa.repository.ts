@@ -82,132 +82,133 @@ import { Contato } from "../types/contato";
 import { Endereco } from "../types/endereco";
 
 export class PessoaRepository {
-  private localStorageKey = 'pessoaRepository';
+	private localStorageKey = 'pessoaRepository';
 
-  private getPessoaModel(pessoa: Pessoa): PessoaModel {
-    return new PessoaModel({
-      id: pessoa.id,
-      cpf: pessoa.cpf,
-      nome: pessoa.nome,
-      vinculo: pessoa.vinculo,
-      contratante: pessoa.contratante,
-      contatos: pessoa.contatos,
-      enderecos: pessoa.enderecos,
-    });
-  }
+	private getPessoaModel(pessoa: Pessoa): PessoaModel {
+		return new PessoaModel({
+			id: pessoa.id,
+			cpf: pessoa.cpf,
+			nome: pessoa.nome,
+			vinculo: pessoa.vinculo,
+			contratante: pessoa.contratante,
+			contatos: pessoa.contatos,
+			enderecos: pessoa.enderecos,
+		});
+	}
 
-  private async loadFromLocalStorage(): Promise<Pessoa[]> {
-    const storedData = localStorage.getItem(this.localStorageKey);
-    if (storedData) {
-      return JSON.parse(storedData).map((p: Record<string, any>) => PessoaModel.fromRecord(p));
-    }
-    return [];
-  }
+	private async loadFromLocalStorage(): Promise<Pessoa[]> {
+		const storedData = localStorage.getItem(this.localStorageKey);
+		if (storedData) {
+			return JSON.parse(storedData).map((p: Record<string, any>) => PessoaModel.fromRecord(p));
+		}
+		return [];
+	}
 
-  private async saveToLocalStorage(pessoas: Pessoa[]): Promise<void> {
-    localStorage.setItem(this.localStorageKey, JSON.stringify(pessoas.map(p => this.getPessoaModel(p).toRecord())));
-  }
+	private async saveToLocalStorage(pessoas: Pessoa[]): Promise<void> {
+		localStorage.setItem(this.localStorageKey, JSON.stringify(pessoas.map(p => this.getPessoaModel(p).toRecord())));
+	}
 
-  async getAllPersons(pagination?: PaginacaoArgs, query?: string): Promise<PaginatedResultOutput<Pessoa>> {
-    try {
-      // Load from local storage
-      const localPersons = await this.loadFromLocalStorage();
-      // Filter by query
-      const filteredPersons = query ? localPersons.filter(p => p.nome.toLowerCase().includes(query.toLowerCase())) : localPersons;
-      // Apply pagination
-      const startIndex = (pagination?.page ?? 1 - 1) * (pagination?.limit ?? 10);
-      const endIndex = startIndex + (pagination?.limit ?? 10);
-      const paginatedPersons = filteredPersons.slice(startIndex, endIndex);
-      return {
-        total: filteredPersons.length,
-        items: paginatedPersons,
-      };
-    } catch (error) {
-      throw BaseError.fromHttpError(error);
-    }
-  }
+	async getAllPersons(pagination?: PaginacaoArgs, query?: string): Promise<PaginatedResultOutput<Pessoa>> {
+		try {
+			// Load from local storage
+			const localPersons = await this.loadFromLocalStorage();
+			// Filter by query
+			const filteredPersons = query ? localPersons.filter(p => p.nome.toLowerCase().includes(query.toLowerCase())) : localPersons;
+			// Apply pagination
+			const startIndex = ((pagination?.page ?? 1) - 1) * (pagination?.limit ?? 10);
+			const endIndex = startIndex + (pagination?.limit ?? 10);
+			const paginatedPersons = filteredPersons.slice(startIndex, endIndex);
+			const response = {
+				total: filteredPersons.length,
+				items: paginatedPersons,
+			};
+			return response;
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
 
-  async getPersonById(id: number): Promise<Pessoa | undefined> {
-    try {
-      const localPersons = await this.loadFromLocalStorage();
-      const pessoa = localPersons.find(p => p.id === id);
-      return pessoa;
-    } catch (error) {
-      throw BaseError.fromHttpError(error);
-    }
-  }
+	async getPersonById(id: number): Promise<Pessoa | undefined> {
+		try {
+			const localPersons = await this.loadFromLocalStorage();
+			const pessoa = localPersons.find(p => p.id === id);
+			return pessoa;
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
 
-  async createPerson(pessoa: {
-    cpf: string;
-    nome: string;
-    vinculo: string;
-    contratante: string;
-    enderecos: Endereco[],
-    contatos: Contato[],
-  }): Promise<Pessoa> {
-    try {
-      // Create pessoa
-      const pessoaModel = this.getPessoaModel({
-        id: 12,
-        ...pessoa,
-      });
-      // Load from local storage
-      const localPersons = await this.loadFromLocalStorage();
-      // Add pessoa to local storage
-      localPersons.push(pessoaModel);
-      await this.saveToLocalStorage(localPersons);
-      return pessoaModel;
-    } catch (error) {
-      throw BaseError.fromHttpError(error);
-    }
-  }
+	async createPerson(pessoa: {
+		cpf: string;
+		nome: string;
+		vinculo: string;
+		contratante: string;
+		enderecos: Endereco[],
+		contatos: Contato[],
+	}): Promise<Pessoa> {
+		try {
+			// Create pessoa
+			const pessoaModel = this.getPessoaModel({
+				id: 12,
+				...pessoa,
+			});
+			// Load from local storage
+			const localPersons = await this.loadFromLocalStorage();
+			// Add pessoa to local storage
+			localPersons.push(pessoaModel);
+			await this.saveToLocalStorage(localPersons);
+			return pessoaModel;
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
 
-  async updatePerson(pessoa: Pessoa): Promise<void> {
-    try {
-      // Update pessoa
-      const pessoaModel = this.getPessoaModel(pessoa);
-      // Load from local storage
-      const localPersons = await this.loadFromLocalStorage();
-      // Find pessoa in local storage
-      const index = localPersons.findIndex(p => p.cpf === pessoa.cpf);
-      if (index !== -1) {
-        // Update pessoa in local storage
-        localPersons[index] = pessoaModel;
-        await this.saveToLocalStorage(localPersons);
-      } else {
-        throw new BaseError({
-          code: 404,
-          message: 'Person not found',
-          errors: {},
-        },
-        );
-      }
-    } catch (error) {
-      throw BaseError.fromHttpError(error);
-    }
-  }
+	async updatePerson(pessoa: Pessoa): Promise<void> {
+		try {
+			// Update pessoa
+			const pessoaModel = this.getPessoaModel(pessoa);
+			// Load from local storage
+			const localPersons = await this.loadFromLocalStorage();
+			// Find pessoa in local storage
+			const index = localPersons.findIndex(p => p.cpf === pessoa.cpf);
+			if (index !== -1) {
+				// Update pessoa in local storage
+				localPersons[index] = pessoaModel;
+				await this.saveToLocalStorage(localPersons);
+			} else {
+				throw new BaseError({
+					code: 404,
+					message: 'Person not found',
+					errors: {},
+				},
+				);
+			}
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
 
-  async deletePerson(cpf: string): Promise<void> {
-    try {
-      // Delete pessoa
-      // Load from local storage
-      const localPersons = await this.loadFromLocalStorage();
-      // Find pessoa in local storage
-      const index = localPersons.findIndex(p => p.cpf === cpf);
-      if (index !== -1) {
-        // Remove pessoa from local storage
-        localPersons.splice(index, 1);
-        await this.saveToLocalStorage(localPersons);
-      } else {
-        throw new BaseError({
-          code: 404,
-          message: 'Person not found',
-          errors: {},
-        },
-        );
-      }
-    } catch (error) {
-      throw BaseError.fromHttpError(error);
-    }
-  }
+	async deletePerson(cpf: string): Promise<void> {
+		try {
+			// Delete pessoa
+			// Load from local storage
+			const localPersons = await this.loadFromLocalStorage();
+			// Find pessoa in local storage
+			const index = localPersons.findIndex(p => p.cpf === cpf);
+			if (index !== -1) {
+				// Remove pessoa from local storage
+				localPersons.splice(index, 1);
+				await this.saveToLocalStorage(localPersons);
+			} else {
+				throw new BaseError({
+					code: 404,
+					message: 'Person not found',
+					errors: {},
+				},
+				);
+			}
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
 }
