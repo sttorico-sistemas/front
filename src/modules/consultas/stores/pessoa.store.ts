@@ -25,6 +25,17 @@ export const pessoaStore = defineStore('pessoaStore', {
 			status: '',
 			vinculo: '',
 		},
+		editingPessoa: <Omit<Pessoa, 'id'>>{
+			nome: '',
+			cpf: '',
+			email: '',
+			contratante: '',
+			tpVinculo: '',
+			cidade: '',
+			status: '',
+			enderecos: [],
+			contatos: [],
+		},
 		loadingPessoas: false,
 		showEditor: false,
 		error: '',
@@ -32,6 +43,21 @@ export const pessoaStore = defineStore('pessoaStore', {
 	actions: {
 		toggleEditor(show?: boolean) {
 			this.showEditor = show ?? !this.showEditor;
+		},
+		updateEditingPessoa(pessoa: {
+			[K in keyof Pessoa]?: Pessoa[K];
+		}) {
+			this.editingPessoa = {
+				nome: pessoa.nome ?? this.editingPessoa.nome,
+				cpf: pessoa.cpf ?? this.editingPessoa.cpf,
+				email: pessoa.email ?? this.editingPessoa.email,
+				contratante: pessoa.contratante ?? this.editingPessoa.contratante,
+				tpVinculo: pessoa.tpVinculo ?? this.editingPessoa.tpVinculo,
+				cidade: pessoa.cidade ?? this.editingPessoa.cidade,
+				status: pessoa.status ?? this.editingPessoa.status,
+				enderecos: pessoa.enderecos ?? this.editingPessoa.enderecos,
+				contatos: pessoa.contatos ?? this.editingPessoa.contatos,
+			};
 		},
 		async applyFilter<K extends keyof FiltrosPessoa>(key: K) { },
 		async clearFilter() { },
@@ -80,8 +106,11 @@ export const pessoaStore = defineStore('pessoaStore', {
 			id?: number;
 			cpf: string;
 			nome: string;
-			vinculo: string;
+			tpVinculo: string;
 			contratante: string;
+			cidade?: string;
+			email?: string;
+			status?: string;
 			enderecos: Endereco[],
 			contatos: Contato[],
 		}) {

@@ -14,7 +14,7 @@ const store = tabelasAuxiliaresStore();
 const props = withDefaults(
 	defineProps<{
 		modelValue?: {
-			contactType: string;
+			tipoContatoId: number;
 			telefone: string;
 			celular: string;
 			email: string;
@@ -23,7 +23,7 @@ const props = withDefaults(
 	{
 		modelValue: () => [
 			{
-				contactType: '',
+				tipoContatoId: 0,
 				telefone: '',
 				celular: '',
 				email: '',
@@ -52,7 +52,7 @@ const addContato = () => {
 	}
 
 	contacts.value.push({
-		contactType: '',
+		tipoContatoId: 0,
 		telefone: '',
 		celular: '',
 		email: '',
@@ -74,7 +74,7 @@ const removeContato = (index: number) => {
 onMounted(async () => {
 	if (!props.modelValue.length) {
 		contacts.value.push({
-			contactType: '',
+			tipoContatoId: 0,
 			telefone: '',
 			celular: '',
 			email: '',

@@ -21,15 +21,6 @@ const props = withDefaults(
 const store = pessoaStore();
 
 const isDisabled = ref(props.disabled);
-
-const pessoa = ref({
-	nome: '',
-	cpf: '',
-	enderecos: [],
-	contatos: [],
-	contratante: '',
-	vinculo: '',
-});
 </script>
 
 <template>
@@ -55,33 +46,42 @@ const pessoa = ref({
 					<form-field
 						mask="cpf"
 						:disabled="isDisabled"
-						v-model="pessoa.cpf"
+						:model-value="store.editingPessoa.cpf"
+						@update:model-value="store.updateEditingPessoa({ cpf: $event })"
 						max-width="150px"
 						label="CPF"
 					/>
 					<form-field
 						:disabled="isDisabled"
-						v-model="pessoa.nome"
+						:model-value="store.editingPessoa.nome"
+						@update:model-value="store.updateEditingPessoa({ nome: $event })"
 						min-width="400px"
 						label="Nome"
 					/>
 					<form-field
 						:disabled="isDisabled"
-						v-model="pessoa.vinculo"
+						:model-value="store.editingPessoa.nome"
+						@update:model-value="store.updateEditingPessoa({ nome: $event })"
 						max-width="200px"
 						label="Vínculo"
 					/>
 					<form-field
 						:disabled="isDisabled"
-						v-model="pessoa.contratante"
+						:model-value="store.editingPessoa.contratante"
+						@update:model-value="
+							store.updateEditingPessoa({ contratante: $event })
+						"
 						width="300px"
 						label="Contratante"
 					/>
 				</div>
 			</div>
 
-			<cadastro-contato v-model="pessoa.contatos" />
-			<cadastro-endereco v-model="pessoa.enderecos" />
+			<cadastro-contato
+				:model-value="store.editingPessoa.contatos"
+				@update:model-value="store.updateEditingPessoa({ contatos: $event })"
+			/>
+			<cadastro-endereco :model-value="store.editingPessoa.enderecos" />
 
 			<div class="flex justify-center items-center gap-12 mt-8">
 				<app-button

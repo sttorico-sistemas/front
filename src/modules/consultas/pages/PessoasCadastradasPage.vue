@@ -14,6 +14,9 @@ import IconCheck from 'src/core/components/Icons/IconCheck.vue';
 import IconBlock from 'src/core/components/Icons/IconBlock.vue';
 import { Col } from 'types/col.d';
 import { pessoaStore } from '../stores/pessoa.store';
+import IconEdit from 'src/core/components/Icons/IconEdit.vue';
+import IconDelete from 'src/core/components/Icons/IconDelete.vue';
+import AppButton from 'src/core/components/AppButton.vue';
 
 const store = pessoaStore();
 
@@ -31,9 +34,9 @@ const cols = reactive<Col[]>([
 	{ field: 'id', title: 'ID', hide: true },
 	{ field: 'nome', title: 'Nome', hide: false },
 	{ field: 'cpf', title: 'CPF', hide: false },
-	{ field: 'vinculo', title: 'Tp Vínculo', hide: false },
+	{ field: 'tpVinculo', title: 'Tp Vínculo', hide: false },
 	{ field: 'cidade', title: 'Cidade', hide: false, sort: false },
-	{ field: 'celular', title: 'Celular', hide: false, sort: false },
+	// { field: 'celular', title: 'Celular', hide: false, sort: false },
 	{ field: 'email', title: 'E-mail', hide: false, sort: false },
 	{ field: 'status', title: 'Status', hide: false, sort: false },
 	{ field: 'acao', title: 'Ação', hide: false, sort: false },
@@ -294,10 +297,10 @@ onMounted(() => {
 									class="text-xs m-1"
 									@click="store.toggleEditor(true)"
 								>
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right"
-									>ver {{ data.value.id }}</tippy
+									>Editar {{ data.value.nome }}</tippy
 								>
 							</div>
 							<div>
@@ -315,6 +318,12 @@ onMounted(() => {
 										}}
 									</tippy>
 								</div>
+							</div>
+							<div>
+								<button v-tippy:right type="button" class="text-xs m-1">
+									<icon-delete class="w-5 h-5 text-primary_3-table" />
+								</button>
+								<tippy target="right" placement="right">Deletar</tippy>
 							</div>
 						</div>
 					</template>
