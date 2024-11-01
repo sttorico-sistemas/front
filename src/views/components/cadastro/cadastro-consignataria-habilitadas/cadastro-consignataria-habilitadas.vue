@@ -33,7 +33,7 @@
   import ConsultasExport from '../../consultas/consultas-export/consultas-export.vue'
 
 	import cadastroModalHabilitarConsignatarias from '../cadastro-modal-habilitar-consignatarias/cadastro-modal-habilitar-consignatarias.vue'
-	import modalHabilitarPontoVenda from '../modal-habilitar-ponto-venda/modal-habilitar-ponto-venda.vue'
+	import modalListarPontoVenda from '../modal-listar-ponto-venda/modal-listar-ponto-venda.vue'
 	import modalListarBackoffice from '../modal-listar-backoffice/modal-listar-backoffice.vue'
 
 	// Icons
@@ -438,15 +438,12 @@
 		</modal-layout>
 
 		<modal-layout
-			title="Habilitar Pontos de Venda para Consignante"
+			title="Pontos de Venda Habilitados"
 			:is-open="isOpenDialogPontoVenda"
 			size="max-w-full"
 			@btn-close="isOpenDialogPontoVenda = false"
 		>
-			<template #icon>
-				<component :is="IconShieldUser" />
-			</template>
-			<modal-habilitar-ponto-venda @btn-cancelar="isOpenDialogPontoVenda = false" />
+			<modal-listar-ponto-venda @btn-cancelar="isOpenDialogPontoVenda = false" />
 		</modal-layout>
 
 		<modal-layout

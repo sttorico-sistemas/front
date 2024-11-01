@@ -4,8 +4,8 @@
   // Componentes
   import Vue3Datatable from '@bhplugin/vue3-datatable'
   import titulo from '@components/layout/tituloLayout.vue'
-  import modalLayout from '@components/layout/modalLayout.vue'
-  import modalHabilitarBackoffice from './modal-habilitar-backoffice/modal-habilitar-backoffice.vue'
+  import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
+  import inputReadOnly from '@components/layout/forms/inputs/inputReadonly.vue'
 
   // Icones
   import IconAdd from '@icons/iconAdd.vue'
@@ -19,7 +19,7 @@
 		label: '',
 	})
   const cols = reactive([
-		{ field: 'backoffice', title: 'Backoffice', hide: false, sort: true, },
+    { field: 'backoffice', title: 'Backoffice', hide: false, sort: true, },
 		{ field: 'setor', title: 'Setor', hide: false, sort: true, },
 		{ field: 'cidade', title: 'Cidade', hide: false, sort: true, },
 		{ field: 'uf', title: 'UF', hide: false, sort: true, },
@@ -27,7 +27,7 @@
 		{ field: 'actions', title: 'Ações', hide: false, sort: false, },
 	])
 	const rows = reactive([
-		{
+  {
       id: 1,
       backoffice: 'Agência Centro Florianópolis',
       setor: 'Agência',
@@ -61,7 +61,7 @@
 		}
 	}
 
-	const filtered = (value: string = '') => {
+  const filtered = (value: string = '') => {
 		if (value === '') return rows
 
     if (selected.type === 'backoffice')
@@ -82,21 +82,19 @@
   <div class="panel mt-4">
     <div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
       <div class="flex items-center gap-14">
-        <titulo title="Backoffice" />
+        <titulo title="Pontos de Venda" />
         <button @click="isOpenDialog = true" v-tippy:right>
           <icon-add />
         </button>
         <tippy target="right" placement="right">Cadastre um nova cidade</tippy>
       </div>
 
-      <div
-        class="header_actions flex items-center gap-5"
-      >
+      <div class="header_actions flex items-center gap-5">
         <multiselect
           v-model="backoffice"
           :options="['Agência Centro Florianópolis', 'PAB - Prefeitura Florianópolis']"
           class="custom-multiselect md:min-w-[150px]"
-          placeholder="Backoffice"
+          placeholder="PDV"
           :searchable="false"
           :preselect-first="false"
           :allow-empty="false"
@@ -109,7 +107,7 @@
           v-model="setor"
           :options="['Agência', 'PAB']"
           class="custom-multiselect md:min-w-[150px]"
-          placeholder="Setor"
+          placeholder="Tipo PDV"
           :searchable="false"
           :preselect-first="false"
           :allow-empty="false"
@@ -146,7 +144,6 @@
         />
       </div>
     </div>
-
     <div class="datatable">
       <vue3-datatable
         :rows="filtered(selected.label)"
@@ -183,16 +180,8 @@
         type="button"
         class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
         @click="emits('btnCancelar', false)"
-      >Fechar</button>
+      >Cancelar</button>
+      <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
     </div>
-
-    <modal-layout
-      :is-open="isOpenDialog"
-      title="Habilitar Backoffice"
-      size="max-w-[400px]"
-      @btn-close="isOpenDialog = false"
-    >
-      <modal-habilitar-backoffice @btn-cancelar="isOpenDialog = false" />
-    </modal-layout>
   </div>
 </template>
