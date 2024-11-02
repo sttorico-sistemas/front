@@ -45,8 +45,14 @@ export class PessoaModel extends BaseModel implements Pessoa {
 			email: e.email,
 		}));
 		this.enderecos = this.props.enderecos.map((e) => new EnderecoModel({
+			id: e.id,
+			cep: e.cep,
+			cidade: e.cidade,
+			createdAt: e.createdAt,
+			deletedAt: e.deletedAt,
+			updatedAt: e.updatedAt,
 			tipoEnderecoId: e.tipoEnderecoId,
-			endereco: e.endereco,
+			logradouro: e.logradouro,
 			cidadeId: e.cidadeId,
 		}));
 	}

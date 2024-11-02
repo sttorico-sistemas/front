@@ -8,6 +8,7 @@ import { pessoaStore } from '../../stores/pessoa.store';
 import FormField from 'src/core/components/FormField.vue';
 import AppButton from 'src/core/components/AppButton.vue';
 import AppDialog from 'src/core/components/AppDialog.vue';
+import CircularProgress from 'src/core/components/CircularProgress.vue';
 
 const props = withDefaults(
 	defineProps<{
@@ -20,7 +21,7 @@ const props = withDefaults(
 
 const store = pessoaStore();
 
-const isDisabled = ref(props.disabled);
+const isDisabled = ref(props.disabled || store.fetchingPessoa);
 </script>
 
 <template>
@@ -60,7 +61,7 @@ const isDisabled = ref(props.disabled);
 					/>
 					<form-field
 						:disabled="isDisabled"
-						:model-value="store.editingPessoa.nome"
+						:model-value="store.editingPessoa.tpVinculo"
 						@update:model-value="store.updateEditingPessoa({ nome: $event })"
 						max-width="200px"
 						label="Vínculo"
@@ -78,10 +79,18 @@ const isDisabled = ref(props.disabled);
 			</div>
 
 			<cadastro-contato
+				v-if="!store.fetchingPessoa"
 				:model-value="store.editingPessoa.contatos"
 				@update:model-value="store.updateEditingPessoa({ contatos: $event })"
 			/>
-			<cadastro-endereco :model-value="store.editingPessoa.enderecos" />
+			<cadastro-endereco
+				v-if="!store.fetchingPessoa"
+				:model-value="store.editingPessoa.enderecos"
+				@update:model-value="store.updateEditingPessoa({ enderecos: $event })"
+			/>
+			<div class="flex justify-center mt-8" v-else>
+				<circular-progress :size="40" />
+			</div>
 
 			<div class="flex justify-center items-center gap-12 mt-8">
 				<app-button
@@ -95,7 +104,7 @@ const isDisabled = ref(props.disabled);
 				<app-button
 					width="86px"
 					density="comfortable"
-					@click="store.savePerson(pessoa)"
+					@click="store.savePerson()"
 				>
 					Salvar
 				</app-button>

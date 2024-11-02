@@ -10,28 +10,50 @@ import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue';
 import FormField from 'src/core/components/FormField.vue';
 import { Estado, EstadoUf } from '../types/estado.d';
 import { localizacaoStore as _localizacaoStore } from '../stores/localizacao.store';
+import { Endereco } from '../types/endereco';
+import { pessoaStore as _pessoaStore } from '../stores/pessoa.store';
+
+interface IEndereco extends Endereco {
+	loadingCidades?: boolean;
+	tipoEndereco?: string;
+}
 
 const props = withDefaults(
 	defineProps<{
 		flat?: boolean;
 		showTitle?: boolean;
-		modelValue?: {
-			tipoEndereco: string;
-			endereco: string;
-			cidade: string;
-			loadingCidades: boolean;
-			uf?: EstadoUf;
-		}[];
+		modelValue?: IEndereco[];
 	}>(),
 	{
 		flat: false,
 		showTitle: true,
 		modelValue: () => [
 			{
-				endereco: '',
-				tipoEndereco: '',
+				id: 0,
+				cep: '',
+				cidade: {
+					id: 0,
+					nome: '',
+					estadoId: 0,
+					estado: {
+						id: 0,
+						ibgeId: 0,
+						nome: '',
+						uf: 'RO',
+						updatedAt: new Date(),
+						createdAt: new Date(),
+					},
+					ibgeId: 0,
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				},
+				logradouro: '',
+				tipoEnderecoId: 0,
+				cidadeId: 0,
+				createdAt: new Date(),
+				updatedAt: new Date(),
 				loadingCidades: false,
-				cidade: '',
+				tipoEndereco: '',
 			},
 		],
 	},
@@ -41,6 +63,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const tabelasAuxiliaresStore = _tabelasAuxiliaresStore();
 const localizacaoStore = _localizacaoStore();
+const pessoaStore = _pessoaStore();
 
 const eventBus = inject<Emitter<Record<EventType, unknown>>>('eventBus');
 const isDisabled = ref(true);
@@ -48,20 +71,33 @@ const isDisabled = ref(true);
 const addressTypes = ref<TableValue[]>([]);
 const states = ref<Estado[]>([]);
 
-const addresses = ref(Array.from(props.modelValue));
+const addresses = ref<
+	{
+		id?: number;
+		tipoEndereco: string;
+		logradouro: string;
+		uf: EstadoUf;
+		cidade: string;
+		loadingCidades: boolean;
+	}[]
+>(
+	props.modelValue.map((e) => ({
+		id: e.id,
+		tipoEndereco:
+			pessoaStore.tipoEnderecos.find(
+				(tipoEndereco) => tipoEndereco.id == e.tipoEnderecoId,
+			)?.nome ?? '',
+		logradouro: e.logradouro,
+		uf: e.cidade.estado?.uf ?? 'RO',
+		cidade: e.cidade.nome,
+		loadingCidades: false,
+	})),
+);
 
 const addAddress = () => {
-	if (addresses.value.length >= 3) {
-		eventBus?.emit('alert', {
-			type: 'danger',
-			message: 'Limite máximo de contato é de 3',
-		});
-		return false;
-	}
-
 	const lastAddress = addresses.value[addresses.value.length - 1];
 
-	if (!lastAddress.endereco || !lastAddress.cidade) {
+	if (!lastAddress.logradouro || !lastAddress.cidade) {
 		eventBus?.emit('alert', {
 			type: 'danger',
 			message: 'Preencha os campos obrigatórios!',
@@ -70,9 +106,10 @@ const addAddress = () => {
 	}
 
 	addresses.value.push({
-		tipoEndereco: '',
-		endereco: '',
 		cidade: '',
+		logradouro: '',
+		tipoEndereco: '',
+		uf: 'RO',
 		loadingCidades: false,
 	});
 };
@@ -102,37 +139,120 @@ const loadCities = async (stateUf?: EstadoUf) => {
 onMounted(async () => {
 	if (!props.modelValue.length) {
 		addresses.value.push({
-			endereco: '',
-			tipoEndereco: '',
-			loadingCidades: false,
 			cidade: '',
+			logradouro: '',
+			tipoEndereco: '',
+			uf: 'RO',
+			loadingCidades: false,
 		});
 	}
 	isDisabled.value = true;
 	addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco');
 	states.value = await localizacaoStore.getStates();
+	loadCities('RO');
 	isDisabled.value = false;
 });
 
 watch(
 	() => props.modelValue,
 	(value) => {
-		addresses.value = value;
+		addresses.value = value.map((e) => ({
+			id: e.id,
+			cidade: e.cidade.nome,
+			logradouro: e.logradouro,
+			tipoEndereco:
+				pessoaStore.tipoEnderecos.find(
+					(tipoEndereco) => e.tipoEnderecoId == tipoEndereco.id,
+				)?.nome ?? '',
+			uf: e.cidade.estado?.uf ?? 'RO',
+			loadingCidades: false,
+		}));
 	},
 	{
 		deep: true,
 	},
 );
 
-watch(
-	addresses,
-	(value) => {
-		emit('update:modelValue', value);
-	},
-	{
-		deep: true,
-	},
-);
+const updateEndereco = () => {
+	emit(
+		'update:modelValue',
+		addresses.value.map((e): Endereco => {
+			const currentEndereco = props.modelValue.find(
+				(endereco) => endereco.id === e.id,
+			);
+			const updatedCidade = localizacaoStore.cities[e.uf]?.find(
+				(city) => city.nome === e.cidade,
+			);
+			// TODO UF não está sendo alterado pois updatedCidade está vazio.
+			console.log(updatedCidade);
+
+			return {
+				id: currentEndereco?.id ?? 0,
+				cep: currentEndereco?.cep ?? '',
+				cidade: {
+					id: updatedCidade?.id ?? currentEndereco?.cidade.id ?? 0,
+					nome: updatedCidade?.nome ?? currentEndereco?.cidade.nome ?? '',
+					estadoId:
+						updatedCidade?.estadoId ?? currentEndereco?.cidade.estadoId ?? 0,
+					estado: {
+						id:
+							updatedCidade?.estado?.id ??
+							currentEndereco?.cidade.estado?.id ??
+							0,
+						nome:
+							updatedCidade?.estado?.nome ??
+							currentEndereco?.cidade.estado?.nome ??
+							'',
+						uf:
+							updatedCidade?.estado?.uf ??
+							currentEndereco?.cidade.estado?.uf ??
+							'RO',
+						ibgeId:
+							updatedCidade?.estado?.ibgeId ??
+							currentEndereco?.cidade.estado?.ibgeId ??
+							0,
+						createdAt:
+							updatedCidade?.estado?.createdAt ??
+							currentEndereco?.cidade.estado?.createdAt ??
+							new Date(),
+						updatedAt:
+							updatedCidade?.estado?.updatedAt ??
+							currentEndereco?.cidade.estado?.updatedAt ??
+							new Date(),
+						deletedAt:
+							updatedCidade?.estado?.deletedAt ??
+							currentEndereco?.cidade.estado?.deletedAt ??
+							new Date(),
+					},
+					ibgeId: updatedCidade?.ibgeId ?? currentEndereco?.cidade.ibgeId ?? 0,
+					createdAt:
+						updatedCidade?.createdAt ??
+						currentEndereco?.cidade.createdAt ??
+						new Date(),
+					updatedAt:
+						updatedCidade?.updatedAt ??
+						currentEndereco?.cidade.updatedAt ??
+						new Date(),
+					deletedAt:
+						updatedCidade?.deletedAt ??
+						currentEndereco?.cidade.deletedAt ??
+						new Date(),
+				},
+				cidadeId: updatedCidade?.id ?? currentEndereco?.cidadeId ?? 0,
+				tipoEnderecoId:
+					pessoaStore.tipoEnderecos.find(
+						(tipoEndereco) => tipoEndereco.nome === e.tipoEndereco,
+					)?.id ??
+					currentEndereco?.tipoEnderecoId ??
+					0,
+				logradouro: e.logradouro,
+				createdAt: currentEndereco?.createdAt ?? new Date(),
+				updatedAt: currentEndereco?.updatedAt ?? new Date(),
+				deletedAt: currentEndereco?.deletedAt,
+			};
+		}),
+	);
+};
 </script>
 
 <template>
@@ -144,16 +264,18 @@ watch(
 			class="flex flex-wrap gap-4 w-full my-3"
 		>
 			<app-select-input
-				v-model="address.addressType"
+				v-model="address.tipoEndereco"
 				label="Tipo Endereço"
 				:disabled="isDisabled"
 				width="100px"
 				:items="addressTypes.map((e) => e.nome)"
+				@update:model-value="updateEndereco"
 			/>
 			<form-field
-				v-model="address.address"
+				v-model="address.logradouro"
 				label="Endereço"
 				:disabled="isDisabled"
+				@update:model-value="updateEndereco"
 			></form-field>
 			<app-select-input
 				v-model="address.uf"
@@ -162,12 +284,13 @@ watch(
 				label="UF"
 				density="comfortable"
 				width="100px"
-				@update:model-value="loadCities(address.uf)"
+				@update:model-value="updateEndereco()"
 			/>
 			<app-select-input
-				v-model="address.city"
+				v-model="address.cidade"
 				width="180px"
 				label="Cidade"
+				@update:model-value="updateEndereco"
 				:disabled="
 					!address.uf ||
 					isDisabled ||
@@ -187,6 +310,7 @@ watch(
 					v-if="index === addresses.length - 1"
 					v-tippy:right
 					class="flex self-end"
+					@update:model-value="updateEndereco"
 					@click="addAddress()"
 				>
 					<icon-add />

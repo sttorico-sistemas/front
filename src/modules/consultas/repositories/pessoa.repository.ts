@@ -46,8 +46,8 @@ export class PessoaRepository {
 
 	async getPersonById(id: number): Promise<Pessoa | undefined> {
 		try {
-			const response = await this.http(`/pessoas/${id}`)
-			return PessoaModel.fromRecord(response.data.data[0]);
+			const response = await this.http(`/pessoas/${id}`);
+			return PessoaModel.fromRecord(response.data.data);
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -85,7 +85,7 @@ export class PessoaRepository {
 		}
 	}
 
-	async deletePerson(id: string): Promise<void> {
+	async deletePerson(id: number): Promise<void> {
 		try {
 			await this.http.delete(`/pessoas/${id}`);
 		} catch (error) {

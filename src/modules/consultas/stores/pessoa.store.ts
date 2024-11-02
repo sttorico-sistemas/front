@@ -7,8 +7,13 @@ import { PaginacaoArgs } from "src/core/types/paginacao.type";
 import { PessoaRepository } from "../repositories/pessoa.repository";
 import Swal from "sweetalert2";
 import { BaseError } from "src/core/errors/base.error";
+import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from "src/modules/configuracoes/stores/tabelas_auxiliares.store";
+import { EstadoUf } from "../types/estado";
+import { TableValue } from "src/modules/configuracoes/types/table_value";
+import { TabelasAuxiliaresRepository } from "src/modules/configuracoes/repositories/tabelas_auxiliares.repository";
 
 const pessoaRepository = new PessoaRepository();
+const tabelasAuxiliaresRepository = new TabelasAuxiliaresRepository();
 
 export const pessoaStore = defineStore('pessoaStore', {
 	state: () => ({
@@ -25,7 +30,7 @@ export const pessoaStore = defineStore('pessoaStore', {
 			status: '',
 			vinculo: '',
 		},
-		editingPessoa: <Omit<Pessoa, 'id'>>{
+		editingPessoa: <Partial<Pick<Pessoa, 'id'>> & Omit<Pessoa, 'id'>>{
 			nome: '',
 			cpf: '',
 			email: '',
@@ -36,17 +41,56 @@ export const pessoaStore = defineStore('pessoaStore', {
 			enderecos: [],
 			contatos: [],
 		},
+		tipoEnderecos: <TableValue[]>[],
 		loadingPessoas: false,
 		showEditor: false,
+		showDeleteDialog: false,
+		deleting: false,
+		fetchingPessoa: false,
 		error: '',
 	}),
 	actions: {
-		toggleEditor(show?: boolean) {
+		toggleEditor(show?: boolean, pessoa?: Pessoa) {
+			this.editingPessoa = pessoa ?? {
+				nome: '',
+				cpf: '',
+				email: '',
+				contratante: '',
+				tpVinculo: '',
+				cidade: '',
+				status: '',
+				enderecos: [],
+				contatos: [],
+			};
+			if (pessoa?.id && !pessoa.enderecos.length && !pessoa.contatos.length) {
+				this.fetchPessoa(pessoa.id);
+			}
 			this.showEditor = show ?? !this.showEditor;
 		},
-		updateEditingPessoa(pessoa: {
-			[K in keyof Pessoa]?: Pessoa[K];
-		}) {
+		async fetchPessoa(id: number) {
+			try {
+				this.fetchingPessoa = true;
+				const pessoa = await pessoaRepository.getPersonById(id);
+				const localPessoa = this.pessoas.find((e) => e.id === id);
+				if (localPessoa && pessoa) {
+					localPessoa.enderecos.push(...pessoa.enderecos);
+					localPessoa.contatos.push(...pessoa.contatos);
+				}
+			} catch (error) {
+				if (error instanceof BaseError) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Erro ao buscar os dados da pessoa',
+						text: error.message,
+						showConfirmButton: false,
+						timer: 1500,
+					});
+				}
+			} finally {
+				this.fetchingPessoa = false;
+			}
+		},
+		updateEditingPessoa(pessoa: Partial<Pessoa>) {
 			this.editingPessoa = {
 				nome: pessoa.nome ?? this.editingPessoa.nome,
 				cpf: pessoa.cpf ?? this.editingPessoa.cpf,
@@ -59,6 +103,17 @@ export const pessoaStore = defineStore('pessoaStore', {
 				contatos: pessoa.contatos ?? this.editingPessoa.contatos,
 			};
 		},
+		toggleDeletePessoa(props?: {
+			pessoa?: Pessoa,
+			show?: boolean;
+		}) {
+			if (!props?.pessoa) {
+				this.showDeleteDialog = false;
+				return;
+			}
+			this.editingPessoa = props?.pessoa ?? this.editingPessoa;
+			this.showDeleteDialog = props?.show ?? !this.showDeleteDialog;
+		},
 		async applyFilter<K extends keyof FiltrosPessoa>(key: K) { },
 		async clearFilter() { },
 		async getAllPessoas(pagination?: PaginacaoArgs) {
@@ -68,7 +123,8 @@ export const pessoaStore = defineStore('pessoaStore', {
 					page: pagination?.page ?? this.pagination.page,
 					limit: pagination?.limit ?? this.pagination.limite,
 				});
-				console.log(response);
+				const tipoEnderecosResponse = await tabelasAuxiliaresRepository.getAllTableValues('tipo-endereco')
+				this.tipoEnderecos = tipoEnderecosResponse;
 				this.pessoas = response.items;
 				this.pagination.page = pagination?.page ?? this.pagination.page;
 				this.pagination.total = response.total;
@@ -102,19 +158,9 @@ export const pessoaStore = defineStore('pessoaStore', {
 				page: this.pagination.page,
 			});
 		},
-		async savePerson(pessoa: {
-			id?: number;
-			cpf: string;
-			nome: string;
-			tpVinculo: string;
-			contratante: string;
-			cidade?: string;
-			email?: string;
-			status?: string;
-			enderecos: Endereco[],
-			contatos: Contato[],
-		}) {
+		async savePerson() {
 			try {
+				const pessoa = this.editingPessoa;
 				this.error = '';
 				if (pessoa.id) {
 					await pessoaRepository.updatePerson({
@@ -138,8 +184,52 @@ export const pessoaStore = defineStore('pessoaStore', {
 				}
 			}
 		},
+		async deletePessoa() {
+			try {
+				if (!this.editingPessoa?.id) {
+					return;
+				}
+				this.deleting = true;
+				await pessoaRepository.deletePerson(this.editingPessoa.id);
+				await this.getAllPessoas();
+				this.showDeleteDialog = false;
+				Swal.fire({
+					icon: 'success',
+					title: 'Pessoa Apagada!',
+					showConfirmButton: false,
+					timer: 1500,
+				});
+			} catch (error) {
+				if (error instanceof BaseError) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Erro ao apagar pessoa!',
+						text: error.message,
+						showConfirmButton: false,
+						timer: 1500,
+					});
+				}
+			} finally {
+				this.deleting = false;
+			}
+		}
 	},
 	getters: {
+		editingAddresses(): {
+			tipoEndereco: string;
+			endereco: string;
+			cidade: string;
+			loadingCidades: boolean;
+			uf?: EstadoUf;
+		}[] {
+			return this.pessoas.find((e) => e.id == this.editingPessoa.id)?.enderecos.map((e) => ({
+				cidade: e.cidade.nome,
+				endereco: e.logradouro,
+				loadingCidades: false,
+				tipoEndereco: this.tipoEnderecos.find((tipoEndereco) => tipoEndereco.id == e.tipoEnderecoId)?.nome ?? '',
+				uf: e.cidade.estado?.uf,
+			})) ?? [];
+		},
 		pagina(): number {
 			return this.pagination.page;
 		},
