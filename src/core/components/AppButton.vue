@@ -61,14 +61,14 @@ const variantClass = computed(() => {
 		case 'plain':
 			return `bg-transparent text-${props.color}`;
 		case 'icon':
-			return 'p-0 m-0 bg-transparent border-none shadow-none'; // Remove padding, margin, border, shadow
+			return 'p-0 m-0 bg-transparent border-none shadow-none';
 		default:
 			return '';
 	}
 });
 
 const densityClass = computed(() => {
-	if (props.variant === 'icon') return ''; // Sem espaçamento adicional
+	if (props.variant === 'icon') return '';
 	switch (props.density) {
 		case 'compact':
 			return 'py-1 px-2 text-xs';
@@ -175,6 +175,5 @@ const handleClick = (e: MouseEvent) => {
 	transition:
 		background-color 0.2s ease-in-out,
 		box-shadow 0.2s;
-	border: none; /* Remove border para todos os botões, mas você pode ajustar dependendo das variantes */
 }
 </style>
