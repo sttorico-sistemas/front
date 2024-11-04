@@ -314,6 +314,7 @@
 			:is-open="isOpenDialog"
 			size="max-w-full"
 			@btn-close="isOpenDialog = false"
+			title="Cadastro Pessoa"
 		>
 			<consultas-cadastro-pessoa @btn-cancelar="isOpenDialog = false" />
 		</modal-layout>

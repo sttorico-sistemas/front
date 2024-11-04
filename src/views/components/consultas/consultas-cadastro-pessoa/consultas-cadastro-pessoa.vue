@@ -15,8 +15,8 @@
   import LabelInput from '@components/layout/forms/inputs/inputLabel.vue'
   import LabelSelect from '@components/layout/forms/inputs/selectLabel.vue'
 
-  import ConsultasCadastroPessoaContato from './consultas-cadastro-pessoa-contato/consultas-cadastro-pessoa-contato.vue'
-  import ConsultasCadastroPessoaEndereco from './consultas-cadastro-pessoa-endereco/consultas-cadastro-pessoa-endereco.vue'
+  import consultasListagemContatos from './consultas-listagem-contatos/consultas-listagem-contatos.vue';
+  import consultasListagemEnderecos from './consultas-listagem-enderecos/consultas-listagem-enderecos.vue';
 
   // Icons
   import IconEdit from '@icons/iconEdit.vue'
@@ -35,62 +35,51 @@
 <template>
 	<main>
     <div class="panel mt-5 border border-primary_3-table">
-      <div class="flex items-center gap-14 mb-6">
-        <titulo title="Cadastro Pessoa" />
-        <button
-          v-if="props.disabled"
-          @click="isDisabled = false"
-          v-tippy:right
-        >
-          <icon-edit />
-        </button>
-        <tippy v-if="props.disabled" target="right" placement="right"
-          >Editar cadastro</tippy
-        >
-      </div>
-
       <div class="panel">
         <titulo title="Dados da Pessoa" class="mb-6" />
-        <div class="flex flex-col md:flex-row gap-2.5">
-          <label-input
-            type="cpf"
-            id="cpf"
-            label="CPF"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:max-w-[150px]"
-            layout="row"
-          />
-          <label-input
-            id="nome"
-            label="Nome"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:min-w-[400px]"
-            layout="row"
-          />
-          <label-input
-            id="vinculo"
-            label="Vínculo"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:max-w-[200px]"
-            layout="row"
-          />
-          <label-input
-            id="contratante"
-            label="Contratante"
-            :disabled="isDisabled"
-            class-label="text-sm"
-            class-input="md:w-[300px]"
-            layout="row"
-          />
+        <div>
+          <div class="flex flex-col md:flex-row gap-5 mb-3">
+            <label-input
+              type="cpf"
+              id="cpf"
+              label="CPF"
+              class-label="text-sm"
+              class-input="md:max-w-[200px]"
+              layout="row"
+              />
+            <label-input
+              type="date"
+              id="nascimento"
+              label="Data Nascimento"
+              class-label="text-sm"
+              class-input="md:max-w-[200px]"
+              layout="row"
+            />
+            <label-select
+              id="vinculo"
+              label="Tipo Vínculo"
+              class-label="text-sm"
+              class-select="md:w-[200px]"
+              layout="row"
+              :options="['Analista', 'vendedor', 'Gerente', 'Aprovador']"
+            />
+          </div>
+          <div>
+            <label-input
+              type="text"
+              id="nome"
+              label="Nome"
+              class-label="text-sm"
+              class-input="md:max-w-[600px]"
+              layout="row"
+            />
+          </div>
         </div>
       </div>
 
-      <consultas-cadastro-pessoa-contato />
-      
-      <consultas-cadastro-pessoa-endereco  />
+      <consultas-listagem-contatos />
+
+      <consultas-listagem-enderecos />
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button
