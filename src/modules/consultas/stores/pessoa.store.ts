@@ -1,8 +1,6 @@
 import { defineStore } from "pinia";
 import { Pessoa } from "../types/pessoa";
 import { FiltrosPessoa } from "../types/filtros_pessoa";
-import { Endereco } from "../types/endereco";
-import { Contato } from "../types/contato";
 import { PaginacaoArgs } from "src/core/types/paginacao.type";
 import { PessoaRepository } from "../repositories/pessoa.repository";
 import Swal from "sweetalert2";
@@ -34,6 +32,7 @@ export const pessoaStore = defineStore('pessoaStore', {
 			nome: '',
 			cpf: '',
 			email: '',
+			dtNasc: '',
 			contratante: '',
 			tpVinculo: '',
 			cidade: '',
@@ -48,6 +47,7 @@ export const pessoaStore = defineStore('pessoaStore', {
 		deleting: false,
 		fetchingPessoa: false,
 		error: '',
+		saving: false,
 	}),
 	actions: {
 		toggleEditor(show?: boolean, pessoa?: Pessoa) {
@@ -57,12 +57,14 @@ export const pessoaStore = defineStore('pessoaStore', {
 				email: '',
 				contratante: '',
 				tpVinculo: '',
+				dtNasc: '',
 				cidade: '',
 				status: '',
 				enderecos: [],
 				contatos: [],
 			};
 			if (pessoa?.id && !pessoa.enderecos.length && !pessoa.contatos.length) {
+				console.log(pessoa.id);
 				this.fetchPessoa(pessoa.id);
 			}
 			this.showEditor = show ?? !this.showEditor;
@@ -75,6 +77,8 @@ export const pessoaStore = defineStore('pessoaStore', {
 				if (localPessoa && pessoa) {
 					localPessoa.enderecos.push(...pessoa.enderecos);
 					localPessoa.contatos.push(...pessoa.contatos);
+					localPessoa.dtNasc = pessoa.dtNasc;
+					this.editingPessoa.dtNasc = pessoa.dtNasc;
 				}
 			} catch (error) {
 				if (error instanceof BaseError) {
@@ -92,9 +96,11 @@ export const pessoaStore = defineStore('pessoaStore', {
 		},
 		updateEditingPessoa(pessoa: Partial<Pessoa>) {
 			this.editingPessoa = {
+				id: this.editingPessoa.id,
 				nome: pessoa.nome ?? this.editingPessoa.nome,
 				cpf: pessoa.cpf ?? this.editingPessoa.cpf,
 				email: pessoa.email ?? this.editingPessoa.email,
+				dtNasc: pessoa.dtNasc ?? this.editingPessoa.dtNasc,
 				contratante: pessoa.contratante ?? this.editingPessoa.contratante,
 				tpVinculo: pessoa.tpVinculo ?? this.editingPessoa.tpVinculo,
 				cidade: pessoa.cidade ?? this.editingPessoa.cidade,
@@ -161,6 +167,7 @@ export const pessoaStore = defineStore('pessoaStore', {
 		async savePerson() {
 			try {
 				const pessoa = this.editingPessoa;
+				this.saving = true;
 				this.error = '';
 				if (pessoa.id) {
 					await pessoaRepository.updatePerson({
@@ -180,8 +187,16 @@ export const pessoaStore = defineStore('pessoaStore', {
 				});
 			} catch (error) {
 				if (error instanceof BaseError) {
-					this.error = error.message;
+					Swal.fire({
+						icon: 'error',
+						title: 'Erro ao salvar pessoa!',
+						text: error.message,
+						showConfirmButton: false,
+						timer: 1500,
+					});
 				}
+			} finally {
+				this.saving = false;
 			}
 		},
 		async deletePessoa() {

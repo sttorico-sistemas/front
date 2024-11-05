@@ -7,6 +7,7 @@ export interface Pessoa {
 	nome: string;
 	tpVinculo: string;
 	contratante: string;
+	dtNasc: string;
 	cidade?: string;
 	email?: string;
 	status?: string;

@@ -14,6 +14,7 @@ export class PessoaRepository {
 			id: pessoa.id,
 			cpf: pessoa.cpf,
 			nome: pessoa.nome,
+			dtNasc: pessoa.dtNasc,
 			tpVinculo: pessoa.tpVinculo,
 			cidade: pessoa.cidade,
 			email: pessoa.email,
@@ -58,6 +59,7 @@ export class PessoaRepository {
 		nome: string;
 		tpVinculo: string;
 		contratante: string;
+		dtNasc: string;
 		cidade?: string;
 		email?: string;
 		status?: string;
@@ -65,11 +67,23 @@ export class PessoaRepository {
 		contatos: Contato[],
 	}): Promise<Pessoa> {
 		try {
-			const pessoaModel = this.getPessoaModel({
-				id: 0,
-				...pessoa,
+			const response = await this.http.post('/pessoas', {
+				nome: pessoa.nome,
+				cpf: pessoa.cpf.replace(/\D+/g, ""),
+				dt_nasc: PessoaModel.formatDate(pessoa.dtNasc),
+				enderecos: pessoa.enderecos.map((e) => ({
+					logradouro: e.logradouro,
+					cep: e.cep.replace(/\D+/g, ""),
+					cidade_id: e.cidadeId,
+					tipo_endereco_id: e.tipoEnderecoId,
+				})),
+				contatos: pessoa.contatos.map((e) => ({
+					telefone: e.telefone.replace(/\D+/g, ""),
+					celular: e.celular.replace(/\D+/g, ""),
+					tipo_contato_id: e.tipoContatoId,
+					email: e.email
+				}))
 			});
-			const response = await this.http.post('/pessoas', pessoaModel.toRecord());
 			return response.data;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
@@ -78,8 +92,23 @@ export class PessoaRepository {
 
 	async updatePerson(pessoa: Pessoa): Promise<void> {
 		try {
-			const pessoaModel = this.getPessoaModel(pessoa);
-			await this.http.put(`/pessoas/${pessoa.id}`, pessoaModel.toRecord(),);
+			await this.http.put(`/pessoas/${pessoa.id}`, {
+				nome: pessoa.nome,
+				cpf: pessoa.cpf.replace(/\D+/g, ""),
+				dt_nasc: PessoaModel.formatDate(pessoa.dtNasc),
+				enderecos: pessoa.enderecos.map((e) => ({
+					logradouro: e.logradouro,
+					cep: e.cep.replace(/\D+/g, ""),
+					cidade_id: e.cidadeId,
+					tipo_endereco_id: e.tipoEnderecoId,
+				})),
+				contatos: pessoa.contatos.map((e) => ({
+					telefone: e.telefone.replace(/\D+/g, ""),
+					celular: e.celular.replace(/\D+/g, ""),
+					tipo_contato_id: e.tipoContatoId,
+					email: e.email
+				}))
+			},);
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
