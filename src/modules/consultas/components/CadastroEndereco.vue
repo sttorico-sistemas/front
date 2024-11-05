@@ -77,6 +77,7 @@ const addresses = ref<
 		tipoEndereco: string;
 		logradouro: string;
 		uf: EstadoUf;
+		cep: string;
 		cidade: string;
 		loadingCidades: boolean;
 	}[]
@@ -88,6 +89,7 @@ const addresses = ref<
 				(tipoEndereco) => tipoEndereco.id == e.tipoEnderecoId,
 			)?.nome ?? '',
 		logradouro: e.logradouro,
+		cep: e.cep,
 		uf: e.cidade.estado?.uf ?? 'RO',
 		cidade: e.cidade.nome,
 		loadingCidades: false,
@@ -108,6 +110,7 @@ const addAddress = () => {
 	addresses.value.push({
 		cidade: '',
 		logradouro: '',
+		cep: '',
 		tipoEndereco: '',
 		uf: 'RO',
 		loadingCidades: false,
@@ -128,12 +131,24 @@ const removeAddress = (index: number) => {
 
 const loadCities = async (stateUf?: EstadoUf) => {
 	const state = states.value.find((e) => e.uf === stateUf);
+	console.log('buscando cidades de ', state?.nome);
 	if (state) {
 		const address = addresses.value.find((e) => e.uf === state.uf);
-		address!.loadingCidades = true;
 		await localizacaoStore.getStateCitites(state.id);
-		address!.loadingCidades = false;
 	}
+};
+
+const updateUf = async (
+	address: {
+		uf: EstadoUf;
+		loadingCidades: boolean;
+	},
+	stateUf?: EstadoUf,
+) => {
+	console.log('atualizando uf', stateUf);
+	address.uf = stateUf ?? 'RO';
+	await loadCities(stateUf);
+	updateEndereco();
 };
 
 onMounted(async () => {
@@ -141,6 +156,7 @@ onMounted(async () => {
 		addresses.value.push({
 			cidade: '',
 			logradouro: '',
+			cep: '',
 			tipoEndereco: '',
 			uf: 'RO',
 			loadingCidades: false,
@@ -149,7 +165,7 @@ onMounted(async () => {
 	isDisabled.value = true;
 	addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco');
 	states.value = await localizacaoStore.getStates();
-	loadCities('RO');
+	loadCities(addresses.value[0].uf);
 	isDisabled.value = false;
 });
 
@@ -160,6 +176,7 @@ watch(
 			id: e.id,
 			cidade: e.cidade.nome,
 			logradouro: e.logradouro,
+			cep: e.cep,
 			tipoEndereco:
 				pessoaStore.tipoEnderecos.find(
 					(tipoEndereco) => e.tipoEnderecoId == tipoEndereco.id,
@@ -180,47 +197,40 @@ const updateEndereco = () => {
 			const currentEndereco = props.modelValue.find(
 				(endereco) => endereco.id === e.id,
 			);
-			const updatedCidade = localizacaoStore.cities[e.uf]?.find(
-				(city) => city.nome === e.cidade,
+			const updatedCidade =
+				localizacaoStore.cities[e.uf]?.find((city) => city.nome === e.cidade) ??
+				localizacaoStore.cities[e.uf]?.at(0);
+			const updatedState = localizacaoStore.states.find(
+				(e) => e.id == updatedCidade?.estadoId,
 			);
-			// TODO UF não está sendo alterado pois updatedCidade está vazio.
-			console.log(updatedCidade);
 
 			return {
 				id: currentEndereco?.id ?? 0,
-				cep: currentEndereco?.cep ?? '',
+				cep: e.cep ?? '',
 				cidade: {
 					id: updatedCidade?.id ?? currentEndereco?.cidade.id ?? 0,
 					nome: updatedCidade?.nome ?? currentEndereco?.cidade.nome ?? '',
 					estadoId:
 						updatedCidade?.estadoId ?? currentEndereco?.cidade.estadoId ?? 0,
 					estado: {
-						id:
-							updatedCidade?.estado?.id ??
-							currentEndereco?.cidade.estado?.id ??
-							0,
+						id: updatedState?.id ?? currentEndereco?.cidade.estado?.id ?? 0,
 						nome:
-							updatedCidade?.estado?.nome ??
-							currentEndereco?.cidade.estado?.nome ??
-							'',
-						uf:
-							updatedCidade?.estado?.uf ??
-							currentEndereco?.cidade.estado?.uf ??
-							'RO',
+							updatedState?.nome ?? currentEndereco?.cidade.estado?.nome ?? '',
+						uf: updatedState?.uf ?? currentEndereco?.cidade.estado?.uf ?? 'RO',
 						ibgeId:
-							updatedCidade?.estado?.ibgeId ??
+							updatedState?.ibgeId ??
 							currentEndereco?.cidade.estado?.ibgeId ??
 							0,
 						createdAt:
-							updatedCidade?.estado?.createdAt ??
+							updatedState?.createdAt ??
 							currentEndereco?.cidade.estado?.createdAt ??
 							new Date(),
 						updatedAt:
-							updatedCidade?.estado?.updatedAt ??
+							updatedState?.updatedAt ??
 							currentEndereco?.cidade.estado?.updatedAt ??
 							new Date(),
 						deletedAt:
-							updatedCidade?.estado?.deletedAt ??
+							updatedState?.deletedAt ??
 							currentEndereco?.cidade.estado?.deletedAt ??
 							new Date(),
 					},
@@ -277,6 +287,14 @@ const updateEndereco = () => {
 				:disabled="isDisabled"
 				@update:model-value="updateEndereco"
 			></form-field>
+			<form-field
+				label="CEP"
+				v-model="address.cep"
+				:mask="{
+					custom: '#####-###',
+				}"
+				@update:model-value="updateEndereco"
+			/>
 			<app-select-input
 				v-model="address.uf"
 				:items="states.map((e) => e.uf)"
@@ -284,7 +302,7 @@ const updateEndereco = () => {
 				label="UF"
 				density="comfortable"
 				width="100px"
-				@update:model-value="updateEndereco()"
+				@update:model-value="updateUf(address, $event)"
 			/>
 			<app-select-input
 				v-model="address.cidade"
