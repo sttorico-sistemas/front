@@ -109,6 +109,7 @@ const isDisabled = ref(props.disabled || store.fetchingPessoa);
 					width="86px"
 					density="comfortable"
 					variant="outlined"
+					:disabled="store.saving"
 					@click="store.toggleEditor()"
 				>
 					Cancelar
@@ -116,6 +117,7 @@ const isDisabled = ref(props.disabled || store.fetchingPessoa);
 				<app-button
 					width="86px"
 					density="comfortable"
+					:loading="store.saving"
 					@click="store.savePerson()"
 				>
 					Salvar
