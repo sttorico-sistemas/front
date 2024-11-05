@@ -77,6 +77,16 @@ const isDisabled = ref(props.disabled || store.fetchingPessoa);
 						width="300px"
 						label="Contratante"
 					/>
+					<form-field
+						:disabled="isDisabled"
+						label="Data de nascimento"
+						:model-value="store.editingPessoa.dtNasc"
+						@update:model-value="store.updateEditingPessoa({ dtNasc: $event })"
+						max-width="150px"
+						:mask="{
+							custom: '##/##/####',
+						}"
+					/>
 				</div>
 			</div>
 
