@@ -62,7 +62,9 @@ const isDisabled = ref(props.disabled || store.fetchingPessoa);
 					<form-field
 						:disabled="isDisabled"
 						:model-value="store.editingPessoa.tpVinculo"
-						@update:model-value="store.updateEditingPessoa({ nome: $event })"
+						@update:model-value="
+							store.updateEditingPessoa({ tpVinculo: $event })
+						"
 						max-width="200px"
 						label="Vínculo"
 					/>
