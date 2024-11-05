@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { inject, onMounted, ref, watch } from 'vue';
 import titulo from 'src/core/components/Titulo.vue';
-import LabelInput from 'src/core/components/Inputs/InputLabel.vue';
-import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue';
 import IconAdd from 'src/core/components/Icons/IconAdd.vue';
 import IconClose from 'src/core/components/Icons/IconClose.vue';
 import { Emitter, EventType } from 'mitt';
 import { TableValue } from 'src/modules/configuracoes/types/table_value.d';
 import { tabelasAuxiliaresStore } from 'src/modules/configuracoes/stores/tabelas_auxiliares.store';
+import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue';
+import FormField from 'src/core/components/FormField.vue';
 
 const store = tabelasAuxiliaresStore();
 
@@ -40,6 +40,18 @@ const isDisabled = ref(false);
 const contactTypes = ref<TableValue[]>([]);
 
 const contacts = ref(props.modelValue);
+
+const getContactTypeName = (index: number) => {
+	const contact = contactTypes.value.find(
+		(e) => e.id === contacts.value[index].tipoContatoId,
+	);
+	return contact?.nome;
+};
+
+const updateContactTypeId = (nome: string, index: number) => {
+	const contact = contactTypes.value.find((e) => e.nome === nome);
+	contacts.value[index].tipoContatoId = contact?.id ?? 0;
+};
 
 const addContato = () => {
 	if (!contacts.value[0].celular.length && !contacts.value[0].email.length) {
@@ -82,6 +94,7 @@ onMounted(async () => {
 	}
 	isDisabled.value = true;
 	const contactTypesResponse = await store.getValues('tipo-contato');
+	console.log(contactTypesResponse);
 	contactTypes.value = contactTypesResponse;
 	isDisabled.value = false;
 });
@@ -115,43 +128,36 @@ watch(
 			:key="`contato-${index}`"
 			class="flex-col md:flex-row flex gap-2.5 mb-3"
 		>
-			<label-select
-				id="tp_contrato"
-				label="Tipo Contrato"
+			<app-select-input
+				label="Tipo contato"
 				:disabled="isDisabled"
-				class-label="text-sm"
-				class-select="md:w-[200px]"
-				layout="row"
-				:options="contactTypes.map((e) => e.nome)"
+				:model-value="getContactTypeName(index) ?? ''"
+				@update:model-value="updateContactTypeId($event, index)"
+				width="200px"
+				:items="contactTypes.map((e) => e.nome)"
 			/>
-			<label-input
-				id="telefone"
+			<form-field
 				v-model="contato.telefone"
 				type="tel"
 				label="Telefone"
 				:disabled="isDisabled"
-				class-label="text-sm"
-				class-input="md:max-w-[150px]"
-				layout="row"
+				max-width="150px"
+				mask="tel"
 			/>
-			<label-input
-				id="celular"
+			<form-field
 				v-model="contato.celular"
-				type="cel"
+				type="tel"
 				label="Celular"
 				:disabled="isDisabled"
-				class-label="text-sm"
-				class-input="md:max-w-[150px]"
-				layout="row"
+				max-width="150px"
+				mask="cel"
 			/>
-			<label-input
-				id="email"
+			<form-field
 				v-model="contato.email"
+				type="email"
 				label="E-mail"
 				:disabled="isDisabled"
-				class-label="text-sm"
-				class-input="md:w-[400px]"
-				layout="row"
+				max-width="400px"
 			/>
 			<div class="flex items-center gap-1">
 				<button v-tippy:right class="flex self-end mb-2" @click="addContato()">
