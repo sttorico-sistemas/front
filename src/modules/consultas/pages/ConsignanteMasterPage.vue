@@ -61,7 +61,6 @@ const openEditor = (consignanteMaster?: ConsignanteMaster) => {
 const saveConsignanteMaster = async () => {
 	store.clearError();
 	saving.value = true;
-	console.log('deu submit');
 
 	if (editingConsignanteMaster.value) {
 		await store.updateConsignanteMaster({

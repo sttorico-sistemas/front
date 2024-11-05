@@ -131,7 +131,6 @@ const removeAddress = (index: number) => {
 
 const loadCities = async (stateUf?: EstadoUf) => {
 	const state = states.value.find((e) => e.uf === stateUf);
-	console.log('buscando cidades de ', state?.nome);
 	if (state) {
 		const address = addresses.value.find((e) => e.uf === state.uf);
 		await localizacaoStore.getStateCitites(state.id);
@@ -145,7 +144,6 @@ const updateUf = async (
 	},
 	stateUf?: EstadoUf,
 ) => {
-	console.log('atualizando uf', stateUf);
 	address.uf = stateUf ?? 'RO';
 	await loadCities(stateUf);
 	updateEndereco();

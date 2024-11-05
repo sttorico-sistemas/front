@@ -94,7 +94,6 @@ onMounted(async () => {
 	}
 	isDisabled.value = true;
 	const contactTypesResponse = await store.getValues('tipo-contato');
-	console.log(contactTypesResponse);
 	contactTypes.value = contactTypesResponse;
 	isDisabled.value = false;
 });

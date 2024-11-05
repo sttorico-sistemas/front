@@ -40,7 +40,6 @@ const rows = reactive([
 ])
 
 const iconeService = (value: string) => {
-	console.log(value)
 	switch (value) {
 		case 'emprestimo':
 			return IconEmprestimoServico

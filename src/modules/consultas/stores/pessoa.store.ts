@@ -64,7 +64,6 @@ export const pessoaStore = defineStore('pessoaStore', {
 				contatos: [],
 			};
 			if (pessoa?.id && !pessoa.enderecos.length && !pessoa.contatos.length) {
-				console.log(pessoa.id);
 				this.fetchPessoa(pessoa.id);
 			}
 			this.showEditor = show ?? !this.showEditor;
