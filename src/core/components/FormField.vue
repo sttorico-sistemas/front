@@ -25,7 +25,7 @@ const props = withDefaults(
 			| 'cpf'
 			| 'cnpj'
 			| {
-					custom: '';
+					custom: string;
 			  };
 	}>(),
 	{
