@@ -9,22 +9,6 @@ import { useAxios } from "src/core/composables/use_axios";
 export class PessoaRepository {
 	private http = useAxios();
 
-	private getPessoaModel(pessoa: Pessoa): PessoaModel {
-		return new PessoaModel({
-			id: pessoa.id,
-			cpf: pessoa.cpf,
-			nome: pessoa.nome,
-			dtNasc: pessoa.dtNasc,
-			tpVinculo: pessoa.tpVinculo,
-			cidade: pessoa.cidade,
-			email: pessoa.email,
-			status: pessoa.status,
-			contratante: pessoa.contratante,
-			contatos: pessoa.contatos,
-			enderecos: pessoa.enderecos,
-		});
-	}
-
 	async getAllPersons(pagination?: PaginacaoArgs, query?: string): Promise<PaginatedResultOutput<Pessoa>> {
 		try {
 			const response = await this.http.get('/pessoas', {
@@ -70,6 +54,7 @@ export class PessoaRepository {
 			const response = await this.http.post('/pessoas', {
 				nome: pessoa.nome,
 				cpf: pessoa.cpf.replace(/\D+/g, ""),
+				status: pessoa.status,
 				dt_nasc: PessoaModel.formatDate(pessoa.dtNasc),
 				enderecos: pessoa.enderecos.map((e) => ({
 					logradouro: e.logradouro,
@@ -93,8 +78,10 @@ export class PessoaRepository {
 	async updatePerson(pessoa: Pessoa): Promise<void> {
 		try {
 			await this.http.put(`/pessoas/${pessoa.id}`, {
+				id: pessoa.id,
 				nome: pessoa.nome,
 				cpf: pessoa.cpf.replace(/\D+/g, ""),
+				status: pessoa.status,
 				dt_nasc: PessoaModel.formatDate(pessoa.dtNasc),
 				enderecos: pessoa.enderecos.map((e) => ({
 					logradouro: e.logradouro,

@@ -14,9 +14,9 @@ import IconBlock from 'src/core/components/Icons/IconBlock.vue';
 import { Col } from 'types/col.d';
 import { pessoaStore } from '../stores/pessoa.store';
 import IconEdit from 'src/core/components/Icons/IconEdit.vue';
-import IconDelete from 'src/core/components/Icons/IconDelete.vue';
 import AppDialog from 'src/core/components/AppDialog.vue';
 import AppButton from 'src/core/components/AppButton.vue';
+import CircularProgress from 'src/core/components/CircularProgress.vue';
 
 const store = pessoaStore();
 
@@ -295,6 +295,7 @@ onMounted(() => {
 									v-tippy:right
 									type="button"
 									class="text-xs m-1"
+									:disabled="store.saving"
 									@click="store.toggleEditor(true, data.value)"
 								>
 									<icon-edit class="w-5 h-5 text-primary_3-table" />
@@ -305,12 +306,22 @@ onMounted(() => {
 							</div>
 							<div>
 								<div>
-									<button v-tippy:right type="button" class="text-xs m-1">
+									<button
+										v-tippy:right
+										type="button"
+										class="text-xs m-1"
+										@click="store.toggleStatus(data.value)"
+										:disabled="store.saving"
+									>
 										<icon-check
 											v-if="data.value.status === 'Inativo'"
 											class="w-5 h-5 text-primary_3-table"
 										/>
-										<icon-block v-else class="w-5 h-5 text-primary_3-table" />
+										<icon-block
+											v-else-if="!store.saving"
+											class="w-5 h-5 text-primary_3-table"
+										/>
+										<circular-progress v-else :size="20"></circular-progress>
 									</button>
 									<tippy target="right" placement="right"
 										>{{
@@ -319,7 +330,7 @@ onMounted(() => {
 									</tippy>
 								</div>
 							</div>
-							<div>
+							<!-- <div>
 								<button
 									v-tippy:right
 									type="button"
@@ -331,7 +342,7 @@ onMounted(() => {
 									<icon-delete class="w-5 h-5 text-primary_3-table" />
 								</button>
 								<tippy target="right" placement="right">Deletar</tippy>
-							</div>
+							</div> -->
 						</div>
 					</template>
 				</vue3-datatable>

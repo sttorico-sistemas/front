@@ -74,6 +74,8 @@ export const pessoaStore = defineStore('pessoaStore', {
 				const pessoa = await pessoaRepository.getPersonById(id);
 				const localPessoa = this.pessoas.find((e) => e.id === id);
 				if (localPessoa && pessoa) {
+					localPessoa.enderecos.splice(0, localPessoa.enderecos.length);
+					localPessoa.contatos.splice(0, localPessoa.contatos.length);
 					localPessoa.enderecos.push(...pessoa.enderecos);
 					localPessoa.contatos.push(...pessoa.contatos);
 					localPessoa.dtNasc = pessoa.dtNasc;
@@ -92,6 +94,14 @@ export const pessoaStore = defineStore('pessoaStore', {
 			} finally {
 				this.fetchingPessoa = false;
 			}
+		},
+		async toggleStatus(pessoa: Pessoa) {
+			this.saving = true;
+			await this.fetchPessoa(pessoa.id);
+			this.updateEditingPessoa(pessoa);
+			this.updateEditingPessoa({ status: pessoa.status === 'Ativado' ? 'Inativado' : 'Ativado' })
+			this.editingPessoa.id = pessoa.id;
+			await this.savePerson();
 		},
 		updateEditingPessoa(pessoa: Partial<Pessoa>) {
 			this.editingPessoa = {
@@ -180,7 +190,7 @@ export const pessoaStore = defineStore('pessoaStore', {
 				this.showEditor = false;
 				Swal.fire({
 					icon: 'success',
-					title: 'Pessoa criada!',
+					title: 'Pessoa Salva!',
 					showConfirmButton: false,
 					timer: 1500,
 				});
