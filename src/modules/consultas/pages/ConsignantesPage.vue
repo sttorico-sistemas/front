@@ -70,37 +70,6 @@ const color = (id: number | string): string => {
 	}
 };
 
-// const filtered = (value: string = '') => {
-// 	if (value === '') return store.consignantes;
-
-// 	if (selected.type === 'consignante')
-// 		return store.consignantes.filter((item: any) => item.nome === value);
-
-// 	if (selected.type === 'cidade')
-// 		return store.consignantes.filter(
-// 			(item: any) => item.enderecos[0].cidade.nome === value,
-// 		);
-
-// 	if (selected.type === 'tp_entidade')
-// 		return store.consignantes.filter(
-// 			(item: any) =>
-// 				store.tipoEntidades.find(
-// 					(tipoEntidade: any) => tipoEntidade.id === item.tipoEntidadeId,
-// 				)?.nome === value,
-// 		);
-
-// 	if (selected.type === 'data_final')
-// 		return store.consignantes.filter((item: any) => item.dtFinal === value);
-
-// 	if (selected.type === 'status')
-// 		return store.consignantes.filter((item: any) => item.status === value);
-
-// 	if (selected.type === 'averbacao')
-// 		return store.consignantes.filter((item: any) => item.averbacao === value);
-
-// 	return store.consignantes;
-// };
-
 onMounted(() => {
 	store.getAllConsignantes();
 });
@@ -138,9 +107,12 @@ onMounted(() => {
             @select="(selected.label = $event), (selected.type = 'consignante')"
           /> -->
 					<multiselect
+						v-if="item?.enderecos?.length"
 						v-model="cidade"
 						:options="
-							store.consignantes.map((item) => item.enderecos[0].cidade.nome)
+							store.consignantes.map(
+								(item) => item.enderecos.at(0)?.cidade.nomes,
+							)
 						"
 						class="custom-multiselect min-w-[200px]"
 						placeholder="Cidade"
@@ -310,31 +282,6 @@ onMounted(() => {
 									type="button"
 									class="text-xs m-1"
 									@click="store.toggleStatus(data.value)"
-									:disabled="store.saving"
-								>
-									<icon-unlock
-										v-if="data.value.averbacao === 'Liberada'"
-										class="w-5 h-5 text-primary_3-table"
-									/>
-									<icon-lock v-else class="w-5 h-5 text-primary_3-table" />
-								</button>
-								<tippy target="right" placement="right">
-									{{
-										data.value.averbacao === 'Liberada' ? 'Bloquear' : 'Liberar'
-									}}
-								</tippy>
-							</div>
-							<div>
-								<button
-									v-tippy:right
-									type="button"
-									class="text-xs m-1"
-									@click="
-										store.toggleDeleteConsignante({
-											consignante: data.value,
-											show: true,
-										})
-									"
 									:disabled="store.saving"
 								>
 									<icon-unlock

@@ -169,8 +169,42 @@ export const consignanteStore = defineStore('consignanteStore', {
 				page: this.pagination.page,
 			});
 		},
+		validateForm() {
+			let message = '';
+			if (!this.editingConsignante.consignanteMasterId) {
+				message = 'Selecione um consignante master.';
+			}
+			if (!this.editingConsignante.tipoEntidadeId) {
+				message = 'Selecione um tipo de entidade.';
+			}
+			this.editingConsignante.enderecos.forEach((e) => {
+				if (!e.tipoEnderecoId || !e.logradouro || !e.cep || !e.cidade.id || !e.cidade.estado?.id) {
+					message = 'Endereço inválido.';
+				}
+			});
+			if (!this.editingConsignante.enderecos.length) {
+				message = 'Endereço inválido';
+			}
+			if (!this.editingConsignante.expediente.de || !this.editingConsignante.expediente.ate) {
+				message = 'Expediente inválido.';
+			}
+			if (message) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Erro ao cadastrar consignante!',
+					text: message,
+					showConfirmButton: false,
+					timer: 1500,
+				});
+				return false;
+			}
+			return true;
+		},
 		async saveConsignante() {
 			try {
+				if (!this.validateForm()) {
+					return;
+				}
 				const consignante = this.editingConsignante;
 				this.saving = true;
 				this.error = '';
