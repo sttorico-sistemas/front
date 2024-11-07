@@ -2,6 +2,14 @@
 import { computed, InputTypeHTMLAttribute } from 'vue';
 import uniqid from 'uniqid';
 
+type Breakpoints = {
+	xs?: string;
+	sm?: string;
+	md?: string;
+	lg?: string;
+	xl?: string;
+};
+
 const props = withDefaults(
 	defineProps<{
 		id?: string;
@@ -13,12 +21,12 @@ const props = withDefaults(
 		message?: string;
 		error?: boolean;
 		disabled?: boolean;
-		minWidth?: string;
-		maxWidth?: string;
-		minHeight?: string;
-		maxHeight?: string;
-		width?: string;
-		height?: string;
+		minWidth?: string | Breakpoints;
+		maxWidth?: string | Breakpoints;
+		minHeight?: string | Breakpoints;
+		maxHeight?: string | Breakpoints;
+		width?: string | Breakpoints;
+		height?: string | Breakpoints;
 		mask?:
 			| 'cel'
 			| 'tel'
@@ -63,11 +71,45 @@ const mask = computed(() => {
 			return props.mask.custom;
 	}
 });
+
+function generateSizeClasses(
+	prop: string | Breakpoints | undefined,
+	prefix: string,
+) {
+	if (typeof prop === 'string') {
+		return `${prefix}-[${prop}]`;
+	} else if (prop && typeof prop === 'object') {
+		return Object.entries(prop)
+			.map(([bp, size]) => `${bp}:${prefix}-[${size}]`)
+			.join(' ');
+	}
+	return '';
+}
+
+const sizeClasses = computed(() => ({
+	minWidth: generateSizeClasses(props.minWidth, 'min-w'),
+	maxWidth: generateSizeClasses(props.maxWidth, 'max-w'),
+	minHeight: generateSizeClasses(props.minHeight, 'min-h'),
+	maxHeight: generateSizeClasses(props.maxHeight, 'max-h'),
+	width: generateSizeClasses(props.width, 'w'),
+	height: generateSizeClasses(props.height, 'h'),
+}));
 </script>
 
 <template>
-	<div :class="{ 'has-error': error }">
-		<label :for="id ?? randomId" class="text-xs">
+	<div
+		:class="[
+			sizeClasses.minWidth,
+			sizeClasses.maxWidth,
+			sizeClasses.minHeight,
+			sizeClasses.maxHeight,
+			sizeClasses.width,
+			sizeClasses.height,
+			error ? 'has-error' : '',
+		]"
+		style="display: flex; flex: 1; flex-direction: column"
+	>
+		<label :for="id ?? randomId" class="text-xs" v-if="label">
 			{{ label }}
 		</label>
 		<input
@@ -75,17 +117,18 @@ const mask = computed(() => {
 			:type="type"
 			:value="modelValue"
 			:placeholder="placeholder"
-			:class="`form-input ${props.class}`"
+			:class="[
+				'form-input',
+				props.class,
+				sizeClasses.minWidth,
+				sizeClasses.maxWidth,
+				sizeClasses.minHeight,
+				sizeClasses.maxHeight,
+				sizeClasses.width,
+				sizeClasses.height,
+			]"
 			:disabled="disabled"
 			v-maska="mask"
-			:style="{
-				minWidth: props.minWidth,
-				maxWidth: props.maxWidth,
-				minHeight: props.minHeight,
-				maxHeight: props.maxHeight,
-				width: props.width,
-				height: props.height,
-			}"
 			@input="
 				$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)
 			"
