@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import LabelInput from 'src/core/components/Inputs/InputLabel.vue';
 import IconClear from 'src/core/components/Icons/IconClear.vue';
 import CadastroEndereco from 'src/modules/consultas/components/CadastroEndereco.vue';
 import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue';
@@ -8,8 +7,13 @@ import { consignanteMasterStore as _consignanteMasterStore } from 'src/modules/c
 import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from 'src/modules/configuracoes/stores/tabelas_auxiliares.store';
 import { TabelasAuxiliaresRepository } from 'src/modules/configuracoes/repositories/tabelas_auxiliares.repository';
 import { TableValue } from 'src/modules/configuracoes/types/table_value';
+import FormField from 'src/core/components/FormField.vue';
+import AppButton from 'src/core/components/AppButton.vue';
+import { consignanteStore } from '../../stores/consignante.store';
 
 const emits = defineEmits(['btnSave', 'btnCancelar']);
+
+const store = consignanteStore();
 
 const loadingEntidades = ref(false);
 
@@ -26,6 +30,20 @@ onMounted(async () => {
 	loadingEntidades.value = false;
 });
 
+const updateEntidadeId = (nome: string) => {
+	store.updateEditingConsignante({
+		tipoEntidadeId: entidades.value.find((e) => e.nome === nome)?.id,
+	});
+};
+
+const updateConsignanteMasterId = (nome: string) => {
+	store.updateEditingConsignante({
+		consignanteMasterId: consignanteMasterStore.consignantesMaster.find(
+			(e) => e.nome === nome,
+		)?.id,
+	});
+};
+
 const clearOption = () => (consignanteMaster.value = '');
 </script>
 
@@ -41,7 +59,12 @@ const clearOption = () => (consignanteMaster.value = '');
 			>
 			<div class="flex items-center gap-6">
 				<app-select-input
-					v-model="consignanteMaster"
+					:model-value="
+						consignanteMasterStore.consignantesMaster.find(
+							(e) => e.id === store.editingConsignante.consignanteMasterId,
+						)?.nome
+					"
+					@update:model-value="updateConsignanteMasterId"
 					width="500px"
 					placeholder="Selecione uma opção"
 					:disabled="consignanteMasterStore.loadingConsignantesMaster"
@@ -55,86 +78,140 @@ const clearOption = () => (consignanteMaster.value = '');
 
 		<div class="panel border mt-5 border-primary_3-table">
 			<h3 class="text-base font-semibold text-primary_3-table mb-7">
-				Consignante Master
+				Consignante
 			</h3>
 
 			<div class="flex flex-col md:flex-row items-center mb-3">
-				<label for="cnpj" class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left"
-					>CNPJ</label
-				>
-				<input
-					id="cnpj"
-					type="text"
-					class="form-input mb-3 md:mb-0 md:max-w-[200px] h-[38px]"
+				<label
+					for="cnpj"
+					class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left"
+					v-text="'CNPJ'"
+				/>
+				<form-field
+					mask="cnpj"
+					:model-value="store.editingConsignante.cnpj"
+					@update:model-value="store.updateEditingConsignante({ cnpj: $event })"
 				/>
 
 				<label
 					for="tipo_entidade"
 					class="mb-0 md:ml-3 md:mr-2 w-full md:w-auto text-sm text-left"
-					>Tipo de Entidade</label
-				>
+					v-text="'Tipo de Entidade'"
+				/>
 				<app-select-input
 					:items="entidades.map((e) => e.nome)"
+					:model-value="
+						entidades.find(
+							(e) => e.id === store.editingConsignante.tipoEntidadeId,
+						)?.nome ?? '---'
+					"
+					@update:model-value="updateEntidadeId"
 					min-width="250px"
 				/>
 			</div>
 
-			<label-input
-				id="nome"
-				label="Nome"
-				class-label="text-sm"
-				class-input="md:max-w-[420px]"
-				layout="col"
-			/>
-			<label-input
-				id="nome_curto"
-				label="Nome curto"
-				class-label="text-sm"
-				class-input="md:max-w-[250px]"
-				layout="col"
-			/>
+			<div class="flex flex-col md:flex-row items-center mb-3">
+				<label
+					for="nome"
+					class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left"
+					v-text="'Nome'"
+				/>
+				<form-field
+					id="nome"
+					:model-value="store.editingConsignante.nome"
+					@update:model-value="store.updateEditingConsignante({ nome: $event })"
+					:max-width="{ md: '420px' }"
+				/>
+			</div>
+			<div class="flex flex-col md:flex-row items-center mb-5">
+				<label
+					for="nome_curto"
+					class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left"
+					v-text="'Nome curto'"
+				/>
+				<form-field
+					:model-value="store.editingConsignante.nomeCurto"
+					@update:model-value="
+						store.updateEditingConsignante({ nomeCurto: $event })
+					"
+					id="nome_curto"
+					:max-width="{ md: '250px' }"
+				/>
+			</div>
 			<cadastro-endereco
+				:model-value="store.editingConsignante.enderecos"
+				@update:model-value="
+					store.updateEditingConsignante({ enderecos: $event })
+				"
 				flat
 				:show-title="false"
 				class="my-3"
-			></cadastro-endereco>
+			/>
 
 			<div class="flex flex-col md:flex-row items-center mb-3">
 				<label
 					for="expediente"
 					class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left"
-					>Expediente</label
-				>
-				<input
+					v-text="'Expediente'"
+				/>
+				<form-field
 					id="expediente"
-					type="text"
-					class="form-input mb-3 md:mb-0 md:max-w-[80px] h-[38px]"
+					class="mb-3 md:mb-0"
+					:model-value="store.editingConsignante.expediente.de"
+					@update:model-value="
+						store.updateEditingConsignante({
+							expediente: {
+								de: $event,
+								ate: store.editingConsignante.expediente.ate,
+							},
+						})
+					"
+					:mask="{
+						custom: '##:##',
+					}"
+					:max-width="{ md: '80px' }"
+					height="38px"
 				/>
 
 				<label for="ate" class="mb-0 md:mx-2 w-full md:w-auto text-sm text-left"
 					>Até</label
 				>
-				<input
+				<form-field
 					id="ate"
-					type="text"
-					class="form-input md:max-w-[80px] h-[38px]"
+					:model-value="store.editingConsignante.expediente.ate"
+					@update:model-value="
+						store.updateEditingConsignante({
+							expediente: {
+								de: store.editingConsignante.expediente.de,
+								ate: $event,
+							},
+						})
+					"
+					class="mb-3 md:mb-0"
+					:mask="{
+						custom: '##:##',
+					}"
+					:max-width="{ md: '80px' }"
+					height="38px"
 				/>
 			</div>
 
 			<div class="flex justify-center items-center gap-12 mt-8">
-				<button
-					type="button"
-					class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
-					@click="emits('btnCancelar', false)"
+				<app-button
+					variant="outlined"
+					density="comfortable"
+					width="86px"
+					@click="store.toggleEditor()"
+					:disabled="store.saving"
+					>Cancelar</app-button
 				>
-					Cancelar
-				</button>
-				<button
-					type="button"
-					class="w-[86px] btn bg-primary_3-table text-white text-xs"
+				<app-button
+					density="comfortable"
+					width="86px"
+					@click="store.saveConsignante()"
+					:loading="store.saving"
+					>Salvar</app-button
 				>
-					Salvar
-				</button>
 			</div>
 		</div>
 	</main>
