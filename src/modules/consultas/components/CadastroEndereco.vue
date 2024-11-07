@@ -12,6 +12,7 @@ import { Estado, EstadoUf } from '../types/estado.d';
 import { localizacaoStore as _localizacaoStore } from '../stores/localizacao.store';
 import { Endereco } from '../types/endereco';
 import { pessoaStore as _pessoaStore } from '../stores/pessoa.store';
+import { TabelasAuxiliaresRepository } from 'src/modules/configuracoes/repositories/tabelas_auxiliares.repository';
 
 interface IEndereco extends Endereco {
 	loadingCidades?: boolean;
@@ -61,7 +62,7 @@ const props = withDefaults(
 
 const emit = defineEmits(['update:modelValue']);
 
-const tabelasAuxiliaresStore = _tabelasAuxiliaresStore();
+const tabelasAuxiliaresRepository = new TabelasAuxiliaresRepository();
 const localizacaoStore = _localizacaoStore();
 const pessoaStore = _pessoaStore();
 
@@ -161,7 +162,8 @@ onMounted(async () => {
 		});
 	}
 	isDisabled.value = true;
-	addressTypes.value = await tabelasAuxiliaresStore.getValues('tipo-endereco');
+	addressTypes.value =
+		await tabelasAuxiliaresRepository.getAllTableValues('tipo-endereco');
 	states.value = await localizacaoStore.getStates();
 	loadCities(addresses.value[0].uf);
 	isDisabled.value = false;
@@ -176,7 +178,7 @@ watch(
 			logradouro: e.logradouro,
 			cep: e.cep,
 			tipoEndereco:
-				pessoaStore.tipoEnderecos.find(
+				addressTypes.value.find(
 					(tipoEndereco) => e.tipoEnderecoId == tipoEndereco.id,
 				)?.nome ?? '',
 			uf: e.cidade.estado?.uf ?? 'RO',
@@ -248,7 +250,7 @@ const updateEndereco = () => {
 				},
 				cidadeId: updatedCidade?.id ?? currentEndereco?.cidadeId ?? 0,
 				tipoEnderecoId:
-					pessoaStore.tipoEnderecos.find(
+					addressTypes.value.find(
 						(tipoEndereco) => tipoEndereco.nome === e.tipoEndereco,
 					)?.id ??
 					currentEndereco?.tipoEnderecoId ??
