@@ -36,32 +36,9 @@ const cols = reactive<Col[]>([
 	{ field: 'cpf', title: 'CPF', hide: false },
 	{ field: 'tpVinculo', title: 'Tp Vínculo', hide: false },
 	{ field: 'cidade', title: 'Cidade', hide: false, sort: false },
-	// { field: 'celular', title: 'Celular', hide: false, sort: false },
 	{ field: 'email', title: 'E-mail', hide: false, sort: false },
 	{ field: 'status', title: 'Status', hide: false, sort: false },
 	{ field: 'acao', title: 'Ação', hide: false, sort: false },
-]);
-const rows = reactive([
-	{
-		id: 1,
-		nome: 'João Carlos de Oliveira Carvalho',
-		cpf: '356.859.789-99',
-		tp_vinculo: 'Consignante',
-		cidade: 'Florianópolis-SC',
-		celular: '(48) 98745632',
-		email: 'jcoliveira@gmail.com',
-		status: 'Inativo',
-	},
-	{
-		id: 2,
-		nome: 'Mario Alves Cabral',
-		cpf: '526.987.456-11',
-		tp_vinculo: 'Consignatária',
-		cidade: 'São Paulo-SP',
-		celular: '(11) 95683031',
-		email: 'mario@daycoval.com.br',
-		status: 'Ativo',
-	},
 ]);
 
 const clearFilter = () => {
@@ -90,36 +67,17 @@ const color = (value: string): string => {
 	}
 };
 
-const filtered = (value: string = '') => {
-	if (value === '') return rows;
-
-	if (selected.type === 'nome')
-		return rows.filter((item: any) => item.nome === value);
-
-	if (selected.type === 'cpf')
-		return rows.filter((item: any) => item.cpf === value);
-
-	if (selected.type === 'vinculo')
-		return rows.filter((item: any) => item.tp_vinculo === value);
-
-	if (selected.type === 'cidade')
-		return rows.filter((item: any) => item.cidade === value);
-
-	if (selected.type === 'status')
-		return rows.filter((item: any) => item.status === value);
-};
-
 const parseRows = () => {
-	return rows.map((row) => {
+	return store.pessoas.map((pessoa) => {
 		return {
-			id: row.id,
-			nome: row.nome,
-			cpf: row.cpf,
-			tp_vinculo: row.tp_vinculo,
-			cidade: row.cidade,
-			celular: row.celular,
-			email: row.email,
-			status: row.status,
+			id: pessoa.id,
+			nome: pessoa.nome,
+			cpf: pessoa.cpf,
+			tp_vinculo: pessoa.tpVinculo,
+			cidade: pessoa.cidade,
+			celular: pessoa.contatos.at(0)?.celular,
+			email: pessoa.email,
+			status: pessoa.status,
 		};
 	});
 };
@@ -330,19 +288,6 @@ onMounted(() => {
 									</tippy>
 								</div>
 							</div>
-							<!-- <div>
-								<button
-									v-tippy:right
-									type="button"
-									class="text-xs m-1"
-									@click="
-										store.toggleDeletePessoa({ pessoa: data.value, show: true })
-									"
-								>
-									<icon-delete class="w-5 h-5 text-primary_3-table" />
-								</button>
-								<tippy target="right" placement="right">Deletar</tippy>
-							</div> -->
 						</div>
 					</template>
 				</vue3-datatable>
@@ -377,8 +322,6 @@ onMounted(() => {
 		</div>
 
 		<consultas-cadastro-pessoa />
-		<!-- <modal-layout :is-open="isOpenDialog" size="max-w-full" @btn-close="isOpenDialog = false"> -->
-		<!-- </modal-layout> -->
 	</main>
 </template>
 
