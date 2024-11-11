@@ -1,34 +1,19 @@
 <script setup>
-	// import { RouterLink, RouterView } from 'vue-router'
+import { useMeta } from 'src/core/composables/use_meta'
 
-	import footerLayout from '@components/layout/footerLayout.vue'
-	import headerLayout from '@components/layout/headerLayout.vue'
-	import alertLayout from '@components/layout/alertLayout.vue'
-
-	import { useMeta } from '@/composables/use-meta'
-
-	// Meta
-	useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
+useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
 </script>
 
 <template>
-	<div class="dashboard-layout">
-		<header-layout />
-
-		<RouterView />
-
-		<footer-layout />
-		<alert-layout />
-	</div>
+	<app-layout layout-name="default-layout" class="dashboard-layout">
+		<router-view></router-view>
+	</app-layout>
 </template>
 
 <style lang="scss" scoped>
-	.dashboard-layout {
-		max-width: 1920px;
-		margin: 0 auto;
-		padding: 13px 20px;
-	}
-	.main {
-		height: 90vh;
-	}
+.dashboard-layout {
+	max-width: 1920px;
+	margin: 0 auto;
+	padding: 13px 20px;
+}
 </style>
