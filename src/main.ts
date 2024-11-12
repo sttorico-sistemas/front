@@ -14,6 +14,11 @@ import Popper from 'vue3-popper'
 import JsonExcel from 'vue-json-excel3'
 import Multiselect from '@suadelabs/vue3-multiselect'
 import { createPinia } from 'pinia'
+import 'select2' // importa o select2
+import 'select2/dist/css/select2.min.css'
+import $ from 'jquery'
+window.$ = $ // Torna o $ globalmente acessível
+
 
 const app = createApp(App)
 const pinia = createPinia()
