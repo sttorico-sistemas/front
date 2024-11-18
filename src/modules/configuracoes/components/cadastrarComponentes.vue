@@ -34,9 +34,9 @@ const components = ref<Array<{ id: number | null; key: number; value: string; is
 watch(
   () => props.componentes,
   (newComponents) => {
-    components.value = newComponents.map(component => ({
+    components.value = newComponents.map((component, index) => ({
       id: component.id,
-      key: component.id || Date.now(), // usa o ID existente ou um timestamp como chave
+      key: index + Date.now(), // chave única para evitar conflitos
       value: component.nome,
       isRemoved: false,
     }));
@@ -49,9 +49,9 @@ const addComponentInput = () => {
   components.value.push({ id: null, key: Date.now(), value: '', isRemoved: false }); // id é null para novos componentes
 };
 
-// Função para marcar um campo como removido pelo ID
-const removeComponentInput = (id: number | null) => {
-  const component = components.value.find(c => c.id === id);
+// Função para marcar um campo como removido pelo índice
+const removeComponentInput = (index: number) => {
+  const component = components.value[index];
   if (component) component.isRemoved = !component.isRemoved; // Alterna entre remover e restaurar
 };
 
@@ -103,7 +103,7 @@ const cancelComponents = () => {
   </div>
 
   <!-- Renderização dinâmica dos campos de entrada com controle de remoção -->
-  <div v-for="component in components" :key="component.key" class="flex items-center space-x-2 mt-2">
+  <div v-for="(component, index) in components" :key="component.key" class="flex items-center space-x-2 mt-2">
     <InputLabel
       v-model="component.value"
       type="text"
@@ -114,7 +114,7 @@ const cancelComponents = () => {
       layout="row"
       v-show="!component.isRemoved"
     />
-    <button @click="removeComponentInput(component.id)" class="text-red-500 text-sm">
+    <button @click="removeComponentInput(index)" class="text-red-500 text-sm">
       {{ component.isRemoved ? 'Restaurar' : 'Remover' }}
     </button>
   </div>

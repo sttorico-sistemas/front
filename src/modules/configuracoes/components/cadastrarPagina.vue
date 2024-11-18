@@ -1,181 +1,160 @@
+<template>
+  <div>
+    <h2>{{ isEditing ? 'Editar Página' : 'Cadastrar Página' }}</h2>
+
+    <!-- Nome da Página -->
+    <InputLabel
+      v-model="formData.nome"
+      type="text"
+      id="nome"
+      label="Nome da Página"
+      class-label="text-sm"
+      class-input="md:w-[300px]"
+      layout="row"
+    />
+
+    <!-- URL da Página -->
+    <InputLabel
+      v-model="formData.url"
+      type="text"
+      id="url"
+      label="URL da Página"
+      class-label="text-sm"
+      class-input="md:w-[300px]"
+      layout="row"
+    />
+
+    <!-- Página Pai -->
+    <div>
+      <label for="paginaPai">Página Principal</label>
+      <select ref="select2Ref" v-model="formData.pagina_principal" class="w-64 h-10" aria-label="Página Principal">
+        <option :value="null">Nenhuma</option>
+        <option v-for="page in paginas" :key="page.id" :value="page.id">
+          {{ page.nome }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Selecionar Ícone -->
+    <div>
+      <label for="icon">Ícone</label>
+      <select v-model="formData.icone" class="w-64 h-10" aria-label="Ícone">
+        <option v-for="icon in icons" :key="icon.value" :value="icon.value">
+          <FontAwesomeIcon :icon="['fas', icon.value]" /> {{ icon.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Exibir Ícone Selecionado -->
+    <div v-if="formData.icone" class="mt-4">
+      <p>Ícone Selecionado:</p>
+      <FontAwesomeIcon :icon="['fas', formData.icone]" size="2x" />
+    </div>
+
+    <!-- Botões de ação -->
+    <div class="flex items-center space-x-4 mt-6">
+      <button @click="savePage" class="px-4 py-2 bg-blue-500 text-white rounded">
+        {{ isEditing ? 'Salvar Alterações' : 'Cadastrar' }}
+      </button>
+      <button @click="cancel" class="px-4 py-2 bg-gray-300 text-black rounded">
+        Cancelar
+      </button>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch, defineProps, defineEmits, nextTick } from 'vue';
+import { ref, onMounted, nextTick, defineProps, defineEmits } from 'vue';
 import InputLabel from 'src/core/components/Inputs/InputLabel.vue';
-import IconAdd from 'src/core/components/Icons/IconAdd.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { savePage, getPageById, updatePage } from '../../../api/pageService';
 import Swal from 'sweetalert2';
 import $ from 'jquery';
 import 'select2/dist/css/select2.min.css';
 import 'select2/dist/js/select2.min.js';
 
-// Define o jQuery globalmente para que o select2 funcione corretamente
-if (typeof window !== 'undefined') {
-  window.$ = $;
-}
-
+// Props para o componente
 const props = defineProps<{
-  paginas: Array<{ id: number; nome: string; slug: string }>
+  paginas: Array<{ id: number; nome: string; slug: string }>;
+  editId?: number;
 }>();
 
-const selectedPage = ref<string>('');
-const nomePagina = ref<string>(''); // Campo para o nome da página
-const urlPagina = ref<string>(''); // Campo para a URL da página
+const emits = defineEmits(['saveSuccess', 'cancel']);
+
+// Estado de edição
+const isEditing = ref(!!props.editId);
+
+// Dados do formulário
+const formData = ref({
+  nome: '',
+  url: '',
+  pagina_principal: null,
+  icone: '',
+});
+
+// Ícones disponíveis
+const icons = [
+  { name: 'Coffee', value: 'coffee' },
+  { name: 'Home', value: 'home' },
+  { name: 'User', value: 'user' },
+];
+
+// Referência para o select2
 const select2Ref = ref<HTMLElement | null>(null);
-const emits = defineEmits(['btnSave', 'btnCancelar']);
 
-// Lista para armazenar os campos dinamicamente
-const components = ref<Array<{ id: number; value: string }>>([]);
-let idCounter = 1; // Contador para gerar IDs únicos para cada campo
-
-// Função para adicionar um novo campo de entrada
-const addComponentInput = () => {
-  components.value.push({ id: idCounter++, value: '' });
-};
-
-// Função para remover um campo pelo ID
-const removeComponentInput = (id: number) => {
-  components.value = components.value.filter(component => component.id !== id);
-};
-
-// Função para emitir o evento de salvar e enviar dados para a API
-const saveComponents = async () => {
-  const pageData = {
-    nome: nomePagina.value,
-    url: urlPagina.value,
-    pagina_principal: selectedPage.value,
-    componentes: components.value.map(component => component.value),
-  };
-
-  try {
-    const response = await fetch('https://dev-02-apiv2.management.infoconsig.tec.br/api/paginas', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(pageData),
-    });
-
-    if (response.ok) {
-      Swal.fire({
-        title: 'Sucesso!',
-        text: 'Ação concluída com sucesso.',
-        icon: 'success',
-        confirmButtonText: 'OK',
-      });
-      emits('btnSave', components.value);
-    } else {
-      Swal.fire({
-        title: 'Erro!',
-        text: 'Ocorreu um problema ao enviar os dados.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-    }
-  } catch (error) {
-    Swal.fire({
-      title: 'Erro!',
-      text: 'Ocorreu um erro ao tentar enviar os dados.',
-      icon: 'error',
-      confirmButtonText: 'OK',
-    });
-  }
-};
-
-// Função para emitir o evento de cancelar
-const cancelComponents = () => {
-  emits('btnCancelar');
-};
-
-// Inicialize o Select2 após o componente estar montado
+// Inicialização do componente
 onMounted(async () => {
-  await nextTick(); // Aguarda até que o DOM seja completamente carregado
+  if (isEditing.value && props.editId) {
+    try {
+      const data = await getPageById(props.editId);
+      formData.value = {
+        nome: data.nome,
+        url: data.url,
+        pagina_principal: data.pagina_principal,
+        icone: data.icone,
+      };
+    } catch (error) {
+      Swal.fire('Erro', 'Erro ao carregar os dados da página.', 'error');
+    }
+  }
+
+  // Inicializar o select2
+  await nextTick();
   if (select2Ref.value) {
     $(select2Ref.value).select2();
     $(select2Ref.value).on('change', () => {
-      selectedPage.value = $(select2Ref.value).val() as string;
+      formData.value.pagina_principal = $(select2Ref.value).val() as string;
     });
   }
 });
 
-onBeforeUnmount(() => {
-  // Destroi o select2 ao desmontar o componente
-  if (select2Ref.value) {
-    $(select2Ref.value).select2('destroy');
-  }
-});
+// Salvar a página
+const savePage = async () => {
+  try {
+    if (!formData.value.nome || !formData.value.url) {
+      Swal.fire('Erro', 'Preencha todos os campos obrigatórios.', 'error');
+      return;
+    }
 
-// Observa mudanças em selectedPage para sincronizar com select2
-watch(selectedPage, (newVal) => {
-  if (select2Ref.value) {
-    $(select2Ref.value).val(newVal).trigger('change');
+    if (isEditing.value) {
+      await updatePage(props.editId!, formData.value);
+    } else {
+      await savePage(formData.value);
+    }
+
+    Swal.fire('Sucesso', 'A página foi salva com sucesso.', 'success');
+    emits('saveSuccess');
+  } catch (error) {
+    Swal.fire('Erro', 'Não foi possível salvar a página.', 'error');
   }
-});
+};
+
+// Cancelar
+const cancel = () => {
+  emits('cancel');
+};
 </script>
 
-<template>
-  <div>
-    <InputLabel
-      v-model="nomePagina"
-      type="text"
-      id="nome"
-      label="Digite o nome da página"
-      class-label="text-sm"
-      class-input="md:w-[300px]"
-      layout="row"
-    />
-  </div>
-  <div>
-    <InputLabel
-      v-model="urlPagina"
-      type="text"
-      id="url"
-      label="Digite a URL da página"
-      class-label="text-sm"
-      class-input="md:w-[300px]"
-      layout="row"
-    />
-  </div>
-
-  <div>
-    <label for="pagina">Página Principal</label>
-    <select ref="select2Ref" v-model="selectedPage" class="w-64 h-10">
-      <option v-for="page in props.paginas" :key="page.id" :value="page.nome">
-        {{ page.nome }}
-      </option>
-    </select>
-  </div>
-
-  <!-- Botão para adicionar novos campos -->
-  <div class="flex items-center space-x-2 mt-4">
-    <button @click="addComponentInput" class="flex items-center space-x-2 text-blue-500">
-      <IconAdd />
-      <span>Adicionar Componente</span>
-    </button>
-  </div>
-
-  <!-- Renderização dinâmica dos campos de entrada -->
-  <div v-for="component in components" :key="component.id" class="flex items-center space-x-2 mt-2">
-    <InputLabel
-      v-model="component.value"
-      type="text"
-      :id="'nome-' + component.id"
-      label="Digite o nome do componente"
-      class-label="text-sm"
-      class-input="md:w-[300px]"
-      layout="row"
-    />
-    <button @click="removeComponentInput(component.id)" class="text-red-500 text-sm">
-      Remover
-    </button>
-  </div>
-
-  <!-- Botões de Cadastrar e Cancelar -->
-  <div class="flex items-center space-x-4 mt-6">
-    <button @click="saveComponents" class="px-4 py-2 bg-blue-500 text-white rounded">
-      Cadastrar
-    </button>
-    <button @click="cancelComponents" class="px-4 py-2 bg-gray-300 text-black rounded">
-      Cancelar
-    </button>
-  </div>
-</template>
+<style scoped>
+/* Estilos personalizados */
+</style>

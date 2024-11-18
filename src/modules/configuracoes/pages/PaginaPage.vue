@@ -3,89 +3,101 @@ import { reactive, ref, onMounted } from 'vue';
 import axios from 'axios';
 
 // Componentes
-import Vue3Datatable from '@bhplugin/vue3-datatable';
 import Titulo from 'src/core/components/Titulo.vue';
 import Breadcrumbs from 'src/core/components/Breadcrumbs.vue';
 import Modal from 'src/core/components/Modal.vue';
 import InputLabel from 'src/core/components/Inputs/InputLabel.vue';
-import CadastrarPagina from 'src/modules/configuracoes/components/cadastrarPagina.vue';
-import CadastrarComponentes from 'src/modules/configuracoes/components/cadastrarComponentes.vue';
 
 // Ícones
 import IconAdd from 'src/core/components/Icons/IconAdd.vue';
-import IconDelete from 'src/core/components/Icons/IconDelete.vue';
 
-// Declarações
-const selected = reactive<{ type: string; label: string }>({
-	type: '',
-	label: '',
+// Controle de estado
+const isOpenDialog = ref(false);
+const isEditMode = ref(false);
+const pages = ref<any[]>([]); // Lista de páginas para montar o select
+
+const pageForm = reactive({
+	id: null,
+	name: '',
+	slug: '',
+	parent_id: null,
+	url: '',
 });
 
-const instituicao = ref<string>('');
-const tipo_instituicao = ref<string>('');
-const isOpenDialog = ref<boolean>(false);
-const isOpenComponente = ref<boolean>(false);
-const selectedPageId = ref<number | null>(null); // ID da página selecionada
-const selectedPageName = ref<string>('');        // Nome da página selecionada
-const selectedPageComponents = ref<any[]>([]);   // Componentes da página selecionada
-
-const cols = reactive([
-	{ field: 'logo', title: 'Página', hide: false },
-	{ field: 'instituicao', title: 'Instituição', hide: false },
-	{ field: 'tipo_instituicao', title: 'Tipo de Instituição', hide: false },
-	{ field: 'actions', title: 'Ação', hide: false },
-]);
-
-const rows = reactive([
-	{
-		id: '1',
-		logo: '1',
-		instituicao: 'Banco do Brasil',
-		tipo_instituicao: 'Instituição Financeira',
-	},
-	{
-		id: '2',
-		logo: '1',
-		instituicao: 'ASM - Associação Servidores de Macapá',
-		tipo_instituicao: 'Associação de Servidores Públicos',
-	},
-]);
-
-const filtered = (value: string = '') => {
-	if (value === '') return rows;
-	if (selected.type === 'instituicao')
-		return rows.filter((item: any) => item.instituicao === value);
-};
-
-const pages = ref<any[]>([]);
-
+// Fetch de páginas do backend
 const fetchPages = async () => {
 	try {
 		const authToken = localStorage.getItem('authToken');
-		if (authToken) {
-			const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/paginas', {
-				headers: {
-					Authorization: `Bearer ${authToken}`,
-				},
-			});
-			pages.value = response.data.data;
-		} else {
+		if (!authToken) {
 			console.error('Token não encontrado no storage.');
+			return;
 		}
+
+		const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages', {
+			headers: { Authorization: `Bearer ${authToken}` },
+		});
+
+		pages.value = response.data.data;
+		console.log('Páginas carregadas:', pages.value);
 	} catch (error) {
 		console.error('Erro ao buscar dados das páginas:', error);
 	}
 };
 
-// Executa a busca ao montar o componente
-onMounted(fetchPages);
+// Submeter formulário de página (adicionar ou editar)
+const submitPage = async () => {
+	try {
+		const authToken = localStorage.getItem('authToken');
+		if (!authToken) {
+			console.error('Token não encontrado no storage.');
+			return;
+		}
 
-const openComponenteModal = (page: any) => {
-	selectedPageId.value = page.id;
-	selectedPageName.value = page.nome;  // Define o nome da página selecionada
-	selectedPageComponents.value = page.componentes || [];
-	isOpenComponente.value = true;
+		const method = isEditMode.value ? 'put' : 'post';
+		const url = isEditMode.value
+			? `https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages/${pageForm.id}`
+			: 'https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages';
+
+		await axios[method](url, pageForm, {
+			headers: { Authorization: `Bearer ${authToken}` },
+		});
+
+		await fetchPages(); // Atualiza a lista de páginas
+		isOpenDialog.value = false;
+		clearPageForm();
+	} catch (error) {
+		console.error('Erro ao salvar página:', error);
+	}
 };
+
+// Abrir modal de edição com dados da página
+const openEditPageModal = (page: any) => {
+	console.log('Abrindo modal com dados:', page); // Log para verificar dados
+	clearPageForm(); // Limpa qualquer dado residual no formulário
+	isEditMode.value = true;
+	isOpenDialog.value = true;
+
+
+
+	pageForm.id = page.id || null;
+	pageForm.name = page.name || '';
+	pageForm.slug = page.slug || '';
+	pageForm.parent_id = page.parent_id || null;
+	pageForm.url = page.url || '';
+	//console.log(pageForm.name);
+};
+
+// Limpar formulário de página
+const clearPageForm = () => {
+	pageForm.id = null;
+	pageForm.name = '';
+	pageForm.slug = '';
+	pageForm.parent_id = null;
+	pageForm.url = '';
+};
+
+// Inicializar componente
+onMounted(fetchPages);
 </script>
 
 <template>
@@ -96,23 +108,11 @@ const openComponenteModal = (page: any) => {
 			<div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
 				<div class="flex items-center gap-14">
 					<titulo title="Páginas" />
-					<button @click="isOpenDialog = true" v-tippy:right>
+					<button @click="isOpenDialog = true; isEditMode = false; clearPageForm()"
+						v-tippy="{ placement: 'right' }">
 						<icon-add />
 					</button>
 					<tippy target="right" placement="right">Cadastre uma nova página</tippy>
-				</div>
-
-				<div class="header_actions flex items-center gap-2">
-					<multiselect v-model="instituicao"
-						:options="['Banco do Brasil', 'ASM - Associação Servidores de Macapá']"
-						class="custom-multiselect min-w-[200px]" placeholder="Instituição" :searchable="false"
-						:preselect-first="false" :allow-empty="false" selected-label="" select-label=""
-						deselect-label="" @select="(selected.label = $event), (selected.type = 'instituicao')" />
-					<multiselect v-model="tipo_instituicao"
-						:options="['Instituição Financeira', 'Associação de Servidores Públicos']"
-						class="custom-multiselect min-w-[150px]" placeholder="Tipo Instituição" :searchable="false"
-						:preselect-first="false" :allow-empty="false" selected-label="" select-label=""
-						deselect-label="" @select="(selected.label = $event), (selected.type = 'tipo_instituicao')" />
 				</div>
 			</div>
 
@@ -123,16 +123,17 @@ const openComponenteModal = (page: any) => {
 							<tr>
 								<th>Páginas</th>
 								<th>Slug</th>
+								<th>URL</th>
 								<th>Ações</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr v-for="page in pages" :key="page.id">
-								<td>{{ page.nome }}</td>
+								<td>{{ page.name }}</td>
 								<td>{{ page.slug }}</td>
+								<td>{{ page.url }}</td>
 								<td>
-									<button class="btn">Editar</button>
-									<button @click="openComponenteModal(page)" class="btn">Ver</button>
+									<button class="btn btn-primary" @click="openEditPageModal(page)">Editar</button>
 								</td>
 							</tr>
 						</tbody>
@@ -140,15 +141,39 @@ const openComponenteModal = (page: any) => {
 				</div>
 			</div>
 		</div>
+
+		<!-- Modal para cadastrar ou editar página -->
+		<modal :is-open="isOpenDialog" :title="isEditMode ? 'Editar Página' : 'Adicionar Página'" size="max-w-[650px]"
+			@btn-close="isOpenDialog = false">
+			<form @submit.prevent="submitPage">
+				<input-label id="page-name" label="Nome da Página" v-model="pageForm.name" required
+					classWrapper="w-full" classLabel="block text-sm font-medium text-gray-700 mb-1" classInput="input">
+				</input-label>
+
+				<input-label id="page-slug" label="Slug" v-model="pageForm.slug" required classWrapper="w-full"
+					classLabel="block text-sm font-medium text-gray-700 mb-1" classInput="input">
+				</input-label>
+
+				<input-label id="page-url" label="URL" v-model="pageForm.url" required classWrapper="w-full"
+					classLabel="block text-sm font-medium text-gray-700 mb-1" classInput="input">
+				</input-label>
+
+
+				<div class="form-group">
+					<label for="parent-id">Página Pai</label>
+					<select id="parent-id" v-model="pageForm.parent_id" class="form-select">
+						<option value="">Nenhuma</option>
+						<option v-for="page in pages" :key="page.id" :value="page.id">
+							{{ page.name }}
+						</option>
+					</select>
+				</div>
+
+				<div class="flex justify-end mt-4">
+					<button type="button" class="btn btn-secondary mr-2" @click="isOpenDialog = false">Cancelar</button>
+					<button type="submit" class="btn btn-primary">Salvar</button>
+				</div>
+			</form>
+		</modal>
 	</main>
-
-	<modal :is-open="isOpenDialog" title="Adicionar Página" size="max-w-[650px]" @btn-close="isOpenDialog = false">
-		<cadastrar-pagina :paginas="pages" @btn-cancelar="isOpenDialog = false" />
-	</modal>
-
-	<modal :is-open="isOpenComponente" :title="`Adicionar Componente - ${selectedPageName}`" size="max-w-[650px]"
-		@btn-close="isOpenComponente = false">
-		<cadastrar-componentes :page-id="selectedPageId" :componentes="selectedPageComponents"
-			@btn-cancelar="isOpenComponente = false" />
-	</modal>
 </template>

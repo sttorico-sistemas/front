@@ -3,6 +3,7 @@ import TabelasPage from "./pages/TabelasPage.vue";
 import LogomarcasPage from "./pages/LogomarcasPage.vue";
 import PaginaPage from "./pages/PaginaPage.vue";
 import PerfilPage from "./pages/PerfilPage.vue";
+import ComponentesPage from "./pages/ComponentesPage.vue";
 
 export const configuracoesRoutes: RouteRecordRaw[] = [
   {
@@ -23,6 +24,11 @@ export const configuracoesRoutes: RouteRecordRaw[] = [
         path: 'paginas',
         name: 'paginas',
         component: PaginaPage,
+      },
+      {
+        path: 'componentes',
+        name: 'componentes',
+        component: ComponentesPage,
       },
       {
         path: 'perfil',

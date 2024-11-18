@@ -1,217 +1,200 @@
 <script lang="ts" setup>
-// Core
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted } from 'vue';
+import axios from 'axios';
+import Modal from 'src/core/components/Modal.vue';
 
-import InputLabel from 'src/core/components/Inputs/InputLabel.vue';
-import axios from 'axios'
-import Swal from 'sweetalert2';
-// Props
-const props = defineProps({
-    addButton: {
-        type: Boolean,
-        default: false
+// Estados e referências
+const tipoOperadores = ref<any[]>([]);
+const permissions = ref<any[]>([]);
+const isDialogOpen = ref<boolean>(false);
+const isEditMode = ref<boolean>(false);
+
+// Formulário reativo para tipo_operador
+const form = reactive({
+  id: null,
+  name: '',
+  description: '',
+  permissions: [] as number[],
+});
+
+// Função para buscar tipos de operadores e permissões
+const fetchData = async () => {
+  try {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      console.error('Token não encontrado.');
+      return;
     }
-})
-const accordions = ref<{ [key: number]: boolean }>({})
-const nomePerfil = ref('')
-const checkedPermissions = ref<number[]>([])
-// Icons
 
+    const [tipoOperadoresRes, permissionsRes] = await Promise.all([
+      axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/profile/tipo-operador', {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }),
+      axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/profile/permissions', {
+        headers: { Authorization: `Bearer ${authToken}` },
+      }),
+    ]);
 
+    tipoOperadores.value = tipoOperadoresRes.data.data;
+    permissions.value = permissionsRes.data; // Utilizando diretamente o related_name do backend
+  } catch (error) {
+    console.error('Erro ao buscar dados:', error);
+  }
+};
 
-import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue';
-
-// Componentes
-import VueCollapsible from 'vue-height-collapsible/vue3'
-
-//import titulo from '@components/layout/tituloLayout.vue'
-import Titulo from 'src/core/components/Titulo.vue';
-
-
-
-// Declarações
-const tp_operador = ref('')
-const cliente = ref('')
-
-
-const toggleAccordion = (pageId: number) => {
-    accordions.value[pageId] = !accordions.value[pageId]
-}
-
-const pages = ref<any[]>([])
-
-const fetchPages = async () => {
-    try {
-        const authToken = localStorage.getItem('authToken')
-        if (authToken) {
-            const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/paginas', {
-                headers: {
-                    Authorization: `Bearer ${authToken}`
-                }
-            })
-            pages.value = response.data.data // Armazena as páginas no estado
-        } else {
-            console.error('Token não encontrado no storage.')
-        }
-    } catch (error) {
-        console.error('Erro ao buscar dados das páginas:', error)
+// Função para salvar ou editar tipo de operador
+const saveTipoOperador = async () => {
+  try {
+    const authToken = localStorage.getItem('authToken');
+    if (!authToken) {
+      console.error('Token não encontrado.');
+      return;
     }
-}
 
-// Script
-const clearFilter = () => {
-    tp_operador.value = ''
-    cliente.value = ''
+    const url = form.id
+      ? `https://dev-02-apiv2.management.infoconsig.tec.br/api/profile/tipo-operador/${form.id}`
+      : 'https://dev-02-apiv2.management.infoconsig.tec.br/api/profile/tipo-operador';
 
-    selected.label = ''
-    selected.type = ''
-}
+    const method = form.id ? 'put' : 'post';
 
-//Salvar perfil e permissoes
-//Salvar perfil e permissoes
-const submitForm = async () => {
-    try {
-        const authToken = localStorage.getItem('authToken')
-        if (!authToken) throw new Error('Token de autenticação não encontrado')
+    await axios[method](url, form, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
 
-        const payload = {
-            nome: nomePerfil.value,
-            permissions: checkedPermissions.value
-        }
+    await fetchData();
+    closeDialog();
+  } catch (error) {
+    console.error('Erro ao salvar tipo de operador:', error);
+  }
+};
 
-        const response = await axios.post('https://dev-02-apiv2.management.infoconsig.tec.br/api/auxiliary/tipo-operador', payload, {
-            headers: {
-                Authorization: `Bearer ${authToken}`
-            }
-        })
+// Função para abrir o modal em modo de edição
+const openEditModal = (tipoOperador: any) => {
+  isEditMode.value = true;
+  isDialogOpen.value = true;
 
-        // Exibir mensagem de sucesso com SweetAlert
-        await Swal.fire({
-            icon: 'success',
-            title: 'Perfil salvo com sucesso!',
-            confirmButtonText: 'OK'
-        })
+  form.id = tipoOperador.id;
+  form.name = tipoOperador.name;
+  form.description = tipoOperador.description;
+  form.permissions = tipoOperador.permissions.map((p: any) => p.id);
+};
 
-        // Limpar o formulário após sucesso
-        nomePerfil.value = ''
-        checkedPermissions.value = []
-        accordions.value = {}
-        pages.value = []
+// Função para fechar o modal e limpar o formulário
+const closeDialog = () => {
+  isDialogOpen.value = false;
+  isEditMode.value = false;
+  clearForm();
+};
 
-        // Atualizar a lista de páginas
-        fetchPages()
+// Função para limpar o formulário
+const clearForm = () => {
+  form.id = null;
+  form.name = '';
+  form.description = '';
+  form.permissions = [];
+};
 
-    } catch (error) {
-        console.error('Erro ao salvar o perfil:', error)
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro ao salvar o perfil',
-            text: 'Por favor, tente novamente mais tarde.'
-        })
-    }
-}
-
-
-onMounted(fetchPages)
-
+// Inicializa o componente ao montar
+onMounted(fetchData);
 </script>
+
 <template>
-    <main>
+  <main>
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">Gerenciar Tipos de Operadores</h1>
+      <button class="btn-primary" @click="isDialogOpen = true; isEditMode = false; clearForm()">Adicionar Tipo Operador</button>
+    </div>
 
-        <br>
-        <br>
-        <br>
-        <div>
-            <div class="panel">
-                <div class="flex items-center gap-14">
+    <table class="table-auto w-full border-collapse">
+      <thead>
+        <tr>
+          <th class="text-left border-b p-2">Nome</th>
+          <th class="text-left border-b p-2">Descrição</th>
+          <th class="text-left border-b p-2">Permissões</th>
+          <th class="text-left border-b p-2">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="tipoOperador in tipoOperadores" :key="tipoOperador.id">
+          <td class="p-2 border-b">{{ tipoOperador.name }}</td>
+          <td class="p-2 border-b">{{ tipoOperador.description }}</td>
+          <td class="p-2 border-b">
+            {{
+    tipoOperador.permissions
+      ?.map(p => p.related_name || 'Nome não definido') // Valor padrão se `related_name` estiver vazio
+      .join(', ') || 'Sem permissões atribuídas'
+  }}
+          </td>
+          <td class="p-2 border-b">
+            <button class="btn-secondary mr-2" @click="openEditModal(tipoOperador)">Editar</button>
+            <button class="btn-danger">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-                    <titulo title="Cadastro de Perfil" />
-
-                </div>
-                <div class="flex flex-col md:flex-row gap-5 mt-3">
-                    <InputLabel type="text" id="nome" label="Digite o nome do Perfil" class-label="text-sm"
-                        class-input="md:w-[300px]" layout="row" v-model="nomePerfil" />
-
-
-
-                </div>
-
-
-                <div v-for="page in pages" :key="page.id"
-                    class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#fff]">
-                    <button type="button" class="p-4 w-full flex justify-between items-center text-lg bg-[#fff]"
-                        @click="toggleAccordion(page.id)">
-                        {{ page.nome }}
-                        <div :class="{ 'rotate-180': accordions[page.id] === true }">
-                            <icon-caret-down />
-                        </div>
-                    </button>
-
-                    <vue-collapsible :isOpen="accordions[page.id] === true">
-                        <div class="table-responsive my-3">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Funcionalidade</th>
-                                        <th>Permissão</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="componente in page.componentes" :key="componente.id">
-                                        <td>{{ componente.nome }}</td>
-                                        <td>
-                                            <input type="checkbox" class="form-checkbox rounded-full"
-                                                v-model="checkedPermissions" :value="componente.id" />
-
-                                        </td>
-
-                                    </tr>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </vue-collapsible>
-
-
-                </div>
-                <button class="mt-6 btn" @click="submitForm">Salvar</button>
-
-            </div>
+    <!-- Modal para adicionar/editar tipo operador -->
+    <modal
+      :is-open="isDialogOpen"
+      :title="isEditMode ? 'Editar Tipo Operador' : 'Adicionar Tipo Operador'"
+      @close="closeDialog"
+    >
+      <form @submit.prevent="saveTipoOperador">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Nome</label>
+          <input v-model="form.name" type="text" class="input" required />
         </div>
-    </main>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Descrição</label>
+          <textarea v-model="form.description" class="input"></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">Permissões</label>
+          <div v-for="permission in permissions" :key="permission.id" class="flex items-center mb-2">
+            <input type="checkbox" :value="permission.id" v-model="form.permissions" />
+            <span class="ml-2">{{ permission.related_name }}</span>
+          </div>
+        </div>
+
+        <div class="flex justify-end">
+          <button type="button" class="btn-secondary mr-2" @click="closeDialog">Cancelar</button>
+          <button type="submit" class="btn-primary">Salvar</button>
+        </div>
+      </form>
+    </modal>
+  </main>
 </template>
-<style lang="scss" scoped>
-thead tr {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1384AD;
+
+<style scoped>
+.table-auto th,
+.table-auto td {
+  padding: 8px;
+  border: 1px solid #ccc;
 }
-
-tbody tr {
-    font-size: 12px;
-    font-weight: 400;
-    color: #0E1726;
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
-
-tr {
-    text-align: center;
+.btn-secondary {
+  background-color: #d1d5db;
+  color: #1f2937;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
-
-.header_actions:deep(.custom-multiselect) {
-    .multiselect__placeholder {
-        font-size: 0.75rem;
-        line-height: 1rem;
-        font-weight: 600;
-        white-space: nowrap;
-        color: rgb(14 23 38);
-    }
-
-    .multiselect__option {
-        font-size: 0.75rem;
-        line-height: 1rem;
-        white-space: normal;
-    }
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
