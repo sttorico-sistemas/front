@@ -156,5 +156,6 @@ const cancel = () => {
 </script>
 
 <style scoped>
-/* Estilos personalizados */
+
+
 </style>

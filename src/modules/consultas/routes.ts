@@ -13,6 +13,7 @@ import ConsignanteMasterPage from "./pages/ConsignanteMasterPage.vue";
 import ConsignantesPage from "./pages/ConsignantesPage.vue";
 import ConsignadorPage from "./pages/ConsignadorPage.vue";
 import PessoasCadastradasPage from "./pages/PessoasCadastradasPage.vue";
+import Operador from "../cadastro/pages/Operador.vue";
 
 export const consultasRoutes: RouteRecordRaw[] = [
   {
@@ -88,6 +89,11 @@ export const consultasRoutes: RouteRecordRaw[] = [
         path: 'consignador',
         name: 'consultas-consignador',
         component: ConsignadorPage,
+      },
+      {
+        path: 'operador',
+        name: 'operador',
+        component: Operador,
       },
     ]
   }

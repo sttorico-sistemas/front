@@ -50,6 +50,7 @@ const color = (value: string): string => {
       return 'bg-secondary';
     default:
       return 'bg-secondary';
+	  
   }
 };
 
