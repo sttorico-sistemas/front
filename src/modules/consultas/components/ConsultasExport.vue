@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { capitalizeString } from 'src/core/utils/capitalize_string'
+import { capitalizeString } from 'src/core/utils'
 import { Col } from 'types/col.d';
 
 type Row = {
