@@ -24,7 +24,7 @@ const delegatedProps = computed(() => {
   <pagination-prev v-bind="delegatedProps">
     <button-root
       type="button"
-      :class="cn('h-10 w-10 p-0', props.class)"
+      :class="cn('h-10 w-10 p-0 rounded-full', props.class)"
       variant="outline"
     >
       <slot>

@@ -24,11 +24,11 @@ const delegatedProps = computed(() => {
   <pagination-last v-bind="delegatedProps">
     <button-root
       type="button"
-      :class="cn('h-10 w-10 p-0', props.class)"
+      :class="cn('h-10 w-10 p-0 rounded-full', props.class)"
       variant="outline"
     >
       <slot>
-        <font-awesome-icon :icon="['fas', 'chevron-right']" />
+        <font-awesome-icon :icon="['fas', 'angles-right']" />
       </slot>
     </button-root>
   </pagination-last>

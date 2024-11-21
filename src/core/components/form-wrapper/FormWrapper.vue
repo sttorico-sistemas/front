@@ -12,6 +12,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/core/components/dialog'
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from '@/core/components/tooltip'
 import { cn } from '@/core/utils';
 
 const properties = defineProps({
@@ -22,6 +28,10 @@ const properties = defineProps({
 	description: {
 		type: String,
 		required: true,
+	},
+	tooltip: {
+		type: String,
+		default: () => ''
 	},
 	buttonName: {
 		type: String,
@@ -50,16 +60,29 @@ function onSubmit(event: Event) {
 
 <template>
 	<dialog-root v-model:open="open">
-		<dialog-trigger v-if="$slots.trigger" as-child>
-			<slot name="trigger"></slot>
-		</dialog-trigger>
+
+
+		<tooltip-provider>
+			<tooltip>
+				<tooltip-trigger as-child>
+					<dialog-trigger v-if="$slots.trigger" as-child>
+						<slot name="trigger"></slot>
+					</dialog-trigger>
+				</tooltip-trigger>
+				<tooltip-content side="right">
+					<p>{{ tooltip }}</p>
+				</tooltip-content>
+			</tooltip>
+		</tooltip-provider>
+
+
 		<dialog-content :class="cn(
 			'max-h-[90dvh] grid-rows-[auto_minmax(0,1fr)_auto] sm:max-w-[625px]',
 			properties.class,
 		)
 			" @pointer-down-outside="(event: Event) => event.preventDefault()">
 			<div v-if="isLoading" class="absolute z-[100] flex h-full w-full items-center justify-center bg-black/40">
-				<Loader2 v-if="isLoading" class="ml-2 h-20 w-20 animate-spin text-3xl text-white/50" />
+				<font-awesome-icon v-if="isLoading" :icon="['fas', 'spinner']" class="animate-spin" />
 			</div>
 			<dialog-header>
 				<dialog-title>{{ title }}</dialog-title>
@@ -74,9 +97,9 @@ function onSubmit(event: Event) {
 				<dialog-footer>
 					<slot name="buttons"></slot>
 
-					<button-root v-if="isAction" :disabled="isLoading" type="submit" class="mt-4">
+					<button-root v-if="isAction" :disabled="isLoading" type="submit" class="mt-4 bg-primary_3-table text-white gap-2">
 						{{ buttonName }}
-						<font-awesome-icon :icon="['fas', 'spinner']" />
+						<font-awesome-icon v-if="isLoading" :icon="['fas', 'spinner']" class="animate-spin" />
 					</button-root>
 				</dialog-footer>
 			</form>

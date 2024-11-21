@@ -23,7 +23,7 @@
           :disabled="disabled"
         >
           <button-root
-            class="h-10 w-10 p-0"
+            :class="['h-10 w-10 p-0 rounded-full text-black', item.value === page ? 'text-white' : undefined]"
             :variant="item.value === page ? 'default' : 'outline'"
             type="button"
           >
