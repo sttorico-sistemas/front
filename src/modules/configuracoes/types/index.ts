@@ -1,3 +1,4 @@
 export * from './pagination'
 export * from './table'
-export * from './table_value'
+export * from './table-value'
+export * from './http-client'

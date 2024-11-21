@@ -4,7 +4,7 @@ import titulo from 'src/core/components/Titulo.vue';
 import IconAdd from 'src/core/components/Icons/IconAdd.vue';
 import IconClose from 'src/core/components/Icons/IconClose.vue';
 import { Emitter, EventType } from 'mitt';
-import { TableValue } from 'src/modules/configuracoes/types/table_value.d';
+import { TableValue } from 'src/modules/configuracoes/types';
 import { tabelasAuxiliaresStore } from '@/modules/configuracoes/stores';
 import AppSelectInput from 'src/core/components/Inputs/AppSelectInput.vue';
 import FormField from 'src/core/components/FormField.vue';

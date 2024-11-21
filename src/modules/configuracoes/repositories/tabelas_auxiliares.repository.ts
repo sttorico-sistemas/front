@@ -1,6 +1,6 @@
 import { useAxios } from "src/core/composables/use_axios";
 import { Table } from "../types/table.d";
-import { TableValue } from "../types/table_value.d";
+import { TableValue } from "../types";
 import { BaseError } from "src/core/errors/base.error";
 import { TableModel } from "../models/table.model";
 import { TableValueModel } from "../models/table_value.model";

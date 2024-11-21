@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { TableValue } from "../types/table_value.d";
+import { TableValue } from "../types";
 import { Table, TableURL } from "../types/table";
 import { TabelasAuxiliaresRepository } from "../repositories/tabelas_auxiliares.repository";
 import { BaseError } from "src/core/errors/base.error";
