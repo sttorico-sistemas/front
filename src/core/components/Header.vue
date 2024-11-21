@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+// Importação de ícones
 import IconAcademic from 'src/core/components/Icons/IconAcademic.vue';
 import IconArrowDown from 'src/core/components/Icons/IconArrowDown.vue';
 import IconCalculator from 'src/core/components/Icons/IconCalculator.vue';
@@ -16,32 +20,125 @@ import IconProfile from 'src/core/components/Icons/IconProfile.vue';
 import IconSearch from 'src/core/components/Icons/IconSearch.vue';
 import IconConfig from 'src/core/components/Icons/IconConfig.vue';
 
+// Gerenciamento do estado do menu
 const showMenu = ref('');
-
 const toggleShow = (value: string) => {
 	showMenu.value = showMenu.value === value ? '' : value;
 };
+
+// Função de logout com SweetAlert
+const confirmLogout = () => {
+	Swal.fire({
+		title: 'Deseja sair?',
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonText: 'Sim',
+		cancelButtonText: 'Não'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			localStorage.clear(); // Limpa o localStorage
+			window.location.href = '/login'; // Redireciona para a página de login
+		}
+	});
+};
+
+// Estado do usuário
+const userName = ref<string>('');
+const userRole = ref<string>('');
+const operadorId = ref<string>('');
+
+// Função para buscar dados do usuário
+const fetchUserData = async () => {
+	try {
+		const authToken = localStorage.getItem('authToken');
+		if (authToken) {
+			const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/user', {
+				headers: {
+					Authorization: `Bearer ${authToken}`,
+				},
+			});
+
+			const userData = response.data;
+			userName.value = userData.nome;
+			userRole.value = userData.operador;
+			operadorId.value = userData.operador_id;
+			localStorage.setItem('operadorId', userData.operador_id);
+
+		} else {
+			console.error('Token não encontrado no storage.');
+		}
+	} catch (error) {
+		console.error('Erro ao buscar dados do usuário:', error);
+	}
+};
+
+// Estado das páginas do menu
+const pages = ref<Array<Page>>([]);
+
+interface Page {
+	id: number;
+	name: string;
+	slug: string;
+	url: string;
+	parent_id: number | null;
+	children?: Array<Page>;
+}
+
+// Função para buscar o menu acessível
+const fetchAccessibleMenu = async (): Promise<void> => {
+	try {
+		// Recuperar o authToken do localStorage
+		const authToken = localStorage.getItem('authToken');
+		if (!authToken) {
+			throw new Error('Token de autenticação não encontrado.');
+		}
+
+		// Recuperar o operadorId do localStorage ou de outra fonte
+		const operadorId = localStorage.getItem('operadorId');
+		if (!operadorId) {
+			throw new Error('ID do operador não encontrado.');
+		}
+
+		// Fazer a requisição GET para o menu acessível
+		const response = await axios.get(
+			'https://dev-02-apiv2.management.infoconsig.tec.br/api/menu/accessible',
+			{
+				headers: {
+					Authorization: `Bearer ${authToken}`,
+				},
+				params: {
+					operador_id: operadorId, // Enviar operador_id como query string
+				},
+			}
+		);
+
+		// Atualizar o estado das páginas
+		pages.value = response.data;
+	} catch (error) {
+		console.error('Erro ao buscar o menu acessível:', error);
+	}
+};
+
+
+
+// Chamar funções no onMounted
+onMounted(() => {
+	fetchUserData();
+	fetchAccessibleMenu();
+});
 </script>
 
 <template>
 	<header>
 		<div class="menu flex-wrap">
 			<div class="menu__logo mb-1">
-				<img
-					src="/assets/images/infoconsig-logo-compact.png"
-					alt="infoconsig"
-					class="menu__logo_compact"
-				/>
-				<img
-					src="/assets/images/infoconsig-logo.png"
-					alt="infoconsig"
-					class="menu__logo_complete"
-				/>
+				<img src="/assets/images/infoconsig-logo-compact.png" alt="infoconsig" class="menu__logo_compact" />
+				<img src="/assets/images/infoconsig-logo.png" alt="infoconsig" class="menu__logo_complete" />
 			</div>
 			<div class="menu__profile">
 				<ul class="menu__items">
 					<li class="menu__items_item !bg-danger">
-						<button v-tippy:top type="button">
+						<button v-tippy:top type="button" @click="confirmLogout">
 							<icon-exit />
 						</button>
 						<tippy target="top" placement="top"> Deseja sair? </tippy>
@@ -87,31 +184,62 @@ const toggleShow = (value: string) => {
 		</div>
 		<hr class="separator" />
 		<div class="menu__main flex-wrap">
+
 			<ul class="menu__main_list mb-1">
+				<li v-for="page in pages" :key="page.id" class="relative">
+					<!-- Página principal sem submenu -->
+					<router-link
+						v-if="!page.children || !page.children.length"
+						:to="page.url"
+						class="menu__main_list_item"
+					>
+						{{ page.name }}
+					</router-link>
+
+					<!-- Página principal com submenu -->
+					<div v-else>
+						<button class="menu__main_list_item relative" @click="toggleShow(page.slug)">
+							{{ page.name }}
+							<icon-arrow-down />
+						</button>
+						<div
+							id="dropdownNavbar"
+							class="absolute left-0 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 z-10"
+							:class="showMenu === page.slug ? '' : 'hidden'"
+						>
+							<ul class="py-2 text-sm text-gray-700">
+								<li v-for="child in page.children" :key="child.id">
+									<router-link :to="child.url" class="block px-4 py-2 hover:bg-gray-100">
+										{{ child.name }}
+									</router-link>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<!-- <ul class="menu__main_list mb-1">
 				<li>
 					<router-link :to="{ name: 'dashboard' }" class="menu__main_list_item">
+						 <font-awesome-icon icon="home" class="menu__main_list_icon" />
+
+
 						<icon-home class="menu__main_list_icon" />
 						Dashboard
 					</router-link>
 				</li>
 				<li>
-					<button
-						class="menu__main_list_item relative"
-						@click="toggleShow('consultas')"
-					>
+					<button class="menu__main_list_item relative" @click="toggleShow('consultas')">
+						 <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="menu__main_list_icon" />
+
 						<icon-search class="menu__main_list_icon" />
 						Consultas
 						<icon-arrow-down />
-						<div
-							id="dropdownNavbar"
+						<div id="dropdownNavbar"
 							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'consultas' ? '' : 'hidden'"
-						>
-							<ul
-								class="py-2 text-sm text-gray-700"
-								aria-labelledby="dropdownLargeButton"
-							>
-								<!-- <li>
+							:class="showMenu === 'consultas' ? '' : 'hidden'">
+							<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
+								 <li>
 									<router-link
 										:to="{ name: 'consultas-rmc' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -119,7 +247,7 @@ const toggleShow = (value: string) => {
 										RMC
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-contratos' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -127,7 +255,7 @@ const toggleShow = (value: string) => {
 										Contratos
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-historico' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -135,7 +263,7 @@ const toggleShow = (value: string) => {
 										Histórico de Desconto
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-consignataria-servidor' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -143,7 +271,7 @@ const toggleShow = (value: string) => {
 										Consignatária
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-atualizacao-margens' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -151,7 +279,7 @@ const toggleShow = (value: string) => {
 										Atualização das Margens
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-historico-reserva-margem' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -159,7 +287,7 @@ const toggleShow = (value: string) => {
 										Histórico da Reserva da Margem
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-solicitacoes' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -167,7 +295,7 @@ const toggleShow = (value: string) => {
 										Solicitações
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-resumo-margem' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -175,84 +303,69 @@ const toggleShow = (value: string) => {
 										Resumo da Margem
 									</router-link>
 								</li> -->
-								<!-- <li>
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-previsao-descontos' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Previsão de Descontos
 									</router-link>
-								</li> -->
+								</li>
 								<li>
-									<router-link
-										:to="{ name: 'consultas-pessoas' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
+									<router-link :to="{ name: 'consultas-pessoas' }"
+										class="block px-4 py-2 hover:bg-gray-100">
 										Pessoas Cadastradas
 									</router-link>
 								</li>
-								<!-- <li>
+								 <li>
 									<router-link
 										:to="{ name: 'consultas-consignador' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Consignador
 									</router-link>
-								</li> -->
-								<!-- <li>
-									<router-link
-										:to="{ name: 'cadastro-operador' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
+								</li>
+								<li>
+									<router-link :to="{ name: 'cadastro-operador' }"
+										class="block px-4 py-2 hover:bg-gray-100">
 										Operadores
 									</router-link>
-								</li> -->
-								<!-- <li>
+								</li>
+								 <li>
 									<router-link
 										:to="{ name: 'cadastro-perfil-operador' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Cadastro Operadores
 									</router-link>
-								</li> -->
+								</li>
 							</ul>
 						</div>
 					</button>
 				</li>
 				<li>
-					<button
-						class="menu__main_list_item relative"
-						@click="toggleShow('cadastro')"
-					>
+					<button class="menu__main_list_item relative" @click="toggleShow('cadastro')">
+						 <font-awesome-icon :icon="['fas', 'table-list']" class="menu__main_list_icon" />
 						<icon-calculator class="menu__main_list_icon" />
 						Cadastro
 						<icon-arrow-down />
-						<div
-							id="dropdownNavbar"
+						<div id="dropdownNavbar"
 							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'cadastro' ? '' : 'hidden'"
-						>
-							<ul
-								class="py-2 text-sm text-gray-700"
-								aria-labelledby="dropdownLargeButton"
-							>
+							:class="showMenu === 'cadastro' ? '' : 'hidden'">
+							<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
 								<li>
-									<router-link
-										:to="{ name: 'consultas-consignante-master' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
+									<router-link :to="{ name: 'consultas-consignante-master' }"
+										class="block px-4 py-2 hover:bg-gray-100">
 										Consignante Master
 									</router-link>
 								</li>
 								<li>
-									<router-link
-										:to="{ name: 'consultas-consignantes' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
+									<router-link :to="{ name: 'consultas-consignantes' }"
+										class="block px-4 py-2 hover:bg-gray-100">
 										Consignantes
 									</router-link>
 								</li>
-								<!-- <li>
+								 <li>
 									<router-link
 										:to="{ name: 'cadastro-administrador' }"
 										class="block px-4 py-2 hover:bg-gray-100"
@@ -260,57 +373,59 @@ const toggleShow = (value: string) => {
 										Administrador
 									</router-link>
 								</li> -->
-								<!-- <hr class="mx-2" /> -->
-								<!-- <li>
+			<!-- <hr class="mx-2" /> -->
+			<!-- <li>
 									<router-link
 										:to="{ name: 'consultas-consignataria-admin' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Consignatária Admin
 									</router-link>
-								</li> -->
+								</li>
 							</ul>
 						</div>
 					</button>
 				</li>
 				<li>
-					<button
-						class="menu__main_list_item relative"
-						@click="toggleShow('configuracoes')"
-					>
+					<button class="menu__main_list_item relative" @click="toggleShow('configuracoes')">
+						 <font-awesome-icon :icon="['fas', 'gear']" class="menu__main_list_icon"/>
+
 						<icon-config class="menu__main_list_icon" />
 						Configurações
 						<icon-arrow-down />
-						<div
-							id="dropdownNavbar"
+						<div id="dropdownNavbar"
 							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'configuracoes' ? '' : 'hidden'"
-						>
-							<ul
-								class="py-2 text-sm text-gray-700"
-								aria-labelledby="dropdownLargeButton"
-							>
+							:class="showMenu === 'configuracoes' ? '' : 'hidden'">
+							<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
 								<li>
-									<router-link
-										:to="{ name: 'configuracoes-tabelas-auxiliares' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
+									<router-link :to="{ name: 'configuracoes-tabelas-auxiliares' }"
+										class="block px-4 py-2 hover:bg-gray-100">
 										Tableas Auxiliares
 									</router-link>
 								</li>
-								<!-- <li>
+								<li>
+									<router-link :to="{ name: 'paginas' }" class="block px-4 py-2 hover:bg-gray-100">
+										Paginas
+									</router-link>
+								</li>
+								<li>
+									<router-link :to="{ name: 'perfil' }" class="block px-4 py-2 hover:bg-gray-100">
+										Perfil
+									</router-link>
+								</li>
+								 <li>
 									<router-link
 										:to="{ name: 'configuracoes-logomarcas' }"
 										class="block px-4 py-2 hover:bg-gray-100"
 									>
 										Logomarcas
 									</router-link>
-								</li> -->
+								</li>
 							</ul>
 						</div>
 					</button>
 				</li>
-				<!-- <li>
+				 <li>
 					<button
 						class="menu__main_list_item relative"
 						@click="toggleShow('simulador')"
@@ -354,8 +469,8 @@ const toggleShow = (value: string) => {
 							</ul>
 						</div>
 					</button>
-				</li> -->
-				<!-- <li>
+				</li>
+				 <li>
 					<button
 						class="menu__main_list_item relative"
 						@click="toggleShow('documentos')"
@@ -383,23 +498,27 @@ const toggleShow = (value: string) => {
 							</ul>
 						</div>
 					</button>
-				</li> -->
+				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+
+
+						 <font-awesome-icon :icon="['fas', 'circle-question']"  class="menu__main_list_icon"/>
 						<icon-help class="menu__main_list_icon" />
 						Ajuda
 					</router-link>
 				</li>
 				<li>
 					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
+						 <font-awesome-icon :icon="['fas', 'graduation-cap']"  class="menu__main_list_icon"/>
 						<icon-academic class="menu__main_list_icon" />
 						Educonsig
 					</router-link>
 				</li>
-			</ul>
+			</ul> -->
 			<div class="message_welcome">
-				<p>Ola, André Marcio Borges</p>
-				<p>Seu perfil: <span>Servidor</span></p>
+				<p>Olá, {{ userName }}</p>
+				<p>Seu perfil: <span>{{ userRole }}</span></p>
 			</div>
 		</div>
 	</header>
