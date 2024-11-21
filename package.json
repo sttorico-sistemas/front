@@ -11,10 +11,14 @@
 	},
 	"dependencies": {
 		"@bhplugin/vue3-datatable": "^1.0.3",
+		"@fortawesome/fontawesome-svg-core": "^6.7.1",
+		"@fortawesome/free-regular-svg-icons": "^6.7.1",
+		"@fortawesome/free-solid-svg-icons": "^6.7.1",
 		"@fortawesome/vue-fontawesome": "^3.0.8",
 		"@suadelabs/vue3-multiselect": "^1.0.2",
 		"@tanstack/vue-query": "^5.60.5",
 		"@tanstack/vue-table": "^8.20.5",
+		"@vee-validate/zod": "^4.14.7",
 		"@vuelidate/core": "^2.0.0",
 		"@vuelidate/validators": "^2.0.0",
 		"@vueuse/core": "^11.2.0",
@@ -41,7 +45,8 @@
 		"vue-router": "^4.4.5",
 		"vue3-apexcharts": "^1.4.1",
 		"vue3-perfect-scrollbar": "^1.6.0",
-		"vue3-popper": "^1.5.0"
+		"vue3-popper": "^1.5.0",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.5.3",
