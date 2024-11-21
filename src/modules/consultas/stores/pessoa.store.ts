@@ -5,7 +5,7 @@ import { PaginacaoArgs } from "src/core/types/paginacao.type";
 import { PessoaRepository } from "../repositories/pessoa.repository";
 import Swal from "sweetalert2";
 import { BaseError } from "src/core/errors/base.error";
-import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from "src/modules/configuracoes/stores/tabelas_auxiliares.store";
+import { tabelasAuxiliaresStore as _tabelasAuxiliaresStore } from '@/modules/configuracoes/stores';
 import { EstadoUf } from "../types/estado";
 import { TableValue } from "src/modules/configuracoes/types/table_value";
 import { TabelasAuxiliaresRepository } from "src/modules/configuracoes/repositories/tabelas_auxiliares.repository";
