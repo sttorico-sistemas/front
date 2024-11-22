@@ -34,7 +34,7 @@ defineProps({
 			<template v-if="isLoading">
 				<table-row v-for="_row in Array.from({ length: rowLimit })" :key="`row-skeleton-${_row}`">
 					<table-cell v-for="_cell in Array.from({ length: columnSize })" :key="`cell-skeleton-${_cell}`">
-						<skeleton class="h-5 w-full" />
+						<skeleton class="h-6 w-full m-2" />
 					</table-cell>
 				</table-row>
 			</template>

@@ -19,9 +19,11 @@ import IconNotification from 'src/core/components/Icons/IconNotification.vue';
 import IconProfile from 'src/core/components/Icons/IconProfile.vue';
 import IconSearch from 'src/core/components/Icons/IconSearch.vue';
 import IconConfig from 'src/core/components/Icons/IconConfig.vue';
+import { useStorage } from '../composables';
 
 // Gerenciamento do estado do menu
 const showMenu = ref('');
+const storage = useStorage()
 const toggleShow = (value: string) => {
 	showMenu.value = showMenu.value === value ? '' : value;
 };
@@ -36,7 +38,7 @@ const confirmLogout = () => {
 		cancelButtonText: 'Não'
 	}).then((result) => {
 		if (result.isConfirmed) {
-			localStorage.clear(); // Limpa o localStorage
+			storage.clear(); // Limpa o storage
 			window.location.href = '/login'; // Redireciona para a página de login
 		}
 	});
@@ -50,7 +52,7 @@ const operadorId = ref<string>('');
 // Função para buscar dados do usuário
 const fetchUserData = async () => {
 	try {
-		const authToken = localStorage.getItem('authToken');
+		const authToken = storage.getItem('authToken');
 		if (authToken) {
 			const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/user', {
 				headers: {
@@ -62,7 +64,7 @@ const fetchUserData = async () => {
 			userName.value = userData.nome;
 			userRole.value = userData.operador;
 			operadorId.value = userData.operador_id;
-			localStorage.setItem('operadorId', userData.operador_id);
+			storage.setItem('operadorId', userData.operador_id);
 
 		} else {
 			console.error('Token não encontrado no storage.');
@@ -87,14 +89,14 @@ interface Page {
 // Função para buscar o menu acessível
 const fetchAccessibleMenu = async (): Promise<void> => {
 	try {
-		// Recuperar o authToken do localStorage
-		const authToken = localStorage.getItem('authToken');
+		// Recuperar o authToken do storage
+		const authToken = storage.getItem('authToken');
 		if (!authToken) {
 			throw new Error('Token de autenticação não encontrado.');
 		}
 
-		// Recuperar o operadorId do localStorage ou de outra fonte
-		const operadorId = localStorage.getItem('operadorId');
+		// Recuperar o operadorId do storage ou de outra fonte
+		const operadorId = storage.getItem('operadorId');
 		if (!operadorId) {
 			throw new Error('ID do operador não encontrado.');
 		}
