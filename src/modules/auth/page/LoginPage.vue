@@ -10,6 +10,7 @@ import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
 import IconUser from 'src/core/components/Icons/IconUser.vue'
 import IconLock from 'src/core/components/Icons/IconLock.vue'
 import IconEye from 'src/core/components/Icons/IconEye.vue'
+import { useStorage } from '@/core/composables'
 
 // Declarações e estados reativos
 const typeInput = ref('password')
@@ -29,6 +30,7 @@ const cpf = ref('')
 const password = ref('')
 const errorMessage = ref('')
 const router = useRouter()
+const storage = useStorage()
 
 // Mostrar/esconder senha
 const showPassword = () => {
@@ -55,8 +57,8 @@ const login = async () => {
 		})
 
 		if (response.data && response.data.data.authToken) {
-			localStorage.setItem('authToken', response.data.data.authToken)
-			localStorage.setItem('tokenType', response.data.data.token_type)
+			storage.setItem('authToken', response.data.data.authToken)
+			storage.setItem('tokenType', response.data.data.token_type)
 
 			Swal.close()
 			router.push('/')

@@ -6,26 +6,29 @@ import { TableModel } from "../models/table.model";
 import { TableValueModel } from "../models/table_value.model";
 import { ResponseApiPagination } from "@/modules/configuracoes/types";
 import { HttpClientProps } from "@/modules/configuracoes/types/http-client";
+import { Ref } from "vue";
 
 export class TabelasAuxiliaresRepository {
 	private http = useAxios();
 	private basePath = 'auxiliar'
 	#QUERY_KEY = 'auxiliary'
 
-	getQueryKey(tag = this.#QUERY_KEY, pagination?: { page?: number, limit?: number }, ...others: string[]) {
+	getQueryKey(tag?: string | Ref<string>, pagination?: { page?: Ref<number>, limit?: Ref<number> }, ...others: Ref<unknown>[]) {
 		if (pagination === undefined) {
-			return [tag]
+			return [tag ?? this.#QUERY_KEY]
 		}
-		return [tag, pagination, ...others]
+		return [tag ?? this.#QUERY_KEY, pagination, ...others]
 	}
 
-	async createTableValue(tableValue: Pick<TableValue, 'nome' | 'tableUrl'>, configParams?: HttpClientProps<TableValue>): Promise<TableValue> {
-		if (!tableValue?.tableUrl) { return {} as TableValue }
+	async createTableValue<T extends Record<string, unknown>>({ tableUrl, ...body }: Pick<TableValue & T, 'nome' | 'tableUrl'>, configParams?: HttpClientProps<TableValue>): Promise<TableValue> {
+		console.log('createTableValue', { tableUrl, ...body })
+		if (!tableUrl) { return {} as TableValue }
 		try {
-			const response = await this.http.post(`/${tableValue.tableUrl.startsWith('auxiliary') ? tableValue.tableUrl.replace('_', '-') : 'auxiliary/' + tableValue.tableUrl.replace('_', '-')}`, {
-				nome: tableValue.nome,
-			}, configParams);
-			return TableValueModel.fromRecord(response.data.data);
+			const response = await this.http.post<any, any>(
+				`/${tableUrl.startsWith('auxiliary') ? tableUrl.replace('_', '-') : 'auxiliary/' + tableUrl.replace('_', '-')}`,
+				body
+				, configParams);
+			return TableValueModel.fromRecord(response.data);
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -58,12 +61,12 @@ export class TabelasAuxiliaresRepository {
 		if (!tableUrl) return []
 		try {
 			// TODO: Verificar isso com o backend
-			const response = await this.http.get(`/${tableUrl.startsWith('auxiliary') ? tableUrl.replace('_', '-') : 'auxiliary/' + tableUrl.replace('_', '-')}`, {
+			const response = await this.http.get<any>(`/${tableUrl.startsWith('auxiliary') ? tableUrl.replace('_', '-') : 'auxiliary/' + tableUrl.replace('_', '-')}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.data.map((e: Record<string, any>) => TableValueModel.fromRecord(e));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			const values = response.data.map((e: Record<string, any>) => TableValueModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
@@ -76,8 +79,8 @@ export class TabelasAuxiliaresRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
-			const tables = response.data.data.map((e: Record<string, any>) => TableModel.fromRecord(e));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, tables) }
+			const tables = response.data.map((e: Record<string, any>) => TableModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, tables) }
 			return tables;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

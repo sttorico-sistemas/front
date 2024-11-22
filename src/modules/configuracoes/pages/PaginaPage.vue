@@ -10,11 +10,14 @@ import InputLabel from 'src/core/components/Inputs/InputLabel.vue';
 
 // Ícones
 import IconAdd from 'src/core/components/Icons/IconAdd.vue';
+import { useAxios } from '@/core/composables';
 
 // Controle de estado
 const isOpenDialog = ref(false);
 const isEditMode = ref(false);
-const pages = ref<any[]>([]); // Lista de páginas para montar o select
+const pages = ref<any[]>([]);
+const httpClient = useAxios()
+	// Lista de páginas para montar o select
 
 const pageForm = reactive({
 	id: null,
@@ -27,17 +30,9 @@ const pageForm = reactive({
 // Fetch de páginas do backend
 const fetchPages = async () => {
 	try {
-		const authToken = localStorage.getItem('authToken');
-		if (!authToken) {
-			console.error('Token não encontrado no storage.');
-			return;
-		}
+		const response = await httpClient.get<any>('/organize/pages');
 
-		const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages', {
-			headers: { Authorization: `Bearer ${authToken}` },
-		});
-
-		pages.value = response.data.data;
+		pages.value = response.data;
 		console.log('Páginas carregadas:', pages.value);
 	} catch (error) {
 		console.error('Erro ao buscar dados das páginas:', error);
@@ -47,20 +42,12 @@ const fetchPages = async () => {
 // Submeter formulário de página (adicionar ou editar)
 const submitPage = async () => {
 	try {
-		const authToken = localStorage.getItem('authToken');
-		if (!authToken) {
-			console.error('Token não encontrado no storage.');
-			return;
-		}
-
-		const method = isEditMode.value ? 'put' : 'post';
+    const runtime = isEditMode.value ? httpClient.put : httpClient.post;
 		const url = isEditMode.value
-			? `https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages/${pageForm.id}`
-			: 'https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages';
+			? `/organize/pages/${pageForm.id}`
+			: '/organize/pages';
 
-		await axios[method](url, pageForm, {
-			headers: { Authorization: `Bearer ${authToken}` },
-		});
+		await runtime<any, any>(url, pageForm);
 
 		await fetchPages(); // Atualiza a lista de páginas
 		isOpenDialog.value = false;

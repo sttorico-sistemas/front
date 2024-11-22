@@ -69,7 +69,7 @@ const formattedAllStates = computed(() => {
 			</FormItem>
 		</FormField>
 
-		<FormField v-slot="{ componentField }" name="name">
+		<FormField v-slot="{ componentField }" name="ibgeCode">
 			<FormItem class="grid grid-cols-4 items-center gap-x-4 gap-y-1">
 				<FormLabel class="text-right">Código IBGE</FormLabel>
 				<FormControl>
