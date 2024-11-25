@@ -155,7 +155,6 @@ export class AxiosHttpClientAdapter implements HttpClient {
 	private async successRequestInterceptor(config: InternalAxiosRequestConfig) {
 		if (this.storageInstance && this.routerInstance) {
 			const authToken = this.storageInstance.getItem('authToken')
-			console.log(authToken)
 
 			if (!authToken && !(!config.url || !this.GLOBAL_ROUTES.includes(config.url))) {
 				const controller = new AbortController();
@@ -170,8 +169,6 @@ export class AxiosHttpClientAdapter implements HttpClient {
 				})
 				controller.abort()
 			}
-
-			console.log(authToken)
 
 			config.headers.Authorization = `Bearer ${authToken}`
 		}
