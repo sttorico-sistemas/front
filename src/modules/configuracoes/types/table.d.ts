@@ -1,4 +1,4 @@
-export type TableURL = 'tipo-endereco' | 'tipo-entidade' | 'tipo-contato' | 'tipo-cobranca'
+export type TableURL = ('tipo-endereco' | 'tipo-entidade' | 'tipo-contato' | 'tipo-cobranca') & string
 
 export type Table = {
   id: number;
@@ -8,3 +8,4 @@ export type Table = {
   createdAt?: Date;
   updatedAt?: Date;
 }
+

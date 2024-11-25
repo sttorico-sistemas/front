@@ -1,5 +1,6 @@
 <script setup>
 import { useMeta } from 'src/core/composables/use_meta'
+import { Toaster } from '@/core/components/sweet-alert';
 
 useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
 </script>
@@ -8,6 +9,7 @@ useMeta({ title: 'Gestão Das Consignações | Infoconsig' })
 	<app-layout layout-name="default-layout" class="dashboard-layout">
 		<router-view></router-view>
 	</app-layout>
+	<Toaster />
 </template>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 import { BaseModel } from "src/core/models/base.model";
-import { TableValue } from "../types/table_value";
+import { TableValue } from "../types";
 
 export class TableValueModel extends BaseModel implements TableValue {
   public id: number;

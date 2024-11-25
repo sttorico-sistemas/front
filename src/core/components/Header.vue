@@ -1,139 +1,118 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+	import { ref, onMounted, computed } from 'vue'
+	import axios from 'axios'
+	import Swal from 'sweetalert2'
 
-// Importação de ícones
-import IconAcademic from 'src/core/components/Icons/IconAcademic.vue';
-import IconArrowDown from 'src/core/components/Icons/IconArrowDown.vue';
-import IconCalculator from 'src/core/components/Icons/IconCalculator.vue';
-import IconCalendar from 'src/core/components/Icons/IconCalendar.vue';
-import IconChat from 'src/core/components/Icons/IconChat.vue';
-import IconDocuments from 'src/core/components/Icons/IconDocuments.vue';
-import IconExit from 'src/core/components/Icons/IconExit.vue';
-import IconHelp from 'src/core/components/Icons/IconHelp.vue';
-import IconHome from 'src/core/components/Icons/IconHome.vue';
-import IconMessage from 'src/core/components/Icons/IconMessage.vue';
-import IconModo from 'src/core/components/Icons/IconModo.vue';
-import IconNotification from 'src/core/components/Icons/IconNotification.vue';
-import IconProfile from 'src/core/components/Icons/IconProfile.vue';
-import IconSearch from 'src/core/components/Icons/IconSearch.vue';
-import IconConfig from 'src/core/components/Icons/IconConfig.vue';
+	// Importação de ícones
+	import IconArrowDown from 'src/core/components/Icons/IconArrowDown.vue'
+	import IconCalendar from 'src/core/components/Icons/IconCalendar.vue'
+	import IconChat from 'src/core/components/Icons/IconChat.vue'
+	import IconExit from 'src/core/components/Icons/IconExit.vue'
+	import IconMessage from 'src/core/components/Icons/IconMessage.vue'
+	import IconModo from 'src/core/components/Icons/IconModo.vue'
+	import IconNotification from 'src/core/components/Icons/IconNotification.vue'
+	import IconProfile from 'src/core/components/Icons/IconProfile.vue'
+	import { useAxios, useStorage } from '../composables'
+	import { useQuery } from '@tanstack/vue-query'
+	import { generalRepository } from '../stores/general.stores'
+	import {
+		Menubar,
+		MenubarContent,
+		MenubarItem,
+		MenubarMenu,
+		MenubarTrigger,
+	} from '@/core/components/menubar'
+	import { Skeleton } from '@/core/components/skeleton'
+	import { useRouter } from 'vue-router'
 
-// Gerenciamento do estado do menu
-const showMenu = ref('');
-const toggleShow = (value: string) => {
-	showMenu.value = showMenu.value === value ? '' : value;
-};
+	// Gerenciamento do estado do menu
+	const showMenu = ref('')
+	const userName = ref<string>('')
+	const userRole = ref<string>('')
+	const operadorId = ref<string | undefined>(undefined)
+	const storage = useStorage()
+	const httpClient = useAxios()
+	const enabledPages = computed(() => !!operadorId.value)
+	const router = useRouter()
 
-// Função de logout com SweetAlert
-const confirmLogout = () => {
-	Swal.fire({
-		title: 'Deseja sair?',
-		icon: 'warning',
-		showCancelButton: true,
-		confirmButtonText: 'Sim',
-		cancelButtonText: 'Não'
-	}).then((result) => {
-		if (result.isConfirmed) {
-			localStorage.clear(); // Limpa o localStorage
-			window.location.href = '/login'; // Redireciona para a página de login
-		}
-	});
-};
+	// Estado do usuário
 
-// Estado do usuário
-const userName = ref<string>('');
-const userRole = ref<string>('');
-const operadorId = ref<string>('');
+	const { data: pages } = useQuery({
+		enabled: enabledPages,
+		queryKey: generalRepository.getQueryKey('pages', {}, operadorId),
+		queryFn: ({ signal }) =>
+			generalRepository.getPages({
+				signal,
+				params: { operador_id: operadorId.value },
+			}),
+	})
 
-// Função para buscar dados do usuário
-const fetchUserData = async () => {
-	try {
-		const authToken = localStorage.getItem('authToken');
-		if (authToken) {
-			const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/user', {
-				headers: {
-					Authorization: `Bearer ${authToken}`,
-				},
-			});
+	const pagesData = computed(() => pages?.value ?? [])
 
-			const userData = response.data;
-			userName.value = userData.nome;
-			userRole.value = userData.operador;
-			operadorId.value = userData.operador_id;
-			localStorage.setItem('operadorId', userData.operador_id);
+	// Função para buscar dados do usuário
+	const fetchUserData = async () => {
+		try {
+			const authToken = storage.getItem('authToken')
+			if (authToken) {
+				const response = await httpClient.get<any>('/user')
 
-		} else {
-			console.error('Token não encontrado no storage.');
-		}
-	} catch (error) {
-		console.error('Erro ao buscar dados do usuário:', error);
-	}
-};
-
-// Estado das páginas do menu
-const pages = ref<Array<Page>>([]);
-
-interface Page {
-	id: number;
-	name: string;
-	slug: string;
-	url: string;
-	parent_id: number | null;
-	children?: Array<Page>;
-}
-
-// Função para buscar o menu acessível
-const fetchAccessibleMenu = async (): Promise<void> => {
-	try {
-		// Recuperar o authToken do localStorage
-		const authToken = localStorage.getItem('authToken');
-		if (!authToken) {
-			throw new Error('Token de autenticação não encontrado.');
-		}
-
-		// Recuperar o operadorId do localStorage ou de outra fonte
-		const operadorId = localStorage.getItem('operadorId');
-		if (!operadorId) {
-			throw new Error('ID do operador não encontrado.');
-		}
-
-		// Fazer a requisição GET para o menu acessível
-		const response = await axios.get(
-			'https://dev-02-apiv2.management.infoconsig.tec.br/api/menu/accessible',
-			{
-				headers: {
-					Authorization: `Bearer ${authToken}`,
-				},
-				params: {
-					operador_id: operadorId, // Enviar operador_id como query string
-				},
+				const userData = response
+				userName.value = userData.nome
+				userRole.value = userData.operador
+				operadorId.value = userData.operador_id
+				storage.setItem('operadorId', userData.operador_id)
+			} else {
+				console.error('Token não encontrado no storage.')
 			}
-		);
-
-		// Atualizar o estado das páginas
-		pages.value = response.data;
-	} catch (error) {
-		console.error('Erro ao buscar o menu acessível:', error);
+		} catch (error) {
+			console.error('Erro ao buscar dados do usuário:', error)
+		}
 	}
-};
 
+	const toggleShow = (value: string) => {
+		showMenu.value = showMenu.value === value ? '' : value
+	}
 
+	// Função de logout com SweetAlert
+	const confirmLogout = () => {
+		Swal.fire({
+			title: 'Deseja sair?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Sim',
+			cancelButtonText: 'Não',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				storage.clear() // Limpa o storage
+				window.location.href = '/login' // Redireciona para a página de login
+			}
+		})
+	}
 
-// Chamar funções no onMounted
-onMounted(() => {
-	fetchUserData();
-	fetchAccessibleMenu();
-});
+	onMounted(() => {
+		const operadorStorageId = storage.getItem('operadorId')
+		console.log('operadorStorageId', operadorStorageId)
+		if (operadorStorageId) {
+			operadorId.value = operadorStorageId
+		}
+		fetchUserData()
+	})
 </script>
 
 <template>
 	<header>
 		<div class="menu flex-wrap">
 			<div class="menu__logo mb-1">
-				<img src="/assets/images/infoconsig-logo-compact.png" alt="infoconsig" class="menu__logo_compact" />
-				<img src="/assets/images/infoconsig-logo.png" alt="infoconsig" class="menu__logo_complete" />
+				<img
+					src="/assets/images/infoconsig-logo-compact.png"
+					alt="infoconsig"
+					class="menu__logo_compact"
+				/>
+				<img
+					src="/assets/images/infoconsig-logo.png"
+					alt="infoconsig"
+					class="menu__logo_complete"
+				/>
 			</div>
 			<div class="menu__profile">
 				<ul class="menu__items">
@@ -183,11 +162,10 @@ onMounted(() => {
 			</div>
 		</div>
 		<hr class="separator" />
-		<div class="menu__main flex-wrap">
 
-			<ul class="menu__main_list mb-1">
-				<li v-for="page in pages" :key="page.id" class="relative">
-					<!-- Página principal sem submenu -->
+		<div class="menu__main flex-wrap">
+			<!-- <ul class="menu__main_list mb-1">
+				<li v-for="page in pagesData" :key="page.id" class="relative">
 					<router-link
 						v-if="!page.children || !page.children.length"
 						:to="page.url"
@@ -196,9 +174,11 @@ onMounted(() => {
 						{{ page.name }}
 					</router-link>
 
-					<!-- Página principal com submenu -->
 					<div v-else>
-						<button class="menu__main_list_item relative" @click="toggleShow(page.slug)">
+						<button
+							class="menu__main_list_item relative"
+							@click="toggleShow(page.slug)"
+						>
 							{{ page.name }}
 							<icon-arrow-down />
 						</button>
@@ -209,7 +189,10 @@ onMounted(() => {
 						>
 							<ul class="py-2 text-sm text-gray-700">
 								<li v-for="child in page.children" :key="child.id">
-									<router-link :to="child.url" class="block px-4 py-2 hover:bg-gray-100">
+									<router-link
+										:to="child.url"
+										class="block px-4 py-2 hover:bg-gray-100"
+									>
 										{{ child.name }}
 									</router-link>
 								</li>
@@ -217,308 +200,65 @@ onMounted(() => {
 						</div>
 					</div>
 				</li>
-			</ul>
-			<!-- <ul class="menu__main_list mb-1">
-				<li>
-					<router-link :to="{ name: 'dashboard' }" class="menu__main_list_item">
-						 <font-awesome-icon icon="home" class="menu__main_list_icon" />
-
-
-						<icon-home class="menu__main_list_icon" />
-						Dashboard
-					</router-link>
-				</li>
-				<li>
-					<button class="menu__main_list_item relative" @click="toggleShow('consultas')">
-						 <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="menu__main_list_icon" />
-
-						<icon-search class="menu__main_list_icon" />
-						Consultas
-						<icon-arrow-down />
-						<div id="dropdownNavbar"
-							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'consultas' ? '' : 'hidden'">
-							<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
-								 <li>
-									<router-link
-										:to="{ name: 'consultas-rmc' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										RMC
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-contratos' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Contratos
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-historico' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Histórico de Desconto
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-consignataria-servidor' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Consignatária
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-atualizacao-margens' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Atualização das Margens
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-historico-reserva-margem' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Histórico da Reserva da Margem
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-solicitacoes' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Solicitações
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-resumo-margem' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Resumo da Margem
-									</router-link>
-								</li> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-previsao-descontos' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Previsão de Descontos
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'consultas-pessoas' }"
-										class="block px-4 py-2 hover:bg-gray-100">
-										Pessoas Cadastradas
-									</router-link>
-								</li>
-								 <li>
-									<router-link
-										:to="{ name: 'consultas-consignador' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Consignador
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'cadastro-operador' }"
-										class="block px-4 py-2 hover:bg-gray-100">
-										Operadores
-									</router-link>
-								</li>
-								 <li>
-									<router-link
-										:to="{ name: 'cadastro-perfil-operador' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Cadastro Operadores
-									</router-link>
-								</li>
-							</ul>
-						</div>
-					</button>
-				</li>
-				<li>
-					<button class="menu__main_list_item relative" @click="toggleShow('cadastro')">
-						 <font-awesome-icon :icon="['fas', 'table-list']" class="menu__main_list_icon" />
-						<icon-calculator class="menu__main_list_icon" />
-						Cadastro
-						<icon-arrow-down />
-						<div id="dropdownNavbar"
-							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'cadastro' ? '' : 'hidden'">
-							<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
-								<li>
-									<router-link :to="{ name: 'consultas-consignante-master' }"
-										class="block px-4 py-2 hover:bg-gray-100">
-										Consignante Master
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'consultas-consignantes' }"
-										class="block px-4 py-2 hover:bg-gray-100">
-										Consignantes
-									</router-link>
-								</li>
-								 <li>
-									<router-link
-										:to="{ name: 'cadastro-administrador' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Administrador
-									</router-link>
-								</li> -->
-			<!-- <hr class="mx-2" /> -->
-			<!-- <li>
-									<router-link
-										:to="{ name: 'consultas-consignataria-admin' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Consignatária Admin
-									</router-link>
-								</li>
-							</ul>
-						</div>
-					</button>
-				</li>
-				<li>
-					<button class="menu__main_list_item relative" @click="toggleShow('configuracoes')">
-						 <font-awesome-icon :icon="['fas', 'gear']" class="menu__main_list_icon"/>
-
-						<icon-config class="menu__main_list_icon" />
-						Configurações
-						<icon-arrow-down />
-						<div id="dropdownNavbar"
-							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'configuracoes' ? '' : 'hidden'">
-							<ul class="py-2 text-sm text-gray-700" aria-labelledby="dropdownLargeButton">
-								<li>
-									<router-link :to="{ name: 'configuracoes-tabelas-auxiliares' }"
-										class="block px-4 py-2 hover:bg-gray-100">
-										Tableas Auxiliares
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'paginas' }" class="block px-4 py-2 hover:bg-gray-100">
-										Paginas
-									</router-link>
-								</li>
-								<li>
-									<router-link :to="{ name: 'perfil' }" class="block px-4 py-2 hover:bg-gray-100">
-										Perfil
-									</router-link>
-								</li>
-								 <li>
-									<router-link
-										:to="{ name: 'configuracoes-logomarcas' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Logomarcas
-									</router-link>
-								</li>
-							</ul>
-						</div>
-					</button>
-				</li>
-				 <li>
-					<button
-						class="menu__main_list_item relative"
-						@click="toggleShow('simulador')"
-					>
-						<icon-calculator class="menu__main_list_icon" />
-						Simulador
-						<icon-arrow-down />
-						<div
-							id="dropdownNavbar"
-							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'simulador' ? '' : 'hidden'"
-						>
-							<ul
-								class="py-2 text-sm text-gray-700"
-								aria-labelledby="dropdownLargeButton"
-							>
-								<li>
-									<router-link
-										:to="{ name: 'simulador-taxa-juros' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Taxas de Juros
-									</router-link>
-								</li>
-								<li>
-									<router-link
-										:to="{ name: 'simulador-calculadora' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Calculadora
-									</router-link>
-								</li>
-								<li>
-									<router-link
-										:to="{ name: 'simulador-emprestimos' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Empréstimos
-									</router-link>
-								</li>
-							</ul>
-						</div>
-					</button>
-				</li>
-				 <li>
-					<button
-						class="menu__main_list_item relative"
-						@click="toggleShow('documentos')"
-					>
-						<icon-documents class="menu__main_list_icon" />
-						Documentos
-						<icon-arrow-down />
-						<div
-							id="dropdownNavbar"
-							class="z-10 absolute font-normal bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-[50px]"
-							:class="showMenu === 'documentos' ? '' : 'hidden'"
-						>
-							<ul
-								class="py-2 text-sm text-gray-700"
-								aria-labelledby="dropdownLargeButton"
-							>
-								<li>
-									<router-link
-										:to="{ name: 'documentos-arquivados' }"
-										class="block px-4 py-2 hover:bg-gray-100"
-									>
-										Arquivados
-									</router-link>
-								</li>
-							</ul>
-						</div>
-					</button>
-				</li>
-				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
-
-
-						 <font-awesome-icon :icon="['fas', 'circle-question']"  class="menu__main_list_icon"/>
-						<icon-help class="menu__main_list_icon" />
-						Ajuda
-					</router-link>
-				</li>
-				<li>
-					<router-link :to="{ name: 'consultas' }" class="menu__main_list_item">
-						 <font-awesome-icon :icon="['fas', 'graduation-cap']"  class="menu__main_list_icon"/>
-						<icon-academic class="menu__main_list_icon" />
-						Educonsig
-					</router-link>
-				</li>
 			</ul> -->
+
+			<div class="flex gap-5">
+				<menubar
+					v-if="pagesData.length > 0"
+					v-for="page in pagesData"
+					:key="page.id"
+				>
+					<menubar-menu>
+						<menubar-trigger
+							as-child
+							@click="
+								() => {
+									if (!page?.children || !page?.children.length)
+										router.push(page.url)
+								}
+							"
+							class="rounded-lg flex gap-2 justify-center items-center px-4 py-2 hover:bg-[#1384ad] hover:text-white focus:bg-[#1384ad] focus:text-white"
+						>
+							<p class="font-semibold text-sm">
+								{{ page.name }}
+							</p>
+							<icon-arrow-down v-if="page.children && page.children.length" />
+						</menubar-trigger>
+						<menubar-content v-if="page.children && page.children.length > 0">
+							<menubar-item v-for="child in page.children" :key="child.id">
+								<router-link
+									:to="child.url"
+									class="block px-4 py-2 hover:bg-gray-100"
+								>
+									{{ child.name }}
+								</router-link>
+							</menubar-item>
+						</menubar-content>
+					</menubar-menu>
+				</menubar>
+
+				<menubar
+					v-else
+					v-for="page in Array.from({ length: 7 }, (_, i) => i)"
+					:key="`menubar_skeleton_${page}`"
+				>
+					<menubar-menu>
+						<menubar-trigger
+							class="rounded-lg flex gap-2 p-0"
+							as-child
+							disabled
+						>
+							<skeleton class="h-6 w-32 m-2" />
+						</menubar-trigger>
+					</menubar-menu>
+				</menubar>
+			</div>
+
 			<div class="message_welcome">
 				<p>Olá, {{ userName }}</p>
-				<p>Seu perfil: <span>{{ userRole }}</span></p>
+				<p>
+					Seu perfil: <span>{{ userRole }}</span>
+				</p>
 			</div>
 		</div>
 	</header>
@@ -529,129 +269,129 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-.separator {
-	background: #eaeaec;
-}
+	.separator {
+		background: #eaeaec;
+	}
 
-header {
-	width: 100%;
-	height: auto;
-	border: 1px solid #eaeaec;
-	background: #fff;
-	box-shadow:
-		0px 4px 6px -1px rgba(0, 0, 0, 0.1),
-		0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+	header {
+		width: 100%;
+		height: auto;
+		border: 1px solid #eaeaec;
+		background: #fff;
+		box-shadow:
+			0px 4px 6px -1px rgba(0, 0, 0, 0.1),
+			0px 2px 4px -2px rgba(0, 0, 0, 0.1);
 
-	.menu {
-		padding: 10px 12px;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-
-		&__logo {
+		.menu {
+			padding: 10px 12px;
 			display: flex;
-			align-items: baseline;
-			gap: 8px;
+			justify-content: space-between;
+			align-items: center;
 
-			&_compact {
-				width: 34px;
-				height: 36px;
-			}
-
-			&_complete {
-				width: 160px;
-				height: 32.381px;
-			}
-		}
-
-		&__profile {
-			.menu__items {
+			&__logo {
 				display: flex;
-				gap: 8.48px;
+				align-items: baseline;
+				gap: 8px;
 
-				&_item {
-					width: 35.519px;
-					height: 35.519px;
-					border-radius: 50%;
+				&_compact {
+					width: 34px;
+					height: 36px;
+				}
+
+				&_complete {
+					width: 160px;
+					height: 32.381px;
+				}
+			}
+
+			&__profile {
+				.menu__items {
 					display: flex;
-					justify-content: center;
-					align-items: center;
-					background-color: #1384ad;
+					gap: 8.48px;
+
+					&_item {
+						width: 35.519px;
+						height: 35.519px;
+						border-radius: 50%;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						background-color: #1384ad;
+					}
 				}
 			}
 		}
-	}
 
-	.menu__main {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 10px 12px;
-
-		&_list {
+		.menu__main {
 			display: flex;
 			align-items: center;
-			gap: 20px;
-			flex-wrap: wrap;
+			justify-content: space-between;
+			padding: 10px 12px;
 
-			&_item {
+			&_list {
 				display: flex;
 				align-items: center;
-				justify-content: center;
-				gap: 8px;
-				padding: 6px 14px;
-				color: #0e1726;
-				font-size: 14px;
-				font-style: normal;
-				font-weight: 600;
-				line-height: normal;
+				gap: 20px;
+				flex-wrap: wrap;
+
+				&_item {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					padding: 6px 14px;
+					color: #0e1726;
+					font-size: 14px;
+					font-style: normal;
+					font-weight: 600;
+					line-height: normal;
+				}
+
+				&_item:hover {
+					background: #1384ad;
+					color: #fff;
+					border-radius: 8px;
+				}
+
+				&_icon {
+					width: 22px;
+					height: 22px;
+				}
 			}
 
-			&_item:hover {
-				background: #1384ad;
-				color: #fff;
-				border-radius: 8px;
-			}
+			.message_welcome {
+				p {
+					color: #3b3f5c;
+					font-size: 11px;
+					font-style: normal;
+					font-weight: 600;
+					line-height: normal;
 
-			&_icon {
-				width: 22px;
-				height: 22px;
-			}
-		}
-
-		.message_welcome {
-			p {
-				color: #3b3f5c;
-				font-size: 11px;
-				font-style: normal;
-				font-weight: 600;
-				line-height: normal;
-
-				span {
-					color: #1384ad;
+					span {
+						color: #1384ad;
+					}
 				}
 			}
 		}
 	}
-}
 
-.sub_header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 9px 12px;
-	margin-bottom: 14px;
+	.sub_header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 9px 12px;
+		margin-bottom: 14px;
 
-	p {
-		color: #3b3f5c;
-		font-size: 11px;
-		font-style: normal;
-		font-weight: 600;
-		line-height: normal;
+		p {
+			color: #3b3f5c;
+			font-size: 11px;
+			font-style: normal;
+			font-weight: 600;
+			line-height: normal;
 
-		span {
-			color: #1384ad;
+			span {
+				color: #1384ad;
+			}
 		}
 	}
-}
 </style>

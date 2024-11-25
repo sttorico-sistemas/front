@@ -1,10 +1,11 @@
 import { BaseModel } from "src/core/models/base.model";
-import { Table } from "../types/table.d";
+import { Table, TableURL } from "../types/table.d";
+
 
 export class TableModel extends BaseModel implements Table {
   public id: number;
   public name: string;
-  public url: string;
+  public url: TableURL;
   public deletedAt?: Date;
   public createdAt?: Date;
   public updatedAt?: Date;
@@ -20,7 +21,7 @@ export class TableModel extends BaseModel implements Table {
     super();
     this.id = this.props.id;
     this.name = this.props.name;
-    this.url = this.props.url;
+    this.url = this.props.url as TableURL;
     this.deletedAt = this.props.deletedAt;
     this.createdAt = this.props.createdAt;
     this.updatedAt = this.props.updatedAt;

@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import { TableValue } from "../types/table_value.d";
+import { TableValue } from "../types";
 import { Table, TableURL } from "../types/table";
 import { TabelasAuxiliaresRepository } from "../repositories/tabelas_auxiliares.repository";
 import { BaseError } from "src/core/errors/base.error";
 import Swal from "sweetalert2";
 
-const tabelasAuxiliaresRepository = new TabelasAuxiliaresRepository();
+export const tabelasAuxiliaresRepository = new TabelasAuxiliaresRepository();
 
 export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
   state: () => ({
@@ -28,7 +28,7 @@ export const tabelasAuxiliaresStore = defineStore('tabelasAuxiliares', {
   actions: {
     async getTables() {
       this.loadingData = true;
-      const tables = await tabelasAuxiliaresRepository.getAllTables();
+      const tables = await tabelasAuxiliaresRepository.getAllTables({});
       this.tables = tables;
       this.selectedTable = tables[0]?.url;
       if (this.selectedTable) {

@@ -16,9 +16,15 @@
 		],
 		"skipLibCheck": false,
 		"baseUrl": "./",
+		"paths": {
+			"@/*": [
+        "./src/*"
+      ],
+		},
 		"noImplicitAny": true,
 		"allowJs": true,
 		// "types": ["@intlify/vite-plugin-vue-i18n/client"]
+		"types": ["vite/client"]
 	},
 	"include": [
 		"src/**/*.js",

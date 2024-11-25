@@ -5,6 +5,7 @@ import axios from 'axios';
 // Componentes
 import Modal from 'src/core/components/Modal.vue';
 import InputLabel from 'src/core/components/Inputs/InputLabel.vue';
+import { useAxios } from '@/core/composables';
 
 // Estado para controle do modal e do formulário
 const isOpenDialog = ref<boolean>(false);
@@ -21,17 +22,13 @@ const componentForm = reactive({
   slug: '',
 });
 
+const httpClient = useAxios()
+
 // Fetch de componentes
 const fetchComponents = async () => {
   try {
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) throw new Error('Token não encontrado no storage.');
-
-    const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/components', {
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
-
-    components.value = response.data.data;
+    const response = await httpClient.get<any>('/organize/components');
+    components.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar dados dos componentes:', error);
   }
@@ -40,14 +37,8 @@ const fetchComponents = async () => {
 // Fetch de páginas para o formulário
 const fetchPages = async () => {
   try {
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) throw new Error('Token não encontrado no storage.');
-
-    const response = await axios.get('https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/pages', {
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
-
-    pages.value = response.data.data;
+		const response = await httpClient.get<any>('/organize/pages');
+    pages.value = response.data;
   } catch (error) {
     console.error('Erro ao buscar dados das páginas:', error);
   }
@@ -56,17 +47,12 @@ const fetchPages = async () => {
 // Submeter formulário (adicionar ou editar componente)
 const submitComponent = async () => {
   try {
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) throw new Error('Token não encontrado no storage.');
-
-    const method = isEditMode.value ? 'put' : 'post';
+    const runtime = isEditMode.value ? httpClient.put : httpClient.post;
     const url = isEditMode.value
-      ? `https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/components/${componentForm.id}`
-      : 'https://dev-02-apiv2.management.infoconsig.tec.br/api/organize/components';
+      ? `/organize/components/${componentForm.id}`
+      : '/organize/components';
 
-    await axios[method](url, componentForm, {
-      headers: { Authorization: `Bearer ${authToken}` },
-    });
+    await runtime<any, any>(url, componentForm);
 
     await fetchComponents();
     isOpenDialog.value = false;
