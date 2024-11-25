@@ -14,6 +14,15 @@ import Popper from 'vue3-popper'
 import JsonExcel from 'vue-json-excel3'
 import Multiselect from '@suadelabs/vue3-multiselect'
 import { createPinia } from 'pinia'
+import { VueQueryPlugin } from '@tanstack/vue-query'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { injectNotify, injectRouter, injectStorage } from '@/core/composables/use_axios'
+import { useNotify, useStorage } from '@/core/composables'
+
+library.add(fas, far)
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -23,7 +32,12 @@ app.component('app-layout', AppLayout);
 app.component('Popper', Popper)
 app.component('DownloadExcel', JsonExcel)
 app.component('Multiselect', Multiselect)
+app.component('font-awesome-icon', FontAwesomeIcon)
 
+injectRouter(router)
+injectStorage(useStorage())
+injectNotify(useNotify())
+app.use(VueQueryPlugin)
 app.use(pinia)
 app.use(createHead())
 app.use(TippyPlugin)

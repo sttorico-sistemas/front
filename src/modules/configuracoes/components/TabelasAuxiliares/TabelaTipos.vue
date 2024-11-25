@@ -1,160 +1,537 @@
 <script lang="ts" setup>
-import { onMounted, reactive } from 'vue'
-import modalLayout from 'src/core/components/Modal.vue'
-import Vue3Datatable from '@bhplugin/vue3-datatable'
-import Titulo from 'src/core/components/Titulo.vue'
-import IconAdd from 'src/core/components/Icons/IconAdd.vue'
-import IconEdit from 'src/core/components/Icons/IconEdit.vue'
-import IconDelete from 'src/core/components/Icons/IconDelete.vue'
-import { tabelasAuxiliaresStore } from '../../stores/tabelas_auxiliares.store'
-import FormField from 'src/core/components/FormField.vue'
-import AppButton from 'src/core/components/AppButton.vue'
-import { Col } from 'types/col.d'
-import AppDialog from 'src/core/components/AppDialog.vue';
+	import { computed, h, Ref, ref } from 'vue'
+	import Titulo from 'src/core/components/Titulo.vue'
+	import { useRouteQuery } from '@vueuse/router'
+	import {
+		keepPreviousData,
+		useMutation,
+		useQuery,
+		useQueryClient,
+	} from '@tanstack/vue-query'
+	import * as z from 'zod'
 
-const store = tabelasAuxiliaresStore();
+	import { tabelasAuxiliaresRepository } from '@/modules/configuracoes/stores'
+	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+	import {
+		TableWrapper,
+		TablePagination,
+	} from '@/core/components/table-wrapper'
+	import { valueUpdater } from '@/core/utils'
+	import { ButtonRoot } from '@/core/components/button'
+	import { FormWrapper } from '@/core/components/form-wrapper'
+	import {
+		SelectRoot,
+		SelectContent,
+		SelectGroup,
+		SelectItem,
+		SelectLabel,
+		SelectTrigger,
+		SelectValue,
+	} from '@/core/components/fields/select'
+	import {
+		Tooltip,
+		TooltipContent,
+		TooltipProvider,
+		TooltipTrigger,
+	} from '@/core/components/tooltip'
+	import {
+		DeleteTableType,
+		EditTableType,
+		TableTypeForm,
+	} from '@/modules/configuracoes/components/TabelasAuxiliares/type-table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+	import { toTypedSchema } from '@vee-validate/zod'
+	import { useForm } from 'vee-validate'
+	import { TableValue } from '../../types'
+	import { useNotify } from '@/core/composables/use-notify'
 
-const selected = reactive({
-  type: '',
-  label: '',
-})
+	type TypeTables = {
+		id: number
+		name: string
+	}
 
-const cols = reactive<Col[]>([
-  { field: 'id', title: 'Código', hide: false, },
-  { field: 'nome', title: 'Descrição', hide: false, },
-  { field: 'actions', title: 'Ação', hide: false, },
-]);
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
-onMounted(async () => {
-  await store.getTables();
-});
+	const openCreateModal = ref(false)
+	const rowSelection = ref({})
+	const pageMetadata = ref({
+		totalPages: 1,
+		totalItens: 0,
+	})
+	const page = useRouteQuery('type-page', 1, { transform: Number })
+	const perPage = useRouteQuery('type-per-page', 8, { transform: Number })
+	const selectType = useRouteQuery<string | undefined>('type-select')
+	const selectSort = useRouteQuery<string | undefined>('type-sort')
+	const notify = useNotify()
+	const enabledSelectType = computed(() => !!selectType?.value)
+	const queryClient = useQueryClient()
+
+	const { data: allRawTypeTables } = useQuery({
+		queryKey: tabelasAuxiliaresRepository.getQueryKey(),
+		queryFn: ({ signal }) =>
+			tabelasAuxiliaresRepository.getAllTables({
+				signal,
+				metaCallback: (meta, response) => {
+					if (response.length > 0 && !selectType.value) {
+						selectType.value = response[0].url.toString()
+					}
+				},
+			}),
+	})
+
+
+	const {
+		data: selectTypeData,
+		isPending: isSelectTypePending,
+		isFetching: isSelectTypeFetching,
+		refetch: selectTypeRefetch,
+		isPlaceholderData: isSelectTypePlaceholderData,
+	} = useQuery({
+		enabled: enabledSelectType,
+		queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
+			page,
+			limit: perPage,
+		}),
+		queryFn: ({ signal }) =>
+			tabelasAuxiliaresRepository.getAllTableValues(selectType.value, {
+				params: { page: page.value, perPage: perPage.value },
+				signal,
+				metaCallback: (meta) => {
+					pageMetadata.value = {
+						totalItens: meta.total,
+						totalPages: meta.last_page,
+					}
+				},
+			}),
+		placeholderData: keepPreviousData,
+	})
+
+	const { mutateAsync: handleDeleteType, isPending: isDeleteTypeLoading } =
+		useMutation({
+			mutationFn: ({
+				tableUrl,
+				valueId,
+			}: {
+				tableUrl: string
+				valueId: number
+			}) => tabelasAuxiliaresRepository.deleteTableValue(tableUrl, valueId),
+			onSettled: async () => {
+				return await queryClient.invalidateQueries({
+					queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
+						page: page,
+						limit: perPage,
+					}),
+				})
+			},
+			onError: (error, variables, context) => {
+				notify.error(
+					error,
+					{
+						title: 'Erro ao deletar tipo!',
+					},
+					{ duration: 1500 },
+				)
+			},
+			onSuccess: (data, variables, context) => {
+				notify.success(
+					{
+						title: 'Tipo deletado com sucesso!',
+					},
+					{ duration: 1500 },
+				)
+			},
+		})
+
+	const { mutateAsync: handleUpdateType, isPending: isUpdateTypeLoading } =
+		useMutation({
+			mutationFn: (tableValue: TableValue) =>
+				tabelasAuxiliaresRepository.updateTableValue(tableValue),
+			onSettled: async () => {
+				return await queryClient.invalidateQueries({
+					queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
+						page: page,
+						limit: perPage,
+					}),
+				})
+			},
+			onError: (error, variables, context) => {
+				notify.error(
+					error,
+					{
+						title: 'Erro ao atualizar tipo!',
+					},
+					{ duration: 1500 },
+				)
+			},
+			onSuccess: (data, variables, context) => {
+				notify.success(
+					{
+						title: `Tipo atualizado com sucesso!`,
+					},
+					{ duration: 1500 },
+				)
+			},
+		})
+
+	const { mutateAsync: handleCreateType, isPending: isCreateTypeLoading } =
+		useMutation({
+			mutationFn: (tableValue: Pick<TableValue, 'nome' | 'tableUrl'>) =>
+				tabelasAuxiliaresRepository.createTableValue(tableValue),
+			onSettled: async () => {
+				return await queryClient.invalidateQueries({
+					queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
+						page: page,
+						limit: perPage,
+					}),
+				})
+			},
+			onError: (error, variables, context) => {
+				notify.error(
+					error,
+					{
+						title: 'Erro ao cadastrar tipo!',
+					},
+					{ duration: 1500 },
+				)
+			},
+			onSuccess: (data, variables, context) => {
+				notify.success(
+					{
+						title: `Tipo cadastrado com sucesso!`,
+					},
+					{ duration: 1500 },
+				)
+			},
+		})
+
+
+	const formattedAllTypeTable = computed(() => {
+		return (allRawTypeTables.value ?? []).map(({ url, name }) => ({
+			id: url,
+			name,
+		}))
+	})
+
+	const formattedSelectedType = computed(() => {
+		return (selectTypeData.value ?? []).map(({ id, nome }) => ({
+			id,
+			name: nome,
+		}))
+	})
+
+	const columns: ColumnDef<TypeTables>[] = [
+		{
+			accessorKey: 'id',
+			meta: 'Código',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedSelectedType.value.length <= 0,
+						onClick: () => handleSort('id'),
+					},
+					() => [
+						'Código',
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('id')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'name',
+			meta: 'Descrição',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedSelectedType.value.length <= 0,
+						onClick: () => handleSort('name'),
+					},
+					() => [
+						'Descrição',
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('name')),
+			enableHiding: false,
+		},
+		{
+			id: 'actions',
+			header: 'Ação',
+			cell: ({ row }) => {
+				const data = row.original
+				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
+					h(EditTableType, {
+						dataId: data.id,
+						tableTypeName: data.name,
+						'onOn-edit': onUpdateSubmit,
+						isLoading: isUpdateTypeLoading.value,
+					}),
+					h(DeleteTableType, {
+						dataId: data.id,
+						tableTypeName: data.name,
+						'onOn-delete': onDeleteSubmit,
+						isLoading: isDeleteTypeLoading.value,
+					}),
+				])
+			},
+		},
+	]
+
+	const table = useVueTable({
+		get data() {
+			return formattedSelectedType.value
+		},
+		get columns() {
+			return columns
+		},
+		getCoreRowModel: getCoreRowModel(),
+		manualSorting: true,
+		manualPagination: true,
+		rowCount: pageMetadata.value.totalItens,
+		getRowId: (row) => row.id.toString(),
+		onRowSelectionChange: (updaterOrValue) =>
+			valueUpdater(updaterOrValue, rowSelection),
+		state: {
+			get rowSelection() {
+				return rowSelection.value
+			},
+		},
+	})
+
+	const formSchema = z.object({
+		name: z.string({ message: 'Esse campo é obrigatório.' }),
+	})
+
+	const form = useForm({
+		validationSchema: toTypedSchema(formSchema),
+	})
+
+	const onCreateSubmit = form.handleSubmit(async (values) => {
+		return handleCreateType({
+			nome: values.name,
+			tableUrl: selectType.value,
+		}).then((response) => {
+			openCreateModal.value = false
+			return response
+		})
+	})
+
+	const onUpdateSubmit = async (
+		id: number,
+		values: z.infer<typeof formSchema>,
+	) => {
+		return handleUpdateType({
+			id,
+			nome: values.name,
+			tableUrl: selectType.value,
+		})
+	}
+
+	const onDeleteSubmit = async (id: number) => {
+		console.log(id, selectType.value)
+		if (!selectType.value) return
+		return handleDeleteType({ tableUrl: selectType.value, valueId: id })
+	}
+
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
+
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
+
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
+
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+
+		if (!regexData) return
+
+		return { [regexData[1]]: regexData[2] as T }
+	}
+
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
+
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
+				selectTypeRefetch()
+				return
+			}
+
+			selectSort.value = undefined
+			selectTypeRefetch()
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+		selectTypeRefetch()
+	}
+
+	function handlePagination(to: number) {
+		if (to < page.value) {
+			page.value = Math.max(to, 1)
+		} else if (to > page.value) {
+			if (!isSelectTypePlaceholderData.value) {
+				page.value = to
+			}
+		}
+	}
 </script>
 
 <template>
-  <div class="panel mt-6">
-    <div class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5">
-      <titulo title="Cadastro de Tipos" />
+	<div class="panel mt-6">
+		<div
+			class="flex flex-wrap justify-between lg:items-center lg:flex-row flex-col mb-5 gap-5"
+		>
+			<div class="flex gap-10 items-center justify-center">
+				<titulo title="Cadastro de Tipos" />
 
-      <div class="header_actions flex items-center gap-20">
-        <multiselect @update:model-value="store.setSelectedTable($event)"
-          :model-value="store.tables.find(e => e.url === store.selectedTable)?.name"
-          :options="store.tables.map(e => e.name)" class="custom-multiselect md:min-w-[400px]"
-          placeholder="Selecione Tabela" :searchable="false" :allow-empty="false" selected-label="" select-label=""
-          deselect-label="" @select="(selected.label = $event), (selected.type = 'tipo_tabela')" />
+				<form-wrapper
+					v-model="openCreateModal"
+					:is-loading="isCreateTypeLoading"
+					:title="`Criar novo tipo`"
+					description="Crie o conteúdo do novo tipo."
+					class="sm:max-w-[780px]"
+					@form-submit="onCreateSubmit"
+				>
+					<template #trigger>
+						<tooltip-provider>
+							<tooltip>
+								<tooltip-trigger as-child>
+									<button-root
+										:disabled="!selectType"
+										variant="ghost"
+										@click="openCreateModal = true"
+									>
+										<font-awesome-icon
+											class="text-primary_3-table w-5 h-5"
+											:icon="['fas', 'circle-plus']"
+										/>
+									</button-root>
+								</tooltip-trigger>
+								<tooltip-content side="right">
+									<p>Cadastre um nova tabela auxiliar</p>
+								</tooltip-content>
+							</tooltip>
+						</tooltip-provider>
+					</template>
 
-        <button @click="store.toggleEditor(true)" v-tippy:right>
-          <icon-add />
-        </button>
-        <tippy target="right" placement="right">Cadastre um nova tablea auxiliar</tippy>
-      </div>
-    </div>
+					<template #fields>
+						<TableTypeForm
+							:metadata="form.values"
+							:disabled="isCreateTypeLoading"
+						/>
+					</template>
+				</form-wrapper>
+			</div>
 
-    <div class="datatable pb-1">
-      <vue3-datatable :loading="store.loadingData" :rows="store.values" :columns="cols"
-        :total-rows="store.values.length" :sortable="true" skin="whitespace-nowrap bh-table-striped"
-        no-data-content="Nenhum dado foi encontrado" pagination-info="Mostrando {0} a {1} de {2} entradas"
-        :pagination="true" :page-size="100">
-        <template #actions="data">
-          <div class="flex gap-2">
-            <div>
-              <button v-tippy:right type="button" class="text-xs m-1" @click="store.toggleEditor(true, data.value.id)">
-                <icon-edit class="w-5 h-5 text-primary_3-table" />
-              </button>
-              <tippy target="right" placement="right">Editar {{ data.value.nome }}</tippy>
-            </div>
-            <div>
-              <button v-tippy:right type="button" class="text-xs m-1"
-                @click="store.toggleDeleteDialog(true, data.value.id)">
-                <icon-delete class="w-5 h-5 text-primary_3-table" />
-              </button>
-              <tippy target="right" placement="right">Deletar
-              </tippy>
-            </div>
-          </div>
-        </template>
-      </vue3-datatable>
-    </div>
-    <!-- <modal-layout :is-open="store.showEditor" title="Adicionar Novo Tipo" size="max-w-[440px]"
-      @btn-close="store.toggleEditor(false)">
-      <div class="flex flex-col">
-        <multiselect :model-value="store.tables.find(e => e.url === store.editingType)?.name"
-          @update:model-value="store.updateEditingType($event)" :options="store.tables.map((e) => e.name)"
-          class="custom-multiselect md:min-w-[80px] pb-4" :searchable="false" placeholder="Tipo de dado"
-          :allow-empty="false" selected-label="" select-label="" deselect-label="">
-        </multiselect>
-        <form-field :model-value="store.editingTableValue.value" @update:model-value="store.updateEditingName($event)"
-          :message="store.error" :error="!!store.error" label="Novo tipo de dado"></form-field>
-      </div>
+			<div class="header_actions flex items-center gap-20 flex-1 justify-end">
+				<select-root
+					:disabled="formattedAllTypeTable.length <= 0"
+					v-model:model-value="selectType"
+					:defaultValue="selectType"
+				>
+					<select-trigger class="lg:max-w-96 w-full">
+						<select-value
+							class="text-left"
+							placeholder="Selecione a categoria..."
+						/>
+					</select-trigger>
+					<select-content>
+						<select-group>
+							<select-label>Categorias:</select-label>
+							<select-item
+								v-for="category of formattedAllTypeTable"
+								:key="category.id"
+								:value="category.id.toString()"
+								>{{ category.name }}</select-item
+							>
+						</select-group>
+					</select-content>
+				</select-root>
+			</div>
+		</div>
 
-      <div class="flex justify-center items-center gap-12 mt-8">
-        <app-button density="comfortable" variant="outlined" width="86px" :disabled="store.saving"
-          @click="store.toggleEditor(false)">
-          Cancelar
-        </app-button>
-        <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving"
-          @click="store.saveType()">Salvar</app-button>
-      </div>
-    </modal-layout> -->
+		<div class="datatable pb-1">
+			<table-wrapper
+				:table="table"
+				:column-size="columns.length"
+				:row-limit="perPage"
+				:is-loading="isSelectTypePending || isSelectTypeFetching"
+			/>
 
-    <app-dialog :model-value="store.showEditor" @update:model-value="store.toggleEditor($event)" width="400px">
-      <template #title>
-        Adicionar Novo Tipo
-      </template>
-      <div class="flex flex-col">
-        <multiselect :model-value="store.tables.find(e => e.url === store.editingType)?.name"
-          @update:model-value="store.updateEditingType($event)" :options="store.tables.map((e) => e.name)"
-          class="custom-multiselect md:min-w-[80px] pb-4" :searchable="false" placeholder="Tipo de dado"
-          :allow-empty="false" selected-label="" select-label="" deselect-label="">
-        </multiselect>
-        <form-field :model-value="store.editingTableValue.value" @update:model-value="store.updateEditingName($event)"
-          :message="store.error" :error="!!store.error" label="Novo tipo de dado" @submit="store.saveType()"
-          :disabled="store.saving" />
-      </div>
-      <template #actions>
-        <app-button density="comfortable" variant="outlined" width="86px" :disabled="store.saving"
-          @click="store.toggleEditor(false)" class="mr-2">
-          Cancelar
-        </app-button>
-        <app-button :elevation="0" density="comfortable" width="86px" :loading="store.saving"
-          @click="store.saveType()">Salvar</app-button>
-      </template>
-    </app-dialog>
+			<div :class="['flex w-full items-center px-4']">
+				<div class="flex-1 text-sm text-muted-foreground">
+					<!-- {{ formattedAllTypeTable.length }} de {{ pageMetadata.totalItens }} linha(s)
+					selecionadas. -->
+				</div>
 
-    <app-dialog :model-value="store.showDeleteDialog" @update:model-value="store.toggleDeleteDialog()">
-      <template #title>
-        Deseja apagar "{{ store.editingTableValue.value }}"?
-      </template>
-
-      A ação não poderá ser desfeita.
-
-      <template #actions>
-        <app-button class="mr-3" density="comfortable" :elevation="0" @click="store.deleteType()"
-          :loading="store.saving">
-          Apagar
-        </app-button>
-        <app-button @click="store.toggleDeleteDialog()" variant="outlined" density="comfortable"
-          :disabled="store.saving">
-          Cancelar
-        </app-button>
-      </template>
-    </app-dialog>
-  </div>
+				<TablePagination
+					v-model="page"
+					:disabled="formattedSelectedType.length <= 0"
+					:total-itens="pageMetadata.totalItens"
+					:items-per-page="perPage"
+					@update-paginate="handlePagination"
+				/>
+			</div>
+		</div>
+	</div>
 </template>
 
 <style lang="scss" scoped>
-.header_actions:deep(.custom-multiselect) {
-  .multiselect__placeholder {
-    font-size: 0.75rem;
-    line-height: 1rem;
-    font-weight: 600;
-    white-space: nowrap;
-    color: rgb(14 23 38);
-  }
+	.header_actions:deep(.custom-multiselect) {
+		.multiselect__placeholder {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			font-weight: 600;
+			white-space: nowrap;
+			color: rgb(14 23 38);
+		}
 
-  .multiselect__option {
-    font-size: 0.75rem;
-    line-height: 1rem;
-    white-space: normal;
-  }
-}
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
+		}
+	}
 </style>
