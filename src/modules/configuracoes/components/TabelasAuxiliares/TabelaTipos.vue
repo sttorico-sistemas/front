@@ -280,6 +280,7 @@
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
 					h(EditTableType, {
 						dataId: data.id,
+						tableUrl: selectType.value as string,
 						tableTypeName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateTypeLoading.value,
