@@ -24,8 +24,8 @@ export class BaseError {
 			const error = e as AxiosError;
 			return new BaseError({
 				code: error.response?.status,
-				message: (error.response?.data as any).message,
-				errors: (error.response?.data as any).error ?? {},
+				message: (error.response?.data as any)?.message,
+				errors: (error.response?.data as any)?.error ?? {},
 			});
 		}
 		console.log(e);
