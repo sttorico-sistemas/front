@@ -4,6 +4,7 @@ import { BaseModel } from "src/core/models/base.model";
 export type PageLinks = {
 	id: number
 	name: string
+	slug: string
 	url: string
 }
 
@@ -11,6 +12,7 @@ export class PageModel extends BaseModel {
 	public id: number
 	public name: string
 	public url: string
+	public parentId?: number
 	public slug: string
   public children: PageLinks[];
 
@@ -18,6 +20,7 @@ export class PageModel extends BaseModel {
     id: number;
     name: string;
     url: string;
+		parentId: number
     slug: string;
     children: PageLinks[];
   }) {
@@ -25,6 +28,7 @@ export class PageModel extends BaseModel {
     this.id = this.props.id;
     this.name = this.props.name;
     this.url = this.props.url;
+    this.parentId = this.props.parentId;
     this.slug = this.props.slug;
     this.children = this.props.children;
   }
@@ -34,7 +38,8 @@ export class PageModel extends BaseModel {
       id: this.id,
       name: this.name,
       slug: this.slug,
-      children: this.children,
+			parent_id: this.parentId,
+      url: this.url
     }
   }
 
@@ -43,7 +48,8 @@ export class PageModel extends BaseModel {
       id: record.id,
       name: record.name,
 			url: record.url,
-      slug: record.url,
+			parentId: record.parent_id,
+      slug: record.slug,
       children: record.children,
     });
   }

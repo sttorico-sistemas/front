@@ -41,7 +41,7 @@
 		enabled: enabledPages,
 		queryKey: generalRepository.getQueryKey('pages', {}, operadorId),
 		queryFn: ({ signal }) =>
-			generalRepository.getPages({
+			generalRepository.getPagesToMenu({
 				signal,
 				params: { operador_id: operadorId.value },
 			}),
