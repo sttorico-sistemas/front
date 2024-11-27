@@ -1,15 +1,10 @@
 <script lang="ts" setup>
-	import { reactive, ref, onMounted, computed, h } from 'vue'
-	import axios from 'axios'
+	import { ref, computed, h } from 'vue'
 	import * as z from 'zod'
 
-	// Componentes
 	import Titulo from 'src/core/components/Titulo.vue'
 	import Breadcrumbs from 'src/core/components/Breadcrumbs.vue'
-	import Modal from 'src/core/components/Modal.vue'
-	import InputLabel from 'src/core/components/Inputs/InputLabel.vue'
 
-	// Ícones
 	import {
 		Tooltip,
 		TooltipContent,
@@ -17,14 +12,10 @@
 		TooltipTrigger,
 	} from '@/core/components/tooltip'
 	import { FormWrapper } from '@/core/components/form-wrapper'
-	import {
-		TableWrapper,
-		TablePagination,
-	} from '@/core/components/table-wrapper'
+	import { TableWrapper } from '@/core/components/table-wrapper'
 
-	import IconAdd from 'src/core/components/Icons/IconAdd.vue'
-	import { useAxios, useNotify } from '@/core/composables'
-	import { generalRepository } from '@/core/stores/general.stores'
+	import { useNotify } from '@/core/composables'
+	import { generalRepository } from '@/core/stores'
 	import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 	import { PageModel } from '@/core/models'
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
@@ -71,7 +62,6 @@
 				return await queryClient.invalidateQueries({
 					queryKey: generalRepository.getQueryKey('all-pages'),
 				})
-
 			},
 			onError: (error, variables, context) => {
 				notify.error(

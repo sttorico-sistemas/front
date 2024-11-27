@@ -1,179 +1,372 @@
 <script lang="ts" setup>
-	import { reactive, ref, onMounted } from 'vue'
-	import axios from 'axios'
+	import { reactive, ref, onMounted, computed, h } from 'vue'
+	import * as z from 'zod'
 	import Modal from 'src/core/components/Modal.vue'
-	import { useAxios } from '@/core/composables'
+	import { useAxios, useNotify } from '@/core/composables'
+	import { iamRepository } from '@/core/stores'
+	import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+	import { PermissionModel, ProfileModel } from '@/core/models'
+	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+	import { ButtonRoot } from '@/core/components/button'
+	import { valueUpdater } from '@/core/utils'
+	import { useForm } from 'vee-validate'
+	import { toTypedSchema } from '@vee-validate/zod'
+	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
+	import {
+		Tooltip,
+		TooltipContent,
+		TooltipProvider,
+		TooltipTrigger,
+	} from '@/core/components/tooltip'
+	import { FormWrapper } from '@/core/components/form-wrapper'
+	import { TableWrapper } from '@/core/components/table-wrapper'
+	import Titulo from '@/core/components/Titulo.vue'
+	import TablePerfilForm from './components/perfil-table/TablePerfilForm.vue'
+	import EditTablePerfil from './components/perfil-table/EditTablePerfil.vue'
+	import DeleteTablePerfil from './components/perfil-table/DeleteTablePerfil.vue'
 
-	// Estados e referências
-	const tipoOperadores = ref<any[]>([])
-	const permissions = ref<any[]>([])
-	const isDialogOpen = ref<boolean>(false)
-	const isEditMode = ref<boolean>(false)
+	type IAMTable = {
+		id: number
+		name: string
+		description: string
+		permissions: string
+	}
 
-	// Formulário reativo para tipo_operador
-	const form = reactive({
-		id: null,
-		name: '',
-		description: '',
-		permissions: [] as number[],
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
+	const openCreateModal = ref(false)
+	const rowSelection = ref({})
+
+	const { data: typeOfOperators, isLoading: isTypeOfOperatorsLoading } =
+		useQuery({
+			queryKey: iamRepository.getQueryKey('type-of-operators'),
+			queryFn: ({ signal }) => iamRepository.getTypeOfOperators({ signal }),
+		})
+
+	const queryClient = useQueryClient()
+	const notify = useNotify()
+
+	const {
+		mutateAsync: handleDeleteTypeOfOperator,
+		isPending: isDeleteTypeOfOperatorLoading,
+	} = useMutation({
+		mutationFn: (data: Pick<ProfileModel, 'id'>) =>
+			iamRepository.deleteTypeOfOperator(data),
+		onSettled: async () => {
+			return await queryClient.invalidateQueries({
+				queryKey: iamRepository.getQueryKey('type-of-operators'),
+			})
+		},
+		onError: (error, variables, context) => {
+			notify.error(
+				error,
+				{ title: 'Erro ao apagar tipo do operador!' },
+				{ duration: 1500 },
+			)
+		},
+		onSuccess: (data, variables, context) => {
+			notify.success(
+				{ title: `Tipo do operador apagado com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
 	})
 
-	const httpClient = useAxios()
+	const {
+		mutateAsync: handleUpdateTypeOfOperator,
+		isPending: isUpdateTypeOfOperatorLoading,
+	} = useMutation({
+		mutationFn: (
+			data: Pick<ProfileModel, 'id' | 'name' | 'description'> & {
+				permissions: Pick<PermissionModel, 'id'>['id'][]
+			},
+		) => iamRepository.updateTypeOfOperator(data),
+		onSettled: async () => {
+			return await queryClient.invalidateQueries({
+				queryKey: iamRepository.getQueryKey('type-of-operators'),
+			})
+		},
+		onError: (error, variables, context) => {
+			notify.error(
+				error,
+				{ title: 'Erro ao atualizar tipo do operador!' },
+				{ duration: 1500 },
+			)
+		},
+		onSuccess: (data, variables, context) => {
+			notify.success(
+				{ title: `Tipo do operador atualizada com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
+	})
 
-	// Função para buscar tipos de operadores e permissões
-	const fetchData = async () => {
-		try {
-			const [tipoOperadoresRes, permissionsRes] = await Promise.all([
-				httpClient.get<any>('/profile/tipo-operador'),
-				httpClient.get<any>('/profile/permissions'),
-			])
+	const {
+		mutateAsync: handleCreateTypeOfOperator,
+		isPending: isCreateTypeOfOperatorLoading,
+	} = useMutation({
+		mutationFn: (
+			data: Pick<ProfileModel, 'name' | 'description'> & {
+				permissions: Pick<PermissionModel, 'id'>['id'][]
+			},
+		) => iamRepository.createTypeOfOperator(data),
+		onSettled: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: iamRepository.getQueryKey('type-of-operators'),
+			})
+			openCreateModal.value = false
+		},
+		onError: (error, variables, context) => {
+			notify.error(
+				error,
+				{ title: 'Erro ao cadastrar tipo do operador!' },
+				{ duration: 1500 },
+			)
+		},
+		onSuccess: (data, variables, context) => {
+			notify.success(
+				{ title: `Tipo do operador cadastrada com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
+	})
 
-			tipoOperadores.value = tipoOperadoresRes.data
-			permissions.value = permissionsRes.data // Utilizando diretamente o related_name do backend
-		} catch (error) {
-			console.error('Erro ao buscar dados:', error)
-		}
+	const formattedAllTypeOfOperator = computed(() => {
+		return (typeOfOperators.value ?? []).map(
+			({ id, name, description, permissions }) => ({
+				id,
+				name,
+				description,
+				permissions: permissions
+					.map(({ relatedName }) => relatedName)
+					.join(', '),
+			}),
+		)
+	})
+
+	const columns: ColumnDef<IAMTable>[] = [
+		{
+			accessorKey: 'name',
+			meta: 'Nome',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						// onClick: () => handleSort('id'),
+					},
+					() => [
+						'Nome',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('id')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('name')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'description',
+			meta: 'Descrição',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						// onClick: () => handleSort('slug'),
+					},
+					() => [
+						'Descrição',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('slug')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('description')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'permissions',
+			meta: 'Permissões',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						// onClick: () => handleSort('slug'),
+					},
+					() => [
+						'Permissões',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('slug')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('permissions')),
+			enableHiding: false,
+		},
+		{
+			id: 'actions',
+			header: 'Ação',
+			cell: ({ row }) => {
+				const data = row.original
+				return h('div', { class: 'relative max-w-8 flex w-full gap-2' }, [
+					h(EditTablePerfil, {
+						dataId: data.id,
+						tablePerfilName: data.name,
+						'onOn-edit': onUpdateSubmit,
+						isLoading: isUpdateTypeOfOperatorLoading.value,
+					}),
+					h(DeleteTablePerfil, {
+						dataId: data.id,
+						tablePerfilName: data.name,
+						'onOn-delete': onDeleteSubmit,
+						isLoading: isDeleteTypeOfOperatorLoading.value,
+					}),
+				])
+			},
+		},
+	]
+
+	const table = useVueTable({
+		get data() {
+			return formattedAllTypeOfOperator.value
+		},
+		get columns() {
+			return columns
+		},
+		getCoreRowModel: getCoreRowModel(),
+		manualSorting: true,
+		manualPagination: true,
+		// rowCount: pageMetadata.value.totalItens,
+		getRowId: (row) => row.id.toString(),
+		onRowSelectionChange: (updaterOrValue) =>
+			valueUpdater(updaterOrValue, rowSelection),
+		state: {
+			get rowSelection() {
+				return rowSelection.value
+			},
+		},
+	})
+
+	const formSchema = z.object({
+		name: z.string({ message: 'Esse campo é obrigatório.' }),
+		description: z.string({ message: 'Esse campo é obrigatório.' }),
+		permissions: z.array(z.string({ message: 'Esse campo é obrigatório 2.' }), {
+			message: 'Esse campo é obrigatório 3.',
+		}),
+	})
+
+	const form = useForm({
+		validationSchema: toTypedSchema(formSchema),
+	})
+
+	console.log(form.errors)
+
+	const onCreateSubmit = form.handleSubmit(async (values) => {
+		return handleCreateTypeOfOperator({
+			...values,
+			permissions: values.permissions.map(Number),
+		}).then((response) => {
+			openCreateModal.value = false
+			return response
+		})
+	})
+
+	const onUpdateSubmit = async (
+		id: number,
+		values: z.infer<typeof formSchema>,
+		onClose: () => void,
+	) => {
+		return handleUpdateTypeOfOperator({
+			id,
+			...values,
+			permissions: values.permissions.map(Number),
+		}).then(() => {
+			onClose()
+		})
 	}
 
-	// Função para salvar ou editar tipo de operador
-	const saveTipoOperador = async () => {
-		try {
-			const url = form.id
-				? `/profile/tipo-operador/${form.id}`
-				: '/profile/tipo-operador'
-
-			const runtime = form.id ? httpClient.put : httpClient.post
-
-			await runtime<any, any>(url, form)
-
-			await fetchData()
-			closeDialog()
-		} catch (error) {
-			console.error('Erro ao salvar tipo de operador:', error)
-		}
+	const onDeleteSubmit = async (id: number) => {
+		return handleDeleteTypeOfOperator({ id })
 	}
-
-	// Função para abrir o modal em modo de edição
-	const openEditModal = (tipoOperador: any) => {
-		isEditMode.value = true
-		isDialogOpen.value = true
-
-		form.id = tipoOperador.id
-		form.name = tipoOperador.name
-		form.description = tipoOperador.description
-		form.permissions = tipoOperador.permissions.map((p: any) => p.id)
-	}
-
-	// Função para fechar o modal e limpar o formulário
-	const closeDialog = () => {
-		isDialogOpen.value = false
-		isEditMode.value = false
-		clearForm()
-	}
-
-	// Função para limpar o formulário
-	const clearForm = () => {
-		form.id = null
-		form.name = ''
-		form.description = ''
-		form.permissions = []
-	}
-
-	onMounted(fetchData)
 </script>
 
 <template>
 	<main>
-		<div class="flex justify-between items-center mb-4">
-			<h1 class="text-2xl font-bold">Gerenciar Tipos de Operadores</h1>
-			<button
-				class="btn-primary"
-				@click="
-					() => {
-						isDialogOpen = true
-						isEditMode = false
-						clearForm()
-					}
-				"
+		<Breadcrumbs :paginas="['Configurações', 'Perfil']" />
+
+		<div class="panel mt-6">
+			<div
+				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				Adicionar Tipo Operador
-			</button>
-		</div>
+				<div class="flex gap-10 items-center justify-center">
+					<Titulo title="Gerenciar Tipos de Operadores" />
 
-		<table class="table-auto w-full border-collapse">
-			<thead>
-				<tr>
-					<th class="text-left border-b p-2">Nome</th>
-					<th class="text-left border-b p-2">Descrição</th>
-					<th class="text-left border-b p-2">Permissões</th>
-					<th class="text-left border-b p-2">Ações</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr v-for="tipoOperador in tipoOperadores" :key="tipoOperador.id">
-					<td class="p-2 border-b">{{ tipoOperador.name }}</td>
-					<td class="p-2 border-b">{{ tipoOperador.description }}</td>
-					<td class="p-2 border-b">
-						{{
-							tipoOperador.permissions
-								?.map((p) => p.related_name || 'Nome não definido') // Valor padrão se `related_name` estiver vazio
-								.join(', ') || 'Sem permissões atribuídas'
-						}}
-					</td>
-					<td class="p-2 border-b">
-						<button
-							class="btn-secondary mr-2"
-							@click="openEditModal(tipoOperador)"
-						>
-							Editar
-						</button>
-						<button class="btn-danger">Excluir</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-
-		<!-- Modal para adicionar/editar tipo operador -->
-		<modal
-			:is-open="isDialogOpen"
-			:title="isEditMode ? 'Editar Tipo Operador' : 'Adicionar Tipo Operador'"
-			@close="closeDialog"
-		>
-			<form @submit.prevent="saveTipoOperador">
-				<div class="mb-4">
-					<label class="block text-sm font-medium mb-1">Nome</label>
-					<input v-model="form.name" type="text" class="input" required />
-				</div>
-
-				<div class="mb-4">
-					<label class="block text-sm font-medium mb-1">Descrição</label>
-					<textarea v-model="form.description" class="input"></textarea>
-				</div>
-
-				<div class="mb-4">
-					<label class="block text-sm font-medium mb-1">Permissões</label>
-					<div
-						v-for="permission in permissions"
-						:key="permission.id"
-						class="flex items-center mb-2"
+					<form-wrapper
+						v-model="openCreateModal"
+						:is-loading="isCreateTypeOfOperatorLoading"
+						:title="`Criar um novo perfil`"
+						description="Crie o conteúdo de um novo perfil."
+						class="sm:max-w-[780px]"
+						@form-submit="onCreateSubmit"
 					>
-						<input
-							type="checkbox"
-							:value="permission.id"
-							v-model="form.permissions"
-						/>
-						<span class="ml-2">{{ permission.related_name }}</span>
-					</div>
-				</div>
+						<template #trigger>
+							<tooltip-provider>
+								<tooltip>
+									<tooltip-trigger as-child>
+										<button-root
+											variant="ghost"
+											@click="openCreateModal = true"
+										>
+											<font-awesome-icon
+												class="text-primary_3-table w-5 h-5"
+												:icon="['fas', 'circle-plus']"
+											/>
+										</button-root>
+									</tooltip-trigger>
+									<tooltip-content side="right">
+										<p>Cadastre um novo perfil</p>
+									</tooltip-content>
+								</tooltip>
+							</tooltip-provider>
+						</template>
 
-				<div class="flex justify-end">
-					<button type="button" class="btn-secondary mr-2" @click="closeDialog">
-						Cancelar
-					</button>
-					<button type="submit" class="btn-primary">Salvar</button>
+						<template #fields>
+							<TablePerfilForm
+								:metadata="form.values"
+								:disabled="isCreateTypeOfOperatorLoading"
+							/>
+						</template>
+					</form-wrapper>
 				</div>
-			</form>
-		</modal>
+			</div>
+
+			<div class="datatable pb-1">
+				<table-wrapper
+					:table="table"
+					:column-size="columns.length"
+					:row-limit="formattedAllTypeOfOperator.length"
+					:is-loading="isTypeOfOperatorsLoading"
+				/>
+			</div>
+		</div>
 	</main>
 </template>
 
