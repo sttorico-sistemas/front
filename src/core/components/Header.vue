@@ -210,7 +210,6 @@
 				>
 					<menubar-menu>
 						<menubar-trigger
-							as-child
 							@click="
 								() => {
 									if (!page?.children || !page?.children.length)
@@ -225,10 +224,10 @@
 							<icon-arrow-down v-if="page.children && page.children.length" />
 						</menubar-trigger>
 						<menubar-content v-if="page.children && page.children.length > 0">
-							<menubar-item v-for="child in page.children" :key="child.id">
+							<menubar-item v-for="child in page.children" :key="child.id" class="p-0">
 								<router-link
 									:to="child.url"
-									class="block px-4 py-2 hover:bg-gray-100 flex-1"
+									class="block px-4 py-4 hover:bg-gray-100 flex-1"
 								>
 									{{ child.name }}
 								</router-link>
