@@ -59,7 +59,6 @@
 		id: number
 		name: string
 		uf: string
-		ibgeCode: number
 	}
 
 	const changeValues = {
@@ -109,6 +108,7 @@
 					page: page.value,
 					perPage: perPage.value,
 					search: selectCity.value,
+					estado_id: selectUf.value,
 				},
 				signal,
 				metaCallback: (meta) => {
@@ -254,12 +254,14 @@
 		})
 
 	const formattedAllCities = computed(() => {
-		return (selectCityData.value ?? []).map(({ id, name, ibgeId }) => ({
-			id,
-			name,
-			ibgeCode: ibgeId,
-			uf: '',
-		}))
+		return (selectCityData.value ?? []).map(
+			({ id, name, stateName, stateId }) => ({
+				id,
+				name,
+				stateId,
+				uf: stateName,
+			}),
+		)
 	})
 
 	const formattedAllStates = computed(() => {
@@ -337,30 +339,6 @@
 				)
 			},
 			cell: ({ row }) => h('div', row.getValue('uf')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'ibgeCode',
-			meta: 'IBGE',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllCities.value.length <= 0,
-						// onClick: () => handleSort('name'),
-					},
-					() => [
-						'IBGE',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('ibgeCode')),
 			enableHiding: false,
 		},
 		{
@@ -524,6 +502,11 @@
 	function handleSelectCity() {
 		selectCityRefetch()
 	}
+
+	function handleClear() {
+		selectCity.value = undefined
+		selectUf.value = undefined
+	}
 </script>
 
 <template>
@@ -546,7 +529,7 @@
 						<tooltip-provider>
 							<tooltip>
 								<tooltip-trigger as-child>
-									<button-root variant="ghost" @click="openCreateModal = true">
+									<button-root variant="outline" @click="openCreateModal = true">
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
 											:icon="['fas', 'circle-plus']"
@@ -658,6 +641,22 @@
 						</Command>
 					</PopoverContent>
 				</Popover>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="outline" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary_3-table w-5 h-5"
+									:icon="['fas', 'eraser']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Apagar filtros</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
 			</div>
 		</div>
 

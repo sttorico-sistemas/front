@@ -37,14 +37,14 @@
 		},
 	})
 
-	const { data: permissions, isLoading: isPermissionsLoading } = useQuery({
+	const { data: permissions } = useQuery({
 		queryKey: iamRepository.getQueryKey('all-permissions'),
 		queryFn: ({ signal }) => iamRepository.getPermissions({ signal }),
 	})
 
 	const formattedPermissions = computed(() => {
 		return (permissions.value ?? []).map(({ id, relatedName }) => ({
-			id,
+			id: `${id}`,
 			name: relatedName,
 		}))
 	})
@@ -100,9 +100,14 @@
 				<FormLabel class="text-right">Permissões</FormLabel>
 				<FormControl>
 					<TagsInput
+						v-model="componentField.modelValue"
 						class="col-span-3 flex-col"
 						:disabled="disabled"
-						v-model="componentField.modelValue"
+						:displayValue="
+							(value) => {
+								return formattedPermissionsMap[value as string]
+							}
+						"
 					>
 						<SelectRoot
 							:disabled="disabled"
@@ -122,15 +127,15 @@
 								<SelectGroup>
 									<SelectLabel>Permissões:</SelectLabel>
 									<SelectItem
-										v-for="page of formattedPermissions"
+										v-for="permission of formattedPermissions"
 										:disabled="
 											((value as any[]) ?? []).some(
-												(value) => value.toString() === page.id.toString(),
+												(value) => value === permission.id,
 											)
 										"
-										:key="page.id"
-										:value="page.id.toString()"
-										>{{ page.name }}</SelectItem
+										:key="permission.id"
+										:value="permission.id"
+										>{{ permission.name }}</SelectItem
 									>
 								</SelectGroup>
 							</SelectContent>
@@ -139,11 +144,7 @@
 						<div
 							class="flex flex-wrap w-full gap-2 items-start justify-start px-3 py-2 text-sm"
 						>
-							<TagsInputItem
-								v-for="item in componentField.modelValue"
-								:key="item"
-								:value="formattedPermissionsMap[item]"
-							>
+							<TagsInputItem v-for="item in value" :key="item" :value="item">
 								<TagsInputItemText />
 								<TagsInputItemDelete />
 							</TagsInputItem>
@@ -153,30 +154,5 @@
 				<FormMessage class="col-span-3 col-start-2" />
 			</FormItem>
 		</FormField>
-		<!--
-		<FormField v-slot="{ componentField }" name="permissions">
-			<FormItem class="grid grid-cols-4 items-center gap-x-4 gap-y-1">
-				<FormLabel class="text-right">Permissões</FormLabel>
-				<FormControl>
-					<SelectRoot :disabled="disabled" v-bind="componentField">
-						<SelectTrigger class="col-span-3">
-							<SelectValue placeholder="Selecione uma permissão..." />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectGroup>
-								<SelectLabel>Permissões:</SelectLabel>
-								<SelectItem
-									v-for="page of formattedPermissions"
-									:key="page.id"
-									:value="page.id.toString()"
-									>{{ page.name }}</SelectItem
-								>
-							</SelectGroup>
-						</SelectContent>
-					</SelectRoot>
-				</FormControl>
-				<FormMessage class="col-span-3 col-start-2" />
-			</FormItem>
-		</FormField> -->
 	</div>
 </template>

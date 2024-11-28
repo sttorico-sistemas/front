@@ -55,7 +55,7 @@
 			form.setValues({
 				name: data.name,
 				description: data?.description,
-				permissions: data.permissions.map(({ id }) => id.toString()),
+				permissions: data?.permissions?.map(({ id }) => `${id}`) ?? [],
 			})
 		} catch (error) {
 			console.log(error)
@@ -95,19 +95,3 @@
 		</template>
 	</form-wrapper>
 </template>
-
-
-<!-- curl --request GET \
-  --url https://apiv2.dev.infoconsig.com.br/api/profile/tipo-operador/1 \
-  --header 'Authorization: Bearer 24|wkIrcOTlL8iLDLJqJWELjUKhfeccdLwdoWsOf6Uod3bf44ad' \
-  --header 'Content-Type: application/json' \
-  --header 'X-CSRF-TOKEN: ' \
-  --header 'accept: */*'
-
-curl --request PUT \
-  --url https://apiv2.dev.infoconsig.com.br/api/profile/tipo-operador/6 \
-  --header 'Authorization: Bearer 24|wkIrcOTlL8iLDLJqJWELjUKhfeccdLwdoWsOf6Uod3bf44ad' \
-  --header 'Content-Type: application/json' \
-  --header 'X-CSRF-TOKEN: ' \
-  --header 'accept: */*' \
-  --data '{"description": "Esse teste", "name: "Teste", "permissions": [1, 2, 4]}' -->
