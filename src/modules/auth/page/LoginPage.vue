@@ -1,80 +1,97 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import VueCollapsible from 'vue-height-collapsible/vue3'
-import axios from 'axios'
-import Swal from 'sweetalert2'
+	import * as z from 'zod'
 
-// Icons
-import IconCaretDown from 'src/core/components/Icons/IconCaretDown.vue'
-import IconUser from 'src/core/components/Icons/IconUser.vue'
-import IconLock from 'src/core/components/Icons/IconLock.vue'
-import IconEye from 'src/core/components/Icons/IconEye.vue'
-import { useStorage } from '@/core/composables'
+	import {
+		FormControl,
+		FormField,
+		FormItem,
+		FormLabel,
+		FormMessage,
+	} from '@/core/components/form'
+	import { ButtonRoot } from '@/core/components/button'
+	import { InputRoot } from '@/core/components/fields/input'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+	import {
+		Accordion,
+		AccordionContent,
+		AccordionItem,
+		AccordionTrigger,
+	} from '@/core/components/accordion'
+	import { useForm } from 'vee-validate'
+	import { toTypedSchema } from '@vee-validate/zod'
+	import { authStores } from '@/core/stores'
+	import { ref } from 'vue'
+	import { useRouter } from 'vue-router'
 
-// Declarações e estados reativos
-const typeInput = ref('password')
-const accordions = reactive({
-	dadosContrato: false,
-})
-const labelAccordion = [
-	'Nunca acessou o sistema?',
-	'Ainda não se conectou utilizando o CPF?',
-	'Esqueceu sua senha?',
-	'Não está conseguindo acessar o sistema?',
-	'Termos e condições de uso do sistema',
-	'Política de privacidade',
-]
+	const accordionItems = [
+		{
+			value: 'item-1',
+			title: 'Nunca acessou o sistema?',
+			content:
+				'Cras nulla quam, consectetur vel turpis vitae, fermentum porttitor elit. Vestibulum semper vitae leo a blandit. Maecenas nec enim vitae nisi lacinia suscipit. Phasellus tellus urna, lacinia eget lectus eu, elementum convallis orci. Etiam nec blandit sem. Sed efficitur dignissim mollis. Vivamus eget iaculis quam.',
+		},
+		{
+			value: 'item-2',
+			title: 'Ainda não se conectou utilizando o CPF?',
+			content:
+				'Cras nulla quam, consectetur vel turpis vitae, fermentum porttitor elit. Vestibulum semper vitae leo a blandit. Maecenas nec enim vitae nisi lacinia suscipit. Phasellus tellus urna, lacinia eget lectus eu, elementum convallis orci. Etiam nec blandit sem. Sed efficitur dignissim mollis. Vivamus eget iaculis quam.',
+		},
+		{
+			value: 'item-3',
+			title: 'Esqueceu sua senha?',
+			content:
+				'Cras nulla quam, consectetur vel turpis vitae, fermentum porttitor elit. Vestibulum semper vitae leo a blandit. Maecenas nec enim vitae nisi lacinia suscipit. Phasellus tellus urna, lacinia eget lectus eu, elementum convallis orci. Etiam nec blandit sem. Sed efficitur dignissim mollis. Vivamus eget iaculis quam.',
+		},
+		{
+			value: 'item-4',
+			title: 'Não está conseguindo acessar o sistema?',
+			content:
+				'Cras nulla quam, consectetur vel turpis vitae, fermentum porttitor elit. Vestibulum semper vitae leo a blandit. Maecenas nec enim vitae nisi lacinia suscipit. Phasellus tellus urna, lacinia eget lectus eu, elementum convallis orci. Etiam nec blandit sem. Sed efficitur dignissim mollis. Vivamus eget iaculis quam.',
+		},
+		{
+			value: 'item-5',
+			title: 'Termos e condições de uso do sistema',
+			content:
+				'Cras nulla quam, consectetur vel turpis vitae, fermentum porttitor elit. Vestibulum semper vitae leo a blandit. Maecenas nec enim vitae nisi lacinia suscipit. Phasellus tellus urna, lacinia eget lectus eu, elementum convallis orci. Etiam nec blandit sem. Sed efficitur dignissim mollis. Vivamus eget iaculis quam.',
+		},
+		{
+			value: 'item-6',
+			title: 'Política de privacidade',
+			content:
+				'Cras nulla quam, consectetur vel turpis vitae, fermentum porttitor elit. Vestibulum semper vitae leo a blandit. Maecenas nec enim vitae nisi lacinia suscipit. Phasellus tellus urna, lacinia eget lectus eu, elementum convallis orci. Etiam nec blandit sem. Sed efficitur dignissim mollis. Vivamus eget iaculis quam.',
+		},
+	]
+	const typeInput = ref('password')
+	const isLoading = ref(false)
+	const auth = authStores()
+	const router = useRouter()
 
-const cpf = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const router = useRouter()
-const storage = useStorage()
+	const formSchema = z.object({
+		username: z.string({ message: 'O CPF é obrigatório.' }),
+		password: z.string({ message: 'A senha é obrigatório.' }),
+	})
 
-// Mostrar/esconder senha
-const showPassword = () => {
-	typeInput.value = typeInput.value === 'password' ? 'text' : 'password'
-}
+	const form = useForm({
+		validationSchema: toTypedSchema(formSchema),
+	})
 
-// Função de login com modal de loading
-const login = async () => {
-	try {
-		errorMessage.value = ''
-		Swal.fire({
-			title: 'Autenticando...',
-			html: 'Por favor, aguarde',
-			allowOutsideClick: false,
-			showConfirmButton: false,
-			didOpen: () => {
-				Swal.showLoading()
-			}
-		})
+	const onLoginSubmit = form.handleSubmit(async (values) => {
+		isLoading.value = true
 
-		const response = await axios.post('https://dev-02-apiv2.management.infoconsig.tec.br/api/login', {
-			cpf: cpf.value,
-			password: password.value
-		})
-
-		if (response.data && response.data.data.authToken) {
-			storage.setItem('authToken', response.data.data.authToken)
-			storage.setItem('tokenType', response.data.data.token_type)
-
-			Swal.close()
-			router.push('/')
-		} else {
-			throw new Error('Autenticação falhou')
+		try {
+			await auth.login(values).then(() => {
+				router.push({ name: 'dashboard' })
+			})
+		} catch (error) {
+			console.log(`onLoginSubmit:`, error)
+		} finally {
+			isLoading.value = false
 		}
-	} catch (error) {
-		Swal.close()
-		errorMessage.value = 'Login ou senha incorretos.'
-		Swal.fire({
-			icon: 'error',
-			title: 'Erro',
-			text: errorMessage.value
-		})
+	})
+
+	const showPassword = () => {
+		typeInput.value = typeInput.value === 'password' ? 'text' : 'password'
 	}
-}
 </script>
 
 <template>
@@ -82,79 +99,154 @@ const login = async () => {
 		<!-- Lado esquerdo (informações e accordion) -->
 		<div class="hidden md:flex flex-col justify-center bg-primary_3-table px-8">
 			<div class="ml-9">
-				<img src="../../../../public/assets/logo-vazado.png" alt="Bem Vindo">
+				<img src="../../../../public/assets/logo-vazado.png" alt="Bem Vindo" />
 				<h2 class="text-white text-4xl font-extralight mt-5">Bem Vindo</h2>
 			</div>
-			<div v-for="(label, idx) in labelAccordion" :key="idx" class="mt-6">
-				<button type="button" class="flex justify-between items-center gap-3 text-lg text-white"
-					@click="accordions[idx] = !accordions[idx]">
-					<div :class="{ 'rotate-180': accordions[idx] }">
-						<IconCaretDown />
-					</div>
-					{{ label }}
-				</button>
-				<VueCollapsible :isOpen="accordions[idx]">
-					<p class="text-white">Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-				</VueCollapsible>
-			</div>
+
+			<accordion type="single" class="w-full mt-6" collapsible>
+				<accordion-item
+					v-for="item in accordionItems"
+					:key="item.value"
+					:value="item.value"
+					class="border-none"
+				>
+					<accordion-trigger
+						class="text-white text-lg font-medium justify-start gap-4"
+					>
+						{{ item.title }}
+						<template #iconLeft></template>
+					</accordion-trigger>
+					<accordion-content class="text-white">
+						{{ item.content }}
+					</accordion-content>
+				</accordion-item>
+			</accordion>
 		</div>
 
 		<!-- Lado direito (formulário de login) -->
 		<div class="container flex flex-col justify-center items-center">
 			<div class="flex flex-col items-center">
-				<img src="../../../../public/assets/logo-full.png" alt="InfoConsig" class="mb-5">
+				<img
+					src="../../../../public/assets/logo-full.png"
+					alt="InfoConsig"
+					class="mb-5"
+				/>
 				<span class="text-xl font-bold">Conecte-se ao Sistema</span>
 			</div>
-			<form class="mt-8 md:mt-28" @submit.prevent="login">
-				<!-- Campo CPF -->
-				<div class="relative mb-9">
-					<span class="absolute start-0 bottom-3 text-gray-500 dark:text-gray-400">
-						<IconUser class="text-[#888EA8]" />
-					</span>
-					<input type="text" v-model="cpf" v-maska="'###.###.###-##'" id="cpf"
-						class="block py-2.5 ps-6 pe-0 w-[300px] text-xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-500 peer"
-						placeholder=" " />
-					<label for="cpf"
-						class="absolute text-xl text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:start-6 peer-focus:start-0 peer-focus:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">CPF</label>
-				</div>
 
-				<!-- Campo Senha -->
-				<div class="relative">
-					<span class="absolute start-0 bottom-3 text-gray-500 dark:text-gray-400">
-						<IconLock class="text-[#888EA8]" />
-					</span>
-					<input :type="typeInput" v-model="password" id="password"
-						class="block py-2.5 ps-6 pe-0 w-[300px] text-xl text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-gray-500 peer"
-						placeholder=" " />
-					<label for="password"
-						class="absolute text-xl text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:start-6 peer-focus:start-0 peer-focus:text-gray-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Senha</label>
-					<span @click="showPassword" class="absolute bottom-3 right-1 cursor-pointer">
-						<IconEye class="text-[#888EA8]" />
-					</span>
-				</div>
+			<form
+				class="flex flex-col gap-4 mt-8 md:mt-28"
+				@submit.prevent="onLoginSubmit"
+			>
+				<form-field v-slot="{ componentField }" name="username">
+					<form-item class="grid grid-cols-6 items-start gap-x-4 gap-y-1">
+						<form-label class="text-left">CPF</form-label>
+						<form-control>
+							<div class="relative w-full max-w-sm items-center col-span-6">
+								<input-root
+									:disabled="isLoading"
+									autocomplete="username"
+									v-maska="'###.###.###-##'"
+									type="text"
+									placeholder="Digite o CPF..."
+									class="pl-10"
+									v-bind="componentField"
+								/>
+								<span
+									class="absolute start-2 inset-y-0 flex items-center justify-center px-2"
+								>
+									<font-awesome-icon
+										class="size-4 text-[#1384AD]"
+										:icon="['far', 'user']"
+									/>
+								</span>
+							</div>
+						</form-control>
 
-				<!-- Mensagem de erro -->
-				<div class="text-red-500 mt-2" v-if="errorMessage">{{ errorMessage }}</div>
+						<form-message class="col-span-6 text-left" />
+					</form-item>
+				</form-field>
 
-				<!-- Botão de login -->
-				<div class="flex justify-center mt-14">
-					<button type="submit" class="w-[200px] h-[38px] btn bg-primary_3-table text-white text-base rounded-full">
-						ENTRAR
-					</button>
-				</div>
+				<form-field v-slot="{ componentField }" name="password">
+					<form-item class="grid grid-cols-6 items-center gap-x-4 gap-y-1">
+						<form-label class="text-left">Senha</form-label>
+						<form-control>
+							<div
+								class="relative flex w-full max-w-sm items-center gap-1.5 col-span-6"
+							>
+								<input-root
+									:disabled="isLoading"
+									autocomplete="current-password"
+									:type="typeInput"
+									placeholder="Digite a senha..."
+									class="pl-10"
+									v-bind="componentField"
+								/>
+
+								<button-root
+									variant="outline"
+									:disabled="isLoading"
+									type="button"
+									@click="showPassword"
+								>
+									<font-awesome-icon
+										class="size-5 text-[#805DCA]"
+										:icon="[
+											'far',
+											typeInput === 'password' ? 'eye' : 'eye-slash',
+										]"
+									/>
+								</button-root>
+
+								<span
+									class="absolute start-2 inset-y-0 flex items-center justify-center px-2"
+								>
+									<font-awesome-icon
+										class="size-4 text-[#805DCA]"
+										:icon="['fas', 'lock']"
+									/>
+								</span>
+							</div>
+						</form-control>
+
+						<form-message class="col-span-6 text-left" />
+					</form-item>
+				</form-field>
+
+				<button-root
+					variant="default"
+					type="form"
+					:disabled="isLoading"
+					:is-loading="isLoading"
+					class="text-white text-lg font-semibold bg-primary_3-table gap-4"
+				>
+					Entrar
+					<font-awesome-icon
+						v-if="isLoading"
+						:icon="['fas', 'spinner']"
+						class="animate-spin"
+					/>
+				</button-root>
 			</form>
 
 			<!-- Esqueci minha senha -->
-			<span class="mt-5 md:mt-16 text-xl font-bold text-primary_3-table">Esqueci minha senha</span>
+			<span class="mt-5 md:mt-16 text-xl font-bold text-primary_3-table"
+				>Esqueci minha senha</span
+			>
 
 			<!-- Redes sociais -->
 			<div class="mt-5 md:mt-14 flex justify-center items-center gap-5">
-				<img src="../../../../public/assets/svg/instagram.svg" alt="Instagram">
-				<img src="../../../../public/assets/svg/facebook.svg" alt="Facebook">
+				<img
+					src="../../../../public/assets/svg/instagram.svg"
+					alt="Instagram"
+				/>
+				<img src="../../../../public/assets/svg/facebook.svg" alt="Facebook" />
 			</div>
 
 			<!-- Rodapé -->
-			<span class="text-xs text-primary_3-table absolute bottom-3">© 2024. Sttórico Sistemas Ltda. Todos os direitos reservados.</span>
+			<span class="text-xs text-primary_3-table absolute bottom-3"
+				>© 2024. Sttórico Sistemas Ltda. Todos os direitos reservados.</span
+			>
 		</div>
 	</main>
 </template>
