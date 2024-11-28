@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { Input } from '@/core/components/fields/input'
+	import { InputRoot } from '@/core/components/fields/input'
 	import {
 		SelectContent,
 		SelectGroup,
@@ -54,8 +54,6 @@
 			(permissions.value ?? []).map(({ id, relatedName }) => [id, relatedName]),
 		)
 	})
-
-	console.log(formattedPermissionsMap)
 </script>
 
 <template>
@@ -64,7 +62,7 @@
 			<FormItem class="grid grid-cols-4 items-center gap-x-4 gap-y-1">
 				<FormLabel class="text-right">Nome</FormLabel>
 				<FormControl>
-					<Input
+					<input-root
 						:disabled="disabled"
 						type="text"
 						placeholder="Digite o nome..."
@@ -81,7 +79,7 @@
 			<FormItem class="grid grid-cols-4 items-center gap-x-4 gap-y-1">
 				<FormLabel class="text-right">Descrição</FormLabel>
 				<FormControl>
-					<Input
+					<input-root
 						:disabled="disabled"
 						type="text"
 						placeholder="Digite a descrição..."
