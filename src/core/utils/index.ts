@@ -1,4 +1,7 @@
 export * from './capitalize-string'
 export * from './component-utils'
 export * from './format-date'
+export * from './format-cpf'
+export * from './format-phone'
+export * from './format-cep'
 export * from './debounce'
