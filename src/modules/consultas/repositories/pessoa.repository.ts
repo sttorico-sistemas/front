@@ -11,16 +11,17 @@ export class PessoaRepository {
 
 	async getAllPersons(pagination?: PaginacaoArgs, query?: string): Promise<PaginatedResultOutput<Pessoa>> {
 		try {
-			const response = await this.http.get('/pessoas', {
+			const response = await this.http.get<{ data: { data: any[], meta: any } }>('/pessoas', {
 				params: {
 					'per_page': pagination?.limit ?? 10,
 					'page': pagination?.page ?? 1,
 					'search': query,
 				}
 			});
+			console.log(response)
 			return {
-				total: response.data.data.meta.total,
-				items: (response.data.data.data as []).map(
+				total: response.data.meta.total,
+				items: (response.data.data as []).map(
 					(e) => PessoaModel.fromRecord(e),
 				),
 			}
@@ -31,8 +32,8 @@ export class PessoaRepository {
 
 	async getPersonById(id: number): Promise<Pessoa | undefined> {
 		try {
-			const response = await this.http(`/pessoas/${id}`);
-			return PessoaModel.fromRecord(response.data.data);
+			const response = await this.http.get<{ data: any }>(`/pessoas/${id}`);
+			return PessoaModel.fromRecord(response.data);
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
