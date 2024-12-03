@@ -63,8 +63,8 @@
 			"
 		>
 			<template v-if="item.hasChildren">
-				<font-awesome-icon v-if="!isExpanded" :icon="['fas', 'chevron-up']" />
-				<font-awesome-icon v-else :icon="['fas', 'chevron-down']" />
+				<font-awesome-icon class="w-4 h-4 text-primary_3-table" v-if="!isExpanded" :icon="['far', 'square-plus']" />
+				<font-awesome-icon class="w-4 h-4 text-primary_3-table" v-else :icon="['far', 'square-minus']" />
 			</template>
 
 			<font-awesome-icon
