@@ -2,7 +2,7 @@ import { useAxios } from "src/core/composables/use_axios";
 import { BaseError } from "src/core/errors/base.error";
 import { HttpClientProps } from "@/modules/configuracoes/types/http-client";
 import { Ref } from "vue";
-import { ProfileModel } from "@/core/models";
+import { PermissionTreeModel, ProfileModel } from "@/core/models";
 import { PermissionModel } from "@/core/models/permission.model";
 
 export class IAMRepository {
@@ -89,6 +89,18 @@ export class IAMRepository {
 				signal: configParams?.signal
 			})
 			return response.map((e: Record<string, any>) => PermissionModel.fromRecord(e));
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
+
+	async getTreePermissions(configParams?: HttpClientProps<PermissionTreeModel[]>): Promise<PermissionTreeModel[]> {
+		try {
+			const response = await this.http.get<any[]>(`/profile/paginas-componentes`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			return response.map((e: Record<string, any>) => PermissionTreeModel.fromRecord(e));
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

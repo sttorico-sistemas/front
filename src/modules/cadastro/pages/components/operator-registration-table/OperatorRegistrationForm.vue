@@ -1,8 +1,4 @@
 <script lang="ts" setup>
-	import * as z from 'zod'
-	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-	import { ButtonRoot } from '@/core/components/button'
 	import { Separator } from '@/core/components/separator'
 	import { InputRoot } from '@/core/components/fields/input'
 	import {
@@ -15,66 +11,16 @@
 		SelectRoot,
 	} from '@/core/components/fields/select'
 	import {
-		Command,
-		CommandEmpty,
-		CommandGroup,
-		CommandInput,
-		CommandItem,
-		CommandList,
-	} from '@/core/components/command'
-	import {
-		Popover,
-		PopoverContent,
-		PopoverTrigger,
-	} from '@/core/components/popover'
-	import {
-		Form,
 		FormControl,
 		FormField,
 		FormItem,
 		FormLabel,
 		FormMessage,
 	} from '@/core/components/form'
-	import { tabelasAuxiliaresRepository } from '@/modules/configuracoes/stores'
 	import { useQuery } from '@tanstack/vue-query'
-	import { computed, ref, type PropType } from 'vue'
-	import { toTypedSchema } from '@vee-validate/zod'
-	import { cn } from '@/core/utils'
+	import { computed, type PropType } from 'vue'
 	import CheckboxTree from '@/core/components/fields/checkbox-tree/CheckboxTree.vue'
 	import { iamRepository } from '@/core/stores'
-
-	const itemTree = [
-		{
-			id: '1',
-			title: 'Dashboard',
-		},
-		{
-			id: '2',
-			title: 'Consultas',
-			children: [
-				{ id: '3', title: 'Pessoas Cadastradas' },
-				{ id: '4', title: 'Operadores' },
-			],
-		},
-		{
-			id: '5',
-			title: 'Cadastro',
-			children: [
-				{ id: '6', title: 'Consignante Master' },
-				{ id: '7', title: 'Consignantes' },
-			],
-		},
-		{
-			id: '8',
-			title: 'Configurações',
-			children: [
-				{ id: '9', title: 'Tabelas Auxiliares' },
-				{ id: '10', title: 'Páginas' },
-				{ id: '11', title: 'Perfil' },
-			],
-		},
-		{ id: '12', title: 'Ajuda' },
-	]
 
 	const props = defineProps({
 		disabled: { type: Boolean, default: () => false },
@@ -89,11 +35,21 @@
 	})
 	const emits = defineEmits(['update-permissions'])
 
+	const { data: treePermissions, isLoading: isTreePermissionsLoading } =
+		useQuery({
+			queryKey: iamRepository.getQueryKey('tree-permissions'),
+			queryFn: ({ signal }) => iamRepository.getTreePermissions({ signal }),
+		})
+
 	const { data: typeOfOperators, isLoading: isTypeOfOperatorsLoading } =
 		useQuery({
 			queryKey: iamRepository.getQueryKey('type-of-operators'),
 			queryFn: ({ signal }) => iamRepository.getTypeOfOperators({ signal }),
 		})
+
+	const formattedAllTreePermissions = computed(() => {
+		return (treePermissions.value ?? []).map((data) => data.toList())
+	})
 
 	const formattedAllTypeOperators = computed(() => {
 		return (typeOfOperators.value ?? []).map(({ id, name, permissions }) => ({
@@ -201,7 +157,7 @@
 
 			<FormItem class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
 				<CheckboxTree
-					:data="itemTree"
+					:data="formattedAllTreePermissions"
 					class="col-span-12"
 					:disabled="disabled || isTypeOfOperatorsLoading"
 					v-model="componentField.modelValue"
