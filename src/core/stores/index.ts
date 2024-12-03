@@ -1,4 +1,5 @@
 export * from './general.stores'
 export * from './iam.stores'
 export * from './auth.stores'
+export * from './operator.store'
 export * from './person.store'

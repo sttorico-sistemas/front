@@ -1,13 +1,13 @@
 import { useAxios } from "@/core/composables";
 import { BaseError } from "@/core/errors/base.error";
-import { PersonModel } from "@/core/models";
+import { OperatorModel } from "@/core/models";
 import { HttpClientProps } from "@/modules/configuracoes/types";
 import { Ref } from "vue";
 
 
-export class PersonRepository {
+export class OperatorRepository {
 	private http = useAxios();
-	#QUERY_KEY = 'person'
+	#QUERY_KEY = 'operator'
 
 	getQueryKey(tag?: string | Ref<string>, pagination?: { page?: Ref<number>, limit?: Ref<number> }, ...others: Ref<unknown>[]) {
 		if (pagination === undefined) {
@@ -16,38 +16,39 @@ export class PersonRepository {
 		return [tag ?? this.#QUERY_KEY, pagination, ...others]
 	}
 
-	async getAllPersons(configParams?: HttpClientProps<PersonModel[]>): Promise<PersonModel[]> {
+	async getAllOperators(configParams?: HttpClientProps<OperatorModel[]>): Promise<OperatorModel[]> {
 		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/pessoas`, {
+			const response = await this.http.get<{ data: [] }>(`/profile/operador`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.data.map((e: Record<string, any>) => PersonModel.fromRecord(e));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			const values = response.data.map((e: Record<string, any>) => OperatorModel.fromRecord(e));
+			console.log(values)
+			// if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
 	}
 
-	async getPersonById(dataId: number, configParams?: HttpClientProps<PersonModel>): Promise<PersonModel> {
+	async getOperatorById(dataId: number, configParams?: HttpClientProps<OperatorModel>): Promise<OperatorModel> {
 		try {
-			const response = await this.http.get<{ data: any }>(`/pessoas/${dataId}`, {
+			const response = await this.http.get<{ data: any }>(`/profile/operador/${dataId}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return PersonModel.fromRecord(response.data)
+			return OperatorModel.fromRecord(response.data)
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
 	}
 
-	async personCreate(
-		body: PersonModel,
-		configParams?: HttpClientProps<PersonModel>
+	async createOperator(
+		body: OperatorModel,
+		configParams?: HttpClientProps<OperatorModel>
 	): Promise<void> {
 		try {
-			await this.http.post(`/pessoas`, body.toRecord(), {
+			await this.http.post(`/profile/operador`, body.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -56,12 +57,12 @@ export class PersonRepository {
 		}
 	}
 
-	async updateTableValue(
-		data: PersonModel,
-		configParams?: HttpClientProps<PersonModel>
+	async updateOperator(
+		data: OperatorModel,
+		configParams?: HttpClientProps<OperatorModel>
 	): Promise<void> {
 		try {
-			await this.http.put(`/pessoas/${data.id}`, data.toRecord(), {
+			await this.http.put(`/profile/operador/${data.id}`, data.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -71,8 +72,8 @@ export class PersonRepository {
 	}
 
 
-	async deletePerson({ id }: Pick<PersonModel, 'id'>,
-		configParams?: HttpClientProps<PersonModel>
+	async deleteOperator({ id }: Pick<OperatorModel, 'id'>,
+		configParams?: HttpClientProps<OperatorModel>
 	): Promise<void> {
 		try {
 			return Promise.resolve()
