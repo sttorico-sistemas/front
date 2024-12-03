@@ -17,30 +17,28 @@
 		useQuery,
 		useQueryClient,
 	} from '@tanstack/vue-query'
-	import { personRepository } from '@/core/stores/person.store'
+	import { operatorRepository } from '@/core/stores'
 	import { useLocalStorage } from '@vueuse/core'
 	import { useRouteQuery } from '@vueuse/router'
 	import { useNotify } from '@/core/composables'
-	import { AddressModel, ContactModel, PersonModel } from '@/core/models'
+	import { OperatorModel } from '@/core/models'
 	import { formatCPF, valueUpdater } from '@/core/utils'
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 	import { ButtonRoot } from '@/core/components/button'
 	import { useForm } from 'vee-validate'
 	import { toTypedSchema } from '@vee-validate/zod'
 	import {
-		EditTableRegisterPerson,
-		DeleteTableRegisterPerson,
-		TableRegisterPersonForm,
-	} from './components/register-person-table'
+		OperatorRegistrationDeleteAction,
+		OperatorRegistrationForm,
+		OperatorRegistrationUpdateAction,
+	} from './components/operator-registration-table'
 
-	type PersonTable = {
+	type OperatorTable = {
 		id: number
 		name: string
 		cpf: string
-		linkedType: string
-		city: string
 		email: string
-		status: number
+		type: string
 	}
 
 	const changeValues = {
@@ -50,53 +48,24 @@
 	} as const
 
 	const openCreateModal = ref(false)
-	const openNameBox = ref(false)
-	const openCPFBox = ref(false)
 	const rowSelection = ref({})
-	const formattedSearchNames = useLocalStorage<{ id: number; name: string }[]>(
-		'search-person-names',
-		[],
-	)
-	const formattedSearchCPFs = useLocalStorage<{ id: number; name: string }[]>(
-		'search-person-cpf',
-		[],
-	)
 	const page = useRouteQuery('city-page', 1, { transform: Number })
 	const perPage = useRouteQuery('city-per-page', 8, { transform: Number })
-	const selectLinkedType = useRouteQuery<string | undefined>(
-		'person-linked-type',
-		undefined,
-	)
-	const selectCity = useRouteQuery<string | undefined>('person-city', undefined)
-	const selectName = useRouteQuery<string | undefined>('person-name', undefined)
-	const selectCPF = useRouteQuery<string | undefined>('person-cpf', undefined)
-	const selectStatus = useRouteQuery<string | undefined>(
-		'person-status',
-		undefined,
-	)
 	const selectSort = useRouteQuery<string | undefined>('city-sort')
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 
 	const {
-		data: persons,
-		isLoading: isPersonsLoading,
-		refetch: selectPersonsRefetch,
-		isPlaceholderData: isPersonsPlaceholderData,
+		data: operators,
+		isLoading: isOperatorsLoading,
+		refetch: selectOperatorsRefetch,
+		isPlaceholderData: isOperatorsPlaceholderData,
 	} = useQuery({
-		queryKey: personRepository.getQueryKey(
-			'persons',
-			{
-				page,
-				limit: perPage,
-			},
-			selectLinkedType,
-			selectCity,
-			selectStatus,
-			selectName,
-			selectCPF,
-		),
+		queryKey: operatorRepository.getQueryKey('operators', {
+			page,
+			limit: perPage,
+		}),
 		queryFn: ({ signal }) =>
-			personRepository.getAllPersons({
+			operatorRepository.getAllOperators({
 				signal,
 				params: { page: page.value, perPage: perPage.value },
 				metaCallback: (meta) => {
@@ -112,114 +81,102 @@
 	const queryClient = useQueryClient()
 	const notify = useNotify()
 
-	const { mutateAsync: handleDeletePerson, isPending: isDeletePersonLoading } =
-		useMutation({
-			mutationFn: ({ id }: { id: number }) =>
-				personRepository.deletePerson({ id }),
-			onSettled: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: personRepository.getQueryKey(
-						'persons',
-						{ page, limit: perPage },
-						selectLinkedType,
-						selectCity,
-						selectStatus,
-						selectName,
-						selectCPF,
-					),
-				})
-				selectCity.value = undefined
-			},
-			onError: (error, variables, context) => {
-				notify.error(
-					error,
-					{ title: 'Erro ao apagar a pessoa!' },
-					{ duration: 1500 },
-				)
-			},
-			onSuccess: (data, variables, context) => {
-				notify.success(
-					{ title: `Pessoa apagada com sucesso!` },
-					{ duration: 1500 },
-				)
-			},
-		})
+	const {
+		mutateAsync: handleDeleteOperator,
+		isPending: isDeleteOperatorLoading,
+	} = useMutation({
+		mutationFn: ({ id }: { id: number }) =>
+			operatorRepository.deleteOperator({ id }),
+		onSettled: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: operatorRepository.getQueryKey('operators', {
+					page,
+					limit: perPage,
+				}),
+			})
+		},
+		onError: (error, variables, context) => {
+			notify.error(
+				error,
+				{ title: 'Erro ao apagar a operador!' },
+				{ duration: 1500 },
+			)
+		},
+		onSuccess: (data, variables, context) => {
+			notify.success(
+				{ title: `Operador apagada com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
+	})
 
-	const { mutateAsync: handleUpdatePerson, isPending: isUpdatePersonLoading } =
-		useMutation({
-			mutationFn: (
-				data: PersonModel,
-			) => personRepository.updateTableValue(data),
-			onSettled: async () => {
-				return await queryClient.invalidateQueries({
-					queryKey: personRepository.getQueryKey(
-						'persons',
-						{ page, limit: perPage },
-						selectLinkedType,
-						selectCity,
-						selectStatus,
-						selectName,
-						selectCPF,
-					),
-				})
-			},
-			onError: (error, variables, context) => {
-				notify.success(
-					{ title: `Erro ao atualizar a pessoa!` },
-					{ duration: 1500 },
-				)
-			},
-			onSuccess: (data, variables, context) => {
-				notify.success(
-					{ title: `Pessoa atualizada com sucesso!` },
-					{ duration: 1500 },
-				)
-			},
-		})
+	const {
+		mutateAsync: handleUpdateOperator,
+		isPending: isUpdateOperatorLoading,
+	} = useMutation({
+		mutationFn: (data: OperatorModel) =>
+			operatorRepository.updateOperator(data),
+		onSettled: async () => {
+			return await queryClient.invalidateQueries({
+				queryKey: operatorRepository.getQueryKey('operators', {
+					page,
+					limit: perPage,
+				}),
+			})
+		},
+		onError: (error, variables, context) => {
+			notify.success(
+				{ title: `Erro ao atualizar a operador!` },
+				{ duration: 1500 },
+			)
+		},
+		onSuccess: (data, variables, context) => {
+			notify.success(
+				{ title: `Operador atualizada com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
+	})
 
-	const { mutateAsync: handleCreatePerson, isPending: isCreatePersonLoading } =
-		useMutation({
-			mutationFn: (data: PersonModel) => personRepository.personCreate(data),
-			onSettled: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: personRepository.getQueryKey(
-						'persons',
-						{ page, limit: perPage },
-						selectLinkedType,
-						selectCity,
-						selectStatus,
-						selectName,
-						selectCPF,
-					),
-				})
-				openCreateModal.value = false
-			},
-			onError: (error, variables, context) => {
-				notify.success({ title: `Erro ao criar a pessoa!` }, { duration: 1500 })
-			},
-			onSuccess: (data, variables, context) => {
-				notify.success(
-					{ title: `Pessoa criada com sucesso!` },
-					{ duration: 1500 },
-				)
-			},
-		})
+	const {
+		mutateAsync: handleCreateOperator,
+		isPending: isCreateOperatorLoading,
+	} = useMutation({
+		mutationFn: (data: OperatorModel) =>
+			operatorRepository.createOperator(data),
+		onSettled: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: operatorRepository.getQueryKey('operators', {
+					page,
+					limit: perPage,
+				}),
+			})
+			openCreateModal.value = false
+		},
+		onError: (error, variables, context) => {
+			notify.success({ title: `Erro ao criar a operador!` }, { duration: 1500 })
+		},
+		onSuccess: (data, variables, context) => {
+			notify.success(
+				{ title: `Operador criada com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
+	})
 
-	const formattedAllTypeOfOperator = computed<PersonTable[]>(() => {
-		return (persons.value ?? []).map(
-			({ id, name, cpf, linkedType, city, email, status }) => ({
+	const formattedAllTypeOfOperator = computed<OperatorTable[]>(() => {
+		return (operators.value ?? []).map(
+			({ id, cpf, email, name, typeName }) => ({
 				id: id as number,
 				name,
+				email: email as string,
 				cpf: formatCPF(cpf),
-				linkedType: linkedType as string,
-				city: city as string,
-				email: email  as string,
-				status: status as number,
+				type: typeName as string,
 			}),
 		)
 	})
 
-	const columns: ColumnDef<PersonTable>[] = [
+	const columns: ColumnDef<OperatorTable>[] = [
 		{
 			accessorKey: 'id',
 			meta: 'Código',
@@ -293,54 +250,6 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'linkedType',
-			meta: 'Tp. vinculo',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
-						// onClick: () => handleSort('name'),
-					},
-					() => [
-						'Tp. vinculo',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('linkedType')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'city',
-			meta: 'Cidade',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
-						// onClick: () => handleSort('name'),
-					},
-					() => [
-						'Cidade',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('city')),
-			enableHiding: false,
-		},
-		{
 			accessorKey: 'email',
 			meta: 'E-mail',
 			header: () => {
@@ -365,8 +274,8 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'status',
-			meta: 'Status',
+			accessorKey: 'type',
+			meta: 'Tipo Operador',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -377,7 +286,7 @@
 						// onClick: () => handleSort('name'),
 					},
 					() => [
-						'Status',
+						'Tipo Operador',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
 						// 	icon: ['fas', getSort('name')],
@@ -385,7 +294,7 @@
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('status')),
+			cell: ({ row }) => h('div', row.getValue('type')),
 			enableHiding: false,
 		},
 		{
@@ -394,18 +303,18 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(EditTableRegisterPerson, {
+					h(OperatorRegistrationUpdateAction, {
 						dataId: data.id,
-						tablePersonName: data.name,
+						tableOperatorName: data.name,
 						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdatePersonLoading.value,
+						isLoading: isUpdateOperatorLoading.value,
 					}),
-					h(DeleteTableRegisterPerson, {
+					h(OperatorRegistrationDeleteAction, {
 						dataId: data.id,
-						tablePersonName: data.name,
+						tableOperatorName: data.name,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeletePersonLoading.value,
-						isActive: data.status === 1,
+						isLoading: isDeleteOperatorLoading.value,
+						isActive: true,
 					}),
 				])
 			},
@@ -435,53 +344,39 @@
 
 	const formSchema = z.object({
 		name: z.string({ message: 'Esse campo é obrigatório.' }),
-		birthday: z.string({ message: 'Esse campo é obrigatório.' }),
 		cpf: z.string({ message: 'Esse campo é obrigatório.' }),
-		addresses: z
+		typeId: z.string({ message: 'Esse campo é obrigatório.' }),
+		permissions: z
 			.array(
-				z.object({
-					cityId: z.string({ message: 'Esse campo é obrigatório.' }),
-					stateId: z.string({ message: 'Esse campo é obrigatório.' }),
-					street: z.string({ message: 'Esse campo é obrigatório.' }),
-					zipCode: z.string({ message: 'Esse campo é obrigatório.' }),
-					addressTypeId: z.string({ message: 'Esse campo é obrigatório.' }),
-				}),
-				{ message: 'Deve haver pelo menos 1 endereço.' },
+				z.object(
+					{
+						id: z.string({ message: 'Esse campo é obrigatório.' }),
+						title: z.string({ message: 'Esse campo é obrigatório.' }),
+					},
+					{ message: 'Esse campo é obrigatório.' },
+				),
+				{
+					message: 'Deve haver pelo menos 1 endereço.',
+				},
 			)
 			.min(1, 'Deve haver pelo menos 1 endereço.'),
-		contacts: z
-			.array(
-				z.object({
-					phoneTypeId: z.string({ message: 'Esse campo é obrigatório.' }),
-					phone: z.string({ message: 'Esse campo é obrigatório.' }),
-					email: z.string({ message: 'Esse campo é obrigatório.' }),
-					cellphone: z.string({ message: 'Esse campo é obrigatório.' }),
-				}),
-				{ message: 'Deve haver pelo menos 1 contato.' },
-			)
-			.min(1, 'Deve haver pelo menos 1 contato.'),
 	})
 
 	const form = useForm({
 		validationSchema: toTypedSchema(formSchema),
 		initialValues: {
-			contacts: [],
-			addresses: [],
+			permissions: [],
 		},
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		return handleCreatePerson(
-			new PersonModel({
-				name: values.name,
-				birthday: values.birthday,
-				cpf: values.cpf,
-				addresses: values.addresses.map((data) => new AddressModel(data)),
-				deletedAddresses: [],
-				contacts: values.contacts.map((data) => new ContactModel(data)),
-				deletedContacts: [],
-			}),
-		)
+		console.log(values)
+		// return handleCreateOperator(
+		// 	new OperatorModel({
+		// 		...values,
+		// 		permissions: values.permissions.map(({ id }) => Number(id)),
+		// 	}),
+		// )
 	})
 
 	const onUpdateSubmit = async (
@@ -491,22 +386,17 @@
 			deletedContacts: number[]
 		},
 	) => {
-		return handleUpdatePerson(
-			new PersonModel({
+		return handleUpdateOperator(
+			new OperatorModel({
 				id,
-				name: values.name,
-				birthday: values.birthday,
-				cpf: values.cpf,
-				addresses: values.addresses.map((data) => new AddressModel(data)),
-				deletedAddresses: values.deletedAddresses,
-				contacts: values.contacts.map((data) => new ContactModel(data)),
-				deletedContacts: values.deletedContacts,
+				...values,
+				permissions: values.permissions.map(({ id }) => Number(id)),
 			}),
 		)
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeletePerson({ id })
+		return handleDeleteOperator({ id })
 	}
 
 	function getSort(key: string) {
@@ -552,55 +442,49 @@
 
 			if (changeValues[value] !== changeValues.NONE) {
 				selectSort.value = `[${key}][${value}]`
-				selectPersonsRefetch()
+				selectOperatorsRefetch()
 				return
 			}
 
 			selectSort.value = undefined
-			selectPersonsRefetch()
+			selectOperatorsRefetch()
 			return
 		}
 
 		selectSort.value = `[${key}][ASC]`
-		selectPersonsRefetch()
+		selectOperatorsRefetch()
 	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
 			page.value = Math.max(to, 1)
 		} else if (to > page.value) {
-			if (!isPersonsPlaceholderData.value) {
+			if (!isOperatorsPlaceholderData.value) {
 				page.value = to
 			}
 		}
 	}
 
 	function handleSelectCity() {
-		selectPersonsRefetch()
+		selectOperatorsRefetch()
 	}
 
-	function handleClear() {
-		selectCity.value = undefined
-		selectCPF.value = undefined
-		selectName.value = undefined
-		selectLinkedType.value = undefined
-		selectStatus.value = undefined
-	}
+	function handleClear() {}
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Cadastro', 'Pessoas Cadastradas']" />
+		<breadcrumbs :paginas="['Consultas', 'Operadores']" />
 
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex gap-10 items-center justify-center">
-					<Titulo title="Gerenciar pessoas cadastradas" />
+					<Titulo title="Gerenciar Operadores" />
 
 					<form-wrapper
 						v-model="openCreateModal"
-						:is-loading="isCreatePersonLoading"
+						:is-loading="isCreateOperatorLoading"
 						:title="`Criar uma nova pessoa`"
 						description="Crie o conteúdo de uma nova pessoa."
 						class="sm:max-w-[1100px]"
@@ -609,7 +493,7 @@
 						<template #trigger>
 							<tooltip-provider>
 								<tooltip>
-									<tooltip-trigger as-child>
+									<tooltip-trigger disabled as-child>
 										<button-root
 											variant="ghost"
 											@click="openCreateModal = true"
@@ -628,9 +512,9 @@
 						</template>
 
 						<template #fields>
-							<TableRegisterPersonForm
+							<OperatorRegistrationForm
 								:metadata="form.values"
-								:disabled="isCreatePersonLoading"
+								:disabled="isCreateOperatorLoading"
 							/>
 						</template>
 					</form-wrapper>
@@ -642,7 +526,7 @@
 					:table="table"
 					:column-size="columns.length"
 					:row-limit="perPage"
-					:is-loading="isPersonsLoading"
+					:is-loading="isOperatorsLoading"
 				/>
 			</div>
 		</div>

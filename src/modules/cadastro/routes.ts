@@ -5,6 +5,7 @@ import CadastroOperadorPage from "./pages/CadastroOperadorPage.vue";
 import CadastroAdministradorPage from "./pages/CadastroAdministradorPage.vue";
 import CadastroPerfilOperadorPage from "./pages/CadastroPerfilOperadorPage.vue";
 import Operador from "./pages/Operador.vue";
+import OperatorRegistrationPage from "./pages/OperatorRegistrationPage.vue"
 
 export const cadastroRoutes: RouteRecordRaw[] = [
   {
@@ -39,7 +40,7 @@ export const cadastroRoutes: RouteRecordRaw[] = [
 			{
         path: 'operador',
         name: 'operador',
-        component: Operador,
+        component: OperatorRegistrationPage,
       },
     ],
   }

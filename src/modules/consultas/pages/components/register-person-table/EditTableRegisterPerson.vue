@@ -150,10 +150,10 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar cidade"
+		tooltip="Editar pessoa"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar cidade ${tablePersonName}`"
+		:title="`Editar pessoa ${tablePersonName}`"
 		description="Atualize o conteúdo da pessoa."
 		class="sm:max-w-[1100px]"
 		@form-submit="onSubmit"
