@@ -126,6 +126,9 @@
 		queryFn: ({ signal }) =>
 			tabelasAuxiliaresRepository.getAllStates({
 				signal,
+				params: {
+					perPage: 27
+				}
 			}),
 	})
 

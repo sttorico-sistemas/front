@@ -74,7 +74,7 @@
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="ghost" @click="setNewData">
+			<button-root variant="outline" @click="setNewData">
 				<font-awesome-icon
 					class="text-primary_3-table w-4 h-4"
 					:icon="['fas', 'pen']"

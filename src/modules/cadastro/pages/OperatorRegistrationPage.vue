@@ -495,7 +495,7 @@
 								<tooltip>
 									<tooltip-trigger disabled as-child>
 										<button-root
-											variant="ghost"
+											variant="outline"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon

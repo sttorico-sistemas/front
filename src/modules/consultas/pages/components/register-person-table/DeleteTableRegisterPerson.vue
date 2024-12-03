@@ -50,7 +50,7 @@
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger disabled as-child>
-						<button-root variant="ghost">
+						<button-root variant="outline">
 							<font-awesome-icon
 								:class="['w-4 h-4', isActive ? 'text-warning' : 'text-success']"
 								:icon="['fas', isActive ? 'ban' : 'arrows-rotate']"
