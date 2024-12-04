@@ -32,6 +32,7 @@
 		DeleteTableRegisterPerson,
 		TableRegisterPersonForm,
 	} from './components/register-person-table'
+import TablePagination from '@/core/components/table-wrapper/TablePagination.vue'
 
 	type PersonTable = {
 		id: number
@@ -61,8 +62,8 @@
 		'search-person-cpf',
 		[],
 	)
-	const page = useRouteQuery('city-page', 1, { transform: Number })
-	const perPage = useRouteQuery('city-per-page', 8, { transform: Number })
+	const page = useRouteQuery('person-page', 1, { transform: Number })
+	const perPage = useRouteQuery('person-per-page', 8, { transform: Number })
 	const selectLinkedType = useRouteQuery<string | undefined>(
 		'person-linked-type',
 		undefined,
@@ -74,7 +75,7 @@
 		'person-status',
 		undefined,
 	)
-	const selectSort = useRouteQuery<string | undefined>('city-sort')
+	const selectSort = useRouteQuery<string | undefined>('person-sort')
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 
 	const {
@@ -98,7 +99,7 @@
 		queryFn: ({ signal }) =>
 			personRepository.getAllPersons({
 				signal,
-				params: { page: page.value, perPage: perPage.value },
+				params: { page: page.value, per_page: perPage.value },
 				metaCallback: (meta) => {
 					pageMetadata.value = {
 						totalItens: meta.total,
@@ -205,7 +206,7 @@
 			},
 		})
 
-	const formattedAllTypeOfOperator = computed<PersonTable[]>(() => {
+	const formattedAllPersons = computed<PersonTable[]>(() => {
 		return (persons.value ?? []).map(
 			({ id, name, cpf, linkedType, city, email, status }) => ({
 				id: id as number,
@@ -229,7 +230,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('id'),
 					},
 					() => [
@@ -253,7 +254,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('name'),
 					},
 					() => [
@@ -277,7 +278,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('name'),
 					},
 					() => [
@@ -301,7 +302,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('name'),
 					},
 					() => [
@@ -325,7 +326,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('name'),
 					},
 					() => [
@@ -349,7 +350,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('name'),
 					},
 					() => [
@@ -373,7 +374,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfOperator.value.length <= 0,
+						disabled: formattedAllPersons.value.length <= 0,
 						// onClick: () => handleSort('name'),
 					},
 					() => [
@@ -414,7 +415,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return formattedAllTypeOfOperator.value
+			return formattedAllPersons.value
 		},
 		get columns() {
 			return columns
@@ -644,6 +645,21 @@
 					:row-limit="perPage"
 					:is-loading="isPersonsLoading"
 				/>
+
+				<div :class="['flex w-full items-center px-4']">
+					<div class="flex-1 text-sm text-muted-foreground">
+						<!-- {{ formattedAllTypeTable.length }} de {{ pageMetadata.totalItens }} linha(s)
+					selecionadas. -->
+					</div>
+
+					<TablePagination
+						v-model="page"
+						:disabled="formattedAllPersons.length <= 0"
+						:total-itens="pageMetadata.totalItens"
+						:items-per-page="perPage"
+						@update-paginate="handlePagination"
+					/>
+				</div>
 			</div>
 		</div>
 	</main>
