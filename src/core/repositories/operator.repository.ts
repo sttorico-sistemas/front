@@ -18,7 +18,7 @@ export class OperatorRepository {
 
 	async getAllOperators(configParams?: HttpClientProps<OperatorModel[]>): Promise<OperatorModel[]> {
 		try {
-			const response = await this.http.get<{ data: [] }>(`/profile/operador`, {
+			const response = await this.http.get<{ data: any[] }>(`/profile/operador`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})

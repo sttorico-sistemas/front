@@ -17,11 +17,11 @@ export class IAMRepository {
 	}
 
 	async createTypeOfOperator(
-		body: Pick<ProfileModel, 'name' | 'description'> & { permissions: Pick<PermissionModel, 'id'>['id'][] },
+		body: ProfileModel,
 		configParams?: HttpClientProps<ProfileModel>
 	): Promise<void> {
 		try {
-			await this.http.post(`/profile/tipo-operador`, body, {
+			await this.http.post(`/profile/tipo-operador`, body.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -31,11 +31,11 @@ export class IAMRepository {
 	}
 
 	async updateTypeOfOperator(
-		{ id, ...body }: Pick<ProfileModel, 'id' | 'name' | 'description'> & { permissions: Pick<PermissionModel, 'id'>['id'][] },
+		data: ProfileModel,
 		configParams?: HttpClientProps<ProfileModel>
 	): Promise<void> {
 		try {
-			await this.http.put(`/profile/tipo-operador/${id}`, body, {
+			await this.http.put(`/profile/tipo-operador/${data.id}`, data.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});

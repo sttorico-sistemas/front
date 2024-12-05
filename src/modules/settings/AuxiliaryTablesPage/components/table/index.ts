@@ -1,0 +1,6 @@
+export { default as CityDeleteAction } from './CityDeleteAction.vue'
+export { default as CityUpdateAction } from './CityUpdateAction.vue'
+export { default as CityForm } from './CityForm.vue'
+export { default as TypeDeleteAction } from './TypeDeleteAction.vue'
+export { default as TypeUpdateAction } from './TypeUpdateAction.vue'
+export { default as TypeForm } from './TypeForm.vue'

@@ -42,7 +42,7 @@ export class PersonRepository {
 		}
 	}
 
-	async personCreate(
+	async createPerson(
 		body: PersonModel,
 		configParams?: HttpClientProps<PersonModel>
 	): Promise<void> {
@@ -56,7 +56,7 @@ export class PersonRepository {
 		}
 	}
 
-	async updateTableValue(
+	async updatePerson(
 		data: PersonModel,
 		configParams?: HttpClientProps<PersonModel>
 	): Promise<void> {

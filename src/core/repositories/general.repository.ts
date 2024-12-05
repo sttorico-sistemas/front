@@ -16,17 +16,17 @@ export class GeneralRepository {
 		return [tag ?? this.#QUERY_KEY, pagination, ...others]
 	}
 
-	async createPage(body: Pick<PageModel, 'name' | 'slug' | 'url' | 'parentId'>, configParams?: HttpClientProps<PageModel>): Promise<void> {
+	async createPage(body: PageModel, configParams?: HttpClientProps<PageModel>): Promise<void> {
 		try {
-			await this.http.post(`/organize/pages`, body, configParams);
+			await this.http.post(`/organize/pages`, body.toRecord(), configParams);
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
 	}
 
-	async updateTableValue({ id, ...body }: Pick<PageModel, 'name' | 'slug' | 'url' | 'parentId' | 'id'>): Promise<void> {
+	async updatePage(body: PageModel): Promise<void> {
 		try {
-			await this.http.put(`/organize/pages/${id}`, body);
+			await this.http.put(`/organize/pages/${body.id}`, body.toRecord());
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -63,6 +63,16 @@ export class GeneralRepository {
 				signal: configParams?.signal
 			})
 			return PageModel.fromRecord(response.data)
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
+
+	async deletePage({ id }: Pick<Required<PageModel>, 'id'>): Promise<void> {
+		try {
+			return Promise.resolve()
+			// await this.http.delete(`/organize/pages/${id}`);
+			return
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

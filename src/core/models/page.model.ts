@@ -1,4 +1,3 @@
-import { Table, TableURL } from "@/modules/configuracoes/types";
 import { BaseModel } from "src/core/models/base.model";
 
 export type PageLinks = {
@@ -9,28 +8,28 @@ export type PageLinks = {
 }
 
 export class PageModel extends BaseModel {
-	public id: number
+	public id?: number
 	public name: string
 	public url: string
-	public parentId?: number
+	public parentId?: number | null
 	public slug: string
   public children: PageLinks[];
 
-  constructor(private props: {
-    id: number;
+  constructor( props: {
+    id?: string;
     name: string;
     url: string;
-		parentId: number
+		parentId?: string | null
     slug: string;
     children: PageLinks[];
   }) {
     super();
-    this.id = this.props.id;
-    this.name = this.props.name;
-    this.url = this.props.url;
-    this.parentId = this.props.parentId;
-    this.slug = this.props.slug;
-    this.children = this.props.children;
+    this.id = props?.id ? +props.id : undefined;
+    this.name = props.name;
+    this.url = props.url;
+    this.parentId = props?.parentId ? +props.parentId : undefined;
+    this.slug = props.slug;
+    this.children = props.children;
   }
 
   toRecord(): Record<string, any> {

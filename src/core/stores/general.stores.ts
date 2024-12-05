@@ -16,7 +16,7 @@ export type PageData = {
 
 export const generalRepository = new GeneralRepository()
 
-export const generalStores = defineStore('generalStores', {
+export const generalStores = defineStore('general-stores', {
 	state: () => ({}),
 	actions: {},
 	getters: {},

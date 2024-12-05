@@ -1,37 +1,42 @@
 import { BaseModel } from "src/core/models/base.model";
 
 export class CityModel extends BaseModel {
-	public id: number;
+	public id?: number;
 	public name: string;
 	public stateId: number;
-	public stateName: string;
+	public ibgeId: number;
+	public stateName?: string;
+	public basePath?: string;
 	public createdAt?: Date;
 	public updatedAt?: Date;
 
-	constructor(private props: {
-		id: number;
+	constructor(props: {
+		id?: string;
 		name: string;
 		stateId: number;
-		stateName: string;
+		stateName?: string;
+		ibgeId: number,
+		basePath?: string;
 		createdAt?: Date;
 		updatedAt?: Date;
 	}) {
 		super();
-		this.id = this.props.id;
-		this.name = this.props.name;
-		this.stateId = this.props.stateId;
-		this.stateName = this.props.stateName;
-		this.createdAt = this.props.createdAt;
-		this.updatedAt = this.props.updatedAt;
+		this.id = props?.id ? +props.id : undefined;
+		this.name = props.name;
+		this.stateId = props.stateId;
+		this.stateName = props?.stateName;
+		this.ibgeId = props.ibgeId;
+		this.basePath = props.basePath;
+		this.createdAt = props.createdAt;
+		this.updatedAt = props.updatedAt;
 	}
 
 	toRecord(): Record<string, any> {
 		return {
-			id: this.id,
+			id: this?.id,
 			nome: this.name,
 			estado_id: this.stateId,
-			created_at: this.createdAt,
-			updated_at: this.updatedAt,
+			ibge_id: this.ibgeId,
 		};
 	}
 
@@ -41,6 +46,7 @@ export class CityModel extends BaseModel {
 			name: record.nome,
 			stateName: record.estado.nome,
 			stateId: record.estado_id,
+			ibgeId: record.ibge_id,
 			createdAt: new Date(record.created_at),
 			updatedAt: new Date(record.updated_at),
 		});

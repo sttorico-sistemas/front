@@ -2,38 +2,39 @@ import { PermissionModel } from "@/core/models/permission.model";
 import { BaseModel } from "src/core/models/base.model";
 
 export class ProfileModel extends BaseModel {
-	public id: number
+	public id?: number
 	public name: string
 	public description: string
 	public createdAt?: Date;
 	public updatedAt?: Date;
 	public permissions: PermissionModel[];
+	public permissionsId: number[];
 
-	constructor(private props: {
-		id: number;
+	constructor(props: {
+		id?: string;
 		name: string;
 		description: string;
 		createdAt?: Date;
 		updatedAt?: Date;
-		permissions: PermissionModel[];
+		permissions?: PermissionModel[];
+		permissionsId?: number[];
 	}) {
 		super();
-		this.id = this.props.id;
-		this.name = this.props.name;
-		this.description = this.props.description;
-		this.createdAt = this.props.createdAt;
-		this.updatedAt = this.props.updatedAt;
-		this.permissions = this.props.permissions;
+		this.id = props?.id ? +props.id : undefined;
+		this.name = props.name;
+		this.description = props.description;
+		this.createdAt = props.createdAt;
+		this.updatedAt = props.updatedAt;
+		this.permissions = props?.permissions ?? [];
+		this.permissionsId = props?.permissionsId ?? [];
 	}
 
 	toRecord(): Record<string, any> {
 		return {
-			id: this.id,
+			id: this?.id,
 			name: this.name,
 			description: this.description,
-			created_at: this.createdAt,
-			updated_at: this.updatedAt,
-			permissions: this.permissions.map((permission) => permission.toRecord()),
+			permissions: this.permissionsId
 		}
 	}
 
