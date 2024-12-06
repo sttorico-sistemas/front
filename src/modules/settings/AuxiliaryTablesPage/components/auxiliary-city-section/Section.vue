@@ -50,7 +50,7 @@
 	import { auxiliaryRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { CityModel } from '@/core/models'
-	import { cn, valueUpdater } from '@/core/utils'
+	import { cn, debounceAsync, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import { CityDeleteAction, CityForm, CityUpdateAction } from '../table'
 
@@ -70,7 +70,7 @@
 	const openCityBox = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	const formattedSearchCities = useLocalStorage<{ id: number; name: string }[]>(
+	const formattedSearchCities = useLocalStorage<{ id: string; name: string }[]>(
 		'aux-sch-cities',
 		[],
 	)
@@ -83,6 +83,17 @@
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
+
+	const { data: statesData } = useQuery({
+		queryKey: auxiliaryRepository.getQueryKey('states'),
+		queryFn: ({ signal }) =>
+			auxiliaryRepository.getAllStates({
+				signal,
+				params: {
+					perPage: 27,
+				},
+			}),
+	})
 
 	const {
 		data: cities,
@@ -101,7 +112,12 @@
 		queryFn: ({ signal }) =>
 			auxiliaryRepository.getAllCities({
 				signal,
-				params: { page: page.value, perPage: perPage.value },
+				params: {
+					page: page.value,
+					perPage: perPage.value,
+					estado_id: selectUf.value,
+					search: selectCity.value,
+				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {
 						totalItens: meta.total,
@@ -219,6 +235,10 @@
 			stateId,
 			uf: stateName as string,
 		}))
+	})
+
+	const formattedAllStates = computed(() => {
+		return (statesData.value ?? []).map(({ id, name }) => ({ id, name }))
 	})
 
 	const columns: ColumnDef<CityTable>[] = [
@@ -369,6 +389,7 @@
 	const onUpdateSubmit = async (
 		id: number,
 		values: z.infer<typeof formSchema>,
+		onClose: () => void,
 	) => {
 		return handleUpdateCity(
 			new CityModel({
@@ -378,7 +399,9 @@
 				stateId: +values.stateId,
 				basePath: 'auxiliary/cidade',
 			}),
-		)
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
@@ -455,6 +478,20 @@
 		selectCity.value = undefined
 		selectUf.value = undefined
 	}
+
+	const handleSearchCities = debounceAsync(async (value: string) => {
+		return auxiliaryRepository
+			.getAllCities({
+				params: { search: value, estado_id: selectUf.value, perPage: 5 },
+			})
+			.then((response) => {
+				formattedSearchCities.value = response.map(({ id, name }) => ({
+					id: `${id}`,
+					name,
+				}))
+				return response
+			})
+	}, 500)
 </script>
 <template>
 	<div class="panel mt-6">
@@ -505,8 +542,8 @@
 			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 				<select-root
 					class="flex-[1]"
-					:disabled="formattedAllCities.length <= 0"
-					v-model:model-value="selectUf"
+					:disabled="formattedAllStates.length <= 0"
+					v-model="selectUf"
 				>
 					<select-trigger class="lg:max-w-96 flex-[2]">
 						<select-value
@@ -518,7 +555,7 @@
 						<select-group>
 							<select-label>Estados:</select-label>
 							<select-item
-								v-for="state of formattedAllCities"
+								v-for="state of formattedAllStates"
 								:key="state.id"
 								:value="state.id.toString()"
 								>{{ state.name }}</select-item
@@ -550,7 +587,11 @@
 						</ButtonRoot>
 					</PopoverTrigger>
 					<PopoverContent class="lg:max-w-96 flex-[3]A p-0">
-						<Command multiple v-model="selectCity">
+						<Command
+							multiple
+							v-model="selectCity"
+							@update:searchTerm="handleSearchCities"
+						>
 							<CommandInput class="h-9" placeholder="Busque uma cidade..." />
 							<CommandEmpty>Nenhuma cidades encontrada.</CommandEmpty>
 							<CommandList>

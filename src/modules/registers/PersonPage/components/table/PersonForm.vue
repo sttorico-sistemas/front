@@ -99,28 +99,28 @@
 
 	const formattedAllStates = computed(() => {
 		return (statesData.value ?? []).map(({ id, uf }) => ({
-			id: id as number,
+			id: `${id}`,
 			name: uf,
 		}))
 	})
 
 	const formattedAllCities = computed(() => {
 		return (citiesData.value ?? []).map(({ id, name }) => ({
-			id: id as number,
+			id: `${id}`,
 			name,
 		}))
 	})
 
 	const formattedAllAddressesType = computed(() => {
 		return (addressesTypeData.value ?? []).map(({ id, name }) => ({
-			id: id as number,
+			id: `${id}`,
 			name,
 		}))
 	})
 
 	const formattedAllContactType = computed(() => {
 		return (contactTypeData.value ?? []).map(({ id, name }) => ({
-			id: id as number,
+			id: `${id}`,
 			name,
 		}))
 	})
@@ -150,20 +150,37 @@
 	})
 
 	const formAddressSchema = z.object({
-		formCityId: z.string({ message: 'Cidade  é obrigatória.' }),
-		formStateId: z.string({ message: 'Cidade  é obrigatória.' }),
-		formStreet: z.string({ message: 'Logradouro é obrigatório.' }),
-		formZipCode: z.string({ message: 'CEP é obrigatório.' }),
-		formAddressTypeId: z.string({ message: 'Estado é obrigatório.' }),
+		formCityId: z
+			.string({ message: 'A cidade é obrigatória.' })
+			.min(1, { message: 'A cidade é obrigatória.' }),
+		formStateId: z
+			.string({ message: 'O estado é obrigatório.' })
+			.min(1, { message: 'O estado é obrigatório.' }),
+		formStreet: z
+			.string({ message: 'O logradouro é obrigatório.' })
+			.min(1, { message: 'O logradouro é obrigatório.' }),
+		formZipCode: z
+			.string({ message: 'O CEP é obrigatório.' })
+			.min(1, { message: 'O CEP é obrigatório.' }),
+		formAddressTypeId: z
+			.string({ message: 'O tipo é obrigatório.' })
+			.min(1, { message: 'O tipo é obrigatório.' }),
 	})
 
 	const formContactSchema = z.object({
-		formPhoneTypeId: z.string({ message: 'Tipo é obrigatório.' }),
-		formPhone: z.string({ message: 'Telefone é obrigatório.' }),
+		formPhoneTypeId: z
+			.string({ message: 'O tipo é obrigatório.' })
+			.min(1, { message: 'O tipo é obrigatório.' }),
+		formPhone: z
+			.string({ message: 'O telefone é obrigatório.' })
+			.min(1, { message: 'O telefone é obrigatório.' }),
 		formEmail: z
-			.string({ message: 'E-mail é obrigatório.' })
-			.email({ message: 'Tem que ser e-mail válido' }),
-		formCellphone: z.string({ message: 'Celular é obrigatório.' }),
+			.string({ message: 'O e-mail é obrigatório.' })
+			.min(1, { message: 'O e-mail é obrigatório.' })
+			.email({ message: 'Deve ser um e-mail válido.' }),
+		formCellphone: z
+			.string({ message: 'O celular é obrigatório.' })
+			.min(1, { message: 'O celular é obrigatório.' }),
 	})
 </script>
 
@@ -601,7 +618,10 @@
 						</form-item>
 					</form-field>
 
-					<form-field v-slot="{ componentField }" name="formCityId">
+					<form-field
+						v-slot="{ componentField, handleChange }"
+						name="formCityId"
+					>
 						<form-item
 							class="grid grid-cols-4 col-span-3 items-center gap-x-4 gap-y-1"
 						>
@@ -621,7 +641,7 @@
 											"
 										>
 											{{
-												formattedAllCitiesMap[componentField.modelValue] ??
+												formattedAllCitiesTempMap[componentField.modelValue] ??
 												'Selecione a cidade...'
 											}}
 											<font-awesome-icon
@@ -646,11 +666,11 @@
 													<command-item
 														v-for="searchCities in formattedAllCities"
 														:key="searchCities.id"
-														:value="searchCities.name"
+														:value="searchCities.id"
 														@select="
 															(ev) => {
 																if (typeof ev.detail.value === 'string') {
-																	componentField.modelValue = ev.detail.value
+																	handleChange(ev.detail.value)
 																}
 																openCityBox = false
 															}
@@ -661,8 +681,7 @@
 															:class="
 																cn(
 																	'ml-auto h-4 w-4',
-																	componentField.modelValue ===
-																		searchCities.name
+																	componentField.modelValue === searchCities.id
 																		? 'opacity-100'
 																		: 'opacity-0',
 																)

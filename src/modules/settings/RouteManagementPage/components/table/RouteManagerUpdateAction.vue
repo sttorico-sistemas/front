@@ -50,7 +50,11 @@
 			const data = await generalRepository.getPageById(properties.dataId)
 			form.setValues({
 				name: data.name,
-				parentId: data?.parentId ? data.parentId.toString() : undefined,
+				parentId: data?.parentId
+					? data.parentId.toString()
+					: data?.parentId === undefined
+						? undefined
+						: null,
 				slug: data.slug,
 				url: data.url,
 			})
@@ -88,10 +92,7 @@
 		</template>
 
 		<template #fields>
-			<route-manager-form
-				:metadata="form.values"
-				:disabled="isLoading"
-			/>
+			<route-manager-form :metadata="form.values" :disabled="isLoading" />
 		</template>
 	</form-wrapper>
 </template>

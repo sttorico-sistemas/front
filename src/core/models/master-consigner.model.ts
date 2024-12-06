@@ -26,4 +26,16 @@ export class MasterConsignerModel extends BaseModel {
 			name: record.nome,
 		});
 	}
+
+	public equals(entity: MasterConsignerModel) {
+		if (entity === this) {
+			return true
+		}
+
+		if (entity.id === this.id && JSON.stringify(entity) === JSON.stringify(this)) {
+			return true
+		}
+
+		return false
+	}
 }

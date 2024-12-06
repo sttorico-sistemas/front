@@ -346,6 +346,9 @@
 	})
 
 	const formSchema = z.object({
+		userId: z
+			.string({ message: 'O tipo é obrigatório.' })
+			.min(1, { message: 'O tipo é obrigatório.' }),
 		name: z
 			.string({ message: 'O nome é obrigatório.' })
 			.min(1, { message: 'O nome é obrigatório.' }),
@@ -379,7 +382,10 @@
 	const onCreateSubmit = form.handleSubmit(async (values) => {
 		return handleCreateOperator(
 			new OperatorModel({
-				...values,
+				cpf: values.cpf,
+				name: values.name,
+				typeId: values.typeId,
+				userId: values.userId,
 				permissions: values.permissions.map(({ id }) => Number(id)),
 			}),
 		)
@@ -387,18 +393,21 @@
 
 	const onUpdateSubmit = async (
 		id: number,
-		values: z.infer<typeof formSchema> & {
-			deletedAddresses: number[]
-			deletedContacts: number[]
-		},
+		values: z.infer<typeof formSchema>,
+		onClose: () => void,
 	) => {
 		return handleUpdateOperator(
 			new OperatorModel({
 				id,
-				...values,
+				cpf: values.cpf,
+				name: values.name,
+				typeId: values.typeId,
+				userId: values.userId,
 				permissions: values.permissions.map(({ id }) => Number(id)),
 			}),
-		)
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
@@ -487,12 +496,12 @@
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar Operadores" />
+					<titulo title="Gerenciar operadores" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateOperatorLoading"
-						:title="`Criar um novo pessoa`"
+						:title="`Criar um novo operador`"
 						description="Crie o conteúdo de um novo operador."
 						class="sm:max-w-[1100px]"
 						@form-submit="onCreateSubmit"

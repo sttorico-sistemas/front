@@ -23,8 +23,8 @@
 		TableWrapper,
 		TablePagination,
 	} from '@/core/components/table-wrapper'
-	import Breadcrumbs from 'src/core/components/Breadcrumbs.vue'
-	import Titulo from 'src/core/components/Titulo.vue'
+	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
+	import Titulo from '@/core/components/Titulo.vue'
 	import { masterConsignerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { MasterConsignerModel } from '@/core/models'
@@ -34,7 +34,7 @@
 		MasterConsignerDeleteAction,
 		MasterConsignerForm,
 		MasterConsignerUpdateAction,
-	} from '../../cadastro/pages/components/master-consigner-table'
+	} from './components/table'
 
 	type MasterConsignerTable = {
 		id: number
@@ -289,13 +289,16 @@
 	const onUpdateSubmit = async (
 		id: number,
 		values: z.infer<typeof formSchema>,
+		onClose: () => void,
 	) => {
 		return handleUpdateMasterConsigner(
 			new MasterConsignerModel({
 				id,
 				...values,
 			}),
-		)
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {

@@ -12,6 +12,12 @@
 		SelectRoot,
 	} from '@/core/components/fields/select'
 	import {
+		Tooltip,
+		TooltipContent,
+		TooltipProvider,
+		TooltipTrigger,
+	} from '@/core/components/tooltip'
+	import {
 		FormControl,
 		FormField,
 		FormItem,
@@ -19,6 +25,7 @@
 		FormMessage,
 	} from '@/core/components/form'
 	import { InputRoot } from '@/core/components/fields/input'
+	import { ButtonRoot } from '@/core/components/button'
 	import { generalRepository } from '@/core/stores'
 
 	defineProps({
@@ -92,7 +99,7 @@
 			</form-item>
 		</form-field>
 
-		<form-field v-slot="{ componentField }" name="parentId">
+		<form-field v-slot="{ componentField, handleChange }" name="parentId">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
 				<form-label class="text-left col-span-2">Página pai</form-label>
 				<form-control>
@@ -112,6 +119,30 @@
 							</select-group>
 						</select-content>
 					</select-root>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root
+									variant="outline"
+									type="button"
+									@click="
+										() => {
+											handleChange(null)
+										}
+									"
+								>
+									<font-awesome-icon
+										class="text-primary_3-table w-5 h-5"
+										:icon="['fas', 'eraser']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Apagar filtros</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
 				</form-control>
 				<form-message class="col-span-5 col-start-3" />
 			</form-item>

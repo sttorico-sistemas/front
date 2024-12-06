@@ -23,19 +23,6 @@
 		SelectValue,
 	} from '@/core/components/fields/select'
 	import {
-		Command,
-		CommandEmpty,
-		CommandGroup,
-		CommandInput,
-		CommandItem,
-		CommandList,
-	} from '@/core/components/command'
-	import {
-		Popover,
-		PopoverContent,
-		PopoverTrigger,
-	} from '@/core/components/popover'
-	import {
 		Tooltip,
 		TooltipContent,
 		TooltipProvider,
@@ -324,7 +311,7 @@
 		return handleCreateType(
 			new AuxiliaryModel({
 				name: values.name,
-				basePath: 'auxiliary/cidade',
+				basePath: selectType.value,
 			}),
 		)
 	})
@@ -332,14 +319,17 @@
 	const onUpdateSubmit = async (
 		id: number,
 		values: z.infer<typeof formSchema>,
+		onClose: () => void,
 	) => {
 		return handleUpdateType(
 			new AuxiliaryModel({
 				id: `${id}`,
 				name: values.name,
-				basePath: 'auxiliary/cidade',
+				basePath: selectType.value,
 			}),
-		)
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
@@ -422,7 +412,7 @@
 			class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 		>
 			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Cadastro de Tipos" />
+				<titulo title="Cadastro de tipos" />
 
 				<form-wrapper
 					v-model="openCreateModal"

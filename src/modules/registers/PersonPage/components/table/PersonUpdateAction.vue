@@ -8,9 +8,15 @@
 	import { ButtonRoot } from '@/core/components/button'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 	import { personRepository } from '@/core/stores'
-	import { AddressList, AddressModel, ContactList, ContactModel, PersonModel } from '@/core/models'
+	import {
+		AddressList,
+		AddressModel,
+		ContactList,
+		ContactModel,
+		PersonModel,
+	} from '@/core/models'
 	import PersonForm from './PersonForm.vue'
-import { formatCEP, formatCPF, formatPhone } from '@/core/utils'
+	import { formatCEP, formatCPF, formatPhone } from '@/core/utils'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
@@ -27,55 +33,57 @@ import { formatCEP, formatCPF, formatPhone } from '@/core/utils'
 	const formSchema = toTypedSchema(
 		z.object({
 			name: z
-			.string({ message: 'O nome é obrigatório.' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		birthday: z
-			.string({ message: 'O aniversário é obrigatório.' })
-			.min(1, { message: 'O aniversário é obrigatório.' }),
-		cpf: z
-			.string({ message: 'O CPF é obrigatório.' })
-			.min(1, { message: 'O CPF é obrigatório.' }),
-		addresses: z
-			.array(
-				z.object({
-					cityId: z
-						.string({ message: 'A cidade é obrigatória.' })
-						.min(1, { message: 'A cidade é obrigatória.' }),
-					stateId: z
-						.string({ message: 'O estado é obrigatório.' })
-						.min(1, { message: 'O estado é obrigatório.' }),
-					street: z
-						.string({ message: 'O logradouro é obrigatório.' })
-						.min(1, { message: 'O logradouro é obrigatório.' }),
-					zipCode: z
-						.string({ message: 'O CEP é obrigatório.' })
-						.min(1, { message: 'O CEP é obrigatório.' }),
-					addressTypeId: z
-						.string({ message: 'O tipo é obrigatório.' })
-						.min(1, { message: 'O tipo é obrigatório.' }),
-				}),
-				{ message: 'Deve haver pelo menos 1 endereço.' },
-			)
-			.min(1, 'Deve haver pelo menos 1 endereço.'),
-		contacts: z
-			.array(
-				z.object({
-					phoneTypeId: z
-						.string({ message: 'O tipo é obrigatório.' })
-						.min(1, { message: 'O tipo é obrigatório.' }),
-					phone: z
-						.string({ message: 'O telefone é obrigatório.' })
-						.min(1, { message: 'O telefone é obrigatório.' }),
-					email: z
-						.string({ message: 'O e-mail é obrigatório.' })
-						.min(1, { message: 'O e-mail é obrigatório.' }),
-					cellphone: z
-						.string({ message: 'O celular é obrigatório.' })
-						.min(1, { message: 'O celular é obrigatório.' }),
-				}),
-				{ message: 'Deve haver pelo menos 1 contato.' },
-			)
-			.min(1, 'Deve haver pelo menos 1 contato.'),
+				.string({ message: 'O nome é obrigatório.' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			birthday: z
+				.string({ message: 'O aniversário é obrigatório.' })
+				.min(1, { message: 'O aniversário é obrigatório.' }),
+			cpf: z
+				.string({ message: 'O CPF é obrigatório.' })
+				.min(1, { message: 'O CPF é obrigatório.' }),
+			addresses: z
+				.array(
+					z.object({
+						id: z.string({ message: 'O id é obrigatório.' }).optional(),
+						cityId: z
+							.string({ message: 'A cidade é obrigatória.' })
+							.min(1, { message: 'A cidade é obrigatória.' }),
+						stateId: z
+							.string({ message: 'O estado é obrigatório.' })
+							.min(1, { message: 'O estado é obrigatório.' }),
+						street: z
+							.string({ message: 'O logradouro é obrigatório.' })
+							.min(1, { message: 'O logradouro é obrigatório.' }),
+						zipCode: z
+							.string({ message: 'O CEP é obrigatório.' })
+							.min(1, { message: 'O CEP é obrigatório.' }),
+						addressTypeId: z
+							.string({ message: 'O tipo é obrigatório.' })
+							.min(1, { message: 'O tipo é obrigatório.' }),
+					}),
+					{ message: 'Deve haver pelo menos 1 endereço.' },
+				)
+				.min(1, 'Deve haver pelo menos 1 endereço.'),
+			contacts: z
+				.array(
+					z.object({
+						id: z.string({ message: 'O id é obrigatório.' }).optional(),
+						phoneTypeId: z
+							.string({ message: 'O tipo é obrigatório.' })
+							.min(1, { message: 'O tipo é obrigatório.' }),
+						phone: z
+							.string({ message: 'O telefone é obrigatório.' })
+							.min(1, { message: 'O telefone é obrigatório.' }),
+						email: z
+							.string({ message: 'O e-mail é obrigatório.' })
+							.min(1, { message: 'O e-mail é obrigatório.' }),
+						cellphone: z
+							.string({ message: 'O celular é obrigatório.' })
+							.min(1, { message: 'O celular é obrigatório.' }),
+					}),
+					{ message: 'Deve haver pelo menos 1 contato.' },
+				)
+				.min(1, 'Deve haver pelo menos 1 contato.'),
 		}),
 	)
 

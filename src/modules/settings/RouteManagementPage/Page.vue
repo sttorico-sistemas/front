@@ -297,10 +297,13 @@
 	const onUpdateSubmit = async (
 		id: number,
 		values: z.infer<typeof formSchema>,
+		onClose: () => void,
 	) => {
 		return handleUpdateRouteManager(
 			new PageModel({ ...values, id: `${id}`, children: [] }),
-		)
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
@@ -375,20 +378,20 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Cadastro', 'Consignante master']" />
+		<breadcrumbs :paginas="['Configurações', 'Páginas']" />
 
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar consignante master" />
+					<titulo title="Gerenciar páginas" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateRouteManagerLoading"
-						:title="`Criar um novo consignante master`"
-						description="Crie o conteúdo de um novo consignante master."
+						:title="`Criar uma nova página`"
+						description="Crie o conteúdo de uma nova página."
 						class="sm:max-w-[780px]"
 						@form-submit="onCreateSubmit"
 					>
@@ -407,7 +410,7 @@
 										</button-root>
 									</tooltip-trigger>
 									<tooltip-content side="right">
-										<p>Cadastre um novo consignante master</p>
+										<p>Cadastre um nova páginas</p>
 									</tooltip-content>
 								</tooltip>
 							</tooltip-provider>

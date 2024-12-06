@@ -283,6 +283,7 @@
 	const onUpdateSubmit = async (
 		id: number,
 		values: z.infer<typeof formSchema>,
+		onClose: () => void,
 	) => {
 		return handleUpdateIam(
 			new ProfileModel({
@@ -291,7 +292,9 @@
 				description: values.description,
 				permissionsId: values.permissions.map(Number),
 			}),
-		)
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
@@ -366,20 +369,20 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Cadastro', 'Pessoas Cadastradas']" />
+		<breadcrumbs :paginas="['Configurações', 'Perfil']" />
 
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar pessoas cadastradas" />
+					<titulo title="Gerenciar perfis" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateIamLoading"
-						:title="`Criar um nova pessoa`"
-						description="Crie o conteúdo de um nova pessoa."
+						:title="`Criar um novo perfil`"
+						description="Crie o conteúdo de um novo perfil."
 						class="sm:max-w-[780px]"
 						@form-submit="onCreateSubmit"
 					>

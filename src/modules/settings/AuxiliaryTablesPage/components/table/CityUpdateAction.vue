@@ -57,7 +57,9 @@
 	}
 
 	const onSubmit = form.handleSubmit(async (values) => {
-		emits('on-edit', properties.dataId, values)
+		emits('on-edit', properties.dataId, values, () => {
+			openUpdateModal.value = false
+		})
 	})
 </script>
 

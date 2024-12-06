@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { ref } from 'vue'
+	import { ref, watch } from 'vue'
 	import { toTypedSchema } from '@vee-validate/zod'
 	import { useForm } from 'vee-validate'
 	import * as z from 'zod'
@@ -8,8 +8,8 @@
 	import { ButtonRoot } from '@/core/components/button'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 	import { masterConsignerRepository } from '@/core/stores'
-	import { MasterConsignerModel } from '@/core/models'
 	import MasterConsignerForm from './MasterConsignerForm.vue'
+import { MasterConsignerModel } from '@/core/models'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
@@ -18,10 +18,9 @@
 	})
 	const emits = defineEmits(['on-edit'])
 
-	const loadCities = ref<Record<string, string>>({})
-	const selectData = ref<MasterConsignerModel | undefined>(undefined)
 	const openUpdateModal = ref(false)
 	const isDataLoading = ref(false)
+	const currentData = ref<MasterConsignerModel | undefined>()
 
 	const formSchema = toTypedSchema(
 		z.object({
@@ -35,6 +34,7 @@
 		validationSchema: formSchema,
 	})
 
+
 	async function setNewData() {
 		if (!properties.dataId) return
 		isDataLoading.value = true
@@ -42,7 +42,7 @@
 			const data = await masterConsignerRepository.getMasterConsignerById(
 				properties.dataId,
 			)
-			selectData.value = data
+			currentData.value = data
 			form.setValues({ name: data.name })
 		} catch (error) {
 			console.log(error)
@@ -52,7 +52,9 @@
 	}
 
 	const onSubmit = form.handleSubmit(async (values) => {
-		emits('on-edit', properties.dataId, values)
+		emits('on-edit', properties.dataId, values, () => {
+			openUpdateModal.value = false
+		})
 	})
 </script>
 
@@ -78,7 +80,6 @@
 		<template #fields>
 			<master-consigner-form
 				:metadata="form.values"
-				:loadCities="loadCities"
 				:disabled="isLoading"
 			/>
 		</template>

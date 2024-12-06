@@ -91,7 +91,6 @@
 
 	onMounted(() => {
 		const operadorStorageId = storage.getItem('operadorId')
-		console.log('operadorStorageId', operadorStorageId)
 		if (operadorStorageId) {
 			operadorId.value = operadorStorageId
 		}

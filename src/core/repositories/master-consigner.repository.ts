@@ -23,7 +23,6 @@ export class MasterConsignerRepository {
 				signal: configParams?.signal
 			})
 			const values = response.data.data.map((e: Record<string, any>) => MasterConsignerModel.fromRecord(e));
-			console.log(values)
 			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
 			return values;
 		} catch (error) {

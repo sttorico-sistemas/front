@@ -26,6 +26,9 @@
 
 	const formSchema = toTypedSchema(
 		z.object({
+			userId: z
+				.string({ message: 'O usuário é obrigatório.' })
+				.min(1, { message: 'O usuário é obrigatório.' }),
 			name: z
 				.string({ message: 'O nome é obrigatório.' })
 				.min(1, { message: 'O nome é obrigatório.' }),
@@ -64,6 +67,7 @@
 			const data = await operatorRepository.getOperatorById(properties.dataId)
 			selectData.value = data
 			form.setValues({
+				userId: `${data.userId}`,
 				name: data.name,
 				cpf: formatCPF(data.cpf),
 				typeId: `${data.typeId}`,
@@ -81,7 +85,9 @@
 	}
 
 	const onSubmit = form.handleSubmit(async (values) => {
-		emits('on-edit', properties.dataId, values)
+		emits('on-edit', properties.dataId, values, () => {
+			openUpdateModal.value = false
+		})
 	})
 </script>
 

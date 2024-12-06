@@ -20,7 +20,7 @@ export class AuxiliaryModel extends BaseModel {
 	toRecord(): Record<string, any> {
 		return {
 			id: this.id,
-			name: this.name,
+			nome: this.name,
 		}
 	}
 
