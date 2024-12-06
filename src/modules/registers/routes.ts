@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from "vue-router";
 import { MasterConsignerPage } from "@/modules/registers/MasterConsignerPage";
 import { PersonPage } from "@/modules/registers/PersonPage";
+import { ConsignerPage } from "@/modules/registers/ConsignerPage";
 
 
 export const registersRoutes: RouteRecordRaw[] = [
@@ -17,6 +18,11 @@ export const registersRoutes: RouteRecordRaw[] = [
 				path: 'pessoas',
 				name: 'cadastros-pessoas',
 				component: PersonPage,
+			},
+			{
+				path: 'consignantes',
+				name: 'cadastros-consignantes',
+				component: ConsignerPage,
 			},
 		],
 	}
