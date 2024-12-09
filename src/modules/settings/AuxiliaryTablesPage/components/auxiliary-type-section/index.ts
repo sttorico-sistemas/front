@@ -1,0 +1,1 @@
+export { default as AuxiliarTypeSection } from './Section.vue'

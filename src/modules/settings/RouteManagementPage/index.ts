@@ -1,0 +1,1 @@
+export { default as RouteManagementPage } from './Page.vue'

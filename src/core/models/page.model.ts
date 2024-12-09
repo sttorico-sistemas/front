@@ -1,32 +1,35 @@
-import { Table, TableURL } from "@/modules/configuracoes/types";
 import { BaseModel } from "src/core/models/base.model";
 
 export type PageLinks = {
 	id: number
 	name: string
+	slug: string
 	url: string
 }
 
 export class PageModel extends BaseModel {
-	public id: number
+	public id?: number
 	public name: string
 	public url: string
+	public parentId?: number | null
 	public slug: string
   public children: PageLinks[];
 
-  constructor(private props: {
-    id: number;
+  constructor( props: {
+    id?: string;
     name: string;
     url: string;
+		parentId?: string | null
     slug: string;
     children: PageLinks[];
   }) {
     super();
-    this.id = this.props.id;
-    this.name = this.props.name;
-    this.url = this.props.url;
-    this.slug = this.props.slug;
-    this.children = this.props.children;
+    this.id = props?.id ? +props.id : undefined;
+    this.name = props.name;
+    this.url = props.url;
+    this.parentId = props?.parentId ? +props.parentId : undefined;
+    this.slug = props.slug;
+    this.children = props.children;
   }
 
   toRecord(): Record<string, any> {
@@ -34,7 +37,8 @@ export class PageModel extends BaseModel {
       id: this.id,
       name: this.name,
       slug: this.slug,
-      children: this.children,
+			parent_id: this.parentId,
+      url: this.url
     }
   }
 
@@ -43,7 +47,8 @@ export class PageModel extends BaseModel {
       id: record.id,
       name: record.name,
 			url: record.url,
-      slug: record.url,
+			parentId: record.parent_id,
+      slug: record.slug,
       children: record.children,
     });
   }

@@ -96,6 +96,7 @@ module.exports = {
           foreground: 'hsl(var(--card-foreground))',
         },
 				background: 'hsl(var(--background))',
+				border: 'hsl(var(--border))'
 			},
 			fontFamily: {
 				nunito: ['Nunito', 'sans-serif'],

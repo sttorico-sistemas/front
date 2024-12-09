@@ -5,6 +5,8 @@ import CadastroOperadorPage from "./pages/CadastroOperadorPage.vue";
 import CadastroAdministradorPage from "./pages/CadastroAdministradorPage.vue";
 import CadastroPerfilOperadorPage from "./pages/CadastroPerfilOperadorPage.vue";
 import Operador from "./pages/Operador.vue";
+import OperatorRegistrationPage from "./pages/OperatorRegistrationPage.vue"
+import MasterConsignerPage from "@/modules/cadastro/pages/MasterConsignerPage.vue";
 
 export const cadastroRoutes: RouteRecordRaw[] = [
   {
@@ -20,6 +22,11 @@ export const cadastroRoutes: RouteRecordRaw[] = [
         path: 'consignataria/:id',
         name: 'cadastro-consignataria',
         component: CadastroConsignatariaPage,
+      },
+			{
+        path: 'consignante-master',
+        name: 'consultas-consignante-master',
+        component: MasterConsignerPage,
       },
       {
         path: 'operadors',
@@ -39,7 +46,7 @@ export const cadastroRoutes: RouteRecordRaw[] = [
 			{
         path: 'operador',
         name: 'operador',
-        component: Operador,
+        component: OperatorRegistrationPage,
       },
     ],
   }

@@ -1,344 +1,684 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
-import breadcrumbs from 'src/core/components/Breadcrumbs.vue';
-import titulo from 'src/core/components/Titulo.vue';
-import Vue3Datatable from '@bhplugin/vue3-datatable';
-import ConsultasCadastroPessoa from '../components/CadastroPessoa/CadastroPessoa.vue';
-import ConsultasExport from '../components/ConsultasExport.vue';
-import ImageName from '../components/ConsultasHistorico/DatatableColunaImageName.vue';
-import IconAdd from 'src/core/components/Icons/IconAdd.vue';
-import IconClear from 'src/core/components/Icons/IconClear.vue';
-import IconPrinter from 'src/core/components/Icons/IconPrinter.vue';
-import IconCheck from 'src/core/components/Icons/IconCheck.vue';
-import IconBlock from 'src/core/components/Icons/IconBlock.vue';
-import { Col } from 'types/col.d';
-import { pessoaStore } from '../stores/pessoa.store';
-import IconEdit from 'src/core/components/Icons/IconEdit.vue';
-import AppDialog from 'src/core/components/AppDialog.vue';
-import AppButton from 'src/core/components/AppButton.vue';
-import CircularProgress from 'src/core/components/CircularProgress.vue';
+	import { computed, h, onMounted, reactive, ref } from 'vue'
+	import * as z from 'zod'
+	import Breadcrumbs from 'src/core/components/Breadcrumbs.vue'
+	import Titulo from 'src/core/components/Titulo.vue'
+	import {
+		Tooltip,
+		TooltipContent,
+		TooltipProvider,
+		TooltipTrigger,
+	} from '@/core/components/tooltip'
+	import { FormWrapper } from '@/core/components/form-wrapper'
+	import { TableWrapper } from '@/core/components/table-wrapper'
+	import {
+		keepPreviousData,
+		useMutation,
+		useQuery,
+		useQueryClient,
+	} from '@tanstack/vue-query'
+	import { personRepository } from '@/core/stores/person.store'
+	import { useLocalStorage } from '@vueuse/core'
+	import { useRouteQuery } from '@vueuse/router'
+	import { useNotify } from '@/core/composables'
+	import { AddressModel, ContactModel, PersonModel } from '@/core/models'
+	import { formatCPF, valueUpdater } from '@/core/utils'
+	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+	import { ButtonRoot } from '@/core/components/button'
+	import { useForm } from 'vee-validate'
+	import { toTypedSchema } from '@vee-validate/zod'
+	import {
+		EditTableRegisterPerson,
+		DeleteTableRegisterPerson,
+		TableRegisterPersonForm,
+	} from './components/register-person-table'
+import TablePagination from '@/core/components/table-wrapper/TablePagination.vue'
 
-const store = pessoaStore();
-
-const selected = reactive({
-	type: '',
-	label: '',
-});
-const nome = ref('');
-const cpf = ref('');
-const tp_vinculo = ref('');
-const cidade = ref('');
-const status = ref('');
-
-const cols = reactive<Col[]>([
-	{ field: 'id', title: 'ID', hide: true },
-	{ field: 'nome', title: 'Nome', hide: false },
-	{ field: 'cpf', title: 'CPF', hide: false },
-	{ field: 'tpVinculo', title: 'Tp Vínculo', hide: false },
-	{ field: 'cidade', title: 'Cidade', hide: false, sort: false },
-	{ field: 'email', title: 'E-mail', hide: false, sort: false },
-	{ field: 'status', title: 'Status', hide: false, sort: false },
-	{ field: 'acao', title: 'Ação', hide: false, sort: false },
-]);
-
-const clearFilter = () => {
-	nome.value = '';
-	cpf.value = '';
-	tp_vinculo.value = '';
-	cidade.value = '';
-	status.value = '';
-
-	selected.label = '';
-	selected.type = '';
-};
-
-const color = (value: string): string => {
-	switch (value) {
-		case 'Ativo':
-			return 'bg-success';
-		case 'Liberada':
-			return 'bg-success';
-		case 'Inativo':
-			return 'bg-warning';
-		case 'Bloqueada':
-			return 'bg-secondary';
-		default:
-			return 'bg-secondary';
+	type PersonTable = {
+		id: number
+		name: string
+		cpf: string
+		linkedType: string
+		city: string
+		email: string
+		status: number
 	}
-};
 
-const parseRows = () => {
-	return store.pessoas.map((pessoa) => {
-		return {
-			id: pessoa.id,
-			nome: pessoa.nome,
-			cpf: pessoa.cpf,
-			tp_vinculo: pessoa.tpVinculo,
-			cidade: pessoa.cidade,
-			celular: pessoa.contatos.at(0)?.celular,
-			email: pessoa.email,
-			status: pessoa.status,
-		};
-	});
-};
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
-const parseCols = () => {
-	return [
-		{ field: 'id', title: 'ID', hide: true },
-		{ field: 'nome', title: 'Nome', hide: false },
-		{ field: 'cpf', title: 'CPF', hide: false },
-		{ field: 'tp_vinculo', title: 'Tp Vínculo', hide: false },
-		{ field: 'cidade', title: 'Cidade', hide: false, sort: false },
-		{ field: 'celular', title: 'Celular', hide: false, sort: false },
-		{ field: 'email', title: 'E-mail', hide: false, sort: false },
-		{ field: 'status', title: 'Status', hide: false, sort: false },
-	];
-};
+	const openCreateModal = ref(false)
+	const openNameBox = ref(false)
+	const openCPFBox = ref(false)
+	const rowSelection = ref({})
+	const formattedSearchNames = useLocalStorage<{ id: number; name: string }[]>(
+		'search-person-names',
+		[],
+	)
+	const formattedSearchCPFs = useLocalStorage<{ id: number; name: string }[]>(
+		'search-person-cpf',
+		[],
+	)
+	const page = useRouteQuery('person-page', 1, { transform: Number })
+	const perPage = useRouteQuery('person-per-page', 8, { transform: Number })
+	const selectLinkedType = useRouteQuery<string | undefined>(
+		'person-linked-type',
+		undefined,
+	)
+	const selectCity = useRouteQuery<string | undefined>('person-city', undefined)
+	const selectName = useRouteQuery<string | undefined>('person-name', undefined)
+	const selectCPF = useRouteQuery<string | undefined>('person-cpf', undefined)
+	const selectStatus = useRouteQuery<string | undefined>(
+		'person-status',
+		undefined,
+	)
+	const selectSort = useRouteQuery<string | undefined>('person-sort')
+	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 
-onMounted(() => {
-	store.getAllPessoas();
-});
+	const {
+		data: persons,
+		isLoading: isPersonsLoading,
+		refetch: selectPersonsRefetch,
+		isPlaceholderData: isPersonsPlaceholderData,
+	} = useQuery({
+		queryKey: personRepository.getQueryKey(
+			'persons',
+			{
+				page,
+				limit: perPage,
+			},
+			selectLinkedType,
+			selectCity,
+			selectStatus,
+			selectName,
+			selectCPF,
+		),
+		queryFn: ({ signal }) =>
+			personRepository.getAllPersons({
+				signal,
+				params: { page: page.value, per_page: perPage.value },
+				metaCallback: (meta) => {
+					pageMetadata.value = {
+						totalItens: meta.total,
+						totalPages: meta.last_page,
+					}
+				},
+			}),
+		placeholderData: keepPreviousData,
+	})
+
+	const queryClient = useQueryClient()
+	const notify = useNotify()
+
+	const { mutateAsync: handleDeletePerson, isPending: isDeletePersonLoading } =
+		useMutation({
+			mutationFn: ({ id }: { id: number }) =>
+				personRepository.deletePerson({ id }),
+			onSettled: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: personRepository.getQueryKey(
+						'persons',
+						{ page, limit: perPage },
+						selectLinkedType,
+						selectCity,
+						selectStatus,
+						selectName,
+						selectCPF,
+					),
+				})
+				selectCity.value = undefined
+			},
+			onError: (error, variables, context) => {
+				notify.error(
+					error,
+					{ title: 'Erro ao apagar a pessoa!' },
+					{ duration: 1500 },
+				)
+			},
+			onSuccess: (data, variables, context) => {
+				notify.success(
+					{ title: `Pessoa apagada com sucesso!` },
+					{ duration: 1500 },
+				)
+			},
+		})
+
+	const { mutateAsync: handleUpdatePerson, isPending: isUpdatePersonLoading } =
+		useMutation({
+			mutationFn: (
+				data: PersonModel,
+			) => personRepository.updateTableValue(data),
+			onSettled: async () => {
+				return await queryClient.invalidateQueries({
+					queryKey: personRepository.getQueryKey(
+						'persons',
+						{ page, limit: perPage },
+						selectLinkedType,
+						selectCity,
+						selectStatus,
+						selectName,
+						selectCPF,
+					),
+				})
+			},
+			onError: (error, variables, context) => {
+				notify.success(
+					{ title: `Erro ao atualizar a pessoa!` },
+					{ duration: 1500 },
+				)
+			},
+			onSuccess: (data, variables, context) => {
+				notify.success(
+					{ title: `Pessoa atualizada com sucesso!` },
+					{ duration: 1500 },
+				)
+			},
+		})
+
+	const { mutateAsync: handleCreatePerson, isPending: isCreatePersonLoading } =
+		useMutation({
+			mutationFn: (data: PersonModel) => personRepository.personCreate(data),
+			onSettled: async () => {
+				await queryClient.invalidateQueries({
+					queryKey: personRepository.getQueryKey(
+						'persons',
+						{ page, limit: perPage },
+						selectLinkedType,
+						selectCity,
+						selectStatus,
+						selectName,
+						selectCPF,
+					),
+				})
+				openCreateModal.value = false
+			},
+			onError: (error, variables, context) => {
+				notify.success({ title: `Erro ao criar a pessoa!` }, { duration: 1500 })
+			},
+			onSuccess: (data, variables, context) => {
+				notify.success(
+					{ title: `Pessoa criada com sucesso!` },
+					{ duration: 1500 },
+				)
+			},
+		})
+
+	const formattedAllPersons = computed<PersonTable[]>(() => {
+		return (persons.value ?? []).map(
+			({ id, name, cpf, linkedType, city, email, status }) => ({
+				id: id as number,
+				name,
+				cpf: formatCPF(cpf),
+				linkedType: linkedType as string,
+				city: city as string,
+				email: email  as string,
+				status: status as number,
+			}),
+		)
+	})
+
+	const columns: ColumnDef<PersonTable>[] = [
+		{
+			accessorKey: 'id',
+			meta: 'Código',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('id'),
+					},
+					() => [
+						'Código',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('id')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('id')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'name',
+			meta: 'Nome',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'Nome',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('name')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'cpf',
+			meta: 'CPF',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'CPF',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('cpf')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'linkedType',
+			meta: 'Tp. vinculo',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'Tp. vinculo',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('linkedType')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'city',
+			meta: 'Cidade',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'Cidade',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('city')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'email',
+			meta: 'E-mail',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'E-mail',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('email')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'status',
+			meta: 'Status',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllPersons.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'Status',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('status')),
+			enableHiding: false,
+		},
+		{
+			id: 'actions',
+			header: 'Ação',
+			cell: ({ row }) => {
+				const data = row.original
+				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
+					h(EditTableRegisterPerson, {
+						dataId: data.id,
+						tablePersonName: data.name,
+						'onOn-edit': onUpdateSubmit,
+						isLoading: isUpdatePersonLoading.value,
+					}),
+					h(DeleteTableRegisterPerson, {
+						dataId: data.id,
+						tablePersonName: data.name,
+						'onOn-delete': onDeleteSubmit,
+						isLoading: isDeletePersonLoading.value,
+						isActive: data.status === 1,
+					}),
+				])
+			},
+		},
+	]
+
+	const table = useVueTable({
+		get data() {
+			return formattedAllPersons.value
+		},
+		get columns() {
+			return columns
+		},
+		getCoreRowModel: getCoreRowModel(),
+		manualSorting: true,
+		manualPagination: true,
+		rowCount: pageMetadata.value.totalItens,
+		getRowId: (row) => row.id.toString(),
+		onRowSelectionChange: (updaterOrValue) =>
+			valueUpdater(updaterOrValue, rowSelection),
+		state: {
+			get rowSelection() {
+				return rowSelection.value
+			},
+		},
+	})
+
+	const formSchema = z.object({
+		name: z.string({ message: 'Esse campo é obrigatório.' }),
+		birthday: z.string({ message: 'Esse campo é obrigatório.' }),
+		cpf: z.string({ message: 'Esse campo é obrigatório.' }),
+		addresses: z
+			.array(
+				z.object({
+					cityId: z.string({ message: 'Esse campo é obrigatório.' }),
+					stateId: z.string({ message: 'Esse campo é obrigatório.' }),
+					street: z.string({ message: 'Esse campo é obrigatório.' }),
+					zipCode: z.string({ message: 'Esse campo é obrigatório.' }),
+					addressTypeId: z.string({ message: 'Esse campo é obrigatório.' }),
+				}),
+				{ message: 'Deve haver pelo menos 1 endereço.' },
+			)
+			.min(1, 'Deve haver pelo menos 1 endereço.'),
+		contacts: z
+			.array(
+				z.object({
+					phoneTypeId: z.string({ message: 'Esse campo é obrigatório.' }),
+					phone: z.string({ message: 'Esse campo é obrigatório.' }),
+					email: z.string({ message: 'Esse campo é obrigatório.' }),
+					cellphone: z.string({ message: 'Esse campo é obrigatório.' }),
+				}),
+				{ message: 'Deve haver pelo menos 1 contato.' },
+			)
+			.min(1, 'Deve haver pelo menos 1 contato.'),
+	})
+
+	const form = useForm({
+		validationSchema: toTypedSchema(formSchema),
+		initialValues: {
+			contacts: [],
+			addresses: [],
+		},
+	})
+
+	const onCreateSubmit = form.handleSubmit(async (values) => {
+		return handleCreatePerson(
+			new PersonModel({
+				name: values.name,
+				birthday: values.birthday,
+				cpf: values.cpf,
+				addresses: values.addresses.map((data) => new AddressModel(data)),
+				deletedAddresses: [],
+				contacts: values.contacts.map((data) => new ContactModel(data)),
+				deletedContacts: [],
+			}),
+		)
+	})
+
+	const onUpdateSubmit = async (
+		id: number,
+		values: z.infer<typeof formSchema> & {
+			deletedAddresses: number[]
+			deletedContacts: number[]
+		},
+	) => {
+		return handleUpdatePerson(
+			new PersonModel({
+				id,
+				name: values.name,
+				birthday: values.birthday,
+				cpf: values.cpf,
+				addresses: values.addresses.map((data) => new AddressModel(data)),
+				deletedAddresses: values.deletedAddresses,
+				contacts: values.contacts.map((data) => new ContactModel(data)),
+				deletedContacts: values.deletedContacts,
+			}),
+		)
+	}
+
+	const onDeleteSubmit = async (id: number) => {
+		return handleDeletePerson({ id })
+	}
+
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
+
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
+
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
+
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+
+		if (!regexData) return
+
+		return { [regexData[1]]: regexData[2] as T }
+	}
+
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
+
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
+				selectPersonsRefetch()
+				return
+			}
+
+			selectSort.value = undefined
+			selectPersonsRefetch()
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+		selectPersonsRefetch()
+	}
+
+	function handlePagination(to: number) {
+		if (to < page.value) {
+			page.value = Math.max(to, 1)
+		} else if (to > page.value) {
+			if (!isPersonsPlaceholderData.value) {
+				page.value = to
+			}
+		}
+	}
+
+	function handleSelectCity() {
+		selectPersonsRefetch()
+	}
+
+	function handleClear() {
+		selectCity.value = undefined
+		selectCPF.value = undefined
+		selectName.value = undefined
+		selectLinkedType.value = undefined
+		selectStatus.value = undefined
+	}
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Consultas', 'Pessoas']" />
+		<breadcrumbs :paginas="['Cadastro', 'Pessoas Cadastradas']" />
+
 		<div class="panel pb-0 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex items-center gap-14">
-					<titulo title="Pessoas Cadastradas" />
-					<button @click="store.toggleEditor(true)" v-tippy:right>
-						<icon-add />
-					</button>
-					<tippy target="right" placement="right"
-						>Cadastre uma nova pessoa</tippy
+				<div class="flex gap-10 items-center justify-center">
+					<Titulo title="Gerenciar pessoas cadastradas" />
+
+					<form-wrapper
+						v-model="openCreateModal"
+						:is-loading="isCreatePersonLoading"
+						:title="`Criar uma nova pessoa`"
+						description="Crie o conteúdo de uma nova pessoa."
+						class="sm:max-w-[1100px]"
+						@form-submit="onCreateSubmit"
 					>
-				</div>
+						<template #trigger>
+							<tooltip-provider>
+								<tooltip>
+									<tooltip-trigger as-child>
+										<button-root
+											variant="outline"
+											@click="openCreateModal = true"
+										>
+											<font-awesome-icon
+												class="text-primary_3-table w-5 h-5"
+												:icon="['fas', 'circle-plus']"
+											/>
+										</button-root>
+									</tooltip-trigger>
+									<tooltip-content side="right">
+										<p>Cadastre uma nova pessoa</p>
+									</tooltip-content>
+								</tooltip>
+							</tooltip-provider>
+						</template>
 
-				<div
-					class="header_actions flex flex-wrap md:flex-nowrap items-center gap-5"
-				>
-					<multiselect
-						v-model="nome"
-						:options="[
-							'João Carlos de Oliveira Carvalho',
-							'Mario Alves Cabral',
-						]"
-						class="custom-multiselect min-w-[200px]"
-						placeholder="Nome"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'nome')"
-					/>
-					<multiselect
-						v-model="cpf"
-						:options="['356.859.789-99', '526.987.456-11']"
-						class="custom-multiselect min-w-[120px]"
-						placeholder="CPF"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'cpf')"
-					/>
-					<multiselect
-						v-model="tp_vinculo"
-						:options="['Consignante', 'Consignatária']"
-						class="custom-multiselect max-w-[150px]"
-						placeholder="Tipo Vínculo"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'vinculo')"
-					/>
-					<multiselect
-						v-model="cidade"
-						:options="['Florianópolis-SC', 'São Paulo-SP']"
-						class="custom-multiselect max-w-[150px]"
-						placeholder="Cidade"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'cidade')"
-					/>
-					<multiselect
-						v-model="status"
-						:options="['Inativo', 'Ativo']"
-						class="custom-multiselect max-w-[120px]"
-						placeholder="Status"
-						:searchable="false"
-						:preselect-first="false"
-						:allow-empty="false"
-						selected-label=""
-						select-label=""
-						deselect-label=""
-						@select="(selected.label = $event), (selected.type = 'status')"
-					/>
-
-					<div>
-						<button
-							v-tippy:top
-							type="button"
-							class="text-xs m-1"
-							@click="clearFilter()"
-						>
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
-						</button>
-						<tippy target="top" placement="top">Limpar pesquisa</tippy>
-					</div>
-
-					<div>
-						<consultas-export
-							v-tippy:top
-							:cols="parseCols()"
-							:rows="parseRows()"
-							filename="Histórico das Solicitações"
-							export-type="print"
-						>
-							<template #icon>
-								<icon-printer class="w-5 h-5" />
-							</template>
-						</consultas-export>
-						<tippy target="top" placement="top">Imprimir</tippy>
-					</div>
+						<template #fields>
+							<TableRegisterPersonForm
+								:metadata="form.values"
+								:disabled="isCreatePersonLoading"
+							/>
+						</template>
+					</form-wrapper>
 				</div>
 			</div>
 
-			<div class="datatable">
-				<vue3-datatable
-					:rows="store.pessoas"
-					:columns="cols"
-					:total-rows="store.total"
-					:sortable="true"
-					skin="whitespace-nowrap bh-table-striped"
-					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
-					:loading="store.loadingPessoas"
-					:page="store.pagina"
-					:page-size="store.limite"
-					@change="(e: any) => store.goToPage(e.current_page)"
-					@page-size-change="(e: number) => store.setLimit(e)"
-					:is-server-mode="true"
-				>
-					<template #solicitado="data">
-						<image-name
-							image="https://placehold.co/30x30"
-							:name="data.value.solicitado.nome"
-						/>
-					</template>
-					<template #status="data">
-						<span
-							class="flex justify-center badge !w-[110px] h-[22px]"
-							:class="color(data.value.status)"
-							>{{ data.value.status }}</span
-						>
-					</template>
-					<template #acao="data">
-						<div class="flex">
-							<div>
-								<button
-									v-tippy:right
-									type="button"
-									class="text-xs m-1"
-									:disabled="store.saving"
-									@click="store.toggleEditor(true, data.value)"
-								>
-									<icon-edit class="w-5 h-5 text-primary_3-table" />
-								</button>
-								<tippy target="right" placement="right"
-									>Editar {{ data.value.nome }}</tippy
-								>
-							</div>
-							<div>
-								<div>
-									<button
-										v-tippy:right
-										type="button"
-										class="text-xs m-1"
-										@click="store.toggleStatus(data.value)"
-										:disabled="store.saving"
-									>
-										<icon-check
-											v-if="data.value.status === 'Inativo'"
-											class="w-5 h-5 text-primary_3-table"
-										/>
-										<icon-block
-											v-else-if="!store.saving"
-											class="w-5 h-5 text-primary_3-table"
-										/>
-										<circular-progress v-else :size="20"></circular-progress>
-									</button>
-									<tippy target="right" placement="right"
-										>{{
-											data.value.status === 'Inativo' ? 'Ativar' : 'Inativar'
-										}}
-									</tippy>
-								</div>
-							</div>
-						</div>
-					</template>
-				</vue3-datatable>
-				<app-dialog
-					:model-value="store.showDeleteDialog"
-					@update:model-value="store.toggleDeletePessoa()"
-				>
-					<template #title>
-						Deseja deletar {{ store.editingPessoa.nome }}?
-					</template>
-					Essa ação não poderá ser desfeita.
-					<template #actions>
-						<app-button
-							density="comfortable"
-							variant="outlined"
-							:disabled="store.deleting"
-							@click="store.toggleDeletePessoa()"
-						>
-							Cancelar
-						</app-button>
-						<app-button
-							density="comfortable"
-							class="ml-2"
-							:loading="store.deleting"
-							@click="store.deletePessoa()"
-						>
-							Apagar
-						</app-button>
-					</template>
-				</app-dialog>
+			<div class="datatable pb-1">
+				<table-wrapper
+					:table="table"
+					:column-size="columns.length"
+					:row-limit="perPage"
+					:is-loading="isPersonsLoading"
+				/>
+
+				<div :class="['flex w-full items-center px-4']">
+					<div class="flex-1 text-sm text-muted-foreground">
+						<!-- {{ formattedAllTypeTable.length }} de {{ pageMetadata.totalItens }} linha(s)
+					selecionadas. -->
+					</div>
+
+					<TablePagination
+						v-model="page"
+						:disabled="formattedAllPersons.length <= 0"
+						:total-itens="pageMetadata.totalItens"
+						:items-per-page="perPage"
+						@update-paginate="handlePagination"
+					/>
+				</div>
 			</div>
 		</div>
-
-		<consultas-cadastro-pessoa />
 	</main>
 </template>
 
 <style lang="scss" scoped>
-.header_actions:deep(.custom-multiselect) {
-	.multiselect__placeholder {
-		font-size: 0.75rem;
-		line-height: 1rem;
-		font-weight: 600;
-		white-space: nowrap;
-		color: rgb(14 23 38);
-	}
+	.header_actions:deep(.custom-multiselect) {
+		.multiselect__placeholder {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			font-weight: 600;
+			white-space: nowrap;
+			color: rgb(14 23 38);
+		}
 
-	.multiselect__option {
-		font-size: 0.75rem;
-		line-height: 1rem;
-		white-space: normal;
+		.multiselect__option {
+			font-size: 0.75rem;
+			line-height: 1rem;
+			white-space: normal;
+		}
 	}
-}
 </style>

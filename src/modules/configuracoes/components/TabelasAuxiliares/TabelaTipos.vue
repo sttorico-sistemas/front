@@ -83,7 +83,6 @@
 			}),
 	})
 
-
 	const {
 		data: selectTypeData,
 		isPending: isSelectTypePending,
@@ -92,10 +91,13 @@
 		isPlaceholderData: isSelectTypePlaceholderData,
 	} = useQuery({
 		enabled: enabledSelectType,
-		queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
-			page,
-			limit: perPage,
-		}),
+		queryKey: tabelasAuxiliaresRepository.getQueryKey(
+			selectType as Ref<string>,
+			{
+				page,
+				limit: perPage,
+			},
+		),
 		queryFn: ({ signal }) =>
 			tabelasAuxiliaresRepository.getAllTableValues(selectType.value, {
 				params: { page: page.value, perPage: perPage.value },
@@ -121,10 +123,13 @@
 			}) => tabelasAuxiliaresRepository.deleteTableValue(tableUrl, valueId),
 			onSettled: async () => {
 				return await queryClient.invalidateQueries({
-					queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
-						page: page,
-						limit: perPage,
-					}),
+					queryKey: tabelasAuxiliaresRepository.getQueryKey(
+						selectType as Ref<string>,
+						{
+							page: page,
+							limit: perPage,
+						},
+					),
 				})
 			},
 			onError: (error, variables, context) => {
@@ -152,10 +157,13 @@
 				tabelasAuxiliaresRepository.updateTableValue(tableValue),
 			onSettled: async () => {
 				return await queryClient.invalidateQueries({
-					queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
-						page: page,
-						limit: perPage,
-					}),
+					queryKey: tabelasAuxiliaresRepository.getQueryKey(
+						selectType as Ref<string>,
+						{
+							page: page,
+							limit: perPage,
+						},
+					),
 				})
 			},
 			onError: (error, variables, context) => {
@@ -183,10 +191,13 @@
 				tabelasAuxiliaresRepository.createTableValue(tableValue),
 			onSettled: async () => {
 				return await queryClient.invalidateQueries({
-					queryKey: tabelasAuxiliaresRepository.getQueryKey(selectType as Ref<string>, {
-						page: page,
-						limit: perPage,
-					}),
+					queryKey: tabelasAuxiliaresRepository.getQueryKey(
+						selectType as Ref<string>,
+						{
+							page: page,
+							limit: perPage,
+						},
+					),
 				})
 			},
 			onError: (error, variables, context) => {
@@ -207,7 +218,6 @@
 				)
 			},
 		})
-
 
 	const formattedAllTypeTable = computed(() => {
 		return (allRawTypeTables.value ?? []).map(({ url, name }) => ({
@@ -234,14 +244,14 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedSelectedType.value.length <= 0,
-						onClick: () => handleSort('id'),
+						// onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('id')],
-						}),
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('id')],
+						// }),
 					],
 				)
 			},
@@ -258,14 +268,14 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedSelectedType.value.length <= 0,
-						onClick: () => handleSort('name'),
+						// onClick: () => handleSort('name'),
 					},
 					() => [
 						'Descrição',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('name')],
-						}),
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
 					],
 				)
 			},
@@ -280,6 +290,7 @@
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
 					h(EditTableType, {
 						dataId: data.id,
+						tableUrl: selectType.value as string,
 						tableTypeName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateTypeLoading.value,
@@ -416,6 +427,11 @@
 			}
 		}
 	}
+
+	function handleClear() {
+		selectType.value = formattedAllTypeTable.value[0].id
+		selectSort.value = undefined
+	}
 </script>
 
 <template>
@@ -440,7 +456,7 @@
 								<tooltip-trigger as-child>
 									<button-root
 										:disabled="!selectType"
-										variant="ghost"
+										variant="outline"
 										@click="openCreateModal = true"
 									>
 										<font-awesome-icon
@@ -465,7 +481,7 @@
 				</form-wrapper>
 			</div>
 
-			<div class="header_actions flex items-center gap-20 flex-1 justify-end">
+			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 				<select-root
 					:disabled="formattedAllTypeTable.length <= 0"
 					v-model:model-value="selectType"
@@ -489,6 +505,22 @@
 						</select-group>
 					</select-content>
 				</select-root>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="outline" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary_3-table w-5 h-5"
+									:icon="['fas', 'eraser']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Apagar filtros</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
 			</div>
 		</div>
 
