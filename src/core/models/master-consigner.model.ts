@@ -1,16 +1,20 @@
+import { Status } from "@/core/types";
 import { BaseModel } from "src/core/models/base.model";
 
 export class MasterConsignerModel extends BaseModel {
 	public id?: number
 	public name: string
+	public status?: Status
 
 	constructor(props: {
 		id?: number;
 		name: string;
+		status?: Status
 	}) {
 		super();
 		this.id = props.id;
 		this.name = props.name;
+		this.status = props.status;
 	}
 
 	toRecord(): Record<string, any> {
@@ -24,6 +28,7 @@ export class MasterConsignerModel extends BaseModel {
 		return new MasterConsignerModel({
 			id: record.id,
 			name: record.nome,
+			status: record.status
 		});
 	}
 

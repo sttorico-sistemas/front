@@ -46,11 +46,13 @@ export class GeneralRepository {
 
 	async getAllPages(configParams?: HttpClientProps<PageModel[]>): Promise<PageModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[] }>(`/organize/pages`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/organize/pages`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return response.data.map((e: Record<string, any>) => PageModel.fromRecord(e));
+			const values = response.data.map((e: Record<string, any>) => PageModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
+			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
