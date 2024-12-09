@@ -64,7 +64,7 @@ export class AxiosHttpClientAdapter implements HttpClient {
 			.then(response => response.data)
 	}
 
-	async put<TResponse  extends any, TBody>(
+	async put<TResponse extends any, TBody>(
 		path: HttpClientRoute,
 		data: TBody,
 		config?: HttpClientConfig,
@@ -155,8 +155,7 @@ export class AxiosHttpClientAdapter implements HttpClient {
 	private async successRequestInterceptor(config: InternalAxiosRequestConfig) {
 		if (this.storageInstance && this.routerInstance) {
 			const authToken = this.storageInstance.getItem('authToken')
-
-			if (!authToken && !(!config.url || !this.GLOBAL_ROUTES.includes(config.url))) {
+			if (!authToken && !(config.url && this.GLOBAL_ROUTES.includes(config.url))) {
 				const controller = new AbortController();
 				config.signal = controller.signal
 				this.notifyInstance?.error(null, {
