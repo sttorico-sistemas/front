@@ -15,12 +15,12 @@ import { settingsRoutes } from '@/modules/settings/routes'
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
-		// ...dashboradRoutes,
+		...dashboradRoutes,
 		// ...consultasRoutes,
 		// ...simuladorRoutes,
 		// ...documentosRoutes,
 		// ...cadastroRoutes,
-		// ...authRoutes,
+		...authRoutes,
 		...settingsRoutes,
 		...registersRoutes,
 		...queriesRoutes,
