@@ -4,7 +4,6 @@ import { MasterConsignerModel } from "@/core/models";
 import { HttpClientProps } from "@/modules/configuracoes/types";
 import { Ref } from "vue";
 
-
 export class MasterConsignerRepository {
 	private http = useAxios();
 	#QUERY_KEY = 'master-consigner'
