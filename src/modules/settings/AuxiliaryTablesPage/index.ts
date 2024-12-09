@@ -1,0 +1,1 @@
+export { default as AuxiliaryTablesPage } from './Page.vue'

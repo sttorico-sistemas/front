@@ -14,12 +14,10 @@ export class NotifyAdapter implements Notify {
 
 	private readonly defaultErrorProps: NotifyProps = {
 		title: 'Erro na solicitação',
-		description: 'Não foi possível realizar essa operação, tente novamente mais tarde.'
 	}
 
 	private readonly defaultSuccessProps: NotifyProps = {
 		title: 'Sucesso na solicitação',
-		description: 'Sua solicitação foi realizada com sucesso.'
 	}
 
 	private readonly defaultConfigs: NotifyOptions = {

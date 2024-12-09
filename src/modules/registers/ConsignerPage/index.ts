@@ -1,0 +1,1 @@
+export { default as ConsignerPage } from './Page.vue'

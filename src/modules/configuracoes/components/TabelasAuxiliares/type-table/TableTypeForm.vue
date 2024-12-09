@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Input } from '@/core/components/fields/input'
+import { InputRoot } from '@/core/components/fields/input'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/core/components/form';
 import { type PropType } from 'vue';
 
@@ -18,7 +18,7 @@ defineProps({
 			<FormItem class="grid grid-cols-4 items-center gap-x-4 gap-y-1">
 				<FormLabel class="text-right">Nome</FormLabel>
 				<FormControl>
-					<Input :disabled="disabled" type="text" placeholder="Digite o nome..." class="col-span-3"
+					<input-root :disabled="disabled" type="text" placeholder="Digite o nome..." class="col-span-3"
 						v-bind="componentField" />
 				</FormControl>
 

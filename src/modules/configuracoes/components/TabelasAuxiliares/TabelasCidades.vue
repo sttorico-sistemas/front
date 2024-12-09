@@ -31,7 +31,7 @@
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 	import { ButtonRoot } from '@/core/components/button'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-	import { valueUpdater } from '@/core/utils'
+	import { cn, debounceAsync, valueUpdater } from '@/core/utils'
 	import { toTypedSchema } from '@vee-validate/zod'
 	import { useForm } from 'vee-validate'
 	import { TableValue } from '../../types'
@@ -40,6 +40,20 @@
 		TableWrapper,
 		TablePagination,
 	} from '@/core/components/table-wrapper'
+	import {
+		Command,
+		CommandEmpty,
+		CommandGroup,
+		CommandInput,
+		CommandItem,
+		CommandList,
+	} from '@/core/components/command'
+	import {
+		Popover,
+		PopoverContent,
+		PopoverTrigger,
+	} from '@/core/components/popover'
+	import { useLocalStorage } from '@vueuse/core'
 
 	type CityTables = {
 		id: number
@@ -54,7 +68,12 @@
 	} as const
 
 	const openCreateModal = ref(false)
+	const openCityBox = ref(false)
 	const rowSelection = ref({})
+	const formattedSearchCities = useLocalStorage<{ id: number; name: string }[]>(
+		'search-cities',
+		[],
+	)
 	const page = useRouteQuery('city-page', 1, { transform: Number })
 	const perPage = useRouteQuery('city-per-page', 8, { transform: Number })
 	const selectCity = useRouteQuery<string | undefined>('city-select', undefined)
@@ -74,13 +93,23 @@
 		refetch: selectCityRefetch,
 		isPlaceholderData: isCityPlaceholderData,
 	} = useQuery({
-		queryKey: tabelasAuxiliaresRepository.getQueryKey('cities', {
-			page,
-			limit: perPage,
-		}, selectUf, selectCity),
+		queryKey: tabelasAuxiliaresRepository.getQueryKey(
+			'cities',
+			{
+				page,
+				limit: perPage,
+			},
+			selectUf,
+			selectCity,
+		),
 		queryFn: ({ signal }) =>
-			tabelasAuxiliaresRepository.getAllTableValues('auxiliary/cidade', {
-				params: { page: page.value, perPage: perPage.value, search: selectCity.value },
+			tabelasAuxiliaresRepository.getAllCities({
+				params: {
+					page: page.value,
+					perPage: perPage.value,
+					search: selectCity.value,
+					estado_id: selectUf.value,
+				},
 				signal,
 				metaCallback: (meta) => {
 					pageMetadata.value = {
@@ -95,8 +124,11 @@
 	const { data: statesData } = useQuery({
 		queryKey: tabelasAuxiliaresRepository.getQueryKey('states'),
 		queryFn: ({ signal }) =>
-			tabelasAuxiliaresRepository.getAllTableValues('auxiliary/estados', {
+			tabelasAuxiliaresRepository.getAllStates({
 				signal,
+				params: {
+					perPage: 27
+				}
 			}),
 	})
 
@@ -112,12 +144,21 @@
 				valueId: number
 			}) => tabelasAuxiliaresRepository.deleteTableValue(tableUrl, valueId),
 			onSettled: async () => {
-				return await queryClient.invalidateQueries({
+				formattedSearchCities.value = formattedSearchCities.value.filter(
+					({ name }) => name !== selectCity.value,
+				)
+				await queryClient.invalidateQueries({
 					queryKey: tabelasAuxiliaresRepository.getQueryKey(
-						'auxiliary/cidade',
-						{ page, limit: perPage },
+						'cities',
+						{
+							page,
+							limit: perPage,
+						},
+						selectUf,
+						selectCity,
 					),
 				})
+				selectCity.value = undefined
 			},
 			onError: (error, variables, context) => {
 				Swal.fire({
@@ -144,8 +185,13 @@
 			onSettled: async () => {
 				return await queryClient.invalidateQueries({
 					queryKey: tabelasAuxiliaresRepository.getQueryKey(
-						'auxiliary/cidade',
-						{ page, limit: perPage },
+						'cities',
+						{
+							page,
+							limit: perPage,
+						},
+						selectUf,
+						selectCity,
 					),
 				})
 			},
@@ -179,12 +225,18 @@
 				>,
 			) => tabelasAuxiliaresRepository.createTableValue(tableValue),
 			onSettled: async () => {
-				return await queryClient.invalidateQueries({
+				await queryClient.invalidateQueries({
 					queryKey: tabelasAuxiliaresRepository.getQueryKey(
-						'auxiliary/cidade',
-						{ page, limit: perPage },
+						'cities',
+						{
+							page,
+							limit: perPage,
+						},
+						selectUf,
+						selectCity,
 					),
 				})
+				openCreateModal.value = false
 			},
 			onError: (error, variables, context) => {
 				Swal.fire({
@@ -205,14 +257,18 @@
 		})
 
 	const formattedAllCities = computed(() => {
-		return (selectCityData.value ?? []).map(({ id, nome }) => ({
-			id,
-			name: nome,
-		}))
+		return (selectCityData.value ?? []).map(
+			({ id, name, stateName, stateId }) => ({
+				id,
+				name,
+				stateId,
+				uf: stateName,
+			}),
+		)
 	})
 
 	const formattedAllStates = computed(() => {
-		return (statesData.value ?? []).map(({ id, nome }) => ({ id, name: nome }))
+		return (statesData.value ?? []).map(({ id, name }) => ({ id, name }))
 	})
 
 	const columns: ColumnDef<CityTables>[] = [
@@ -226,14 +282,14 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedAllCities.value.length <= 0,
-						onClick: () => handleSort('id'),
+						// onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('id')],
-						}),
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('id')],
+						// }),
 					],
 				)
 			},
@@ -250,18 +306,42 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedAllCities.value.length <= 0,
-						onClick: () => handleSort('name'),
+						// onClick: () => handleSort('name'),
 					},
 					() => [
 						'Descrição',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('name')],
-						}),
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
 					],
 				)
 			},
 			cell: ({ row }) => h('div', row.getValue('name')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'uf',
+			meta: 'Estado',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllCities.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'Estado',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('uf')),
 			enableHiding: false,
 		},
 		{
@@ -319,14 +399,27 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		console.log(values)
 		return handleCreateCity({
 			nome: values.name,
 			tableUrl: 'auxiliary/cidade',
 			estado_id: +values.stateId,
-			ibge_id: +values.ibgeCode
+			ibge_id: +values.ibgeCode,
 		})
 	})
+
+	const handleSearchCities = debounceAsync(async (value: string) => {
+		return tabelasAuxiliaresRepository
+			.getAllTableValues('auxiliary/cidade', {
+				params: { search: value, perPage: 5 },
+			})
+			.then((response) => {
+				formattedSearchCities.value = response.map(({ id, nome }) => ({
+					id,
+					name: nome,
+				}))
+				return response
+			})
+	}, 500)
 
 	const onUpdateSubmit = async (
 		id: number,
@@ -335,13 +428,12 @@
 		return handleUpdateCity({
 			id,
 			nome: values.name,
-			tableUrl: selectCity.value,
+			tableUrl: 'auxiliary/cidade',
 		})
 	}
 
 	const onDeleteSubimit = async (id: number) => {
-		if (!selectCity.value) return
-		return handleDeleteCity({ tableUrl: selectCity.value, valueId: id })
+		return handleDeleteCity({ tableUrl: 'auxiliary/cidade', valueId: id })
 	}
 
 	function getSort(key: string) {
@@ -413,6 +505,11 @@
 	function handleSelectCity() {
 		selectCityRefetch()
 	}
+
+	function handleClear() {
+		selectCity.value = undefined
+		selectUf.value = undefined
+	}
 </script>
 
 <template>
@@ -435,7 +532,7 @@
 						<tooltip-provider>
 							<tooltip>
 								<tooltip-trigger as-child>
-									<button-root variant="ghost" @click="openCreateModal = true">
+									<button-root variant="outline" @click="openCreateModal = true">
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
 											:icon="['fas', 'circle-plus']"
@@ -484,29 +581,85 @@
 					</select-content>
 				</select-root>
 
-				<select-root
-					:disabled="formattedAllCities.length <= 0"
-					v-model:model-value="selectCity"
-					@update:model-value="handleSelectCity"
-				>
-					<select-trigger class="lg:max-w-96 flex-[3]">
-						<select-value
-							class="text-left"
-							placeholder="Selecione uma cidade..."
-						/>
-					</select-trigger>
-					<select-content>
-						<select-group>
-							<select-label>Cidades:</select-label>
-							<select-item
-								v-for="city of formattedAllCities"
-								:key="city.id"
-								:value="city.name.toString()"
-								>{{ city.name }}</select-item
-							>
-						</select-group>
-					</select-content>
-				</select-root>
+				<Popover v-model:open="openCityBox">
+					<PopoverTrigger as-child>
+						<ButtonRoot
+							variant="outline"
+							role="combobox"
+							:aria-expanded="openCityBox"
+							class="lg:max-w-96 flex-[3] justify-between"
+						>
+							{{
+								selectCity
+									? formattedSearchCities.find(
+											(searchCities) => searchCities.name === selectCity,
+										)?.name
+									: 'Selecione a cidade...'
+							}}
+							<font-awesome-icon
+								v-if="openCityBox"
+								:icon="['fas', 'chevron-up']"
+							/>
+							<font-awesome-icon v-else :icon="['fas', 'chevron-down']" />
+						</ButtonRoot>
+					</PopoverTrigger>
+					<PopoverContent class="lg:max-w-96 flex-[3]A p-0">
+						<Command
+							multiple
+							v-model="selectCity"
+							@update:searchTerm="handleSearchCities"
+						>
+							<CommandInput class="h-9" placeholder="Busque uma cidade..." />
+							<CommandEmpty>Nenhuma cidades encontrada.</CommandEmpty>
+							<CommandList>
+								<CommandGroup>
+									<CommandItem
+										v-for="searchCities in formattedSearchCities"
+										:key="searchCities.id"
+										:value="searchCities.name"
+										@select="
+											(ev) => {
+												if (typeof ev.detail.value === 'string') {
+													selectCity = ev.detail.value
+												}
+												openCityBox = false
+											}
+										"
+									>
+										{{ searchCities.name }}
+										<font-awesome-icon
+											:class="
+												cn(
+													'ml-auto h-4 w-4',
+													selectCity === searchCities.name
+														? 'opacity-100'
+														: 'opacity-0',
+												)
+											"
+											:icon="['fas', 'check']"
+										/>
+									</CommandItem>
+								</CommandGroup>
+							</CommandList>
+						</Command>
+					</PopoverContent>
+				</Popover>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="outline" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary_3-table w-5 h-5"
+									:icon="['fas', 'eraser']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Apagar filtros</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
 			</div>
 		</div>
 

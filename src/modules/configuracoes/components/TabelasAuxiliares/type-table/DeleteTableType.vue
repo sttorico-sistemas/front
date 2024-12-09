@@ -48,7 +48,7 @@ function handleDelete() {
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger as-child>
-						<button-root variant="ghost">
+						<button-root variant="outline">
 							<font-awesome-icon class="text-danger w-4 h-4" :icon="['far', 'trash-can']" />
 						</button-root>
 					</tooltip-trigger>

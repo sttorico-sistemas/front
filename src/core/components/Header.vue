@@ -41,7 +41,7 @@
 		enabled: enabledPages,
 		queryKey: generalRepository.getQueryKey('pages', {}, operadorId),
 		queryFn: ({ signal }) =>
-			generalRepository.getPages({
+			generalRepository.getPagesToMenu({
 				signal,
 				params: { operador_id: operadorId.value },
 			}),
@@ -91,7 +91,6 @@
 
 	onMounted(() => {
 		const operadorStorageId = storage.getItem('operadorId')
-		console.log('operadorStorageId', operadorStorageId)
 		if (operadorStorageId) {
 			operadorId.value = operadorStorageId
 		}
@@ -210,25 +209,24 @@
 				>
 					<menubar-menu>
 						<menubar-trigger
-							as-child
 							@click="
 								() => {
 									if (!page?.children || !page?.children.length)
 										router.push(page.url)
 								}
 							"
-							class="rounded-lg flex gap-2 justify-center items-center px-4 py-2 hover:bg-[#1384ad] hover:text-white focus:bg-[#1384ad] focus:text-white"
+							class="rounded-lg flex flex-1 gap-2 justify-center items-center px-4 py-2 hover:bg-[#1384ad] hover:text-white focus:bg-[#1384ad] focus:text-white"
 						>
-							<p class="font-semibold text-sm">
+							<p class="font-semibold text-sm flex-1">
 								{{ page.name }}
 							</p>
 							<icon-arrow-down v-if="page.children && page.children.length" />
 						</menubar-trigger>
 						<menubar-content v-if="page.children && page.children.length > 0">
-							<menubar-item v-for="child in page.children" :key="child.id">
+							<menubar-item v-for="child in page.children" :key="child.id" class="p-0">
 								<router-link
 									:to="child.url"
-									class="block px-4 py-2 hover:bg-gray-100"
+									class="block px-4 py-4 hover:bg-gray-100 flex-1"
 								>
 									{{ child.name }}
 								</router-link>

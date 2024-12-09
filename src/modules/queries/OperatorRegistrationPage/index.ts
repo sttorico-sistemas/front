@@ -1,0 +1,1 @@
+export { default as OperatorRegistrationPage } from './Page.vue'
