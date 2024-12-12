@@ -19,10 +19,13 @@
 		TooltipTrigger,
 	} from '@/core/components/tooltip'
 	import { FormWrapper } from '@/core/components/form-wrapper'
-	import { TableWrapper } from '@/core/components/table-wrapper'
+	import {
+		TableWrapper,
+		TablePagination,
+	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { operatorRepository } from '@/core/stores'
+	import { operatorRepository, personRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { OperatorModel } from '@/core/models'
 	import { formatCPF, valueUpdater } from '@/core/utils'
@@ -59,7 +62,7 @@
 	const {
 		data: operators,
 		isLoading: isOperatorsLoading,
-		// isPlaceholderData: isOperatorsPlaceholderData,
+		isPlaceholderData: isOperatorsPlaceholderData,
 	} = useQuery({
 		queryKey: operatorRepository.getQueryKey('operators', {
 			page,
@@ -346,9 +349,9 @@
 	})
 
 	const formSchema = z.object({
-		userId: z
-			.string({ message: 'O tipo é obrigatório.' })
-			.min(1, { message: 'O tipo é obrigatório.' }),
+		personId: z
+			.string({ message: 'A pessoa é obrigatória.' })
+			.min(1, { message: 'A pessoa é obrigatória.' }),
 		name: z
 			.string({ message: 'O nome é obrigatório.' })
 			.min(1, { message: 'O nome é obrigatório.' }),
@@ -379,13 +382,34 @@
 		},
 	})
 
+	async function handleSearchPerson(cpf: string) {
+		try {
+			const person = await personRepository.getAllPersons({
+				params: { cpf: cpf.replace(/\D/g, '') },
+			})
+			form.setValues({
+				...form.values,
+				personId: `${person[0].id}`,
+				name: person[0].name,
+				cpf: formatCPF(person[0].cpf),
+			})
+		} catch (error) {
+			form.setFieldError('cpf', 'CPF é inválido ou a pessoa não existe.')
+		}
+	}
+
+	async function handlePermissions(value: { id: string; title: string }[]) {
+		console.log('handlePermissions', value)
+		form.setValues({ permissions: value })
+	}
+
 	const onCreateSubmit = form.handleSubmit(async (values) => {
 		return handleCreateOperator(
 			new OperatorModel({
 				cpf: values.cpf,
 				name: values.name,
 				typeId: values.typeId,
-				userId: values.userId,
+				personId: values.personId,
 				permissions: values.permissions.map(({ id }) => Number(id)),
 			}),
 		)
@@ -402,7 +426,7 @@
 				cpf: values.cpf,
 				name: values.name,
 				typeId: values.typeId,
-				userId: values.userId,
+				userId: values.personId,
 				permissions: values.permissions.map(({ id }) => Number(id)),
 			}),
 		).then(() => {
@@ -470,15 +494,15 @@
 	// 	selectOperatorsRefetch()
 	// }
 
-	// function handlePagination(to: number) {
-	// 	if (to < page.value) {
-	// 		page.value = Math.max(to, 1)
-	// 	} else if (to > page.value) {
-	// 		if (!isOperatorsPlaceholderData.value) {
-	// 			page.value = to
-	// 		}
-	// 	}
-	// }
+	function handlePagination(to: number) {
+		if (to < page.value) {
+			page.value = Math.max(to, 1)
+		} else if (to > page.value) {
+			if (!isOperatorsPlaceholderData.value) {
+				page.value = to
+			}
+		}
+	}
 
 	// function handleSelectCity() {
 	// 	selectOperatorsRefetch()
@@ -509,7 +533,7 @@
 						<template #trigger>
 							<tooltip-provider>
 								<tooltip>
-									<tooltip-trigger disabled as-child>
+									<tooltip-trigger as-child>
 										<button-root
 											variant="outline"
 											@click="openCreateModal = true"
@@ -531,6 +555,8 @@
 							<operator-registration-form
 								:metadata="form.values"
 								:disabled="isCreateOperatorLoading"
+								@search-cpf="handleSearchPerson"
+								@update-permissions="handlePermissions"
 							/>
 						</template>
 					</form-wrapper>
@@ -544,6 +570,16 @@
 					:row-limit="perPage"
 					:is-loading="isOperatorsLoading"
 				/>
+
+				<div :class="['flex w-full items-center px-4']">
+					<table-pagination
+						v-model="page"
+						:disabled="formattedAllOperators.length <= 0"
+						:total-itens="pageMetadata.totalItens"
+						:items-per-page="perPage"
+						@update-paginate="handlePagination"
+					/>
+				</div>
 			</div>
 		</div>
 	</main>

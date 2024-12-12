@@ -3,7 +3,12 @@
 	import * as z from 'zod'
 	import { useForm } from 'vee-validate'
 	import { toTypedSchema } from '@vee-validate/zod'
-	import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+	import {
+		keepPreviousData,
+		useMutation,
+		useQuery,
+		useQueryClient,
+	} from '@tanstack/vue-query'
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 
 	import {
@@ -25,6 +30,7 @@
 	import { formatCPF, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import { IamDeleteAction, IamForm, IamUpdateAction } from './components/table'
+	import { useRouteQuery } from '@vueuse/router'
 
 	type IamTable = {
 		id: number
@@ -41,12 +47,35 @@
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
+	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
+	const page = useRouteQuery('prf-page', 1, { transform: Number })
+	const perPage = useRouteQuery('prf-per-page', 8, {
+		transform: Number,
+	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
 
-	const { data: iams, isLoading: isIamsLoading } = useQuery({
-		queryKey: iamRepository.getQueryKey('iams'),
-		queryFn: ({ signal }) => iamRepository.getTypeOfOperators({ signal }),
+	const {
+		data: iams,
+		isLoading: isIamsLoading,
+		isPlaceholderData: isIamsPlaceholderData,
+	} = useQuery({
+		queryKey: iamRepository.getQueryKey('iams', {
+			page,
+			limit: perPage,
+		}),
+		queryFn: ({ signal }) =>
+			iamRepository.getTypeOfOperators({
+				signal,
+				params: { page: page.value, per_page: perPage.value },
+				metaCallback: (meta) => {
+					pageMetadata.value = {
+						totalItens: meta.total,
+						totalPages: meta.last_page,
+					}
+				},
+			}),
+		placeholderData: keepPreviousData,
 	})
 
 	const { mutateAsync: handleDeleteIam, isPending: isDeleteIamLoading } =
@@ -55,7 +84,10 @@
 				iamRepository.deleteTypeOfOperator({ id }),
 			onSettled: async () => {
 				await queryClient.invalidateQueries({
-					queryKey: iamRepository.getQueryKey('iams'),
+					queryKey: iamRepository.getQueryKey('iams', {
+						page,
+						limit: perPage,
+					}),
 				})
 			},
 			onError: (error) => {
@@ -79,7 +111,10 @@
 				iamRepository.updateTypeOfOperator(data),
 			onSettled: async () => {
 				return await queryClient.invalidateQueries({
-					queryKey: iamRepository.getQueryKey('iams'),
+					queryKey: iamRepository.getQueryKey('iams', {
+						page,
+						limit: perPage,
+					}),
 				})
 			},
 			onError: (error) => {
@@ -103,7 +138,10 @@
 				iamRepository.createTypeOfOperator(data),
 			onSettled: async () => {
 				await queryClient.invalidateQueries({
-					queryKey: iamRepository.getQueryKey('iams'),
+					queryKey: iamRepository.getQueryKey('iams', {
+						page,
+						limit: perPage,
+					}),
 				})
 				openCreateModal.value = false
 			},
@@ -357,15 +395,15 @@
 	// 	selectIamsRefetch()
 	// }
 
-	// function handlePagination(to: number) {
-	// 	if (to < page.value) {
-	// 		page.value = Math.max(to, 1)
-	// 	} else if (to > page.value) {
-	// 		if (!isIamsPlaceholderData.value) {
-	// 			page.value = to
-	// 		}
-	// 	}
-	// }
+	function handlePagination(to: number) {
+		if (to < page.value) {
+			page.value = Math.max(to, 1)
+		} else if (to > page.value) {
+			if (!isIamsPlaceholderData.value) {
+				page.value = to
+			}
+		}
+	}
 </script>
 <template>
 	<main>
@@ -425,7 +463,7 @@
 					:is-loading="isIamsLoading"
 				/>
 
-				<!-- <div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllIams.length <= 0"
@@ -433,7 +471,7 @@
 						:items-per-page="perPage"
 						@update-paginate="handlePagination"
 					/>
-				</div> -->
+				</div>
 			</div>
 		</div>
 	</main>

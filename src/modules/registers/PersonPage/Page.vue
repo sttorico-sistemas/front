@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-	import { computed, h, ref } from 'vue'
+	import { computed, h, onMounted, ref, watch } from 'vue'
 	import * as z from 'zod'
 	import { useForm } from 'vee-validate'
 	import { toTypedSchema } from '@vee-validate/zod'
@@ -19,6 +19,29 @@
 		TooltipProvider,
 		TooltipTrigger,
 	} from '@/core/components/tooltip'
+	import { InputRoot } from '@/core/components/fields/input'
+	import {
+		Command,
+		CommandEmpty,
+		CommandGroup,
+		CommandInput,
+		CommandItem,
+		CommandList,
+	} from '@/core/components/command'
+	import {
+		Popover,
+		PopoverContent,
+		PopoverTrigger,
+	} from '@/core/components/popover'
+	import {
+		SelectRoot,
+		SelectContent,
+		SelectGroup,
+		SelectItem,
+		SelectLabel,
+		SelectTrigger,
+		SelectValue,
+	} from '@/core/components/fields/select'
 	import { FormWrapper } from '@/core/components/form-wrapper'
 	import {
 		TableWrapper,
@@ -26,16 +49,17 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from 'src/core/components/Breadcrumbs.vue'
 	import Titulo from 'src/core/components/Titulo.vue'
-	import { personRepository } from '@/core/stores'
+	import { auxiliaryRepository, personRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { AddressModel, ContactModel, PersonModel } from '@/core/models'
-	import { formatCPF, valueUpdater } from '@/core/utils'
+	import { cn, debounceAsync, formatCPF, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		PersonDeleteAction,
 		PersonForm,
 		PersonUpdateAction,
 	} from './components/table'
+	import { Status } from '@/core/types'
 
 	type PersonTable = {
 		id: number
@@ -44,7 +68,8 @@
 		linkedType: string
 		city: string
 		email: string
-		status: number
+		status: string
+		statusId: number
 	}
 
 	// const changeValues = {
@@ -53,29 +78,36 @@
 	// 	NONE: 'ASC',
 	// } as const
 
+	const statusItems = [
+		{ value: 1, label: 'Ativado' },
+		{ value: 0, label: 'Desativado' },
+	] as const
+
+	const statusItemsMap: Record<number, string> = {
+		1: 'Ativado',
+		0: 'Desativado',
+	}
+
+	const openCityBox = ref(false)
 	const openCreateModal = ref(false)
-	const openNameBox = ref(false)
-	const openCPFBox = ref(false)
+	const name = ref<string | undefined>(undefined)
+	const cpf = ref<string | undefined>(undefined)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	const formattedSearchNames = useLocalStorage<{ id: number; name: string }[]>(
-		'search-person-names',
-		[],
-	)
-	const formattedSearchCPFs = useLocalStorage<{ id: number; name: string }[]>(
-		'search-person-cpf',
-		[],
-	)
 	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
+	const formattedSearchCities = useLocalStorage<{ id: string; name: string }[]>(
+		'aux-sch-cities',
+		[],
+	)
 	const selectLinkedType = useRouteQuery<string | undefined>(
-		'person-linked-type',
+		'prs-linked-type',
 		undefined,
 	)
-	const selectCity = useRouteQuery<string | undefined>('person-city', undefined)
-	const selectName = useRouteQuery<string | undefined>('person-name', undefined)
-	const selectCPF = useRouteQuery<string | undefined>('person-cpf', undefined)
+	const selectCity = useRouteQuery<string | undefined>('prs-city', undefined)
+	const selectName = useRouteQuery<string | undefined>('prs-name', undefined)
+	const selectCPF = useRouteQuery<string | undefined>('prs-cpf', undefined)
 	const selectStatus = useRouteQuery<string | undefined>(
-		'person-status',
+		'prs-status',
 		undefined,
 	)
 	const page = useRouteQuery('mtr-cgn-page', 1, { transform: Number })
@@ -84,6 +116,11 @@
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
+
+	onMounted(() => {
+		cpf.value = selectCPF.value
+		name.value = selectName.value
+	})
 
 	const {
 		data: persons,
@@ -105,7 +142,14 @@
 		queryFn: ({ signal }) =>
 			personRepository.getAllPersons({
 				signal,
-				params: { page: page.value, per_page: perPage.value },
+				params: {
+					page: page.value,
+					per_page: perPage.value,
+					search: selectName.value,
+					status: selectStatus.value,
+					cpf: selectCPF.value,
+					cidade_id: selectCity.value,
+				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {
 						totalItens: meta.total,
@@ -116,40 +160,42 @@
 		placeholderData: keepPreviousData,
 	})
 
-	const { mutateAsync: handleDeletePerson, isPending: isDeletePersonLoading } =
-		useMutation({
-			mutationFn: ({ id }: { id: number }) =>
-				personRepository.deletePerson({ id }),
-			onSettled: async () => {
-				await queryClient.invalidateQueries({
-					queryKey: personRepository.getQueryKey(
-						'persons',
-						{
-							page,
-							limit: perPage,
-						},
-						selectLinkedType,
-						selectCity,
-						selectStatus,
-						selectName,
-						selectCPF,
-					),
-				})
-			},
-			onError: (error) => {
-				notify.error(
-					error,
-					{ title: 'Erro ao apagar a pessoa!' },
-					{ duration: 1500 },
-				)
-			},
-			onSuccess: () => {
-				notify.success(
-					{ title: `Pessoa apagada com sucesso!` },
-					{ duration: 1500 },
-				)
-			},
-		})
+	const {
+		mutateAsync: handleActivatePerson,
+		isPending: isActivatePersonLoading,
+	} = useMutation({
+		mutationFn: ({ id }: { id: number }) =>
+			personRepository.activatePerson({ id }),
+		onSettled: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: personRepository.getQueryKey(
+					'persons',
+					{
+						page,
+						limit: perPage,
+					},
+					selectLinkedType,
+					selectCity,
+					selectStatus,
+					selectName,
+					selectCPF,
+				),
+			})
+		},
+		onError: (error) => {
+			notify.error(
+				error,
+				{ title: 'Erro ao atualizar status da pessoa!' },
+				{ duration: 1500 },
+			)
+		},
+		onSuccess: () => {
+			notify.success(
+				{ title: `Status da pessoa alterado com sucesso!` },
+				{ duration: 1500 },
+			)
+		},
+	})
 
 	const { mutateAsync: handleUpdatePerson, isPending: isUpdatePersonLoading } =
 		useMutation({
@@ -229,7 +275,8 @@
 				linkedType: linkedType as string,
 				city: city as string,
 				email: email as string,
-				status: status as number,
+				status: statusItemsMap[status as number],
+				statusId: status as number,
 			}),
 		)
 	})
@@ -414,13 +461,14 @@
 						tablePersonName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdatePersonLoading.value,
+						isActive: data.statusId === 1,
 					}),
 					h(PersonDeleteAction, {
 						dataId: data.id,
 						tablePersonName: data.name,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeletePersonLoading.value,
-						isActive: data.status === 1,
+						isLoading: isActivatePersonLoading.value,
+						isActive: data.statusId === 1,
 					}),
 				])
 			},
@@ -529,6 +577,7 @@
 			deletedAddresses: number[]
 			deletedContacts: number[]
 		},
+		onClose: () => void,
 	) => {
 		return handleUpdatePerson(
 			new PersonModel({
@@ -541,11 +590,13 @@
 				contacts: values.contacts.map((data) => new ContactModel(data)),
 				deletedContacts: values.deletedContacts,
 			}),
-		)
+		).then(() => {
+			return onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeletePerson({ id })
+		return handleActivatePerson({ id })
 	}
 
 	// function getSort(key: string) {
@@ -613,6 +664,37 @@
 			}
 		}
 	}
+
+	function handleClear() {
+		selectName.value = undefined
+		name.value = undefined
+		selectCPF.value = undefined
+		cpf.value = undefined
+		selectStatus.value = undefined
+		selectCity.value = undefined
+	}
+
+	const handleSearch = debounceAsync(async (value: string | number) => {
+		selectName.value = value.toString().trim()
+	}, 500)
+
+	const handleSearchCpf = debounceAsync(async (value: string | number) => {
+		selectCPF.value = value.toString().trim().replace(/\D+/, '')
+	}, 500)
+
+	const handleSearchCities = debounceAsync(async (value: string) => {
+		return auxiliaryRepository
+			.getAllCities({
+				params: { search: value, perPage: 5 },
+			})
+			.then((response) => {
+				formattedSearchCities.value = response.map(({ id, name }) => ({
+					id: `${id}`,
+					name,
+				}))
+				return response
+			})
+	}, 500)
 </script>
 <template>
 	<main>
@@ -620,9 +702,9 @@
 
 		<div class="panel pb-0 mt-6">
 			<div
-				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
+				class="flex md:flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
+				<div class="flex flex-1 gap-10 items-center justify-between lg:justify-start lg:flex-initial">
 					<titulo title="Gerenciar pessoas cadastradas" />
 
 					<form-wrapper
@@ -661,6 +743,127 @@
 							/>
 						</template>
 					</form-wrapper>
+				</div>
+
+				<div class="grid grid-cols-12 gap-4 w-full lg:flex-1">
+					<input-root
+						class="col-span-3"
+						v-model:model-value="name"
+						placeholder="Nome"
+						@update:model-value="handleSearch"
+					/>
+
+					<input-root
+						class="col-span-3"
+						v-model:model-value="cpf"
+						v-maska="'###.###.###-##'"
+						placeholder="CPF"
+						@update:model-value="handleSearchCpf"
+					/>
+
+					<Popover v-model:open="openCityBox">
+						<PopoverTrigger as-child>
+							<ButtonRoot
+								variant="outline"
+								role="combobox"
+								:aria-expanded="openCityBox"
+								class="col-span-3 justify-between"
+							>
+								{{
+									selectCity
+										? formattedSearchCities.find(
+												(searchCities) => searchCities.id === selectCity,
+											)?.name
+										: 'Selecione a cidade...'
+								}}
+								<font-awesome-icon
+									v-if="openCityBox"
+									:icon="['fas', 'chevron-up']"
+								/>
+								<font-awesome-icon v-else :icon="['fas', 'chevron-down']" />
+							</ButtonRoot>
+						</PopoverTrigger>
+						<PopoverContent class="lg:max-w-96 flex-[3]A p-0">
+							<Command
+								multiple
+								v-model="selectCity"
+								@update:searchTerm="handleSearchCities"
+							>
+								<CommandInput class="h-9" placeholder="Busque uma cidade..." />
+								<CommandEmpty>Nenhuma cidades encontrada.</CommandEmpty>
+								<CommandList>
+									<CommandGroup>
+										<CommandItem
+											v-for="searchCities in formattedSearchCities"
+											:key="searchCities.id"
+											:value="searchCities.id"
+											@select="
+												(ev) => {
+													if (typeof ev.detail.value === 'string') {
+														selectCity = ev.detail.value
+													}
+													openCityBox = false
+												}
+											"
+										>
+											{{ searchCities.name }}
+											<font-awesome-icon
+												:class="
+													cn(
+														'ml-auto h-4 w-4',
+														selectCity === searchCities.name
+															? 'opacity-100'
+															: 'opacity-0',
+													)
+												"
+												:icon="['fas', 'check']"
+											/>
+										</CommandItem>
+									</CommandGroup>
+								</CommandList>
+							</Command>
+						</PopoverContent>
+					</Popover>
+
+					<select-root v-model="selectStatus">
+						<select-trigger class="col-span-2 md:col-start-10">
+							<select-value
+								class="text-left"
+								placeholder="Status"
+							/>
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Status:</select-label>
+								<select-item
+									v-for="statusItem of statusItems"
+									:key="statusItem.value"
+									:value="statusItem.value.toString()"
+									>{{ statusItem.label }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root
+									class="md:col-start-12"
+									variant="outline"
+									@click="handleClear"
+								>
+									<font-awesome-icon
+										class="text-primary_3-table w-5 h-5"
+										:icon="['fas', 'eraser']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Apagar filtros</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
 				</div>
 			</div>
 

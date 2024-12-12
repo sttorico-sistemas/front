@@ -9,12 +9,13 @@
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 	import { masterConsignerRepository } from '@/core/stores'
 	import MasterConsignerForm from './MasterConsignerForm.vue'
-import { MasterConsignerModel } from '@/core/models'
+	import { MasterConsignerModel } from '@/core/models'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
 		tableMasterConsignerName: { type: String, required: true },
 		isLoading: { type: Boolean, default: () => false },
+		isActive: { type: Boolean, required: true },
 	})
 	const emits = defineEmits(['on-edit'])
 
@@ -33,7 +34,6 @@ import { MasterConsignerModel } from '@/core/models'
 	const form = useForm({
 		validationSchema: formSchema,
 	})
-
 
 	async function setNewData() {
 		if (!properties.dataId) return
@@ -69,7 +69,7 @@ import { MasterConsignerModel } from '@/core/models'
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
 				<font-awesome-icon
 					class="text-primary_3-table w-4 h-4"
 					:icon="['fas', 'pen']"
@@ -78,10 +78,7 @@ import { MasterConsignerModel } from '@/core/models'
 		</template>
 
 		<template #fields>
-			<master-consigner-form
-				:metadata="form.values"
-				:disabled="isLoading"
-			/>
+			<master-consigner-form :metadata="form.values" :disabled="isLoading" />
 		</template>
 	</form-wrapper>
 </template>

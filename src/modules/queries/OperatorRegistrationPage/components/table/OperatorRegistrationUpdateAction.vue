@@ -11,6 +11,7 @@
 	import { formatCPF } from '@/core/utils'
 	import { OperatorModel } from '@/core/models'
 	import OperatorRegistrationForm from './OperatorRegistrationForm.vue'
+	import { personRepository } from '@/core/stores'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
@@ -112,6 +113,7 @@
 
 		<template #fields>
 			<operator-registration-form
+				edited
 				:metadata="form.values"
 				:loadCities="loadCities"
 				:disabled="isLoading"

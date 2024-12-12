@@ -133,7 +133,7 @@
 			mutationFn: ({ id }: { id: number }) =>
 				auxiliaryRepository.deleteGenericAuxiliary({
 					id,
-					basePath: '/auxiliary/cidade',
+					basePath: 'auxiliary/cidade',
 				}),
 			onSettled: async () => {
 				await queryClient.invalidateQueries({

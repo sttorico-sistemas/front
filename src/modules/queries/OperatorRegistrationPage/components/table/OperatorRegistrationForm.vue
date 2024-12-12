@@ -18,30 +18,14 @@
 		FormLabel,
 		FormMessage,
 	} from '@/core/components/form'
-	import {
-		Command,
-		CommandEmpty,
-		CommandGroup,
-		CommandInput,
-		CommandItem,
-		CommandList,
-	} from '@/core/components/command'
-	import {
-		Popover,
-		PopoverContent,
-		PopoverTrigger,
-	} from '@/core/components/popover'
 	import { Separator } from '@/core/components/separator'
 	import { InputRoot } from '@/core/components/fields/input'
-	import { ButtonRoot } from '@/core/components/button'
 	import { CheckboxTree } from '@/core/components/fields/checkbox-tree'
 	import { iamRepository, personRepository } from '@/core/stores'
 	import { ref } from 'vue'
-	import { cn } from '@/core/utils'
-
-	const openPersonBox = ref(false)
 
 	defineProps({
+		edited: { type: Boolean, default: () => false },
 		disabled: { type: Boolean, default: () => false },
 		loadCities: {
 			type: Object as PropType<Record<string, any>>,
@@ -52,7 +36,7 @@
 			default: () => ({}),
 		},
 	})
-	const emits = defineEmits(['update-permissions'])
+	const emits = defineEmits(['update-permissions', 'search-cpf'])
 
 	const { data: treePermissions, isLoading: isTreePermissionsLoading } =
 		useQuery({
@@ -108,6 +92,8 @@
 	function handleUpdatePermissions(id: string) {
 		const selectedPermission = formattedAllPermissionsMap.value[id]
 
+		console.log('selectedPermission', selectedPermission)
+
 		if (selectedPermission) {
 			emits(
 				'update-permissions',
@@ -117,6 +103,10 @@
 				})),
 			)
 		}
+	}
+
+	function handleSearchCPF(cpf: string) {
+		emits('search-cpf', cpf)
 	}
 </script>
 
@@ -195,16 +185,24 @@
 			</form-item>
 		</form-field> -->
 
-		<form-field v-slot="{ componentField }" name="name">
+		<form-field v-slot="{ componentField }" name="cpf">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Nome</form-label>
+				<form-label class="text-left col-span-2">CPF</form-label>
 				<form-control>
 					<input-root
-						:disabled="disabled"
+						v-maska="'###.###.###-##'"
+						:disabled="disabled || edited"
 						type="text"
-						placeholder="Digite o nome..."
+						placeholder="Digite o CPF..."
 						class="col-span-5"
 						v-bind="componentField"
+						@blur="
+							(e: Event) => {
+								if (!handleSearchCPF) return
+								const inputValue = (e.target as any).value
+								handleSearchCPF(inputValue)
+							}
+						"
 					/>
 				</form-control>
 
@@ -212,15 +210,14 @@
 			</form-item>
 		</form-field>
 
-		<form-field v-slot="{ componentField }" name="cpf">
+		<form-field v-slot="{ componentField }" name="name">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">CPF</form-label>
+				<form-label class="text-left col-span-2">Nome</form-label>
 				<form-control>
 					<input-root
-						v-maska="'###.###.###-##'"
-						:disabled="disabled"
+						:disabled="true"
 						type="text"
-						placeholder="Digite o CPF..."
+						placeholder="Digite o nome..."
 						class="col-span-5"
 						v-bind="componentField"
 					/>
@@ -265,7 +262,7 @@
 		</form-field>
 		<div class="mb-8"></div>
 
-		<form-field v-slot="{ componentField }" name="permissions">
+		<form-field v-slot="{ componentField, handleChange }" name="permissions">
 			<separator class="my-4" label="Permissões" />
 
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
@@ -276,6 +273,11 @@
 						disabled || isTypeOfOperatorsLoading || isTreePermissionsLoading
 					"
 					v-model="componentField.modelValue"
+					@update:model-value="
+						(value) => {
+							handleChange(value)
+						}
+					"
 				/>
 
 				<form-message class="col-span-12" />
