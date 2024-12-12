@@ -306,11 +306,15 @@
 		url: z
 			.string({ message: 'A url é obrigatória.' })
 			.min(1, { message: 'A url é obrigatória.' }),
-		parentId: z
-			.string({ message: 'A página pai é obrigatória.' })
-			.min(1, { message: 'A página pai é obrigatória.' })
-			.optional()
-			.nullable(),
+		permissions: z
+			.object(
+				{
+					id: z.string({ message: 'Esse campo é obrigatório.' }),
+					title: z.string({ message: 'Esse campo é obrigatório.' }),
+				},
+				{ message: 'Esse campo é obrigatório.' },
+			)
+			.optional(),
 	})
 
 	const form = useForm({
@@ -318,7 +322,13 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		return handleCreateRouteManager(new PageModel({ ...values, children: [] }))
+		return handleCreateRouteManager(
+			new PageModel({
+				...values,
+				parentId: values?.permissions?.id,
+				children: [],
+			}),
+		)
 	})
 
 	const onUpdateSubmit = async (
@@ -327,7 +337,12 @@
 		onClose: () => void,
 	) => {
 		return handleUpdateRouteManager(
-			new PageModel({ ...values, id: `${id}`, children: [] }),
+			new PageModel({
+				...values,
+				id: `${id}`,
+				parentId: values?.permissions?.id,
+				children: [],
+			}),
 		).then(() => {
 			onClose()
 		})

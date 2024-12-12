@@ -27,7 +27,7 @@
 	import Titulo from '@/core/components/Titulo.vue'
 	import { operatorRepository, personRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { OperatorModel } from '@/core/models'
+	import { OperatorModel, PermissionList, PermissionModel } from '@/core/models'
 	import { formatCPF, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
@@ -42,7 +42,13 @@
 		cpf: string
 		email: string
 		type: string
+		status: string
 	}
+
+	const statusItems = [
+		{ value: 'active', label: 'Ativado' },
+		{ value: 'inactive', label: 'Desativado' },
+	] as const
 
 	// const changeValues = {
 	// 	ASC: 'DESC',
@@ -52,6 +58,7 @@
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
+	const selectPermissions = ref<PermissionModel[]>([])
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	// const selectSort = useRouteQuery<string | undefined>('op-rgt-sort')
 	const page = useRouteQuery('op-rgt-page', 1, { transform: Number })
@@ -87,7 +94,7 @@
 		isPending: isDeleteOperatorLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			operatorRepository.deleteOperator({ id }),
+			operatorRepository.activateConsigner({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: operatorRepository.getQueryKey('operators', {
@@ -118,6 +125,9 @@
 		mutationFn: (data: OperatorModel) =>
 			operatorRepository.updateOperator(data),
 		onSettled: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: operatorRepository.getQueryKey('pages'),
+			})
 			return await queryClient.invalidateQueries({
 				queryKey: operatorRepository.getQueryKey('operators', {
 					page,
@@ -172,12 +182,13 @@
 
 	const formattedAllOperators = computed<OperatorTable[]>(() => {
 		return (operators.value ?? []).map(
-			({ id, cpf, email, name, typeName }) => ({
+			({ id, cpf, email, name, typeName, status }) => ({
 				id: id as number,
 				name,
 				email: email as string,
 				cpf: formatCPF(cpf),
 				type: typeName as string,
+				status: status as string
 			}),
 		)
 	})
@@ -320,7 +331,7 @@
 						tableOperatorName: data.name,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteOperatorLoading.value,
-						isActive: true,
+						isActive: data.status === 'active',
 					}),
 				])
 			},
@@ -398,26 +409,53 @@
 		}
 	}
 
-	async function handlePermissions(value: { id: string; title: string }[]) {
-		console.log('handlePermissions', value)
-		form.setValues({ permissions: value })
+	async function handlePermissions(value: PermissionModel[]) {
+		selectPermissions.value = value
+		form.setValues({
+			permissions: value.map(({ id, relatedName }) => ({
+				id: `${id}`,
+				title: relatedName,
+			})),
+		})
 	}
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
+		const generatePermissions = values.permissions.map(
+			({ id, title }) =>
+				new PermissionModel({
+					id: +id,
+					relatedName: title,
+					action: '',
+					permissibleId: '1',
+					permissibleType: '',
+				}),
+		)
+		const permissionsList = new PermissionList(
+			selectPermissions.value as PermissionModel[],
+		)
+		permissionsList.update(generatePermissions)
+
 		return handleCreateOperator(
 			new OperatorModel({
 				cpf: values.cpf,
 				name: values.name,
 				typeId: values.typeId,
 				personId: values.personId,
-				permissions: values.permissions.map(({ id }) => Number(id)),
+				permissions: permissionsList.getItems().map(({ id }) => Number(id)),
+				deletedPermissions: permissionsList
+					.getRemovedItems()
+					.map(({ id }) => Number(id)),
 			}),
 		)
 	})
 
 	const onUpdateSubmit = async (
 		id: number,
-		values: z.infer<typeof formSchema>,
+		values: z.infer<typeof formSchema> & {
+			addPermissions: number[]
+			deletedPermissions: number[]
+			userId: string
+		},
 		onClose: () => void,
 	) => {
 		return handleUpdateOperator(
@@ -426,8 +464,9 @@
 				cpf: values.cpf,
 				name: values.name,
 				typeId: values.typeId,
-				userId: values.personId,
-				permissions: values.permissions.map(({ id }) => Number(id)),
+				userId: values.userId,
+				permissions: values.addPermissions,
+				deletedPermissions: values.deletedPermissions,
 			}),
 		).then(() => {
 			onClose()

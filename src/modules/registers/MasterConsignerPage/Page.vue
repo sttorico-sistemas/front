@@ -68,7 +68,11 @@
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
-	const search = useRouteQuery<string | undefined>('mtr-cgn-search', undefined)
+	const selectSearch = useRouteQuery<string | undefined>(
+		'mtr-cgn-search',
+		undefined,
+	)
+	const search = ref<string | undefined>()
 	const status = useRouteQuery<string | undefined>('mtr-cgn-status', undefined)
 	const page = useRouteQuery('mtr-cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('mtr-cgn-per-page', 8, {
@@ -88,7 +92,7 @@
 				page,
 				limit: perPage,
 			},
-			search,
+			selectSearch,
 			status,
 		),
 		queryFn: ({ signal }) =>
@@ -97,7 +101,7 @@
 				params: {
 					page: page.value,
 					per_page: perPage.value,
-					search: search.value,
+					search: selectSearch.value,
 					status: status.value,
 				},
 				metaCallback: (meta) => {
@@ -124,7 +128,7 @@
 						page,
 						limit: perPage,
 					},
-					search,
+					selectSearch,
 					status,
 				),
 			})
@@ -158,7 +162,7 @@
 						page,
 						limit: perPage,
 					},
-					search,
+					selectSearch,
 					status,
 				),
 			})
@@ -192,7 +196,7 @@
 						page,
 						limit: perPage,
 					},
-					search,
+					selectSearch,
 					status,
 				),
 			})
@@ -352,7 +356,7 @@
 	}
 
 	const handleSearch = debounceAsync(async (value: string | number) => {
-		search.value = value.toString()
+		selectSearch.value = value.toString()
 	}, 500)
 
 	// function getSort(key: string) {
@@ -422,6 +426,7 @@
 	}
 
 	function handleClear() {
+		selectSearch.value = undefined
 		search.value = undefined
 		status.value = undefined
 	}
@@ -434,8 +439,10 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-			<div class="flex flex-1 gap-10 items-center justify-between md:justify-start md:flex-initial">
-				<titulo title="Gerenciar consignante master" />
+				<div
+					class="flex flex-1 gap-10 items-center justify-between md:justify-start md:flex-initial"
+				>
+					<titulo title="Gerenciar consignante master" />
 
 					<form-wrapper
 						v-model="openCreateModal"
@@ -496,7 +503,12 @@
 						</select-content>
 					</select-root>
 
-					<input-root class="flex-[3] max-w-96" placeholder="Search" @update:model-value="handleSearch" />
+					<input-root
+						class="flex-[3] max-w-96"
+						placeholder="Search"
+						v-model="search"
+						@update:model-value="handleSearch"
+					/>
 
 					<tooltip-provider>
 						<tooltip>

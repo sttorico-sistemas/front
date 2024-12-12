@@ -52,6 +52,7 @@ export class ConsignerRepository {
 			tipo_entidade_id: data.instituicao.id,
 			consignante_master_id: data.master.id,
 			endereco: {
+				id: data?.endereco?.id,
 				cidade_id: data?.cidade?.id,
 				cidade_nome: data?.cidade?.nome,
 				estado_id: data?.estado?.id,
@@ -90,16 +91,14 @@ export class ConsignerRepository {
 		}
 	}
 
-
-	async deleteConsigner({ id }: Pick<ConsignerModel, 'id'>,
+	async activateConsigner({ id }: Pick<ConsignerModel, 'id'>,
 		configParams?: HttpClientProps<ConsignerModel>
 	): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/consignante/${id}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// });
+			await this.http.patch(`/consignante/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

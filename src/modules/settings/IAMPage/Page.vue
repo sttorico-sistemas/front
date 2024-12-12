@@ -295,10 +295,17 @@
 			.string({ message: 'A descrição é obrigatória.' })
 			.min(1, { message: 'A descrição é obrigatória.' }),
 		permissions: z
-			.array(z.string({ message: 'Esse campo é obrigatório.' }), {
-				message: 'As permissões é obrigatória.',
-			})
-			.min(1, { message: 'É necessário pelo menos 1 permissão.' }),
+			.array(
+				z.object(
+					{
+						id: z.string({ message: 'Esse campo é obrigatório.' }),
+						title: z.string({ message: 'Esse campo é obrigatório.' }),
+					},
+					{ message: 'Esse campo é obrigatório.' },
+				),
+				{ message: 'Deve haver pelo menos 1 permissão.' },
+			)
+			.min(1, { message: 'Deve haver pelo menos 1 permissão.' }),
 	})
 
 	const form = useForm({
@@ -313,7 +320,7 @@
 			new ProfileModel({
 				name: values.name,
 				description: values.description,
-				permissionsId: values.permissions.map(Number),
+				permissionsId: values.permissions.map(({ id }) => +id),
 			}),
 		)
 	})
@@ -328,7 +335,7 @@
 				id: `${id}`,
 				name: values.name,
 				description: values.description,
-				permissionsId: values.permissions.map(Number),
+				permissionsId: values.permissions.map(({ id }) => +id),
 			}),
 		).then(() => {
 			onClose()

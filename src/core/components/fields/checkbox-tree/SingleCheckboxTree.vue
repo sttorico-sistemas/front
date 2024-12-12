@@ -12,12 +12,12 @@
 	const props = withDefaults(
 		defineProps<{
 			data: Array<TreeData>
-			modelValue?: Omit<TreeData, 'children'>[]
-			defaultValue?: Omit<TreeData, 'children'>[]
+			modelValue?: Omit<TreeData, 'children'>
+			defaultValue?: Omit<TreeData, 'children'>
 		}>(),
 		{
 			data: () => [],
-			modelValue: () => []
+			modelValue: () => ({} as Omit<TreeData, 'children'>),
 		},
 	)
 
@@ -38,11 +38,12 @@
 		class="list-none w-full select-none bg-white text-blackA11 rounded-lg p-2 text-sm font-medium"
 		:items="data"
 		:get-key="(item) => item.id"
-		multiple
 		propagate-select
-		@update:model-value="(value) => {
-			emits('update:modelValue', value)
-		}"
+		@update:model-value="
+			(value) => {
+				emits('update:modelValue', value)
+			}
+		"
 	>
 		<tree-item
 			v-for="item in flattenItems"
@@ -67,8 +68,16 @@
 			"
 		>
 			<template v-if="item.hasChildren">
-				<font-awesome-icon class="w-4 h-4 text-primary_3-table" v-if="!isExpanded" :icon="['far', 'square-plus']" />
-				<font-awesome-icon class="w-4 h-4 text-primary_3-table" v-else :icon="['far', 'square-minus']" />
+				<font-awesome-icon
+					class="w-4 h-4 text-primary_3-table"
+					v-if="!isExpanded"
+					:icon="['far', 'square-plus']"
+				/>
+				<font-awesome-icon
+					class="w-4 h-4 text-primary_3-table"
+					v-else
+					:icon="['far', 'square-minus']"
+				/>
 			</template>
 
 			<font-awesome-icon
@@ -83,17 +92,10 @@
 				:icon="['fas', 'lock']"
 			/>
 
-			<div
-				:class="[
-					'flex flex-1 gap-4',
-					!item.hasChildren ? 'border-b border-slate-200 py-2' : '',
-				]"
-			>
-				<div class="pl-2 flex-1">
-					{{ item.value.title }}
-				</div>
+			<div :class="['flex flex-1 gap-4', 'border-b border-slate-200 py-2']">
+				<div class="pl-2 flex-1">{{ item.value.title }}</div>
 
-				<div v-if="!item.hasChildren">
+				<div>
 					<Checkbox :checked="isSelected" @update:checked="handleSelect" />
 				</div>
 			</div>

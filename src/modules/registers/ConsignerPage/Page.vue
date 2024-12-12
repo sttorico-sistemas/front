@@ -120,7 +120,7 @@
 		isPending: isDeleteConsignerLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			consignerRepository.deleteConsigner({ id }),
+			consignerRepository.activateConsigner({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: consignerRepository.getQueryKey(
@@ -420,14 +420,14 @@
 
 	const onUpdateSubmit = async (
 		id: number,
-		values: z.infer<typeof formSchema>,
+		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
 		return handleUpdateConsigner(
 			new ConsignerModel({
 				id,
 				...values,
-				addresses: new AddressModel(values),
+				addresses: new AddressModel({ ...values, id: `${values.addressId}` }),
 			}),
 		).then(() => {
 			onClose()

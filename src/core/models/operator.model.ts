@@ -9,7 +9,9 @@ export class OperatorModel extends BaseModel {
 	public userId?: number;
 	public personId?: number;
 	public typeName?: string;
+	public status?: string;
 	public permissions: number[]
+	public deletedPermissions: number[]
 	public permissionsRaw?: { id: string, title: string }[]
 
 	constructor(props: {
@@ -20,8 +22,10 @@ export class OperatorModel extends BaseModel {
 		cpf: string;
 		email?: string;
 		typeId: string;
+		status?: string;
 		typeName?: string;
 		permissions?: number[];
+		deletedPermissions?: number[];
 		permissionsRaw?: { id: string, title: string }[]
 	}) {
 		super();
@@ -31,9 +35,11 @@ export class OperatorModel extends BaseModel {
 		this.email = props.email;
 		this.typeId = +props.typeId;
 		this.typeName = props.typeName;
+		this.status = props.status;
 		this.userId = props?.userId ? +props.userId : undefined;
 		this.personId = props?.personId ? +props.personId : undefined;
 		this.permissions = props?.permissions ?? [];
+		this.deletedPermissions = props?.deletedPermissions ?? [];
 		this.permissionsRaw = props?.permissionsRaw ?? [];
 	}
 
@@ -42,7 +48,8 @@ export class OperatorModel extends BaseModel {
 			user_id: this.userId,
 			pessoa_id: this.personId,
 			tipo_operador_id: this.typeId,
-			permissoes: this.permissions,
+			adicionar_permissoes: this.permissions,
+			remover_permissoes: this.deletedPermissions,
 		}
 	}
 
@@ -54,9 +61,10 @@ export class OperatorModel extends BaseModel {
 			cpf: record.user.cpf,
 			email: record.user.email,
 			typeId: record.tipo_operador.id,
+			status: record.status,
 			typeName: record.tipo_operador.name,
-			permissions: record.tipo_operador.permissions.map((data: Record<string, any>) => data.id),
-			permissionsRaw: record.tipo_operador.permissions.map((data: Record<string, any>) => ({ id: `${data.id}`, title: data.related_name })),
+			permissions: record.permissions,
+			permissionsRaw: record.permissions.map((id: number) => ({ id: `${id}`, title: '' })),
 		});
 	}
 }

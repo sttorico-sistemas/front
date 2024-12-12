@@ -20,7 +20,7 @@
 	} from '@/core/components/form'
 	import { Separator } from '@/core/components/separator'
 	import { InputRoot } from '@/core/components/fields/input'
-	import { CheckboxTree } from '@/core/components/fields/checkbox-tree'
+	import { MultipleCheckboxTree } from '@/core/components/fields/checkbox-tree'
 	import { iamRepository, personRepository } from '@/core/stores'
 	import { ref } from 'vue'
 
@@ -92,16 +92,9 @@
 	function handleUpdatePermissions(id: string) {
 		const selectedPermission = formattedAllPermissionsMap.value[id]
 
-		console.log('selectedPermission', selectedPermission)
-
 		if (selectedPermission) {
-			emits(
-				'update-permissions',
-				selectedPermission.map(({ id, relatedName }) => ({
-					id: `${id}`,
-					title: relatedName,
-				})),
-			)
+			console.log(selectedPermission)
+			emits('update-permissions', selectedPermission)
 		}
 	}
 
@@ -250,7 +243,7 @@
 									:key="contactType.id"
 									:value="contactType.id.toString()"
 								>
-									{{ contactType.name }}
+									{{ contactType.name }} {{contactType.id.toString()}}
 								</select-item>
 							</select-group>
 						</select-content>
@@ -266,7 +259,7 @@
 			<separator class="my-4" label="Permissões" />
 
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<checkbox-tree
+				<multiple-checkbox-tree
 					:data="formattedAllTreePermissions"
 					class="col-span-12"
 					:disabled="

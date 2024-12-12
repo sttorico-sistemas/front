@@ -26,7 +26,9 @@
 	} from '@/core/components/form'
 	import { InputRoot } from '@/core/components/fields/input'
 	import { ButtonRoot } from '@/core/components/button'
-	import { generalRepository } from '@/core/stores'
+	import { generalRepository, iamRepository } from '@/core/stores'
+	import { SingleCheckboxTree } from '@/core/components/fields/checkbox-tree'
+	import { Separator } from '@/core/components/separator'
 
 	defineProps({
 		disabled: { type: Boolean, default: () => false },
@@ -39,6 +41,16 @@
 	const { data: allPages, isLoading: isAllPagesLoading } = useQuery({
 		queryKey: generalRepository.getQueryKey('all-pages'),
 		queryFn: ({ signal }) => generalRepository.getAllPages({ signal }),
+	})
+
+	const { data: treePermissions, isLoading: isTreePermissionsLoading } =
+		useQuery({
+			queryKey: iamRepository.getQueryKey('tree-permissions'),
+			queryFn: ({ signal }) => iamRepository.getTreePermissions({ signal }),
+		})
+
+	const formattedAllTreePermissions = computed(() => {
+		return (treePermissions.value ?? []).map((data) => data.toList())
 	})
 
 	const formattedAllPages = computed(() => {
@@ -99,52 +111,23 @@
 			</form-item>
 		</form-field>
 
-		<form-field v-slot="{ componentField, handleChange }" name="parentId">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Página pai</form-label>
-				<form-control>
-					<select-root :disabled="disabled" v-bind="componentField">
-						<select-trigger class="col-span-5">
-							<select-value placeholder="Selecione uma página pai..." />
-						</select-trigger>
-						<select-content>
-							<select-group>
-								<select-label>Páginas:</select-label>
-								<select-item
-									v-for="page of formattedAllPages"
-									:key="page.id"
-									:value="page.id.toString()"
-									>{{ page.name }}</select-item
-								>
-							</select-group>
-						</select-content>
-					</select-root>
+		<form-field v-slot="{ componentField, handleChange }" name="permissions">
+			<Separator class="my-4" label="Página pai" />
 
-					<tooltip-provider>
-						<tooltip>
-							<tooltip-trigger as-child>
-								<button-root
-									variant="outline"
-									type="button"
-									@click="
-										() => {
-											handleChange(null)
-										}
-									"
-								>
-									<font-awesome-icon
-										class="text-primary_3-table w-5 h-5"
-										:icon="['fas', 'eraser']"
-									/>
-								</button-root>
-							</tooltip-trigger>
-							<tooltip-content side="right">
-								<p>Apagar filtros</p>
-							</tooltip-content>
-						</tooltip>
-					</tooltip-provider>
-				</form-control>
-				<form-message class="col-span-5 col-start-3" />
+			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
+				<single-checkbox-tree
+					:data="formattedAllTreePermissions"
+					class="col-span-12"
+					:disabled="disabled || isTreePermissionsLoading"
+					v-model="componentField.modelValue"
+					@update:model-value="
+						(value) => {
+							handleChange(value)
+						}
+					"
+				/>
+
+				<form-message class="col-span-12" />
 			</form-item>
 		</form-field>
 	</div>

@@ -70,16 +70,14 @@ export class OperatorRepository {
 		}
 	}
 
-
-	async deleteOperator({ id }: Pick<OperatorModel, 'id'>,
+	async activateConsigner({ id }: Pick<OperatorModel, 'id'>,
 		configParams?: HttpClientProps<OperatorModel>
 	): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/pessoas/${id}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// });
+			await this.http.patch(`/profile/operador/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

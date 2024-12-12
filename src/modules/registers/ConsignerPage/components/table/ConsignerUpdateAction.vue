@@ -39,6 +39,9 @@
 			entityTypeId: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
+			addressId: z
+				.number({ message: 'O id endereço é obrigatório.' })
+				.min(1, { message: 'O id endereço é obrigatório.' }),
 			cityId: z
 				.string({ message: 'A cidade é obrigatória.' })
 				.min(1, { message: 'A cidade é obrigatória.' }),
@@ -65,6 +68,7 @@
 			const data = await consignerRepository.getConsignerById(properties.dataId)
 			loadCities.value[`${data.addresses.cityId.toString()}`] = data.addresses
 				.cityName as string
+			console.log(data)
 			form.setValues({
 				name: data.name,
 				cnpj: data.cnpj.replace(
@@ -74,6 +78,7 @@
 				shortName: data.shortName,
 				entityTypeId: data.entityTypeId.toString(),
 				masterConsignerId: data.masterConsignerId.toString(),
+				addressId: data.addresses.id,
 				stateId: data.addresses.stateId.toString(),
 				cityId: data.addresses.cityId.toString(),
 				street: data.addresses.street,

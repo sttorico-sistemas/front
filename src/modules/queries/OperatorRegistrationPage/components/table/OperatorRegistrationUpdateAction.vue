@@ -9,7 +9,7 @@
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 	import { operatorRepository } from '@/core/stores/operator.store'
 	import { formatCPF } from '@/core/utils'
-	import { OperatorModel } from '@/core/models'
+	import { OperatorModel, PermissionList, PermissionModel } from '@/core/models'
 	import OperatorRegistrationForm from './OperatorRegistrationForm.vue'
 	import { personRepository } from '@/core/stores'
 
@@ -21,6 +21,7 @@
 	const emits = defineEmits(['on-edit'])
 
 	const loadCities = ref<Record<string, string>>({})
+	const selectPermissions = ref<PermissionModel[]>([])
 	const selectData = ref<OperatorModel | undefined>(undefined)
 	const openUpdateModal = ref(false)
 	const isDataLoading = ref(false)
@@ -74,6 +75,16 @@
 				typeId: `${data.typeId}`,
 				permissions: data.permissionsRaw,
 			})
+			selectPermissions.value = (data.permissionsRaw ?? []).map(
+				({ id, title }) =>
+					new PermissionModel({
+						id: +id,
+						relatedName: title,
+						action: '',
+						permissibleId: '1',
+						permissibleType: '',
+					}),
+			)
 		} catch (error) {
 			console.log(error)
 		} finally {
@@ -81,14 +92,45 @@
 		}
 	}
 
-	async function handlePermissions(value: { id: string; title: string }[]) {
-		form.setValues({ permissions: value })
+	async function handlePermissions(value: PermissionModel[]) {
+		selectPermissions.value = value
+		form.setValues({
+			permissions: value.map(({ id, relatedName }) => ({
+				id: `${id}`,
+				title: relatedName,
+			})),
+		})
 	}
 
 	const onSubmit = form.handleSubmit(async (values) => {
-		emits('on-edit', properties.dataId, values, () => {
-			openUpdateModal.value = false
-		})
+		const generatePermissions = values.permissions.map(
+			({ id, title }) =>
+				new PermissionModel({
+					id: +id,
+					relatedName: title,
+					action: '',
+					permissibleId: '1',
+					permissibleType: '',
+				}),
+		)
+		const permissionsList = new PermissionList(
+			selectPermissions.value as PermissionModel[],
+		)
+		permissionsList.update(generatePermissions)
+		emits(
+			'on-edit',
+			properties.dataId,
+			{
+				...values,
+				addPermissions: permissionsList.getItems().map(({ id }) => Number(id)),
+				deletedPermissions: permissionsList
+					.getRemovedItems()
+					.map(({ id }) => Number(id)),
+			},
+			() => {
+				openUpdateModal.value = false
+			},
+		)
 	})
 </script>
 

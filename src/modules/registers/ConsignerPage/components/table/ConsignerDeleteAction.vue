@@ -67,7 +67,7 @@
 			<alert-dialog-footer>
 				<alert-dialog-cancel>Cancelar</alert-dialog-cancel>
 				<alert-dialog-action
-					class="bg-warning text-white"
+					:class="['text-white', isActive ? 'bg-warning' : 'bg-success']"
 					@click="handleDelete"
 					>{{ isActive ? 'Desativar' : 'Ativar' }}</alert-dialog-action
 				>
