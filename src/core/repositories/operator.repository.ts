@@ -18,13 +18,12 @@ export class OperatorRepository {
 
 	async getAllOperators(configParams?: HttpClientProps<OperatorModel[]>): Promise<OperatorModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[] }>(`/profile/operador`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/profile/operador`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
 			const values = response.data.map((e: Record<string, any>) => OperatorModel.fromRecord(e));
-			console.log(values)
-			// if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

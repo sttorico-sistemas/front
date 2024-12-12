@@ -77,8 +77,7 @@ export class AuxiliaryRepository {
 
 	async deleteGenericAuxiliary({ id, basePath }: Pick<Required<AuxiliaryModel>, 'basePath' | 'id'>): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/${basePath}/${id}`);
+			await this.http.delete(`/${basePath}/${id}`);
 			return
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
@@ -131,6 +130,20 @@ export class AuxiliaryRepository {
 	async getAllAddressTypes(configParams?: HttpClientProps<AuxiliaryModel[]>): Promise<AuxiliaryModel[]> {
 		try {
 			const response = await this.http.get<{ data: any[], meta: any }>(`auxiliary/tipo-endereco`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			const values = response.data.map((e: Record<string, any>) => AuxiliaryModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
+			return values;
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
+
+	async getAllEntityTypes(configParams?: HttpClientProps<AuxiliaryModel[]>): Promise<AuxiliaryModel[]> {
+		try {
+			const response = await this.http.get<{ data: any[], meta: any }>(`auxiliary/tipo-entidade`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})

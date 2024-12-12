@@ -71,15 +71,14 @@ export class PersonRepository {
 	}
 
 
-	async deletePerson({ id }: Pick<PersonModel, 'id'>,
+	async activatePerson({ id }: Pick<PersonModel, 'id'>,
 		configParams?: HttpClientProps<PersonModel>
 	): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/pessoas/${id}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// });
+			await this.http.patch(`/pessoas/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

@@ -6,14 +6,16 @@ export class OperatorModel extends BaseModel {
 	public name: string
 	public email?: string;
 	public typeId: number;
-	public userId: number;
+	public userId?: number;
+	public personId?: number;
 	public typeName?: string;
 	public permissions: number[]
 	public permissionsRaw?: { id: string, title: string }[]
 
 	constructor(props: {
 		id?: number;
-		userId: string;
+		userId?: string;
+		personId?: string;
 		name: string;
 		cpf: string;
 		email?: string;
@@ -29,7 +31,8 @@ export class OperatorModel extends BaseModel {
 		this.email = props.email;
 		this.typeId = +props.typeId;
 		this.typeName = props.typeName;
-		this.userId = +props.userId;
+		this.userId = props?.userId ? +props.userId : undefined;
+		this.personId = props?.personId ? +props.personId : undefined;
 		this.permissions = props?.permissions ?? [];
 		this.permissionsRaw = props?.permissionsRaw ?? [];
 	}
@@ -37,6 +40,7 @@ export class OperatorModel extends BaseModel {
 	toRecord(): Record<string, any> {
 		return {
 			user_id: this.userId,
+			pessoa_id: this.personId,
 			tipo_operador_id: this.typeId,
 			permissoes: this.permissions,
 		}

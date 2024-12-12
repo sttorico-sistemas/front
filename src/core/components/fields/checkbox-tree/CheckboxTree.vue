@@ -17,14 +17,15 @@
 		}>(),
 		{
 			data: () => [],
+			modelValue: () => []
 		},
 	)
 
 	const emits = defineEmits<{
-		(event: 'update:modelValue', payload: string | number): void
+		(event: 'update:modelValue', payload: any): void
 	}>()
 
-	const modelValue = useVModel(props, 'modelValue', emits, {
+	const modelValueAction = useVModel(props, 'modelValue', emits, {
 		passive: true,
 		defaultValue: props.defaultValue,
 	})
@@ -33,12 +34,15 @@
 <template>
 	<tree-root
 		v-slot="{ flattenItems }"
-		v-model="modelValue"
+		v-model:model-value="modelValueAction"
 		class="list-none w-full select-none bg-white text-blackA11 rounded-lg p-2 text-sm font-medium"
 		:items="data"
 		:get-key="(item) => item.id"
 		multiple
 		propagate-select
+		@update:model-value="(value) => {
+			emits('update:modelValue', value)
+		}"
 	>
 		<tree-item
 			v-for="item in flattenItems"
