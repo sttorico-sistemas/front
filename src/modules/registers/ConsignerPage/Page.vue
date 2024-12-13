@@ -50,6 +50,7 @@
 		name: string
 		cnpj: string
 		entityTypeId: string
+		status: number
 	}
 
 	const statusItems = [
@@ -136,13 +137,13 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: 'Erro ao apagar o consignante master!' },
+				{ title: 'Erro ao atualizar status do consignante master!' },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Consignante master apagado com sucesso!` },
+				{ title: `Status do consignante apagado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
@@ -169,13 +170,13 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao atualizar o consignante master!` },
+				{ title: `Erro ao atualizar o consignante!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Consignante master atualizado com sucesso!` },
+				{ title: `Consignante atualizado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
@@ -203,13 +204,13 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao criar 0 consignante master!` },
+				{ title: `Erro ao criar o consignante!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Consignante master criado com sucesso!` },
+				{ title: `Consignante criado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
@@ -225,15 +226,18 @@
 	})
 
 	const formattedAllTypeOfConsigner = computed<ConsignerTable[]>(() => {
-		return (consigners.value ?? []).map(({ id, name, cnpj, entityTypeId }) => ({
-			id: id as number,
-			name,
-			cnpj: cnpj.replace(
-				/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-				'$1.$2.$3/$4-$5',
-			),
-			entityTypeId: formattedAllEntityTypesMap.value[`${entityTypeId}`],
-		}))
+		return (consigners.value ?? []).map(
+			({ id, name, cnpj, entityTypeId, status }) => ({
+				id: id as number,
+				name,
+				cnpj: cnpj.replace(
+					/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+					'$1.$2.$3/$4-$5',
+				),
+				entityTypeId: formattedAllEntityTypesMap.value[`${entityTypeId}`],
+				status: status as number,
+			}),
+		)
 	})
 
 	const columns: ColumnDef<ConsignerTable>[] = [
@@ -344,13 +348,14 @@
 						tableConsignerName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateConsignerLoading.value,
+						isActive: data.status === 1,
 					}),
 					h(ConsignerDeleteAction, {
 						dataId: data.id,
 						tableConsignerName: data.name,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteConsignerLoading.value,
-						isActive: true,
+						isActive: data.status === 1,
 					}),
 				])
 			},

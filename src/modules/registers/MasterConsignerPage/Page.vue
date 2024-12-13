@@ -205,7 +205,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao criar 0 consignante master!` },
+				{ title: `Erro ao criar o consignante master!` },
 				{ duration: 1500 },
 			)
 		},

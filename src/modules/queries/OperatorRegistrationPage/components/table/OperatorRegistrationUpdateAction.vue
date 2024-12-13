@@ -17,6 +17,7 @@
 		dataId: { type: Number, required: true },
 		tableOperatorName: { type: String, required: true },
 		isLoading: { type: Boolean, default: () => false },
+		isActive: { type: Boolean, required: true },
 	})
 	const emits = defineEmits(['on-edit'])
 
@@ -145,7 +146,7 @@
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
 				<font-awesome-icon
 					class="text-primary_3-table w-4 h-4"
 					:icon="['fas', 'pen']"

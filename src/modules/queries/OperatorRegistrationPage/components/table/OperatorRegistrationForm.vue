@@ -243,7 +243,7 @@
 									:key="contactType.id"
 									:value="contactType.id.toString()"
 								>
-									{{ contactType.name }} {{contactType.id.toString()}}
+									{{ contactType.name }}
 								</select-item>
 							</select-group>
 						</select-content>
