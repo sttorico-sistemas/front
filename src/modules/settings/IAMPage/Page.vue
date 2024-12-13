@@ -93,7 +93,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: 'Erro ao apagar o perfil!' },
+					{ title: error.message ?? 'Erro ao apagar o perfil!' },
 					{ duration: 1500 },
 				)
 			},
@@ -120,7 +120,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao atualizar o perfil!` },
+					{ title: error.message ?? `Erro ao atualizar o perfil!` },
 					{ duration: 1500 },
 				)
 			},
@@ -143,12 +143,11 @@
 						limit: perPage,
 					}),
 				})
-				openCreateModal.value = false
 			},
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao criar o perfil!` },
+					{ title: error.message ?? `Erro ao criar o perfil!` },
 					{ duration: 1500 },
 				)
 			},
@@ -322,7 +321,9 @@
 				description: values.description,
 				permissionsId: values.permissions.map(({ id }) => +id),
 			}),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (

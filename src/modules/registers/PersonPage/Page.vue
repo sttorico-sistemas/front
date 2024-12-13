@@ -184,7 +184,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: 'Erro ao atualizar status da pessoa!' },
+				{ title: error.message ?? 'Erro ao atualizar status da pessoa!' },
 				{ duration: 1500 },
 			)
 		},
@@ -218,7 +218,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao atualizar a pessoa!` },
+					{ title: error.message ?? `Erro ao atualizar a pessoa!` },
 					{ duration: 1500 },
 				)
 			},
@@ -248,12 +248,11 @@
 						selectCPF,
 					),
 				})
-				openCreateModal.value = false
 			},
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao criar a pessoa!` },
+					{ title: error.message ?? `Erro ao criar a pessoa!` },
 					{ duration: 1500 },
 				)
 			},
@@ -567,7 +566,9 @@
 				contacts: values.contacts.map((data) => new ContactModel(data)),
 				deletedContacts: [],
 			}),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (
@@ -678,7 +679,7 @@
 	}, 500)
 
 	const handleSearchCpf = debounceAsync(async (value: string | number) => {
-		selectCPF.value = value.toString().trim().replace(/\D+/, '')
+		selectCPF.value = value.toString().trim().replace(/\D+/g, '')
 	}, 500)
 
 	const handleSearchCities = debounceAsync(async (value: string) => {

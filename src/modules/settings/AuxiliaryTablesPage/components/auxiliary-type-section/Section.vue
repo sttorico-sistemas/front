@@ -121,7 +121,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: 'Erro ao apagar o tipo!' },
+					{ title: error.message ?? 'Erro ao apagar o tipo!' },
 					{ duration: 1500 },
 				)
 			},
@@ -148,7 +148,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao atualizar o tipo!` },
+					{ title: error.message ?? `Erro ao atualizar o tipo!` },
 					{ duration: 1500 },
 				)
 			},
@@ -171,12 +171,11 @@
 						limit: perPage,
 					}),
 				})
-				openCreateModal.value = false
 			},
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao criar o tipo!` },
+					{ title: error.message ?? `Erro ao criar o tipo!` },
 					{ duration: 1500 },
 				)
 			},
@@ -313,7 +312,9 @@
 				name: values.name,
 				basePath: selectType.value,
 			}),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (
