@@ -13,6 +13,15 @@
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 
 	import {
+		SelectRoot,
+		SelectContent,
+		SelectGroup,
+		SelectItem,
+		SelectLabel,
+		SelectTrigger,
+		SelectValue,
+	} from '@/core/components/fields/select'
+	import {
 		Tooltip,
 		TooltipContent,
 		TooltipProvider,
@@ -25,10 +34,15 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { operatorRepository, personRepository } from '@/core/stores'
+	import { InputRoot } from '@/core/components/fields/input'
+	import {
+		iamRepository,
+		operatorRepository,
+		personRepository,
+	} from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { OperatorModel, PermissionList, PermissionModel } from '@/core/models'
-	import { formatCPF, valueUpdater } from '@/core/utils'
+	import { debounceAsync, formatCPF, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		OperatorRegistrationDeleteAction,
@@ -59,8 +73,16 @@
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const selectPermissions = ref<PermissionModel[]>([])
+	const name = ref<string | undefined>(undefined)
+	const cpf = ref<string | undefined>(undefined)
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	// const selectSort = useRouteQuery<string | undefined>('op-rgt-sort')
+	const selectName = useRouteQuery<string | undefined>('opr-name', undefined)
+	const selectCPF = useRouteQuery<string | undefined>('opr-cpf', undefined)
+	const selectOperatorType = useRouteQuery<string | undefined>(
+		'opr-type',
+		undefined,
+	)
 	const page = useRouteQuery('op-rgt-page', 1, { transform: Number })
 	const perPage = useRouteQuery('op-rgt-per-page', 8, { transform: Number })
 	const queryClient = useQueryClient()
@@ -71,14 +93,26 @@
 		isLoading: isOperatorsLoading,
 		isPlaceholderData: isOperatorsPlaceholderData,
 	} = useQuery({
-		queryKey: operatorRepository.getQueryKey('operators', {
-			page,
-			limit: perPage,
-		}),
+		queryKey: operatorRepository.getQueryKey(
+			'operators',
+			{
+				page,
+				limit: perPage,
+			},
+			selectName,
+			selectCPF,
+			selectOperatorType,
+		),
 		queryFn: ({ signal }) =>
 			operatorRepository.getAllOperators({
 				signal,
-				params: { page: page.value, perPage: perPage.value },
+				params: {
+					page: page.value,
+					perPage: perPage.value,
+					search: selectName.value,
+					cpf: selectCPF.value,
+					tipo_operador_id: selectOperatorType.value,
+				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {
 						totalItens: meta.total,
@@ -89,6 +123,13 @@
 		placeholderData: keepPreviousData,
 	})
 
+	const { data: typeOfOperators, isLoading: isTypeOfOperatorsLoading } =
+		useQuery({
+			queryKey: iamRepository.getQueryKey('type-of-operators'),
+			queryFn: ({ signal }) =>
+				iamRepository.getTypeOfOperators({ signal, params: { perPage: 100 } }),
+		})
+
 	const {
 		mutateAsync: handleDeleteOperator,
 		isPending: isDeleteOperatorLoading,
@@ -97,10 +138,16 @@
 			operatorRepository.activateConsigner({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: operatorRepository.getQueryKey('operators', {
-					page,
-					limit: perPage,
-				}),
+				queryKey: operatorRepository.getQueryKey(
+					'operators',
+					{
+						page,
+						limit: perPage,
+					},
+					selectName,
+					selectCPF,
+					selectOperatorType,
+				),
 			})
 		},
 		onError: (error) => {
@@ -129,10 +176,16 @@
 				queryKey: operatorRepository.getQueryKey('pages'),
 			})
 			return await queryClient.invalidateQueries({
-				queryKey: operatorRepository.getQueryKey('operators', {
-					page,
-					limit: perPage,
-				}),
+				queryKey: operatorRepository.getQueryKey(
+					'operators',
+					{
+						page,
+						limit: perPage,
+					},
+					selectName,
+					selectCPF,
+					selectOperatorType,
+				),
 			})
 		},
 		onError: (error) => {
@@ -158,10 +211,16 @@
 			operatorRepository.createOperator(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: operatorRepository.getQueryKey('operators', {
-					page,
-					limit: perPage,
-				}),
+				queryKey: operatorRepository.getQueryKey(
+					'operators',
+					{
+						page,
+						limit: perPage,
+					},
+					selectName,
+					selectCPF,
+					selectOperatorType,
+				),
 			})
 			openCreateModal.value = false
 		},
@@ -188,9 +247,16 @@
 				email: email as string,
 				cpf: formatCPF(cpf),
 				type: typeName as string,
-				status: status as string
+				status: status as string,
 			}),
 		)
+	})
+
+	const formattedAllTypeOperators = computed(() => {
+		return (typeOfOperators.value ?? []).map(({ id, name }) => ({
+			value: `${id}`,
+			label: name,
+		}))
 	})
 
 	const columns: ColumnDef<OperatorTable>[] = [
@@ -325,6 +391,7 @@
 						tableOperatorName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateOperatorLoading.value,
+						isActive: data.status === 'active',
 					}),
 					h(OperatorRegistrationDeleteAction, {
 						dataId: data.id,
@@ -543,11 +610,25 @@
 		}
 	}
 
+	const handleSearch = debounceAsync(async (value: string | number) => {
+		selectName.value = value.toString().trim()
+	}, 500)
+
+	const handleSearchCpf = debounceAsync(async (value: string | number) => {
+		selectCPF.value = value.toString().trim().replace(/\D+/, '')
+	}, 500)
+
 	// function handleSelectCity() {
 	// 	selectOperatorsRefetch()
 	// }
 
-	// function handleClear() {}
+	function handleClear() {
+		selectName.value = undefined
+		name.value = undefined
+		selectCPF.value = undefined
+		cpf.value = undefined
+		selectOperatorType.value = undefined
+	}
 </script>
 
 <template>
@@ -558,7 +639,9 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
+				<div
+					class="flex flex-1 gap-10 items-center justify-between lg:justify-start lg:flex-initial"
+				>
 					<titulo title="Gerenciar operadores" />
 
 					<form-wrapper
@@ -599,6 +682,60 @@
 							/>
 						</template>
 					</form-wrapper>
+				</div>
+
+				<div class="grid grid-cols-12 gap-4 w-full lg:flex-1">
+					<input-root
+						class="col-span-3 md:col-start-4"
+						v-model:model-value="name"
+						placeholder="Nome"
+						@update:model-value="handleSearch"
+					/>
+
+					<input-root
+						class="col-span-3 md:col-start-7"
+						v-model:model-value="cpf"
+						v-maska="'###.###.###-##'"
+						placeholder="CPF"
+						@update:model-value="handleSearchCpf"
+					/>
+
+					<select-root v-model="selectOperatorType">
+						<select-trigger class="col-span-2 md:col-start-10">
+							<select-value class="text-left" placeholder="Status" />
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Status:</select-label>
+								<select-item
+									v-for="typeOperators of formattedAllTypeOperators"
+									:key="typeOperators.value"
+									:value="typeOperators.value.toString()"
+									>{{ typeOperators.label }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root
+									class="md:col-start-12"
+									variant="outline"
+									@click="handleClear"
+								>
+									<font-awesome-icon
+										class="text-primary_3-table w-5 h-5"
+										:icon="['fas', 'eraser']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Apagar filtros</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
 				</div>
 			</div>
 
