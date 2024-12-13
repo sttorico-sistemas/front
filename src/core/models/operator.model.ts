@@ -31,7 +31,7 @@ export class OperatorModel extends BaseModel {
 		super();
 		this.id = props.id;
 		this.name = props.name;
-		this.cpf = props.cpf;
+		this.cpf = props.cpf.replace(/\D+/g, '');
 		this.email = props.email;
 		this.typeId = +props.typeId;
 		this.typeName = props.typeName;
