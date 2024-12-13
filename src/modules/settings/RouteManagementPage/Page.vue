@@ -51,18 +51,36 @@
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
-	// const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
-	// const page = useRouteQuery('mtr-cgn-page', 1, { transform: Number })
-	// const perPage = useRouteQuery('mtr-cgn-per-page', 8, {
-	// 	transform: Number,
-	// })
+	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
+	const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
+	const page = useRouteQuery('mtr-cgn-page', 1, { transform: Number })
+	const perPage = useRouteQuery('mtr-cgn-per-page', 8, {
+		transform: Number,
+	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
 
-	const { data: routeManagers, isLoading: isRouteManagersLoading } = useQuery({
-		queryKey: generalRepository.getQueryKey('route-managers'),
-		queryFn: ({ signal }) => generalRepository.getAllPages({ signal }),
+	const {
+		data: routeManagers,
+		isLoading: isRouteManagersLoading,
+		isPlaceholderData: isRouteManagersPlaceholderData,
+	} = useQuery({
+		queryKey: generalRepository.getQueryKey('route-managers', {
+			page,
+			limit: perPage,
+		}),
+		queryFn: ({ signal }) =>
+			generalRepository.getAllPages({
+				signal,
+				params: { page: page.value, per_page: perPage.value },
+				metaCallback: (meta) => {
+					pageMetadata.value = {
+						totalItens: meta.total,
+						totalPages: meta.last_page,
+					}
+				},
+			}),
+		placeholderData: keepPreviousData,
 	})
 
 	const {
@@ -73,7 +91,10 @@
 			generalRepository.deletePage({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: generalRepository.getQueryKey('route-managers'),
+				queryKey: generalRepository.getQueryKey('route-managers', {
+					page,
+					limit: perPage,
+				}),
 			})
 		},
 		onError: (error) => {
@@ -98,7 +119,10 @@
 		mutationFn: (data: PageModel) => generalRepository.updatePage(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: generalRepository.getQueryKey('route-managers'),
+				queryKey: generalRepository.getQueryKey('route-managers', {
+					page,
+					limit: perPage,
+				}),
 			})
 		},
 		onError: (error) => {
@@ -123,7 +147,10 @@
 		mutationFn: (data: PageModel) => generalRepository.createPage(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: generalRepository.getQueryKey('route-managers'),
+				queryKey: generalRepository.getQueryKey('route-managers', {
+					page,
+					limit: perPage,
+				}),
 			})
 			openCreateModal.value = false
 		},
@@ -279,11 +306,15 @@
 		url: z
 			.string({ message: 'A url é obrigatória.' })
 			.min(1, { message: 'A url é obrigatória.' }),
-		parentId: z
-			.string({ message: 'A página pai é obrigatória.' })
-			.min(1, { message: 'A página pai é obrigatória.' })
-			.optional()
-			.nullable(),
+		permissions: z
+			.object(
+				{
+					id: z.string({ message: 'Esse campo é obrigatório.' }),
+					title: z.string({ message: 'Esse campo é obrigatório.' }),
+				},
+				{ message: 'Esse campo é obrigatório.' },
+			)
+			.optional(),
 	})
 
 	const form = useForm({
@@ -291,7 +322,13 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		return handleCreateRouteManager(new PageModel({ ...values, children: [] }))
+		return handleCreateRouteManager(
+			new PageModel({
+				...values,
+				parentId: values?.permissions?.id,
+				children: [],
+			}),
+		)
 	})
 
 	const onUpdateSubmit = async (
@@ -300,7 +337,12 @@
 		onClose: () => void,
 	) => {
 		return handleUpdateRouteManager(
-			new PageModel({ ...values, id: `${id}`, children: [] }),
+			new PageModel({
+				...values,
+				id: `${id}`,
+				parentId: values?.permissions?.id,
+				children: [],
+			}),
 		).then(() => {
 			onClose()
 		})
@@ -366,15 +408,15 @@
 	// 	selectRouteManagersRefetch()
 	// }
 
-	// function handlePagination(to: number) {
-	// 	if (to < page.value) {
-	// 		page.value = Math.max(to, 1)
-	// 	} else if (to > page.value) {
-	// 		if (!isRouteManagersPlaceholderData.value) {
-	// 			page.value = to
-	// 		}
-	// 	}
-	// }
+	function handlePagination(to: number) {
+		if (to < page.value) {
+			page.value = Math.max(to, 1)
+		} else if (to > page.value) {
+			if (!isRouteManagersPlaceholderData.value) {
+				page.value = to
+			}
+		}
+	}
 </script>
 <template>
 	<main>
@@ -434,7 +476,7 @@
 					:is-loading="isRouteManagersLoading"
 				/>
 
-				<!-- <div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllPages.length <= 0"
@@ -442,7 +484,7 @@
 						:items-per-page="perPage"
 						@update-paginate="handlePagination"
 					/>
-				</div> -->
+				</div>
 			</div>
 		</div>
 	</main>

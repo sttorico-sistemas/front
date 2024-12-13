@@ -3,27 +3,14 @@
 	import { useQuery } from '@tanstack/vue-query'
 
 	import {
-		SelectContent,
-		SelectGroup,
-		SelectItem,
-		SelectLabel,
-		SelectTrigger,
-		SelectValue,
-		SelectRoot,
-	} from '@/core/components/fields/select'
-	import {
-		TagsInput,
-		TagsInputItem,
-		TagsInputItemDelete,
-		TagsInputItemText,
-	} from '@/core/components/tags-input'
-	import {
 		FormControl,
 		FormField,
 		FormItem,
 		FormLabel,
 		FormMessage,
 	} from '@/core/components/form'
+	import { Separator } from '@/core/components/separator'
+	import { MultipleCheckboxTree } from '@/core/components/fields/checkbox-tree'
 	import { InputRoot } from '@/core/components/fields/input'
 	import { iamRepository } from '@/core/stores'
 
@@ -34,7 +21,6 @@
 			default: () => ({}),
 		},
 	})
-
 	const selectValue = ref('')
 
 	const { data: permissions } = useQuery({
@@ -42,11 +28,21 @@
 		queryFn: ({ signal }) => iamRepository.getPermissions({ signal }),
 	})
 
+	const { data: treePermissions, isLoading: isTreePermissionsLoading } =
+		useQuery({
+			queryKey: iamRepository.getQueryKey('tree-permissions'),
+			queryFn: ({ signal }) => iamRepository.getTreePermissions({ signal }),
+		})
+
 	const formattedPermissions = computed(() => {
 		return (permissions.value ?? []).map(({ id, relatedName }) => ({
 			id: `${id}`,
 			name: relatedName,
 		}))
+	})
+
+	const formattedAllTreePermissions = computed(() => {
+		return (treePermissions.value ?? []).map((data) => data.toList())
 	})
 
 	const formattedPermissionsMap = computed(() => {
@@ -92,67 +88,22 @@
 			</form-item>
 		</form-field>
 
-		<form-field
-			v-slot="{ componentField, handleInput, value }"
-			name="permissions"
-		>
-		<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-			<form-label class="text-left col-span-2">Permissões</form-label>
-				<form-control>
-					<tags-input
-						v-model="componentField.modelValue"
-						class="col-span-10 flex-col"
-						:disabled="disabled"
-						:displayValue="
-							(value) => {
-								return formattedPermissionsMap[value as string]
-							}
-						"
-					>
-						<select-root
-							:disabled="disabled"
-							v-model="selectValue"
-							@update:modelValue="
-								(data) => {
-									const dataInput = value ? value : []
-									handleInput([...dataInput, data])
-									selectValue = ''
-								}
-							"
-						>
-							<select-trigger class="col-span-3 ">
-								<select-value placeholder="Selecione uma permissão..." />
-							</select-trigger>
-							<select-content>
-								<select-group>
-									<select-label>Permissões:</select-label>
-									<select-item
-										v-for="permission of formattedPermissions"
-										:disabled="
-											((value as any[]) ?? []).some(
-												(value) => value === permission.id,
-											)
-										"
-										:key="permission.id"
-										:value="permission.id"
-									>
-										{{ permission.name }}
-									</select-item>
-								</select-group>
-							</select-content>
-						</select-root>
+		<form-field v-slot="{ componentField, handleChange }" name="permissions">
+			<separator class="my-4" label="Permissões" />
 
-						<div
-							class="flex flex-wrap w-full gap-2 items-start justify-start px-3 py-2 text-sm"
-						>
-							<tags-input-item v-for="item in value" :key="item" :value="item">
-								<tags-input-item-text />
-								<tags-input-item-delete />
-							</tags-input-item>
-						</div>
-					</tags-input>
-				</form-control>
-				<form-Message class="col-span-3 col-start-2" />
+			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
+				<multiple-checkbox-tree
+					:data="formattedAllTreePermissions"
+					class="col-span-12"
+					:disabled="disabled || isTreePermissionsLoading"
+					v-model="componentField.modelValue"
+					@update:model-value="
+						(value) => {
+							handleChange(value)
+						}
+					"
+				/>
+				<form-message class="col-span-12" />
 			</form-item>
 		</form-field>
 	</div>

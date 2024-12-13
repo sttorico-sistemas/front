@@ -19,12 +19,15 @@
 		TooltipTrigger,
 	} from '@/core/components/tooltip'
 	import { FormWrapper } from '@/core/components/form-wrapper'
-	import { TableWrapper } from '@/core/components/table-wrapper'
+	import {
+		TableWrapper,
+		TablePagination,
+	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { operatorRepository } from '@/core/stores'
+	import { operatorRepository, personRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { OperatorModel } from '@/core/models'
+	import { OperatorModel, PermissionList, PermissionModel } from '@/core/models'
 	import { formatCPF, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
@@ -39,7 +42,13 @@
 		cpf: string
 		email: string
 		type: string
+		status: string
 	}
+
+	const statusItems = [
+		{ value: 'active', label: 'Ativado' },
+		{ value: 'inactive', label: 'Desativado' },
+	] as const
 
 	// const changeValues = {
 	// 	ASC: 'DESC',
@@ -49,6 +58,7 @@
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
+	const selectPermissions = ref<PermissionModel[]>([])
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	// const selectSort = useRouteQuery<string | undefined>('op-rgt-sort')
 	const page = useRouteQuery('op-rgt-page', 1, { transform: Number })
@@ -59,7 +69,7 @@
 	const {
 		data: operators,
 		isLoading: isOperatorsLoading,
-		// isPlaceholderData: isOperatorsPlaceholderData,
+		isPlaceholderData: isOperatorsPlaceholderData,
 	} = useQuery({
 		queryKey: operatorRepository.getQueryKey('operators', {
 			page,
@@ -84,7 +94,7 @@
 		isPending: isDeleteOperatorLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			operatorRepository.deleteOperator({ id }),
+			operatorRepository.activateConsigner({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: operatorRepository.getQueryKey('operators', {
@@ -115,6 +125,9 @@
 		mutationFn: (data: OperatorModel) =>
 			operatorRepository.updateOperator(data),
 		onSettled: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: operatorRepository.getQueryKey('pages'),
+			})
 			return await queryClient.invalidateQueries({
 				queryKey: operatorRepository.getQueryKey('operators', {
 					page,
@@ -169,12 +182,13 @@
 
 	const formattedAllOperators = computed<OperatorTable[]>(() => {
 		return (operators.value ?? []).map(
-			({ id, cpf, email, name, typeName }) => ({
+			({ id, cpf, email, name, typeName, status }) => ({
 				id: id as number,
 				name,
 				email: email as string,
 				cpf: formatCPF(cpf),
 				type: typeName as string,
+				status: status as string
 			}),
 		)
 	})
@@ -317,7 +331,7 @@
 						tableOperatorName: data.name,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteOperatorLoading.value,
-						isActive: true,
+						isActive: data.status === 'active',
 					}),
 				])
 			},
@@ -346,9 +360,9 @@
 	})
 
 	const formSchema = z.object({
-		userId: z
-			.string({ message: 'O tipo é obrigatório.' })
-			.min(1, { message: 'O tipo é obrigatório.' }),
+		personId: z
+			.string({ message: 'A pessoa é obrigatória.' })
+			.min(1, { message: 'A pessoa é obrigatória.' }),
 		name: z
 			.string({ message: 'O nome é obrigatório.' })
 			.min(1, { message: 'O nome é obrigatório.' }),
@@ -379,21 +393,69 @@
 		},
 	})
 
+	async function handleSearchPerson(cpf: string) {
+		try {
+			const person = await personRepository.getAllPersons({
+				params: { cpf: cpf.replace(/\D/g, '') },
+			})
+			form.setValues({
+				...form.values,
+				personId: `${person[0].id}`,
+				name: person[0].name,
+				cpf: formatCPF(person[0].cpf),
+			})
+		} catch (error) {
+			form.setFieldError('cpf', 'CPF é inválido ou a pessoa não existe.')
+		}
+	}
+
+	async function handlePermissions(value: PermissionModel[]) {
+		selectPermissions.value = value
+		form.setValues({
+			permissions: value.map(({ id, relatedName }) => ({
+				id: `${id}`,
+				title: relatedName,
+			})),
+		})
+	}
+
 	const onCreateSubmit = form.handleSubmit(async (values) => {
+		const generatePermissions = values.permissions.map(
+			({ id, title }) =>
+				new PermissionModel({
+					id: +id,
+					relatedName: title,
+					action: '',
+					permissibleId: '1',
+					permissibleType: '',
+				}),
+		)
+		const permissionsList = new PermissionList(
+			selectPermissions.value as PermissionModel[],
+		)
+		permissionsList.update(generatePermissions)
+
 		return handleCreateOperator(
 			new OperatorModel({
 				cpf: values.cpf,
 				name: values.name,
 				typeId: values.typeId,
-				userId: values.userId,
-				permissions: values.permissions.map(({ id }) => Number(id)),
+				personId: values.personId,
+				permissions: permissionsList.getItems().map(({ id }) => Number(id)),
+				deletedPermissions: permissionsList
+					.getRemovedItems()
+					.map(({ id }) => Number(id)),
 			}),
 		)
 	})
 
 	const onUpdateSubmit = async (
 		id: number,
-		values: z.infer<typeof formSchema>,
+		values: z.infer<typeof formSchema> & {
+			addPermissions: number[]
+			deletedPermissions: number[]
+			userId: string
+		},
 		onClose: () => void,
 	) => {
 		return handleUpdateOperator(
@@ -403,7 +465,8 @@
 				name: values.name,
 				typeId: values.typeId,
 				userId: values.userId,
-				permissions: values.permissions.map(({ id }) => Number(id)),
+				permissions: values.addPermissions,
+				deletedPermissions: values.deletedPermissions,
 			}),
 		).then(() => {
 			onClose()
@@ -470,15 +533,15 @@
 	// 	selectOperatorsRefetch()
 	// }
 
-	// function handlePagination(to: number) {
-	// 	if (to < page.value) {
-	// 		page.value = Math.max(to, 1)
-	// 	} else if (to > page.value) {
-	// 		if (!isOperatorsPlaceholderData.value) {
-	// 			page.value = to
-	// 		}
-	// 	}
-	// }
+	function handlePagination(to: number) {
+		if (to < page.value) {
+			page.value = Math.max(to, 1)
+		} else if (to > page.value) {
+			if (!isOperatorsPlaceholderData.value) {
+				page.value = to
+			}
+		}
+	}
 
 	// function handleSelectCity() {
 	// 	selectOperatorsRefetch()
@@ -509,7 +572,7 @@
 						<template #trigger>
 							<tooltip-provider>
 								<tooltip>
-									<tooltip-trigger disabled as-child>
+									<tooltip-trigger as-child>
 										<button-root
 											variant="outline"
 											@click="openCreateModal = true"
@@ -531,6 +594,8 @@
 							<operator-registration-form
 								:metadata="form.values"
 								:disabled="isCreateOperatorLoading"
+								@search-cpf="handleSearchPerson"
+								@update-permissions="handlePermissions"
 							/>
 						</template>
 					</form-wrapper>
@@ -544,6 +609,16 @@
 					:row-limit="perPage"
 					:is-loading="isOperatorsLoading"
 				/>
+
+				<div :class="['flex w-full items-center px-4']">
+					<table-pagination
+						v-model="page"
+						:disabled="formattedAllOperators.length <= 0"
+						:total-itens="pageMetadata.totalItens"
+						:items-per-page="perPage"
+						@update-paginate="handlePagination"
+					/>
+				</div>
 			</div>
 		</div>
 	</main>

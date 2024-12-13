@@ -23,7 +23,7 @@ export class ConsignerModel extends BaseModel {
 		this.id = props.id;
 		this.name = props.name;
 		this.shortName = props.shortName;
-		this.cnpj = props.cnpj;
+		this.cnpj = props.cnpj?.replace(/\D+/g, "");
 		this.masterConsignerId = props.masterConsignerId;
 		this.entityTypeId = props.entityTypeId;
 		this.addresses = props.addresses;
@@ -49,7 +49,7 @@ export class ConsignerModel extends BaseModel {
 			cnpj: record.cnpj,
 			entityTypeId: record.tipo_entidade_id,
 			masterConsignerId: record.consignante_master_id,
-			addresses: new AddressModel(record.endereco)
+			addresses:  AddressModel.fromRecord(record.endereco)
 		});
 	}
 

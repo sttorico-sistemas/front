@@ -29,10 +29,17 @@
 				.string({ message: 'A descrição é obrigatória.' })
 				.min(1, { message: 'A descrição é obrigatória.' }),
 			permissions: z
-				.array(z.string({ message: 'Esse campo é obrigatório.' }), {
-					message: 'As permissões é obrigatória.',
-				})
-				.min(1, { message: 'É necessário pelo menos 1 permissão.' }),
+				.array(
+					z.object(
+						{
+							id: z.string({ message: 'Esse campo é obrigatório.' }),
+							title: z.string({ message: 'Esse campo é obrigatório.' }),
+						},
+						{ message: 'Esse campo é obrigatório.' },
+					),
+					{ message: 'Deve haver pelo menos 1 permissão.' },
+				)
+				.min(1, { message: 'Deve haver pelo menos 1 permissão.' }),
 		}),
 	)
 
@@ -51,7 +58,11 @@
 			form.setValues({
 				name: data.name,
 				description: data?.description,
-				permissions: data?.permissions?.map(({ id }) => `${id}`) ?? [],
+				permissions:
+					data?.permissions?.map(({ id, relatedName }) => ({
+						id: `${id}`,
+						title: relatedName,
+					})) ?? [],
 			})
 		} catch (error) {
 			console.log(error)
@@ -87,10 +98,7 @@
 		</template>
 
 		<template #fields>
-			<iam-form
-				:metadata="form.values"
-				:disabled="isLoading"
-			/>
+			<iam-form :metadata="form.values" :disabled="isLoading" />
 		</template>
 	</form-wrapper>
 </template>

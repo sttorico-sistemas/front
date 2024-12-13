@@ -72,8 +72,7 @@ export class GeneralRepository {
 
 	async deletePage({ id }: Pick<Required<PageModel>, 'id'>): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/organize/pages/${id}`);
+			await this.http.delete(`/organize/pages/${id}`);
 			return
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

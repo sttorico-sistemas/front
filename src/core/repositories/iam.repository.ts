@@ -60,11 +60,14 @@ export class IAMRepository {
 
 	async getTypeOfOperators(configParams?: HttpClientProps<ProfileModel[]>): Promise<ProfileModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[] }>(`/profile/tipo-operador`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/profile/tipo-operador`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return response.data.map((e: Record<string, any>) => ProfileModel.fromRecord(e));
+			const values = response.data.map((e: Record<string, any>) => ProfileModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
+			return values;
+
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

@@ -18,6 +18,16 @@
 		TooltipProvider,
 		TooltipTrigger,
 	} from '@/core/components/tooltip'
+	import {
+		SelectRoot,
+		SelectContent,
+		SelectGroup,
+		SelectItem,
+		SelectLabel,
+		SelectTrigger,
+		SelectValue,
+	} from '@/core/components/fields/select'
+	import { InputRoot } from '@/core/components/fields/input'
 	import { FormWrapper } from '@/core/components/form-wrapper'
 	import {
 		TableWrapper,
@@ -28,17 +38,19 @@
 	import { masterConsignerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { MasterConsignerModel } from '@/core/models'
-	import { valueUpdater } from '@/core/utils'
+	import { debounceAsync, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		MasterConsignerDeleteAction,
 		MasterConsignerForm,
 		MasterConsignerUpdateAction,
 	} from './components/table'
+	import { Status } from '@/core/types'
 
 	type MasterConsignerTable = {
 		id: number
 		name: string
+		status: Status
 	}
 
 	// const changeValues = {
@@ -47,10 +59,21 @@
 	// 	NONE: 'ASC',
 	// } as const
 
+	const statusItems = [
+		{ value: 1, label: 'Ativado' },
+		{ value: 0, label: 'Desativado' },
+	] as const
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
+	const selectSearch = useRouteQuery<string | undefined>(
+		'mtr-cgn-search',
+		undefined,
+	)
+	const search = ref<string | undefined>()
+	const status = useRouteQuery<string | undefined>('mtr-cgn-status', undefined)
 	const page = useRouteQuery('mtr-cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('mtr-cgn-per-page', 8, {
 		transform: Number,
@@ -63,14 +86,24 @@
 		isLoading: isMasterConsignersLoading,
 		isPlaceholderData: isMasterConsignersPlaceholderData,
 	} = useQuery({
-		queryKey: masterConsignerRepository.getQueryKey('master-consigners', {
-			page,
-			limit: perPage,
-		}),
+		queryKey: masterConsignerRepository.getQueryKey(
+			'master-consigners',
+			{
+				page,
+				limit: perPage,
+			},
+			selectSearch,
+			status,
+		),
 		queryFn: ({ signal }) =>
 			masterConsignerRepository.getAllMasterConsigners({
 				signal,
-				params: { page: page.value, per_page: perPage.value },
+				params: {
+					page: page.value,
+					per_page: perPage.value,
+					search: selectSearch.value,
+					status: status.value,
+				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {
 						totalItens: meta.total,
@@ -82,29 +115,34 @@
 	})
 
 	const {
-		mutateAsync: handleDeleteMasterConsigner,
-		isPending: isDeleteMasterConsignerLoading,
+		mutateAsync: handleActivateMasterConsigner,
+		isPending: isActivateMasterConsignerLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			masterConsignerRepository.deleteMasterConsigner({ id }),
+			masterConsignerRepository.activateMasterConsigner({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: masterConsignerRepository.getQueryKey('master-consigners', {
-					page,
-					limit: perPage,
-				}),
+				queryKey: masterConsignerRepository.getQueryKey(
+					'master-consigners',
+					{
+						page,
+						limit: perPage,
+					},
+					selectSearch,
+					status,
+				),
 			})
 		},
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: 'Erro ao apagar o consignante master!' },
+				{ title: 'Erro ao atualizar status do consignante master!' },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Consignante master apagado com sucesso!` },
+				{ title: `Status do consignante master alterado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
@@ -118,10 +156,15 @@
 			masterConsignerRepository.updateMasterConsigner(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: masterConsignerRepository.getQueryKey('master-consigners', {
-					page,
-					limit: perPage,
-				}),
+				queryKey: masterConsignerRepository.getQueryKey(
+					'master-consigners',
+					{
+						page,
+						limit: perPage,
+					},
+					selectSearch,
+					status,
+				),
 			})
 		},
 		onError: (error) => {
@@ -147,10 +190,15 @@
 			masterConsignerRepository.createMasterConsigner(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: masterConsignerRepository.getQueryKey('master-consigners', {
-					page,
-					limit: perPage,
-				}),
+				queryKey: masterConsignerRepository.getQueryKey(
+					'master-consigners',
+					{
+						page,
+						limit: perPage,
+					},
+					selectSearch,
+					status,
+				),
 			})
 			openCreateModal.value = false
 		},
@@ -171,9 +219,10 @@
 
 	const formattedAllTypeOfMasterConsigner = computed<MasterConsignerTable[]>(
 		() => {
-			return (masterConsigners.value ?? []).map(({ id, name }) => ({
+			return (masterConsigners.value ?? []).map(({ id, name, status }) => ({
 				id: id as number,
 				name,
+				status: status as Status,
 			}))
 		},
 	)
@@ -238,13 +287,14 @@
 						tableMasterConsignerName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateMasterConsignerLoading.value,
+						isActive: data.status.value === 1,
 					}),
 					h(MasterConsignerDeleteAction, {
 						dataId: data.id,
 						tableMasterConsignerName: data.name,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteMasterConsignerLoading.value,
-						isActive: true,
+						isLoading: isActivateMasterConsignerLoading.value,
+						isActive: data.status.value === 1,
 					}),
 				])
 			},
@@ -302,8 +352,12 @@
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeleteMasterConsigner({ id })
+		return handleActivateMasterConsigner({ id })
 	}
+
+	const handleSearch = debounceAsync(async (value: string | number) => {
+		selectSearch.value = value.toString()
+	}, 500)
 
 	// function getSort(key: string) {
 	// 	const sortParameters = extractSort(selectSort.value as string)
@@ -370,6 +424,12 @@
 			}
 		}
 	}
+
+	function handleClear() {
+		selectSearch.value = undefined
+		search.value = undefined
+		status.value = undefined
+	}
 </script>
 <template>
 	<main>
@@ -379,7 +439,9 @@
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
+				<div
+					class="flex flex-1 gap-10 items-center justify-between md:justify-start md:flex-initial"
+				>
 					<titulo title="Gerenciar consignante master" />
 
 					<form-wrapper
@@ -418,6 +480,51 @@
 							/>
 						</template>
 					</form-wrapper>
+				</div>
+
+				<div class="header_actions flex items-center gap-4 flex-1 justify-end">
+					<select-root class="flex-[1]" v-model="status">
+						<select-trigger class="lg:max-w-96 flex-[2]">
+							<select-value
+								class="text-left"
+								placeholder="Selecione um status..."
+							/>
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Status:</select-label>
+								<select-item
+									v-for="statusItem of statusItems"
+									:key="statusItem.value"
+									:value="statusItem.value.toString()"
+									>{{ statusItem.label }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<input-root
+						class="flex-[3] max-w-96"
+						placeholder="Search"
+						v-model="search"
+						@update:model-value="handleSearch"
+					/>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root variant="outline" @click="handleClear">
+									<font-awesome-icon
+										class="text-primary_3-table w-5 h-5"
+										:icon="['fas', 'eraser']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Apagar filtros</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
 				</div>
 			</div>
 

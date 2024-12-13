@@ -39,7 +39,7 @@
 
 	const { data: pages } = useQuery({
 		enabled: enabledPages,
-		queryKey: generalRepository.getQueryKey('pages', {}, operadorId),
+		queryKey: generalRepository.getQueryKey('pages'),
 		queryFn: ({ signal }) =>
 			generalRepository.getPagesToMenu({
 				signal,
@@ -58,7 +58,7 @@
 
 				const userData = response
 				userName.value = userData.nome
-				userRole.value = userData.operador
+				userRole.value = userData.operador.tipo_operador.name
 				operadorId.value = userData.operador_id
 				storage.setItem('operadorId', userData.operador_id)
 			} else {
