@@ -616,7 +616,7 @@
 	}, 500)
 
 	const handleSearchCpf = debounceAsync(async (value: string | number) => {
-		selectCPF.value = value.toString().trim().replace(/\D+/, '')
+		selectCPF.value = value.toString().trim().replace(/\D+/g, '')
 	}, 500)
 
 	// function handleSelectCity() {
