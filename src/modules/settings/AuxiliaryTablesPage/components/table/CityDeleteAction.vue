@@ -35,19 +35,19 @@
 
 <template>
 	<alert-dialog>
-		<alert-dialog-trigger disabled>
+		<alert-dialog-trigger>
 			<tooltip-provider>
 				<tooltip>
-					<tooltip-trigger disabled as-child>
+					<tooltip-trigger as-child>
 						<button-root variant="outline">
 							<font-awesome-icon
-								:class="['w-4 h-4', isActive ? 'text-warning' : 'text-success']"
-								:icon="['fas', isActive ? 'ban' : 'arrows-rotate']"
+								:class="['w-4 h-4 text-danger']"
+								:icon="['far', 'trash-can']"
 							/>
 						</button-root>
 					</tooltip-trigger>
 					<tooltip-content side="right">
-						<p>{{ isActive ? 'Desativar' : 'Ativar' }} cidade</p>
+						<p>Apagar cidade</p>
 					</tooltip-content>
 				</tooltip>
 			</tooltip-provider>
@@ -56,20 +56,20 @@
 		<alert-dialog-content>
 			<alert-dialog-header>
 				<alert-dialog-title
-					>Deseja {{ isActive ? 'desativar' : 'ativar' }} "{{
+					>Deseja apagar "{{
 						tableCityName
 					}}"?</alert-dialog-title
 				>
 				<alert-dialog-description>
-					A ação poderá ser desfeita a qualquer momento.
+					A ação não poderá ser desfeita.
 				</alert-dialog-description>
 			</alert-dialog-header>
 			<alert-dialog-footer>
 				<alert-dialog-cancel>Cancelar</alert-dialog-cancel>
 				<alert-dialog-action
-					class="bg-warning text-white"
+					class="bg-danger text-white"
 					@click="handleDelete"
-					>{{ isActive ? 'Desativar' : 'Ativar' }}</alert-dialog-action
+					>Apagar</alert-dialog-action
 				>
 			</alert-dialog-footer>
 		</alert-dialog-content>

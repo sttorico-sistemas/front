@@ -22,6 +22,7 @@
 		dataId: { type: Number, required: true },
 		tablePersonName: { type: String, required: true },
 		isLoading: { type: Boolean, default: () => false },
+		isActive: { type: Boolean, required: true },
 	})
 	const emits = defineEmits(['on-edit'])
 
@@ -151,18 +152,20 @@
 		const contactList = new ContactList(selectData.value?.contacts)
 		contactList.update(values.contacts.map((data) => new ContactModel(data)))
 
-		console.log({
-			addressList,
-			contactList,
-		})
-
-		emits('on-edit', properties.dataId, {
-			...values,
-			contacts: contactList.getItems(),
-			deletedContacts: contactList.getRemovedItems().map((data) => data.id),
-			addresses: addressList.getItems(),
-			deletedAddresses: addressList.getRemovedItems().map((data) => data.id),
-		})
+		emits(
+			'on-edit',
+			properties.dataId,
+			{
+				...values,
+				contacts: contactList.getItems(),
+				deletedContacts: contactList.getRemovedItems().map((data) => data.id),
+				addresses: addressList.getItems(),
+				deletedAddresses: addressList.getRemovedItems().map((data) => data.id),
+			},
+			() => {
+				openUpdateModal.value = false
+			},
+		)
 	})
 </script>
 
@@ -177,7 +180,7 @@
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
 				<font-awesome-icon
 					class="text-primary_3-table w-4 h-4"
 					:icon="['fas', 'pen']"

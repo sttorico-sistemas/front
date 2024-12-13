@@ -31,11 +31,15 @@
 			url: z
 				.string({ message: 'A url é obrigatória.' })
 				.min(1, { message: 'A url é obrigatória.' }),
-			parentId: z
-				.string({ message: 'A página pai é obrigatória.' })
-				.min(1, { message: 'A página pai é obrigatória.' })
-				.optional()
-				.nullable(),
+			permissions: z
+				.object(
+					{
+						id: z.string({ message: 'Esse campo é obrigatório.' }),
+						title: z.string({ message: 'Esse campo é obrigatório.' }),
+					},
+					{ message: 'Esse campo é obrigatório.' },
+				)
+				.optional(),
 		}),
 	)
 
@@ -48,13 +52,25 @@
 		isDataLoading.value = true
 		try {
 			const data = await generalRepository.getPageById(properties.dataId)
+			console.log({
+				name: data.name,
+				permissions: data?.parentId
+					? {
+							id: data?.parentId.toString(),
+							title: data,
+						}
+					: undefined,
+				slug: data.slug,
+				url: data.url,
+			})
 			form.setValues({
 				name: data.name,
-				parentId: data?.parentId
-					? data.parentId.toString()
-					: data?.parentId === undefined
-						? undefined
-						: null,
+				permissions: data?.parentId
+					? {
+							id: data?.parentId.toString(),
+							title: '',
+						}
+					: undefined,
 				slug: data.slug,
 				url: data.url,
 			})

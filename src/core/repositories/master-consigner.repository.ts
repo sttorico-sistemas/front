@@ -70,15 +70,14 @@ export class MasterConsignerRepository {
 	}
 
 
-	async deleteMasterConsigner({ id }: Pick<MasterConsignerModel, 'id'>,
+	async activateMasterConsigner({ id }: Pick<MasterConsignerModel, 'id'>,
 		configParams?: HttpClientProps<MasterConsignerModel>
 	): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/consignante-master/${id}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// });
+			await this.http.patch(`/consignante-master/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}

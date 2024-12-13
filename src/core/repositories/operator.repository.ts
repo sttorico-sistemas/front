@@ -18,13 +18,12 @@ export class OperatorRepository {
 
 	async getAllOperators(configParams?: HttpClientProps<OperatorModel[]>): Promise<OperatorModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[] }>(`/profile/operador`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/profile/operador`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
 			const values = response.data.map((e: Record<string, any>) => OperatorModel.fromRecord(e));
-			console.log(values)
-			// if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
@@ -71,16 +70,14 @@ export class OperatorRepository {
 		}
 	}
 
-
-	async deleteOperator({ id }: Pick<OperatorModel, 'id'>,
+	async activateConsigner({ id }: Pick<OperatorModel, 'id'>,
 		configParams?: HttpClientProps<OperatorModel>
 	): Promise<void> {
 		try {
-			return Promise.resolve()
-			// await this.http.delete(`/pessoas/${id}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// });
+			await this.http.patch(`/profile/operador/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
