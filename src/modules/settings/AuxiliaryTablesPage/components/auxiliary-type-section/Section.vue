@@ -401,10 +401,6 @@
 			}
 		}
 	}
-
-	function handleClear() {
-		selectType.value = undefined
-	}
 </script>
 <template>
 	<div class="panel mt-6">
@@ -476,22 +472,6 @@
 						</select-group>
 					</select-content>
 				</select-root>
-
-				<tooltip-provider>
-					<tooltip>
-						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
-								<font-awesome-icon
-									class="text-primary_3-table w-5 h-5"
-									:icon="['fas', 'eraser']"
-								/>
-							</button-root>
-						</tooltip-trigger>
-						<tooltip-content side="right">
-							<p>Apagar filtros</p>
-						</tooltip-content>
-					</tooltip>
-				</tooltip-provider>
 			</div>
 		</div>
 

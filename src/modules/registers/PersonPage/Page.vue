@@ -59,7 +59,6 @@
 		PersonForm,
 		PersonUpdateAction,
 	} from './components/table'
-	import { Status } from '@/core/types'
 
 	type PersonTable = {
 		id: number
@@ -260,7 +259,7 @@
 			},
 			onSuccess: () => {
 				notify.success(
-					{ title: `Consignante criado com sucesso!` },
+					{ title: `Pessoa criada com sucesso!` },
 					{ duration: 1500 },
 				)
 			},
@@ -704,7 +703,9 @@
 			<div
 				class="flex md:flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex flex-1 gap-10 items-center justify-between lg:justify-start lg:flex-initial">
+				<div
+					class="flex flex-1 gap-10 items-center justify-between lg:justify-start lg:flex-initial"
+				>
 					<titulo title="Gerenciar pessoas cadastradas" />
 
 					<form-wrapper
@@ -770,11 +771,9 @@
 								class="col-span-3 justify-between"
 							>
 								{{
-									selectCity
-										? formattedSearchCities.find(
-												(searchCities) => searchCities.id === selectCity,
-											)?.name
-										: 'Selecione a cidade...'
+									formattedSearchCities.find(
+										(searchCities) => searchCities.id === selectCity,
+									)?.name ?? 'Selecione a cidade...'
 								}}
 								<font-awesome-icon
 									v-if="openCityBox"
@@ -784,11 +783,7 @@
 							</ButtonRoot>
 						</PopoverTrigger>
 						<PopoverContent class="lg:max-w-96 flex-[3]A p-0">
-							<Command
-								multiple
-								v-model="selectCity"
-								@update:searchTerm="handleSearchCities"
-							>
+							<Command @update:searchTerm="handleSearchCities">
 								<CommandInput class="h-9" placeholder="Busque uma cidade..." />
 								<CommandEmpty>Nenhuma cidades encontrada.</CommandEmpty>
 								<CommandList>
@@ -796,11 +791,11 @@
 										<CommandItem
 											v-for="searchCities in formattedSearchCities"
 											:key="searchCities.id"
-											:value="searchCities.id"
+											:value="searchCities.name"
 											@select="
 												(ev) => {
 													if (typeof ev.detail.value === 'string') {
-														selectCity = ev.detail.value
+														selectCity = searchCities.id
 													}
 													openCityBox = false
 												}
@@ -811,7 +806,7 @@
 												:class="
 													cn(
 														'ml-auto h-4 w-4',
-														selectCity === searchCities.name
+														selectCity === searchCities.id
 															? 'opacity-100'
 															: 'opacity-0',
 													)
@@ -827,10 +822,7 @@
 
 					<select-root v-model="selectStatus">
 						<select-trigger class="col-span-2 md:col-start-10">
-							<select-value
-								class="text-left"
-								placeholder="Status"
-							/>
+							<select-value class="text-left" placeholder="Status" />
 						</select-trigger>
 						<select-content>
 							<select-group>

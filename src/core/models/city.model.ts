@@ -45,7 +45,7 @@ export class CityModel extends BaseModel {
 			id: record.id,
 			name: record.nome,
 			stateName: record.estado.nome,
-			stateId: record.estado_id,
+			stateId: record.estado.id,
 			ibgeId: record.ibge_id,
 			createdAt: new Date(record.created_at),
 			updatedAt: new Date(record.updated_at),
