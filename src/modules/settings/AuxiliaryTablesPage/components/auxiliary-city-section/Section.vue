@@ -151,7 +151,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: 'Erro ao apagar a cidade!' },
+					{ title: error.message ?? 'Erro ao apagar a cidade!' },
 					{ duration: 1500 },
 				)
 			},
@@ -183,7 +183,7 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao atualizar a cidade!` },
+					{ title: error.message ?? `Erro ao atualizar a cidade!` },
 					{ duration: 1500 },
 				)
 			},
@@ -211,12 +211,11 @@
 						selectUf,
 					),
 				})
-				openCreateModal.value = false
 			},
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: `Erro ao criar a cidade!` },
+					{ title: error.message ?? `Erro ao criar a cidade!` },
 					{ duration: 1500 },
 				)
 			},
@@ -383,7 +382,9 @@
 				stateId: +values.stateId,
 				basePath: 'auxiliary/cidade',
 			}),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (
