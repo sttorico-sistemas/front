@@ -137,7 +137,10 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: 'Erro ao atualizar status do consignante master!' },
+				{
+					title:
+						error.message ?? 'Erro ao atualizar status do consignante master!',
+				},
 				{ duration: 1500 },
 			)
 		},
@@ -170,7 +173,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao atualizar o consignante!` },
+				{ title: error.message ?? `Erro ao atualizar o consignante!` },
 				{ duration: 1500 },
 			)
 		},
@@ -199,12 +202,11 @@
 					status,
 				),
 			})
-			openCreateModal.value = false
 		},
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao criar o consignante!` },
+				{ title: error.message ?? `Erro ao criar o consignante!` },
 				{ duration: 1500 },
 			)
 		},
@@ -420,7 +422,9 @@
 	const onCreateSubmit = form.handleSubmit(async (values) => {
 		return handleCreateConsigner(
 			new ConsignerModel({ ...values, addresses: new AddressModel(values) }),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (

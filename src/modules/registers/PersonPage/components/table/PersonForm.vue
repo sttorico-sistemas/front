@@ -258,7 +258,7 @@
 							const isInvalid = ((metadata?.contacts ?? []) as Array<any>).some(
 								({ email, cellphone, phone }) =>
 									email === values.formEmail ||
-									cellphone === values.formPhoneTypeId ||
+									cellphone === values.formCellphone ||
 									phone === values.formPhone,
 							)
 

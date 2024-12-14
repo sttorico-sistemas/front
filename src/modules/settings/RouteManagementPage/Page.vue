@@ -100,7 +100,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: 'Erro ao apagar a página!' },
+				{ title: error.message ?? 'Erro ao apagar a página!' },
 				{ duration: 1500 },
 			)
 		},
@@ -128,7 +128,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao atualizar a página!` },
+				{ title: error.message ?? `Erro ao atualizar a página!` },
 				{ duration: 1500 },
 			)
 		},
@@ -152,12 +152,11 @@
 					limit: perPage,
 				}),
 			})
-			openCreateModal.value = false
 		},
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao criar a página!` },
+				{ title: error.message ?? `Erro ao criar a página!` },
 				{ duration: 1500 },
 			)
 		},
@@ -328,7 +327,9 @@
 				parentId: values?.permissions?.id,
 				children: [],
 			}),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (

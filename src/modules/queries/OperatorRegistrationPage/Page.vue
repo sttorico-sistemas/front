@@ -153,7 +153,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: 'Erro ao apagar o operador!' },
+				{ title: error.message ?? 'Erro ao apagar o operador!' },
 				{ duration: 1500 },
 			)
 		},
@@ -191,7 +191,7 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao atualizar o operador!` },
+				{ title: error.message ?? `Erro ao atualizar o operador!` },
 				{ duration: 1500 },
 			)
 		},
@@ -222,12 +222,11 @@
 					selectOperatorType,
 				),
 			})
-			openCreateModal.value = false
 		},
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: `Erro ao criar o operador!` },
+				{ title: error.message ?? `Erro ao criar o operador!` },
 				{ duration: 1500 },
 			)
 		},
@@ -513,7 +512,9 @@
 					.getRemovedItems()
 					.map(({ id }) => Number(id)),
 			}),
-		)
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (
@@ -615,7 +616,7 @@
 	}, 500)
 
 	const handleSearchCpf = debounceAsync(async (value: string | number) => {
-		selectCPF.value = value.toString().trim().replace(/\D+/, '')
+		selectCPF.value = value.toString().trim().replace(/\D+/g, '')
 	}, 500)
 
 	// function handleSelectCity() {
