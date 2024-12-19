@@ -102,11 +102,11 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar consignante master"
+		tooltip="Editar consignante"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar consignante master ${tableConsignerName}`"
-		description="Atualize o conteúdo do consignante master."
+		:title="`Editar consignante ${tableConsignerName}`"
+		description="Atualize o conteúdo do consignante."
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>

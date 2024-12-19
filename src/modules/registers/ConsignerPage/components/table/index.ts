@@ -1,3 +1,5 @@
 export { default as ConsignerDeleteAction } from './ConsignerDeleteAction.vue'
 export { default as ConsignerUpdateAction } from './ConsignerUpdateAction.vue'
+export { default as ConsignerViewAction } from './ConsignerViewAction.vue'
 export { default as ConsignerForm } from './ConsignerForm.vue'
+export { default as ConsignerData } from './ConsignerData.vue'

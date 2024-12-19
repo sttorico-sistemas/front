@@ -37,7 +37,9 @@ export class ConsignerRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return ConsignerModel.fromRecord(this.getConsignerByIdAdapter(response.data))
+			const values = ConsignerModel.fromRecord(this.getConsignerByIdAdapter(response.data))
+			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
+			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -50,7 +52,9 @@ export class ConsignerRepository {
 			nome_curto: data.nome_curto,
 			cnpj: data.cnpj,
 			tipo_entidade_id: data.instituicao.id,
+			tipo_entidade_nome: data.instituicao.nome,
 			consignante_master_id: data.master.id,
+			consignante_master_nome: data.master.nome,
 			endereco: {
 				id: data?.endereco?.id,
 				cidade_id: data?.cidade?.id,

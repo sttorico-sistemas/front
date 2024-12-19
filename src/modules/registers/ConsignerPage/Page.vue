@@ -43,6 +43,7 @@
 		ConsignerDeleteAction,
 		ConsignerForm,
 		ConsignerUpdateAction,
+		ConsignerViewAction,
 	} from './components/table'
 
 	type ConsignerTable = {
@@ -345,6 +346,11 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
+					h(ConsignerViewAction, {
+						dataId: data.id,
+						isLoading: isUpdateConsignerLoading.value,
+						isActive: data.status === 1,
+					}),
 					h(ConsignerUpdateAction, {
 						dataId: data.id,
 						tableConsignerName: data.name,
