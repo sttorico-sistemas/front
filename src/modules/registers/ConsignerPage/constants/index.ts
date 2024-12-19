@@ -1,4 +1,4 @@
-import { ConsignerData } from "@/modules/registers/ConsignerPage/components/table";
+import { ConsignerData, EndorserData } from "@/modules/registers/ConsignerPage/components/table";
 import { h } from "vue";
 
 export const accordionItems = [
@@ -23,8 +23,8 @@ export const accordionItems = [
 	{
 		value: 'item-4',
 		title: 'Lista de averbadores',
-		component: null,
-		disabled: true
+		component: EndorserData,
+		disabled: false
 	},
 	{
 		value: 'item-5',

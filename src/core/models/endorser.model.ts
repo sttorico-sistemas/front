@@ -1,0 +1,62 @@
+import { ManagerModel } from "@/core/models/manager.model";
+import { BaseModel } from "src/core/models/base.model";
+
+export class EndorserModel extends BaseModel {
+	public id?: number
+	public name: string
+	public phone: string
+	public cellphone: string;
+	public email: string;
+	public status?: number
+	public manager: ManagerModel
+
+	constructor(props: {
+		id?: number
+		name: string
+		phone: string
+		cellphone: string;
+		email: string;
+		status?: number
+		manager: ManagerModel
+	}) {
+		super();
+		this.id = props.id;
+		this.name = props.name;
+		this.phone = props.phone?.replace(/\D+/g, "");
+		this.cellphone = props.cellphone?.replace(/\D+/g, "");
+		this.email = props.email;
+		this.status = props.status;
+		this.manager = props.manager;
+	}
+
+	toRecord(): Record<string, any> {
+		return {
+			id: this.id,
+			nome: this.name,
+		}
+	}
+
+	static fromRecord(record: Record<string, any>): EndorserModel {
+		return new EndorserModel({
+			id: record.id,
+			name: record.nome,
+			cellphone: record.celular,
+			email: record.email,
+			phone: record.telefone,
+			status: record.status,
+			manager: ManagerModel.fromRecord(record.gestor)
+		});
+	}
+
+	public equals(entity: EndorserModel) {
+		if (entity === this) {
+			return true
+		}
+
+		if (entity.id === this.id && JSON.stringify(entity) === JSON.stringify(this)) {
+			return true
+		}
+
+		return false
+	}
+}
