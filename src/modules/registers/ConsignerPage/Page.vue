@@ -37,7 +37,11 @@
 	import { auxiliaryRepository, consignerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { AddressModel, ConsignerModel } from '@/core/models'
-	import { valueUpdater } from '@/core/utils'
+	import {
+		formatStatus,
+		valueUpdater,
+		type StatusFormatted,
+	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		ConsignerDeleteAction,
@@ -51,7 +55,7 @@
 		name: string
 		cnpj: string
 		entityTypeId: string
-		status: number
+		status: StatusFormatted
 	}
 
 	const statusItems = [
@@ -238,7 +242,7 @@
 					'$1.$2.$3/$4-$5',
 				),
 				entityTypeId: formattedAllEntityTypesMap.value[`${entityTypeId}`],
-				status: status as number,
+				status: formatStatus(status as number),
 			}),
 		)
 	})
@@ -341,6 +345,41 @@
 			enableHiding: false,
 		},
 		{
+			accessorKey: 'status',
+			meta: 'Tipo de entidade',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: ['w-full justify-start px-1 font-bold'],
+						disabled: formattedAllTypeOfConsigner.value.length <= 0,
+						// onClick: () => handleSort('entityTypeId'),
+					},
+					() => [
+						'Status',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('entityTypeId')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row, cell }) =>
+				h(
+					'div',
+					{
+						class: 'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+						style: {
+							color: row.getValue<StatusFormatted>('status').textColor,
+							backgroundColor: row.getValue<StatusFormatted>('status').bgColor
+						},
+					},
+					row.getValue<StatusFormatted>('status')?.text,
+				),
+			enableHiding: false,
+		},
+		{
 			id: 'actions',
 			header: 'Ações',
 			cell: ({ row }) => {
@@ -349,21 +388,21 @@
 					h(ConsignerViewAction, {
 						dataId: data.id,
 						isLoading: isUpdateConsignerLoading.value,
-						isActive: data.status === 1,
+						isActive: data.status.raw === 1,
 					}),
 					h(ConsignerUpdateAction, {
 						dataId: data.id,
 						tableConsignerName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateConsignerLoading.value,
-						isActive: data.status === 1,
+						isActive: data.status.raw === 1,
 					}),
 					h(ConsignerDeleteAction, {
 						dataId: data.id,
 						tableConsignerName: data.name,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteConsignerLoading.value,
-						isActive: data.status === 1,
+						isActive: data.status.raw === 1,
 					}),
 				])
 			},

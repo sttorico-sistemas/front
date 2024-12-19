@@ -165,8 +165,13 @@
 
 		<div class="grid grid-cols-28 gap-4">
 			<div class="flex flex-col col-span-3">
-				<label class="text-left text-2xs tracking-wide">Cód. Consignante</label>
+				<label
+					for="consigner-data-code"
+					class="text-left text-2xs tracking-wide"
+					>Cód. Consignante</label
+				>
 				<input-root
+					id="consigner-data-code"
 					disabled
 					type="text"
 					v-model="formattedConsigner.code"
@@ -175,8 +180,13 @@
 			</div>
 
 			<div class="flex flex-col col-span-4">
-				<label class="text-left text-2xs tracking-wide">CNPJ</label>
+				<label
+					for="consigner-data-cnpj"
+					class="text-left text-2xs tracking-wide"
+					>CNPJ</label
+				>
 				<input-root
+					id="consigner-data-cnpj"
 					disabled
 					type="text"
 					v-model="formattedConsigner.cnpj"
@@ -185,8 +195,13 @@
 			</div>
 
 			<div class="flex flex-col col-span-8">
-				<label class="text-left text-2xs tracking-wide">Consignante</label>
+				<label
+					for="consigner-data-name"
+					class="text-left text-2xs tracking-wide"
+					>Consignante</label
+				>
 				<input-root
+					id="consigner-data-name"
 					disabled
 					type="text"
 					v-model="formattedConsigner.name"
@@ -195,8 +210,13 @@
 			</div>
 
 			<div class="flex flex-col col-span-6">
-				<label class="text-left text-2xs tracking-wide">Tipo de entidade</label>
+				<label
+					for="consigner-data-entityType"
+					class="text-left text-2xs tracking-wide"
+					>Tipo de entidade</label
+				>
 				<input-root
+					id="consigner-data-entityType"
 					disabled
 					type="text"
 					v-model="formattedConsigner.entityType"
@@ -205,10 +225,14 @@
 			</div>
 
 			<div class="flex flex-col col-span-6">
-				<label class="text-left text-2xs tracking-wide">
+				<label
+					for="consigner-data-masterConsigner"
+					class="text-left text-2xs tracking-wide"
+				>
 					Consignante master
 				</label>
 				<input-root
+					id="consigner-data-masterConsigner"
 					disabled
 					type="text"
 					v-model="formattedConsigner.masterConsigner"
@@ -219,8 +243,13 @@
 
 		<div class="grid grid-cols-28 gap-4">
 			<div class="flex flex-col col-span-6">
-				<label class="text-left text-2xs tracking-wide">Nome curto</label>
+				<label
+					for="consigner-data-shortName"
+					class="text-left text-2xs tracking-wide"
+					>Nome curto</label
+				>
 				<input-root
+					id="consigner-data-shortName"
 					disabled
 					type="text"
 					v-model="formattedConsigner.shortName"
@@ -229,8 +258,13 @@
 			</div>
 
 			<div class="flex flex-col col-span-3">
-				<label class="text-left text-2xs tracking-wide">Expediente de</label>
+				<label
+					for="consigner-data-start"
+					class="text-left text-2xs tracking-wide"
+					>Expediente de</label
+				>
 				<input-root
+					id="consigner-data-start"
 					disabled
 					type="text"
 					class="col-span-5 disabled:opacity-80 disabled:bg-gray-50"
@@ -238,8 +272,11 @@
 			</div>
 
 			<div class="flex flex-col col-span-3">
-				<label class="text-left text-2xs tracking-wide">Até</label>
+				<label for="consigner-data-end" class="text-left text-2xs tracking-wide"
+					>Até</label
+				>
 				<input-root
+					id="consigner-data-end"
 					disabled
 					type="text"
 					class="col-span-5 disabled:opacity-80 disabled:bg-gray-50"
@@ -249,10 +286,14 @@
 
 		<div class="grid grid-cols-28 gap-4">
 			<div class="flex flex-col col-span-4">
-				<label class="text-left text-2xs tracking-wide">
+				<label
+					for="consigner-data-addressType"
+					class="text-left text-2xs tracking-wide"
+				>
 					Tipo de Endereço
 				</label>
 				<input-root
+					id="consigner-data-addressType"
 					disabled
 					type="text"
 					v-model="formattedConsigner.addressType"
@@ -261,10 +302,14 @@
 			</div>
 
 			<div class="flex flex-col col-span-12">
-				<label class="text-left text-2xs tracking-wide">
+				<label
+					for="consigner-data-street"
+					class="text-left text-2xs tracking-wide"
+				>
 					Endereço Completo
 				</label>
 				<input-root
+					id="consigner-data-street"
 					disabled
 					type="text"
 					v-model="formattedConsigner.street"
@@ -273,8 +318,13 @@
 			</div>
 
 			<div class="flex flex-col col-span-6">
-				<label class="text-left text-2xs tracking-wide">Cidade</label>
+				<label
+					for="consigner-data-city"
+					class="text-left text-2xs tracking-wide"
+					>Cidade</label
+				>
 				<input-root
+					id="consigner-data-city"
 					disabled
 					type="text"
 					v-model="formattedConsigner.city"
@@ -283,8 +333,11 @@
 			</div>
 
 			<div class="flex flex-col col-span-2">
-				<label class="text-left text-2xs tracking-wide">UF</label>
+				<label for="consigner-data-uf" class="text-left text-2xs tracking-wide"
+					>UF</label
+				>
 				<input-root
+					id="consigner-data-uf"
 					disabled
 					type="text"
 					v-model="formattedConsigner.uf"
@@ -293,8 +346,13 @@
 			</div>
 
 			<div class="flex flex-col col-span-3">
-				<label class="text-left text-2xs tracking-wide">CEP</label>
+				<label
+					for="consigner-data-zipCode"
+					class="text-left text-2xs tracking-wide"
+					>CEP</label
+				>
 				<input-root
+					id="consigner-data-zipCode"
 					disabled
 					type="text"
 					v-model="formattedConsigner.zipCode"

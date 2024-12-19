@@ -5,7 +5,7 @@
 	import { toTypedSchema } from '@vee-validate/zod'
 	import { useRouteQuery } from '@vueuse/router'
 	import { keepPreviousData, useQuery } from '@tanstack/vue-query'
-		import { useRoute, useRouter } from 'vue-router'
+	import { useRoute, useRouter } from 'vue-router'
 	import { useLocalStorage } from '@vueuse/core'
 
 	import { FormControl, FormField, FormItem } from '@/core/components/form'
@@ -53,8 +53,6 @@
 	import { ButtonRoot } from '@/core/components/button'
 	import { accordionItems } from '@/modules/registers/ConsignerPage/constants'
 
-
-
 	import { RenderElement } from '@/core/components/render-element'
 
 	type ConsignerTable = {
@@ -64,6 +62,22 @@
 		entityTypeId: string
 		status: number
 	}
+
+	const formSchema = z.object({
+		masterConsignerId: z
+			.string({ message: 'O consignante master é obrigatório' })
+			.min(1, { message: 'O consignante master é obrigatório.' }),
+		entityTypeId: z
+			.string({ message: 'A entidade é obrigatória' })
+			.min(1, { message: 'A entidade é obrigatória.' }),
+		consignerId: z
+			.string({ message: 'O consignante é obrigatório.' })
+			.min(1, { message: 'O consignante é obrigatório.' }),
+	})
+
+	const form = useForm({
+		validationSchema: toTypedSchema(formSchema),
+	})
 
 	const openConsignerBox = ref(false)
 	const tmpConsigner = ref<{ id: string; name: string } | undefined>(undefined)
@@ -76,6 +90,14 @@
 
 	const currentId = computed(() => {
 		return +(route.params.id as string)
+	})
+
+	const currentMasterConsignerId = computed(() => {
+		return +(form.values.masterConsignerId as string)
+	})
+
+	const currentEntityTypeId = computed(() => {
+		return +(form.values.entityTypeId as string)
 	})
 
 	const { data: consigner, isLoading: isConsignerLoading } = useQuery({
@@ -130,22 +152,6 @@
 		}))
 	})
 
-	const formSchema = z.object({
-		masterConsignerId: z
-			.string({ message: 'O consignante master é obrigatório' })
-			.min(1, { message: 'O consignante master é obrigatório.' }),
-		entityTypeId: z
-			.string({ message: 'A entidade é obrigatória' })
-			.min(1, { message: 'A entidade é obrigatória.' }),
-		consignerId: z
-			.string({ message: 'O consignante é obrigatório.' })
-			.min(1, { message: 'O consignante é obrigatório.' }),
-	})
-
-	const form = useForm({
-		validationSchema: toTypedSchema(formSchema),
-	})
-
 	const onSubmit = form.handleSubmit((value) => {
 		if (currentId.value.toString() === value.consignerId) return
 		console.log(value)
@@ -162,6 +168,8 @@
 				params: {
 					search: value,
 					per_page: 10,
+					consignante_master_id: currentMasterConsignerId.value,
+					tipo_entidade_id: currentEntityTypeId.value,
 				},
 			})
 			.then((response) => {
@@ -192,16 +200,20 @@
 							</button-root>
 						</tooltip-trigger>
 						<tooltip-content side="right">
-							<p>Nova consulta</p>
+							<p>Voltar</p>
 						</tooltip-content>
 					</tooltip>
 				</tooltip-provider>
 
 				<form
-					class="header_actions flex items-center gap-4 flex-1 justify-end"
+					class="header_actions flex items-center gap-4 flex-1 justify-start"
 					@submit="onSubmit"
 				>
-					<form-field v-slot="{ componentField }" name="masterConsignerId">
+					<form-field
+						v-slot="{ componentField }"
+						id="masterConsignerId"
+						name="masterConsignerId"
+					>
 						<form-item class="flex-1 max-w-96">
 							<form-control>
 								<select-root
@@ -231,7 +243,39 @@
 					</form-field>
 
 					<form-field
+						v-slot="{ componentField }"
+						id="entityTypeId"
+						name="entityTypeId"
+					>
+						<form-item class="flex-1 max-w-96">
+							<form-control>
+								<select-root
+									class="items-start justify-start"
+									:disabled="isEntityTypesLoading"
+									v-bind="componentField"
+								>
+									<select-trigger class="col-span-5">
+										<select-value placeholder="Selecione o tipo..." />
+									</select-trigger>
+									<select-content>
+										<select-group>
+											<select-label>Tipos de entidade:</select-label>
+											<select-item
+												v-for="entityType of formattedAllEntityTypes"
+												:key="entityType.id"
+												:value="entityType.id.toString()"
+												>{{ entityType.name }}</select-item
+											>
+										</select-group>
+									</select-content>
+								</select-root>
+							</form-control>
+						</form-item>
+					</form-field>
+
+					<form-field
 						v-slot="{ componentField, handleChange }"
+						id="consignerId"
 						name="consignerId"
 					>
 						<form-item class="flex-1 max-w-96">
@@ -258,6 +302,7 @@
 									<PopoverContent class="lg:max-w-96 flex-[3]A p-0">
 										<Command @update:searchTerm="handleSearchConsigners">
 											<CommandInput
+												name="search-input"
 												class="h-9"
 												placeholder="Busque um consignante..."
 											/>
@@ -303,48 +348,16 @@
 						</form-item>
 					</form-field>
 
-					<form-field v-slot="{ componentField }" name="entityTypeId">
-						<form-item class="flex-1 max-w-96">
-							<form-control>
-								<select-root
-									class="items-start justify-start"
-									:disabled="isEntityTypesLoading"
-									v-bind="componentField"
-								>
-									<select-trigger class="col-span-5">
-										<select-value placeholder="Selecione o tipo..." />
-									</select-trigger>
-									<select-content>
-										<select-group>
-											<select-label>Tipos de entidade:</select-label>
-											<select-item
-												v-for="entityType of formattedAllEntityTypes"
-												:key="entityType.id"
-												:value="entityType.id.toString()"
-												>{{ entityType.name }}</select-item
-											>
-										</select-group>
-									</select-content>
-								</select-root>
-							</form-control>
-						</form-item>
-					</form-field>
+					<button-root variant="outline" type="submit">
+						<font-awesome-icon
+							class="text-primary_3-table w-5 h-5"
+							:icon="['fas', 'magnifying-glass']"
+						/>
 
-					<tooltip-provider>
-						<tooltip>
-							<tooltip-trigger as-child>
-								<button-root variant="outline" type="submit">
-									<font-awesome-icon
-										class="text-primary_3-table w-5 h-5"
-										:icon="['fas', 'magnifying-glass']"
-									/>
-								</button-root>
-							</tooltip-trigger>
-							<tooltip-content side="right">
-								<p>Nova consulta</p>
-							</tooltip-content>
-						</tooltip>
-					</tooltip-provider>
+						<p class="text-primary_3-table font-semibold ml-4 text-md">
+							Nova consulta
+						</p>
+					</button-root>
 				</form>
 			</div>
 		</div>
@@ -376,7 +389,9 @@
 					>
 						<render-element
 							:element="item.component"
-							:props="{ dataId: route.params.id }"
+							:props="{
+								dataId: +route.params.id,
+							}"
 						></render-element>
 					</accordion-content>
 				</accordion-item>
