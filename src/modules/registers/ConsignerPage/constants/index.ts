@@ -1,4 +1,4 @@
-import { ConsignerData, EndorserData, RegulatoryData } from "@/modules/registers/ConsignerPage/components/table";
+import { ConsignerData, EndorserData, RegulatoryData, InstructionOfProcedureData } from "@/modules/registers/ConsignerPage/components/table";
 import { h } from "vue";
 
 export const accordionItems = [
@@ -77,8 +77,8 @@ export const accordionItems = [
 	{
 		value: 'item-13',
 		title: 'IP - Instrução de procedimentos',
-		component: null,
-		disabled: true
+		component: InstructionOfProcedureData,
+		disabled: false
 	},
 	{
 		value: 'item-14',
