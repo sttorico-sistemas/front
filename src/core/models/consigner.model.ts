@@ -11,6 +11,8 @@ export class ConsignerModel extends BaseModel {
 	public status?: number
 	public entityTypeId: string
 	public entityTypeName?: string;
+	public startOfBusiness?: string | null;
+	public endOfBusiness?: string | null;
 	public addresses: AddressModel
 
 	constructor(props: {
@@ -19,6 +21,8 @@ export class ConsignerModel extends BaseModel {
 		shortName: string;
 		cnpj: string;
 		status?: number;
+		startOfBusiness?: string | null;
+		endOfBusiness?: string | null;
 		masterConsignerId: string;
 		masterConsignerName?: string;
 		entityTypeId: string;
@@ -28,6 +32,8 @@ export class ConsignerModel extends BaseModel {
 		super();
 		this.id = props.id;
 		this.name = props.name;
+		this.startOfBusiness = props.startOfBusiness;
+		this.endOfBusiness = props.endOfBusiness;
 		this.shortName = props.shortName;
 		this.cnpj = props.cnpj?.replace(/\D+/g, "");
 		this.masterConsignerId = props.masterConsignerId;
@@ -46,7 +52,9 @@ export class ConsignerModel extends BaseModel {
 			cnpj: this.cnpj,
 			consignante_master_id: this.masterConsignerId,
 			tipo_entidade_id: this.entityTypeId,
-			endereco: this.addresses.toRecord()
+			endereco: this.addresses.toRecord(),
+			inicio: this.startOfBusiness,
+			fim: this.endOfBusiness,
 		}
 	}
 
@@ -56,6 +64,8 @@ export class ConsignerModel extends BaseModel {
 			name: record.nome,
 			shortName: record.nome_curto,
 			cnpj: record.cnpj,
+			endOfBusiness: record.fim,
+			startOfBusiness: record.inicio,
 			entityTypeId: record.tipo_entidade_id,
 			entityTypeName: record?.tipo_entidade_nome,
 			masterConsignerId: record.consignante_master_id,
