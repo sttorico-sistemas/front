@@ -253,6 +253,50 @@
 			</form-item>
 		</form-field>
 
+		<Separator class="mt-4 mb-6" label="Expediente" />
+
+		<div class="grid grid-cols-12 gap-x-4 items-center">
+			<form-field v-slot="{ componentField }" name="startOfBusiness">
+				<form-item
+					class="grid grid-cols-12 col-span-3 items-center gap-x-4 gap-y-1"
+				>
+					<form-control>
+						<input-root
+							:disabled="disabled"
+							type="time"
+							placeholder="Início..."
+							class="col-span-12"
+							v-bind="componentField"
+						/>
+					</form-control>
+
+					<form-message class="col-span-12" />
+				</form-item>
+			</form-field>
+
+			<div class="flex justify-center items-center ml-4 h-full">
+				<h1 class="text-sm mb-8">Até</h1>
+			</div>
+
+			<form-field v-slot="{ componentField }" name="endOfBusiness">
+				<form-item
+					class="grid grid-cols-12 col-span-3 items-center gap-x-4 gap-y-1"
+				>
+					<form-control>
+						<input-root
+							:disabled="disabled"
+							type="time"
+							placeholder="Fim..."
+							class="col-span-12"
+							v-bind="componentField"
+						/>
+					</form-control>
+
+					<form-message class="col-span-12" />
+				</form-item>
+			</form-field>
+		</div>
+
 		<Separator class="my-4" label="Endereço" />
 
 		<div class="grid grid-cols-12 gap-x-4">

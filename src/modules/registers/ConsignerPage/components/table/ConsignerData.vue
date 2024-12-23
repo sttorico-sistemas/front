@@ -92,45 +92,82 @@
 					'$1.$2.$3/$4-$5',
 				) ?? '',
 			entityType: consigner?.value?.entityTypeName ?? '',
+			startOfBusiness: consigner?.value?.startOfBusiness ?? undefined,
+			endOfBusiness: consigner?.value?.endOfBusiness ?? undefined,
 			masterConsigner: consigner?.value?.masterConsignerName ?? '',
 			shortName: consigner?.value?.shortName ?? '',
-			addressType: consigner?.value?.addresses?.addressTypeId ?? '',
+			addressType: consigner?.value?.addresses?.addressTypeName ?? '',
 			street: consigner?.value?.addresses?.street ?? '',
 			city: consigner?.value?.addresses?.cityName ?? '',
-			uf: consigner?.value?.addresses?.stateId ?? '',
+			uf: consigner?.value?.addresses?.stateName ?? '',
 			zipCode: consigner?.value?.addresses?.zipCode ?? '',
 		}
 	})
 
-	const formSchema = z.object({
-		name: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		shortName: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		cnpj: z
-			.string({ message: 'O CNPJ é obrigatório.' })
-			.min(1, { message: 'O CNPJ é obrigatório.' }),
-		masterConsignerId: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		entityTypeId: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		cityId: z
-			.string({ message: 'A cidade é obrigatória.' })
-			.min(1, { message: 'A cidade é obrigatória.' }),
-		stateId: z
-			.string({ message: 'O estado é obrigatório.' })
-			.min(1, { message: 'O estado é obrigatório.' }),
-		street: z
-			.string({ message: 'O logradouro é obrigatório.' })
-			.min(1, { message: 'O logradouro é obrigatório.' }),
-		zipCode: z
-			.string({ message: 'O CEP é obrigatório.' })
-			.min(1, { message: 'O CEP é obrigatório.' }),
-	})
+	const formSchema = z
+		.object({
+			name: z
+				.string({ message: 'O nome é obrigatório' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			shortName: z
+				.string({ message: 'O nome é obrigatório' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			startOfBusiness: z
+				.string({ message: 'O inicio é obrigatório' })
+				.optional()
+				.nullable(),
+			endOfBusiness: z
+				.string({ message: 'O fim é obrigatório' })
+				.optional()
+				.nullable(),
+			cnpj: z
+				.string({ message: 'O CNPJ é obrigatório.' })
+				.min(1, { message: 'O CNPJ é obrigatório.' }),
+			masterConsignerId: z
+				.string({ message: 'O consignante master é obrigatório' })
+				.min(1, { message: 'O consignante master é obrigatório.' }),
+			entityTypeId: z
+				.string({ message: 'A entidade é obrigatória' })
+				.min(1, { message: 'A entidade é obrigatória.' }),
+			cityId: z
+				.string({ message: 'A cidade é obrigatória.' })
+				.min(1, { message: 'A cidade é obrigatória.' }),
+			stateId: z
+				.string({ message: 'O estado é obrigatório.' })
+				.min(1, { message: 'O estado é obrigatório.' }),
+			street: z
+				.string({ message: 'O logradouro é obrigatório.' })
+				.min(1, { message: 'O logradouro é obrigatório.' }),
+			zipCode: z
+				.string({ message: 'O CEP é obrigatório.' })
+				.min(1, { message: 'O CEP é obrigatório.' }),
+		})
+		.refine(
+			({ startOfBusiness, endOfBusiness }) => {
+				if (
+					startOfBusiness === null ||
+					startOfBusiness === undefined ||
+					endOfBusiness === null ||
+					endOfBusiness === undefined
+				) {
+					return
+				}
+
+				const [h1, m1] = startOfBusiness.split(':').map(Number)
+				const [h2, m2] = endOfBusiness.split(':').map(Number)
+
+				const start = new Date()
+				start.setHours(h1, m1, 0, 0)
+
+				const end = new Date()
+				end.setHours(h2, m2, 0, 0)
+
+				return start > end
+			},
+			{
+				message: 'O horário de início deve ser menor que o horário de término.',
+			},
+		)
 
 	const onUpdateSubmit = async (
 		id: number,
@@ -266,7 +303,8 @@
 				<input-root
 					id="consigner-data-start"
 					disabled
-					type="text"
+					type="time"
+					v-model="formattedConsigner.startOfBusiness"
 					class="col-span-5 disabled:opacity-80 disabled:bg-gray-50"
 				/>
 			</div>
@@ -278,7 +316,8 @@
 				<input-root
 					id="consigner-data-end"
 					disabled
-					type="text"
+					type="time"
+					v-model="formattedConsigner.endOfBusiness"
 					class="col-span-5 disabled:opacity-80 disabled:bg-gray-50"
 				/>
 			</div>

@@ -1,4 +1,4 @@
-import { ConsignerData, EndorserData } from "@/modules/registers/ConsignerPage/components/table";
+import { ConsignerData, EndorserData, RegulatoryData } from "@/modules/registers/ConsignerPage/components/table";
 import { h } from "vue";
 
 export const accordionItems = [
@@ -47,8 +47,8 @@ export const accordionItems = [
 	{
 		value: 'item-8',
 		title: 'Normativos',
-		component: null,
-		disabled: true
+		component: RegulatoryData,
+		disabled: false
 	},
 	{
 		value: 'item-9',
