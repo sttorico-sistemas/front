@@ -5,16 +5,20 @@ export class AddressModel extends BaseModel {
 	public cityId: number;
 	public cityName?: string;
 	public stateId: number;
+	public stateName?: string;
 	public street: string;
 	public zipCode: string;
 	public addressTypeId?: number;
+	public addressTypeName?: string;
 
 	constructor(props: {
 		id?: string;
 		cityId: string;
 		cityName?: string;
 		stateId: string;
+		stateName?: string;
 		addressTypeId?: string;
+		addressTypeName?: string;
 		street: string;
 		zipCode: string;
 	}) {
@@ -22,8 +26,10 @@ export class AddressModel extends BaseModel {
 		this.id = props?.id ? +props.id : undefined;
 		this.cityId = +props.cityId;
 		this.stateId = +props.stateId;
+		this.stateName = props.stateName;
 		this.cityName = props.cityName
 		this.addressTypeId = props.addressTypeId ? +props.addressTypeId : undefined;
+		this.addressTypeName = props.addressTypeName;
 		this.street = props.street;
 		this.zipCode = props.zipCode?.replace(/\D+/g, "");
 	}
@@ -42,9 +48,11 @@ export class AddressModel extends BaseModel {
 		return new AddressModel({
 			id: record?.id,
 			addressTypeId: record?.tipo_endereco_id,
-			cityId: record?.cidade?.id ?? record?.cidade_id,
-			cityName: record?.cidade?.nome ?? record?.cidade_nome,
-			stateId: record?.cidade?.estado?.id ?? record?.estado_id,
+			addressTypeName: record?.tipo_endereco_nome,
+			cityId: record?.cidade_id,
+			cityName: record?.cidade_nome,
+			stateId: record?.estado_id,
+			stateName: record?.estado_nome,
 			street: record?.logradouro,
 			zipCode: record?.cep,
 		});

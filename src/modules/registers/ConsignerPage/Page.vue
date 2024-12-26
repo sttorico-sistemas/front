@@ -37,20 +37,27 @@
 	import { auxiliaryRepository, consignerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { AddressModel, ConsignerModel } from '@/core/models'
-	import { valueUpdater } from '@/core/utils'
+	import {
+		formatStatus,
+		valueUpdater,
+		type StatusFormatted,
+	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		ConsignerDeleteAction,
 		ConsignerForm,
 		ConsignerUpdateAction,
+		ConsignerViewAction,
 	} from './components/table'
 
 	type ConsignerTable = {
 		id: number
 		name: string
-		cnpj: string
-		entityTypeId: string
-		status: number
+		entityTypeName: string
+		address: string
+		start?: string | null
+		end?: string | null
+		status: StatusFormatted
 	}
 
 	const statusItems = [
@@ -229,15 +236,27 @@
 
 	const formattedAllTypeOfConsigner = computed<ConsignerTable[]>(() => {
 		return (consigners.value ?? []).map(
-			({ id, name, cnpj, entityTypeId, status }) => ({
+			({
+				id,
+				name,
+				cnpj,
+				addresses,
+				entityTypeName,
+				startOfBusiness,
+				endOfBusiness,
+				status,
+			}) => ({
 				id: id as number,
 				name,
-				cnpj: cnpj.replace(
-					/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
-					'$1.$2.$3/$4-$5',
-				),
-				entityTypeId: formattedAllEntityTypesMap.value[`${entityTypeId}`],
-				status: status as number,
+				entityTypeName: entityTypeName as string,
+				address: `${addresses.cityName} - ${addresses.stateName}`,
+				start: startOfBusiness,
+				end: endOfBusiness,
+				// cnpj: cnpj.replace(
+				// 	/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+				// 	'$1.$2.$3/$4-$5',
+				// ),
+				status: formatStatus(status as number),
 			}),
 		)
 	})
@@ -246,6 +265,7 @@
 		{
 			accessorKey: 'id',
 			meta: 'Código',
+			size: 20,
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -269,7 +289,7 @@
 		},
 		{
 			accessorKey: 'name',
-			meta: 'Nome',
+			meta: 'Consignante',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -280,7 +300,7 @@
 						// onClick: () => handleSort('name'),
 					},
 					() => [
-						'Nome',
+						'Consignante',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
 						// 	icon: ['fas', getSort('name')],
@@ -292,8 +312,8 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'cnpj',
-			meta: 'CNPJ',
+			accessorKey: 'entityTypeName',
+			meta: 'Tp. Entidade',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -301,23 +321,23 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('city'),
+						// onClick: () => handleSort('entityTypeName'),
 					},
 					() => [
-						'CNPJ',
+						'Tp. Entidade',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('city')],
+						// 	icon: ['fas', getSort('entityTypeName')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('cnpj')),
+			cell: ({ row }) => h('div', row.getValue('entityTypeName')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'entityTypeId',
-			meta: 'Tipo de entidade',
+			accessorKey: 'address',
+			meta: 'Cidade/UF',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -325,10 +345,85 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
+						// onClick: () => handleSort('address'),
+					},
+					() => [
+						'Cidade/UF',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('address')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('address')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'start',
+			meta: 'Inicio',
+			size: 50,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllTypeOfConsigner.value.length <= 0,
+						// onClick: () => handleSort('start'),
+					},
+					() => [
+						'Inicio',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('start')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('start')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'end',
+			meta: 'Fim',
+			size: 50,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllTypeOfConsigner.value.length <= 0,
+						// onClick: () => handleSort('end'),
+					},
+					() => [
+						'Fim',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('end')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('end')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'status',
+			meta: 'Tipo de entidade',
+			size: 20,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: ['w-full justify-start px-1 font-bold'],
+						disabled: formattedAllTypeOfConsigner.value.length <= 0,
 						// onClick: () => handleSort('entityTypeId'),
 					},
 					() => [
-						'Tipo de entidade',
+						'Status',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
 						// 	icon: ['fas', getSort('entityTypeId')],
@@ -336,7 +431,19 @@
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('entityTypeId')),
+			cell: ({ row, cell }) =>
+				h(
+					'div',
+					{
+						class:
+							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+						style: {
+							color: row.getValue<StatusFormatted>('status').textColor,
+							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
+						},
+					},
+					row.getValue<StatusFormatted>('status')?.text,
+				),
 			enableHiding: false,
 		},
 		{
@@ -345,19 +452,24 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
+					h(ConsignerViewAction, {
+						dataId: data.id,
+						isLoading: isUpdateConsignerLoading.value,
+						isActive: data.status.raw === 1,
+					}),
 					h(ConsignerUpdateAction, {
 						dataId: data.id,
 						tableConsignerName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateConsignerLoading.value,
-						isActive: data.status === 1,
+						isActive: data.status.raw === 1,
 					}),
 					h(ConsignerDeleteAction, {
 						dataId: data.id,
 						tableConsignerName: data.name,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteConsignerLoading.value,
-						isActive: data.status === 1,
+						isActive: data.status.raw === 1,
 					}),
 				])
 			},
@@ -385,35 +497,74 @@
 		},
 	})
 
-	const formSchema = z.object({
-		name: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		shortName: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		cnpj: z
-			.string({ message: 'O CNPJ é obrigatório.' })
-			.min(1, { message: 'O CNPJ é obrigatório.' }),
-		masterConsignerId: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		entityTypeId: z
-			.string({ message: 'O nome é obrigatório' })
-			.min(1, { message: 'O nome é obrigatório.' }),
-		cityId: z
-			.string({ message: 'A cidade é obrigatória.' })
-			.min(1, { message: 'A cidade é obrigatória.' }),
-		stateId: z
-			.string({ message: 'O estado é obrigatório.' })
-			.min(1, { message: 'O estado é obrigatório.' }),
-		street: z
-			.string({ message: 'O logradouro é obrigatório.' })
-			.min(1, { message: 'O logradouro é obrigatório.' }),
-		zipCode: z
-			.string({ message: 'O CEP é obrigatório.' })
-			.min(1, { message: 'O CEP é obrigatório.' }),
-	})
+	const formSchema = z
+		.object({
+			name: z
+				.string({ message: 'O nome é obrigatório' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			shortName: z
+				.string({ message: 'O nome é obrigatório' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			startOfBusiness: z
+				.string({ message: 'O inicio é obrigatório' })
+				.optional()
+				.nullable(),
+			endOfBusiness: z
+				.string({ message: 'O fim é obrigatório' })
+				.optional()
+				.nullable(),
+			cnpj: z
+				.string({ message: 'O CNPJ é obrigatório.' })
+				.min(1, { message: 'O CNPJ é obrigatório.' }),
+			masterConsignerId: z
+				.string({ message: 'O consignante master é obrigatório' })
+				.min(1, { message: 'O consignante master é obrigatório.' }),
+			entityTypeId: z
+				.string({ message: 'A entidade é obrigatória' })
+				.min(1, { message: 'A entidade é obrigatória.' }),
+			addressId: z
+				.number({ message: 'O id endereço é obrigatório.' })
+				.min(1, { message: 'O id endereço é obrigatório.' }),
+			cityId: z
+				.string({ message: 'A cidade é obrigatória.' })
+				.min(1, { message: 'A cidade é obrigatória.' }),
+			stateId: z
+				.string({ message: 'O estado é obrigatório.' })
+				.min(1, { message: 'O estado é obrigatório.' }),
+			street: z
+				.string({ message: 'O logradouro é obrigatório.' })
+				.min(1, { message: 'O logradouro é obrigatório.' }),
+			zipCode: z
+				.string({ message: 'O CEP é obrigatório.' })
+				.min(1, { message: 'O CEP é obrigatório.' }),
+		})
+		.refine(
+			({ startOfBusiness, endOfBusiness }) => {
+				if (
+					startOfBusiness === null ||
+					startOfBusiness === undefined ||
+					endOfBusiness === null ||
+					endOfBusiness === undefined
+				) {
+					return
+				}
+
+				const [h1, m1] = startOfBusiness.split(':').map(Number)
+				const [h2, m2] = endOfBusiness.split(':').map(Number)
+
+				const start = new Date()
+				start.setHours(h1, m1, 0, 0)
+
+				const end = new Date()
+				end.setHours(h2, m2, 0, 0)
+
+				return end > start
+			},
+			{
+				path: ['endOfBusiness', 'startOfBusiness'],
+				message: 'Expediente inválido.',
+			},
+		)
 
 	const form = useForm({
 		validationSchema: toTypedSchema(formSchema),

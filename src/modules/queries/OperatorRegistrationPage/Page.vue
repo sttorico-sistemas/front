@@ -703,11 +703,11 @@
 
 					<select-root v-model="selectOperatorType">
 						<select-trigger class="col-span-2 md:col-start-10">
-							<select-value class="text-left" placeholder="Status" />
+							<select-value class="text-left" placeholder="Tipo de operador" />
 						</select-trigger>
 						<select-content>
 							<select-group>
-								<select-label>Status:</select-label>
+								<select-label>Tipo de operador:</select-label>
 								<select-item
 									v-for="typeOperators of formattedAllTypeOperators"
 									:key="typeOperators.value"
