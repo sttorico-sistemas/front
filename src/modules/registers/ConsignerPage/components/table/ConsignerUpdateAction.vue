@@ -24,38 +24,75 @@
 	const loadCities = ref<Record<string, string>>({})
 
 	const formSchema = toTypedSchema(
-		z.object({
-			name: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			shortName: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			cnpj: z
-				.string({ message: 'O CNPJ é obrigatório.' })
-				.min(1, { message: 'O CNPJ é obrigatório.' }),
-			masterConsignerId: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			entityTypeId: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			addressId: z
-				.number({ message: 'O id endereço é obrigatório.' })
-				.min(1, { message: 'O id endereço é obrigatório.' }),
-			cityId: z
-				.string({ message: 'A cidade é obrigatória.' })
-				.min(1, { message: 'A cidade é obrigatória.' }),
-			stateId: z
-				.string({ message: 'O estado é obrigatório.' })
-				.min(1, { message: 'O estado é obrigatório.' }),
-			street: z
-				.string({ message: 'O logradouro é obrigatório.' })
-				.min(1, { message: 'O logradouro é obrigatório.' }),
-			zipCode: z
-				.string({ message: 'O CEP é obrigatório.' })
-				.min(1, { message: 'O CEP é obrigatório.' }),
-		}),
+		z
+			.object({
+				name: z
+					.string({ message: 'O nome é obrigatório' })
+					.min(1, { message: 'O nome é obrigatório.' }),
+				shortName: z
+					.string({ message: 'O nome é obrigatório' })
+					.min(1, { message: 'O nome é obrigatório.' }),
+				startOfBusiness: z
+					.string({ message: 'O inicio é obrigatório' })
+					.optional()
+					.nullable(),
+				endOfBusiness: z
+					.string({ message: 'O fim é obrigatório' })
+					.optional()
+					.nullable(),
+				cnpj: z
+					.string({ message: 'O CNPJ é obrigatório.' })
+					.min(1, { message: 'O CNPJ é obrigatório.' }),
+				masterConsignerId: z
+					.string({ message: 'O consignante master é obrigatório' })
+					.min(1, { message: 'O consignante master é obrigatório.' }),
+				entityTypeId: z
+					.string({ message: 'A entidade é obrigatória' })
+					.min(1, { message: 'A entidade é obrigatória.' }),
+				addressId: z
+					.number({ message: 'O id endereço é obrigatório.' })
+					.min(1, { message: 'O id endereço é obrigatório.' }),
+				cityId: z
+					.string({ message: 'A cidade é obrigatória.' })
+					.min(1, { message: 'A cidade é obrigatória.' }),
+				stateId: z
+					.string({ message: 'O estado é obrigatório.' })
+					.min(1, { message: 'O estado é obrigatório.' }),
+				street: z
+					.string({ message: 'O logradouro é obrigatório.' })
+					.min(1, { message: 'O logradouro é obrigatório.' }),
+				zipCode: z
+					.string({ message: 'O CEP é obrigatório.' })
+					.min(1, { message: 'O CEP é obrigatório.' }),
+			})
+			.refine(
+				({ startOfBusiness, endOfBusiness }) => {
+					if (
+						startOfBusiness === null ||
+						startOfBusiness === undefined ||
+						endOfBusiness === null ||
+						endOfBusiness === undefined
+					) {
+						return
+					}
+
+					const [h1, m1] = startOfBusiness.split(':').map(Number)
+					const [h2, m2] = endOfBusiness.split(':').map(Number)
+
+					const start = new Date()
+					start.setHours(h1, m1, 0, 0)
+
+					const end = new Date()
+					end.setHours(h2, m2, 0, 0)
+
+					return end > start
+				},
+				{
+					path: ['endOfBusiness', 'startOfBusiness'],
+					message:
+						'Expediente inválido.',
+				},
+			),
 	)
 
 	const form = useForm({
@@ -77,15 +114,17 @@
 					'$1.$2.$3/$4-$5',
 				),
 				shortName: data.shortName,
+				startOfBusiness: data.startOfBusiness,
+				endOfBusiness: data.endOfBusiness,
 				entityTypeId: data.entityTypeId.toString(),
 				masterConsignerId: data.masterConsignerId.toString(),
 				addressId: data.addresses.id,
+
 				stateId: data.addresses.stateId.toString(),
 				cityId: data.addresses.cityId.toString(),
 				street: data.addresses.street,
 				zipCode: data.addresses.zipCode.replace(/(\d{5})(\d{3})/, '$1-$2'),
 			})
-			console.log(data)
 		} catch (error) {
 			console.log(error)
 		} finally {
@@ -102,11 +141,11 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar consignante master"
+		tooltip="Editar consignante"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar consignante master ${tableConsignerName}`"
-		description="Atualize o conteúdo do consignante master."
+		:title="`Editar consignante ${tableConsignerName}`"
+		description="Atualize o conteúdo do consignante."
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>

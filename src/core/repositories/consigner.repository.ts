@@ -22,8 +22,7 @@ export class ConsignerRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			console.log(response)
-			const values = response.data.data.map((e: Record<string, any>) => ConsignerModel.fromRecord(e));
+			const values = response.data.data.map((e: Record<string, any>) => ConsignerModel.fromRecord(this.getConsignerByIdAdapter(e)));
 			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
 			return values;
 		} catch (error) {
@@ -37,7 +36,9 @@ export class ConsignerRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return ConsignerModel.fromRecord(this.getConsignerByIdAdapter(response.data))
+			const values = ConsignerModel.fromRecord(this.getConsignerByIdAdapter(response.data))
+			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
+			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -48,16 +49,24 @@ export class ConsignerRepository {
 			id: data.id,
 			nome: data.nome,
 			nome_curto: data.nome_curto,
+			inicio: data.inicio,
+			fim: data.fim,
+			status: data.status,
 			cnpj: data.cnpj,
 			tipo_entidade_id: data.instituicao.id,
+			tipo_entidade_nome: data.instituicao.nome,
 			consignante_master_id: data.master.id,
+			consignante_master_nome: data.master.nome,
 			endereco: {
 				id: data?.endereco?.id,
 				cidade_id: data?.cidade?.id,
 				cidade_nome: data?.cidade?.nome,
 				estado_id: data?.estado?.id,
+				estado_nome: data?.estado?.nome,
 				logradouro: data?.endereco?.logradouro,
 				cep: data?.endereco?.cep,
+				tipo_endereco_id: data?.endereco?.tipo_endereco_id,
+				tipo_endereco_nome: data?.endereco?.tipo_endereco,
 			}
 		}
 	}

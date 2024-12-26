@@ -15,6 +15,13 @@ module.exports = {
 			center: true,
 		},
 		extend: {
+			gridTemplateColumns: {
+				14: 'repeat(14, minmax(0, 1fr))',
+				28: 'repeat(28, minmax(0, 1fr))',
+			},
+			fontSize: {
+				'2xs': ['0.65rem', '1rem'],
+			},
 			colors: {
 				primary: {
 					DEFAULT: '#4361ee',
@@ -27,21 +34,21 @@ module.exports = {
 					'dark-light': 'rgb(128 93 202 / 15%)',
 				},
 				info: {
-					DEFAULT: '#0ea5e9'
+					DEFAULT: '#0ea5e9',
 				},
 				success: {
 					DEFAULT: '#00AB55',
 					light: '#f0fdf4',
 				},
 				warning: {
-					DEFAULT: '#E2A03F'
+					DEFAULT: '#E2A03F',
 				},
 				secondry: {
-					DEFAULT: '#805DCA'
+					DEFAULT: '#805DCA',
 				},
 				primary_3: {
 					DEFAULT: '#255471',
-					table: '#1384AD'
+					table: '#1384AD',
 				},
 				// success: {
 				//     DEFAULT: '#00ab55',
@@ -80,23 +87,23 @@ module.exports = {
 					dark: '#888ea8',
 				},
 				muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
-        },
-        popover: {
-          DEFAULT: 'hsl(var(--popover))',
-          foreground: 'hsl(var(--popover-foreground))',
-        },
-        card: {
-          DEFAULT: 'hsl(var(--card))',
-          foreground: 'hsl(var(--card-foreground))',
-        },
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))',
+				},
+				accent: {
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))',
+				},
+				popover: {
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))',
+				},
+				card: {
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))',
+				},
 				background: 'hsl(var(--background))',
-				border: 'hsl(var(--border))'
+				border: 'hsl(var(--border))',
 			},
 			fontFamily: {
 				nunito: ['Nunito', 'sans-serif'],
@@ -105,10 +112,11 @@ module.exports = {
 				4.5: '18px',
 			},
 			boxShadow: {
-				'3xl': '0 2px 2px rgb(224 230 237 / 46%), 1px 6px 7px rgb(224 230 237 / 46%)',
+				'3xl':
+					'0 2px 2px rgb(224 230 237 / 46%), 1px 6px 7px rgb(224 230 237 / 46%)',
 			},
 			gridRow: {
-      	'span-8': 'span 8 / span 8',
+				'span-8': 'span 8 / span 8',
 			},
 			typography: ({ theme }) => ({
 				DEFAULT: {
