@@ -15,3 +15,8 @@ export { default as InstructionOfProcedureData } from './InstructionOfProcedureD
 export { default as InstructionOfProcedureDeleteAction } from './InstructionOfProcedureDeleteAction.vue'
 export { default as InstructionOfProcedureForm } from './InstructionOfProcedureForm.vue'
 export { default as InstructionOfProcedureUpdateAction } from './InstructionOfProcedureUpdateAction.vue'
+export { default as AnnotationData } from './AnnotationData.vue'
+export { default as AnnotationDeleteAction } from './AnnotationDeleteAction.vue'
+export { default as AnnotationForm } from './AnnotationForm.vue'
+export { default as AnnotationUpdateAction } from './AnnotationUpdateAction.vue'
+export { default as LogData } from './LogData.vue'
