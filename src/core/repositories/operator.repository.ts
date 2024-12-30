@@ -70,7 +70,7 @@ export class OperatorRepository {
 		}
 	}
 
-	async activateConsigner({ id }: Pick<OperatorModel, 'id'>,
+	async activateOperator({ id }: Pick<OperatorModel, 'id'>,
 		configParams?: HttpClientProps<OperatorModel>
 	): Promise<void> {
 		try {
