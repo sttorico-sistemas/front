@@ -1,13 +1,13 @@
 import { useAxios } from "@/core/composables";
 import { BaseError } from "@/core/errors/base.error";
-import { EndorserModel } from "@/core/models";
+import { ManagerModel } from "@/core/models";
 import { HttpClientProps } from "@/modules/configuracoes/types";
 import { Ref } from "vue";
 
 
-export class EndorserRepository {
+export class ManagerRepository {
 	private http = useAxios();
-	#QUERY_KEY = 'endorser'
+	#QUERY_KEY = 'manager'
 
 	getQueryKey(tag?: string | Ref<string>, pagination?: { page?: Ref<number>, limit?: Ref<number> }, ...others: Ref<unknown>[]) {
 		if (pagination === undefined) {
@@ -16,14 +16,13 @@ export class EndorserRepository {
 		return [tag ?? this.#QUERY_KEY, pagination, ...others]
 	}
 
-	async getAllEndorsers(configParams?: HttpClientProps<EndorserModel[]>): Promise<EndorserModel[]> {
+	async getAllManagers(configParams?: HttpClientProps<ManagerModel[]>): Promise<ManagerModel[]> {
 		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/averbadores`, {
+			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/gestores`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			console.log(response)
-			const values = response.data.data.map((e: Record<string, any>) => EndorserModel.fromRecord(e));
+			const values = response.data.data.map((e: Record<string, any>) => ManagerModel.fromRecord(e));
 			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
 			return values;
 		} catch (error) {
@@ -31,13 +30,13 @@ export class EndorserRepository {
 		}
 	}
 
-	async getEndorserById(dataId: number, configParams?: HttpClientProps<EndorserModel>): Promise<EndorserModel> {
+	async getManagerById(dataId: number, configParams?: HttpClientProps<ManagerModel>): Promise<ManagerModel> {
 		try {
-			const response = await this.http.get<{ data: any }>(`/averbadores/${dataId}`, {
+			const response = await this.http.get<{ data: any }>(`/consignante/${dataId}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = EndorserModel.fromRecord(response.data)
+			const values = ManagerModel.fromRecord(response.data)
 			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
 			return values
 		} catch (error) {
@@ -45,12 +44,12 @@ export class EndorserRepository {
 		}
 	}
 
-	async createEndorser(
-		body: EndorserModel,
-		configParams?: HttpClientProps<EndorserModel>
+	async createManager(
+		body: ManagerModel,
+		configParams?: HttpClientProps<ManagerModel>
 	): Promise<void> {
 		try {
-			await this.http.post(`/averbadores`, body.toRecord(), {
+			await this.http.post(`/gestores`, body.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -59,12 +58,12 @@ export class EndorserRepository {
 		}
 	}
 
-	async updateEndorser(
-		data: EndorserModel,
-		configParams?: HttpClientProps<EndorserModel>
+	async updateManager(
+		data: ManagerModel,
+		configParams?: HttpClientProps<ManagerModel>
 	): Promise<void> {
 		try {
-			await this.http.put(`/averbadores/${data.id}`, data.toRecord(), {
+			await this.http.put(`/gestores/${data.id}`, data.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -73,11 +72,11 @@ export class EndorserRepository {
 		}
 	}
 
-	async activateEndorser({ id }: Pick<EndorserModel, 'id'>,
-		configParams?: HttpClientProps<EndorserModel>
+	async activateManager({ id }: Pick<ManagerModel, 'id'>,
+		configParams?: HttpClientProps<ManagerModel>
 	): Promise<void> {
 		try {
-			await this.http.patch(`/averbadores/${id}/status`, {
+			await this.http.patch(`/gestores/${id}/status`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
