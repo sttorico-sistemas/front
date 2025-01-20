@@ -18,15 +18,13 @@ export class RegulatoryRepository {
 
 	async getAllRegulations(configParams?: HttpClientProps<RegulatoryModel[]>): Promise<RegulatoryModel[]> {
 		try {
-			return Promise.resolve([])
-			// const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/consignante`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// })
-			// console.log(response)
-			// const values = response.data.data.map((e: Record<string, any>) => RegulatoryModel.fromRecord(e));
-			// if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
-			// return values;
+			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/normativos`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			const values = response.data.data.map((e: Record<string, any>) => RegulatoryModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -34,14 +32,13 @@ export class RegulatoryRepository {
 
 	async getRegulatoryById(dataId: number, configParams?: HttpClientProps<RegulatoryModel>): Promise<RegulatoryModel> {
 		try {
-			return Promise.resolve({} as RegulatoryModel)
-			// const response = await this.http.get<{ data: any }>(`/consignante/${dataId}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// })
-			// const values = RegulatoryModel.fromRecord(this.getRegulatoryByIdAdapter(response.data))
-			// if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
-			// return values
+			const response = await this.http.get<{ data: any }>(`/normativos/${dataId}`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			const values = RegulatoryModel.fromRecord(response.data)
+			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
+			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -51,40 +48,40 @@ export class RegulatoryRepository {
 		body: RegulatoryModel,
 		configParams?: HttpClientProps<RegulatoryModel>
 	): Promise<void> {
-		// try {
-		// 	await this.http.post(`/consignante`, body.toRecord(), {
-		// 		params: configParams?.params,
-		// 		signal: configParams?.signal
-		// 	});
-		// } catch (error) {
-		// 	throw BaseError.fromHttpError(error);
-		// }
+		try {
+			await this.http.post(`/normativos`, body.toRecord(), {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
 	}
 
 	async updateRegulatory(
 		data: RegulatoryModel,
 		configParams?: HttpClientProps<RegulatoryModel>
 	): Promise<void> {
-		// try {
-		// 	await this.http.put(`/consignante/${data.id}`, data.toRecord(), {
-		// 		params: configParams?.params,
-		// 		signal: configParams?.signal
-		// 	});
-		// } catch (error) {
-		// 	throw BaseError.fromHttpError(error);
-		// }
+		try {
+			await this.http.put(`/normativos/${data.id}`, data.toRecord(), {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
 	}
 
 	async activateRegulatory({ id }: Pick<RegulatoryModel, 'id'>,
 		configParams?: HttpClientProps<RegulatoryModel>
 	): Promise<void> {
-		// try {
-		// 	await this.http.patch(`/consignante/${id}/status`, {
-		// 		params: configParams?.params,
-		// 		signal: configParams?.signal
-		// 	});
-		// } catch (error) {
-		// 	throw BaseError.fromHttpError(error);
-		// }
+		try {
+			await this.http.patch(`/normativos/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
 	}
 }

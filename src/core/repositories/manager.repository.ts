@@ -1,13 +1,13 @@
 import { useAxios } from "@/core/composables";
 import { BaseError } from "@/core/errors/base.error";
-import { OperatorModel } from "@/core/models";
+import { ManagerModel } from "@/core/models";
 import { HttpClientProps } from "@/modules/configuracoes/types";
 import { Ref } from "vue";
 
 
-export class OperatorRepository {
+export class ManagerRepository {
 	private http = useAxios();
-	#QUERY_KEY = 'operator'
+	#QUERY_KEY = 'manager'
 
 	getQueryKey(tag?: string | Ref<string>, pagination?: { page?: Ref<number>, limit?: Ref<number> }, ...others: Ref<unknown>[]) {
 		if (pagination === undefined) {
@@ -16,38 +16,40 @@ export class OperatorRepository {
 		return [tag ?? this.#QUERY_KEY, pagination, ...others]
 	}
 
-	async getAllOperators(configParams?: HttpClientProps<OperatorModel[]>): Promise<OperatorModel[]> {
+	async getAllManagers(configParams?: HttpClientProps<ManagerModel[]>): Promise<ManagerModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[], meta: any }>(`/profile/operador`, {
+			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/gestores`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.map((e: Record<string, any>) => OperatorModel.fromRecord(e));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
+			const values = response.data.data.map((e: Record<string, any>) => ManagerModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
 	}
 
-	async getOperatorById(dataId: number, configParams?: HttpClientProps<OperatorModel>): Promise<OperatorModel> {
+	async getManagerById(dataId: number, configParams?: HttpClientProps<ManagerModel>): Promise<ManagerModel> {
 		try {
-			const response = await this.http.get<{ data: any }>(`/profile/operador/${dataId}`, {
+			const response = await this.http.get<{ data: any }>(`/consignante/${dataId}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return OperatorModel.fromRecord(response.data)
+			const values = ManagerModel.fromRecord(response.data)
+			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
+			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
 	}
 
-	async createOperator(
-		body: OperatorModel,
-		configParams?: HttpClientProps<OperatorModel>
+	async createManager(
+		body: ManagerModel,
+		configParams?: HttpClientProps<ManagerModel>
 	): Promise<void> {
 		try {
-			await this.http.post(`/profile/operador`, body.toRecord(), {
+			await this.http.post(`/gestores`, body.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -56,12 +58,12 @@ export class OperatorRepository {
 		}
 	}
 
-	async updateOperator(
-		data: OperatorModel,
-		configParams?: HttpClientProps<OperatorModel>
+	async updateManager(
+		data: ManagerModel,
+		configParams?: HttpClientProps<ManagerModel>
 	): Promise<void> {
 		try {
-			await this.http.put(`/profile/operador/${data.id}`, data.toRecord(), {
+			await this.http.put(`/gestores/${data.id}`, data.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -70,11 +72,11 @@ export class OperatorRepository {
 		}
 	}
 
-	async activateOperator({ id }: Pick<OperatorModel, 'id'>,
-		configParams?: HttpClientProps<OperatorModel>
+	async activateManager({ id }: Pick<ManagerModel, 'id'>,
+		configParams?: HttpClientProps<ManagerModel>
 	): Promise<void> {
 		try {
-			await this.http.patch(`/profile/operador/${id}/status`, {
+			await this.http.patch(`/gestores/${id}/status`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
