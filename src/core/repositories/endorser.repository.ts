@@ -18,15 +18,14 @@ export class EndorserRepository {
 
 	async getAllEndorsers(configParams?: HttpClientProps<EndorserModel[]>): Promise<EndorserModel[]> {
 		try {
-			return Promise.resolve([])
-			// const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/consignante`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// })
-			// console.log(response)
-			// const values = response.data.data.map((e: Record<string, any>) => EndorserModel.fromRecord(e));
-			// if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
-			// return values;
+			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/averbadores`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			console.log(response)
+			const values = response.data.data.map((e: Record<string, any>) => EndorserModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -34,14 +33,13 @@ export class EndorserRepository {
 
 	async getEndorserById(dataId: number, configParams?: HttpClientProps<EndorserModel>): Promise<EndorserModel> {
 		try {
-			return Promise.resolve({} as EndorserModel)
-			// const response = await this.http.get<{ data: any }>(`/consignante/${dataId}`, {
-			// 	params: configParams?.params,
-			// 	signal: configParams?.signal
-			// })
-			// const values = EndorserModel.fromRecord(this.getEndorserByIdAdapter(response.data))
-			// if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
-			// return values
+			const response = await this.http.get<{ data: any }>(`/averbadores/${dataId}`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			const values = EndorserModel.fromRecord(response.data)
+			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
+			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -51,40 +49,40 @@ export class EndorserRepository {
 		body: EndorserModel,
 		configParams?: HttpClientProps<EndorserModel>
 	): Promise<void> {
-		// try {
-		// 	await this.http.post(`/consignante`, body.toRecord(), {
-		// 		params: configParams?.params,
-		// 		signal: configParams?.signal
-		// 	});
-		// } catch (error) {
-		// 	throw BaseError.fromHttpError(error);
-		// }
+		try {
+			await this.http.post(`/averbadores`, body.toRecord(), {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
 	}
 
 	async updateEndorser(
 		data: EndorserModel,
 		configParams?: HttpClientProps<EndorserModel>
 	): Promise<void> {
-		// try {
-		// 	await this.http.put(`/consignante/${data.id}`, data.toRecord(), {
-		// 		params: configParams?.params,
-		// 		signal: configParams?.signal
-		// 	});
-		// } catch (error) {
-		// 	throw BaseError.fromHttpError(error);
-		// }
+		try {
+			await this.http.put(`/averbadores/${data.id}`, data.toRecord(), {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
 	}
 
 	async activateEndorser({ id }: Pick<EndorserModel, 'id'>,
 		configParams?: HttpClientProps<EndorserModel>
 	): Promise<void> {
-		// try {
-		// 	await this.http.patch(`/consignante/${id}/status`, {
-		// 		params: configParams?.params,
-		// 		signal: configParams?.signal
-		// 	});
-		// } catch (error) {
-		// 	throw BaseError.fromHttpError(error);
-		// }
+		try {
+			await this.http.patch(`/averbadores/${id}/status`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			});
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
 	}
 }
