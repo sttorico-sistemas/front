@@ -34,9 +34,9 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, regulatoryRepository } from '@/core/stores'
+	import { auxiliaryRepository, managerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { AddressModel, RegulatoryModel } from '@/core/models'
+	import { AddressModel, ManagerModel } from '@/core/models'
 	import {
 		formatPhone,
 		formatStatus,
@@ -45,18 +45,19 @@
 	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
-		RegulatoryUpdateAction,
-		RegulatoryForm,
-		RegulatoryDeleteAction,
+		ManagerUpdateAction,
+		ManagerForm,
+		ManagerDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
 
-	type RegulatoryTable = {
+	type ManagerTable = {
 		id: number
-		type: string
-		number: string
-		target: string
-		publicationAt: string
-		revocationAt: string
+		name: string
+		position: string
+		department: string
+		phone: string
+		cellphone: string
+		email: string
 		status: StatusFormatted
 	}
 
@@ -78,12 +79,12 @@
 	const notify = useNotify()
 
 	const {
-		data: regulations,
-		isLoading: isRegulationsLoading,
-		isPlaceholderData: isRegulationsPlaceholderData,
+		data: managers,
+		isLoading: isManagersLoading,
+		isPlaceholderData: isManagersPlaceholderData,
 	} = useQuery({
-		queryKey: regulatoryRepository.getQueryKey(
-			'regulations',
+		queryKey: managerRepository.getQueryKey(
+			'managers',
 			{
 				page,
 				limit: perPage,
@@ -91,7 +92,7 @@
 			status,
 		),
 		queryFn: ({ signal }) =>
-			regulatoryRepository.getAllRegulations({
+			managerRepository.getAllManagers({
 				signal,
 				params: {
 					page: page.value,
@@ -109,15 +110,15 @@
 	})
 
 	const {
-		mutateAsync: handleDeleteRegulatory,
-		isPending: isDeleteRegulatoryLoading,
+		mutateAsync: handleDeleteManager,
+		isPending: isDeleteManagerLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			regulatoryRepository.activateRegulatory({ id }),
+			managerRepository.activateManager({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: managerRepository.getQueryKey(
+					'managers',
 					{
 						page,
 						limit: perPage,
@@ -130,29 +131,28 @@
 			notify.error(
 				error,
 				{
-					title: error.message ?? 'Erro ao atualizar status do normativo!',
+					title: error.message ?? 'Erro ao atualizar status do gestor!',
 				},
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Status do normativo apagado com sucesso!` },
+				{ title: `Status do gestor apagado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
 	const {
-		mutateAsync: handleUpdateRegulatory,
-		isPending: isUpdateRegulatoryLoading,
+		mutateAsync: handleUpdateManager,
+		isPending: isUpdateManagerLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.updateRegulatory(data),
+		mutationFn: (data: ManagerModel) => managerRepository.updateManager(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: managerRepository.getQueryKey(
+					'managers',
 					{
 						page,
 						limit: perPage,
@@ -164,28 +164,27 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: error.message ?? `Erro ao atualizar o normativo!` },
+				{ title: error.message ?? `Erro ao atualizar o gestor!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Normativo atualizado com sucesso!` },
+				{ title: `Gestor atualizado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
 	const {
-		mutateAsync: handleCreateRegulatory,
-		isPending: isCreateRegulatoryLoading,
+		mutateAsync: handleCreateManager,
+		isPending: isCreateManagerLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.createRegulatory(data),
+		mutationFn: (data: ManagerModel) => managerRepository.createManager(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: managerRepository.getQueryKey(
+					'managers',
 					{
 						page,
 						limit: perPage,
@@ -197,33 +196,43 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: error.message ?? `Erro ao criar o normativo!` },
+				{ title: error.message ?? `Erro ao criar o gestor!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Normativo criado com sucesso!` },
+				{ title: `Gestor criado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
-	const formattedAllTypeOfRegulatory = computed<RegulatoryTable[]>(() => {
-		return (regulations.value ?? []).map(
-			({ id, number, target, typeName, publicationAt, revocationAt, status }) => ({
+	const formattedAllTypeOfManager = computed<ManagerTable[]>(() => {
+		return (managers.value ?? []).map(
+			({
+				id,
+				name,
+				position,
+				department,
+				phone,
+				cellphone,
+				email,
+				status,
+			}) => ({
 				id: id as number,
-				number,
-				target,
-				type: typeName as string,
-				publicationAt: Intl.DateTimeFormat('pt-BR').format(new Date(publicationAt)),
-				revocationAt: Intl.DateTimeFormat('pt-BR').format(new Date(revocationAt)),
-				status: formatStatus(status as string),
+				name,
+				position,
+				department,
+				phone: formatPhone(phone),
+				cellphone: formatPhone(cellphone),
+				email,
+				status: formatStatus(status as number),
 			}),
 		)
 	})
 
-	const columns: ColumnDef<RegulatoryTable>[] = [
+	const columns: ColumnDef<ManagerTable>[] = [
 		{
 			accessorKey: 'id',
 			meta: 'Código',
@@ -233,7 +242,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfManager.value.length <= 0,
 						// onClick: () => handleSort('id'),
 					},
 					() => [
@@ -249,123 +258,147 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'type',
-			meta: 'Tipo',
+			accessorKey: 'name',
+			meta: 'Gestores',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('type'),
+						disabled: formattedAllTypeOfManager.value.length <= 0,
+						// onClick: () => handleSort('name'),
 					},
 					() => [
-						'Tipo',
+						'Gestores',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('type')],
+						// 	icon: ['fas', getSort('name')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('type')),
+			cell: ({ row }) => h('div', row.getValue('name')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'number',
-			meta: 'Número',
+			accessorKey: 'position',
+			meta: 'Função',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('number'),
+						disabled: formattedAllTypeOfManager.value.length <= 0,
+						// onClick: () => handleSort('position'),
 					},
 					() => [
-						'Número',
+						'Função',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('number')],
+						// 	icon: ['fas', getSort('position')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('number')),
+			cell: ({ row }) => h('div', row.getValue('position')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'target',
-			meta: 'Objeto',
+			accessorKey: 'department',
+			meta: 'Departamento',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('target'),
+						disabled: formattedAllTypeOfManager.value.length <= 0,
+						// onClick: () => handleSort('department'),
 					},
 					() => [
-						'Objeto',
+						'Departamento',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('target')],
+						// 	icon: ['fas', getSort('department')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('target')),
+			cell: ({ row }) => h('div', row.getValue('department')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'publicationAt',
-			meta: 'Data Publicação',
+			accessorKey: 'phone',
+			meta: 'Telefone',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('publicationAt'),
+						disabled: formattedAllTypeOfManager.value.length <= 0,
+						// onClick: () => handleSort('phone'),
 					},
 					() => [
-						'Data Publicação',
+						'Telefone',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('publicationAt')],
+						// 	icon: ['fas', getSort('phone')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('publicationAt')),
+			cell: ({ row }) => h('div', row.getValue('phone')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'revocationAt',
-			meta: 'Data de Revogação',
+			accessorKey: 'cellphone',
+			meta: 'Celular',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('revocationAt'),
+						disabled: formattedAllTypeOfManager.value.length <= 0,
+						// onClick: () => handleSort('cellphone'),
 					},
 					() => [
-						'Data de Revogação',
+						'Celular',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('revocationAt')],
+						// 	icon: ['fas', getSort('cellphone')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('revocationAt')),
+			cell: ({ row }) => h('div', row.getValue('cellphone')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'email',
+			meta: 'E-mail',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllTypeOfManager.value.length <= 0,
+						// onClick: () => handleSort('email'),
+					},
+					() => [
+						'E-mail',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('email')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('email')),
 			enableHiding: false,
 		},
 		{
@@ -377,7 +410,7 @@
 					{
 						variant: 'ghost',
 						class: ['w-full justify-start px-1 font-bold'],
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfManager.value.length <= 0,
 						// onClick: () => handleSort('entityTypeId'),
 					},
 					() => [
@@ -410,19 +443,19 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(RegulatoryUpdateAction, {
+					h(ManagerUpdateAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableManagerName: data.name,
 						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isUpdateManagerLoading.value,
+						isActive: data.status.raw === 1,
 					}),
-					h(RegulatoryDeleteAction, {
+					h(ManagerDeleteAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableManagerName: data.name,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isDeleteManagerLoading.value,
+						isActive: data.status.raw === 1,
 					}),
 				])
 			},
@@ -431,7 +464,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return formattedAllTypeOfRegulatory.value
+			return formattedAllTypeOfManager.value
 		},
 		get columns() {
 			return columns
@@ -474,8 +507,8 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateRegulatory(
-		// 	// new RegulatoryModel({  }),
+		// return handleCreateManager(
+		// 	// new ManagerModel({  }),
 		// ).then(() => {
 		// 	openCreateModal.value = false
 		// })
@@ -486,8 +519,8 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateRegulatory(
-		// 	new RegulatoryModel({
+		// return handleUpdateManager(
+		// 	new ManagerModel({
 		// 		id,
 		// 		...values,
 		// 	}),
@@ -497,7 +530,7 @@
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeleteRegulatory({ id })
+		return handleDeleteManager({ id })
 	}
 
 	// function getSort(key: string) {
@@ -543,24 +576,24 @@
 
 	// 		if (changeValues[value] !== changeValues.NONE) {
 	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectRegulationsRefetch()
+	// 			selectManagersRefetch()
 	// 			return
 	// 		}
 
 	// 		selectSort.value = undefined
-	// 		selectRegulationsRefetch()
+	// 		selectManagersRefetch()
 	// 		return
 	// 	}
 
 	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectRegulationsRefetch()
+	// 	selectManagersRefetch()
 	// }
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
 			page.value = Math.max(to, 1)
 		} else if (to > page.value) {
-			if (!isRegulationsPlaceholderData.value) {
+			if (!isManagersPlaceholderData.value) {
 				page.value = to
 			}
 		}
@@ -575,13 +608,13 @@
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
 			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Lista de normativos" />
+				<titulo title="Lista de gestores" />
 
 				<form-wrapper
 					v-model="openCreateModal"
-					:is-loading="isCreateRegulatoryLoading"
-					:title="`Criar um novo normativo`"
-					description="Crie o conteúdo de um novo normativo."
+					:is-loading="isCreateManagerLoading"
+					:title="`Criar um novo gestor`"
+					description="Crie o conteúdo de um novo gestor."
 					class="sm:max-w-[780px]"
 					@form-submit="onCreateSubmit"
 				>
@@ -592,7 +625,6 @@
 									<button-root
 										variant="outline"
 										@click="openCreateModal = true"
-										disabled
 									>
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
@@ -601,16 +633,16 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo normativo</p>
+									<p>Cadastre um novo gestor</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
 					</template>
 
 					<template #fields>
-						<regulatory-form
+						<manager-form
 							:metadata="form.values"
-							:disabled="isCreateRegulatoryLoading"
+							:disabled="isCreateManagerLoading"
 						/>
 					</template>
 				</form-wrapper>
@@ -660,13 +692,13 @@
 				:table="table"
 				:column-size="columns.length"
 				:row-limit="perPage"
-				:is-loading="isRegulationsLoading"
+				:is-loading="isManagersLoading"
 			/>
 
 			<div :class="['flex w-full items-center px-4']">
 				<table-pagination
 					v-model="page"
-					:disabled="formattedAllTypeOfRegulatory.length <= 0"
+					:disabled="formattedAllTypeOfManager.length <= 0"
 					:total-itens="pageMetadata.totalItens"
 					:items-per-page="perPage"
 					@update-paginate="handlePagination"

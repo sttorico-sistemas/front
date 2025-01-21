@@ -34,10 +34,11 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, regulatoryRepository } from '@/core/stores'
+	import { auxiliaryRepository, operatorRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { AddressModel, RegulatoryModel } from '@/core/models'
+	import { AddressModel, OperatorModel } from '@/core/models'
 	import {
+		formatCPF,
 		formatPhone,
 		formatStatus,
 		valueUpdater,
@@ -45,19 +46,18 @@
 	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
-		RegulatoryUpdateAction,
-		RegulatoryForm,
-		RegulatoryDeleteAction,
-	} from '@/modules/registers/ConsignerPage/components/table'
+		OperatorRegistrationDeleteAction,
+		OperatorRegistrationForm,
+		OperatorRegistrationUpdateAction,
+	} from '@/modules/queries/OperatorRegistrationPage/components/table'
 
-	type RegulatoryTable = {
+	type OperatorTable = {
 		id: number
+		name: string
+		cpf: string
+		email: string
 		type: string
-		number: string
-		target: string
-		publicationAt: string
-		revocationAt: string
-		status: StatusFormatted
+		status: string
 	}
 
 	const statusItems = [
@@ -78,12 +78,12 @@
 	const notify = useNotify()
 
 	const {
-		data: regulations,
-		isLoading: isRegulationsLoading,
-		isPlaceholderData: isRegulationsPlaceholderData,
+		data: operators,
+		isLoading: isOperatorsLoading,
+		isPlaceholderData: isOperatorsPlaceholderData,
 	} = useQuery({
-		queryKey: regulatoryRepository.getQueryKey(
-			'regulations',
+		queryKey: operatorRepository.getQueryKey(
+			'operators',
 			{
 				page,
 				limit: perPage,
@@ -91,7 +91,7 @@
 			status,
 		),
 		queryFn: ({ signal }) =>
-			regulatoryRepository.getAllRegulations({
+			operatorRepository.getAllOperators({
 				signal,
 				params: {
 					page: page.value,
@@ -109,15 +109,15 @@
 	})
 
 	const {
-		mutateAsync: handleDeleteRegulatory,
-		isPending: isDeleteRegulatoryLoading,
+		mutateAsync: handleDeleteOperator,
+		isPending: isDeleteOperatorLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			regulatoryRepository.activateRegulatory({ id }),
+			operatorRepository.activateOperator({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: operatorRepository.getQueryKey(
+					'operators',
 					{
 						page,
 						limit: perPage,
@@ -130,29 +130,29 @@
 			notify.error(
 				error,
 				{
-					title: error.message ?? 'Erro ao atualizar status do normativo!',
+					title: error.message ?? 'Erro ao atualizar status do operador!',
 				},
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Status do normativo apagado com sucesso!` },
+				{ title: `Status do operador apagado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
 	const {
-		mutateAsync: handleUpdateRegulatory,
-		isPending: isUpdateRegulatoryLoading,
+		mutateAsync: handleUpdateOperator,
+		isPending: isUpdateOperatorLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.updateRegulatory(data),
+		mutationFn: (data: OperatorModel) =>
+			operatorRepository.updateOperator(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: operatorRepository.getQueryKey(
+					'operators',
 					{
 						page,
 						limit: perPage,
@@ -164,28 +164,28 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: error.message ?? `Erro ao atualizar o normativo!` },
+				{ title: error.message ?? `Erro ao atualizar o operador!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Normativo atualizado com sucesso!` },
+				{ title: `operador atualizado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
 	const {
-		mutateAsync: handleCreateRegulatory,
-		isPending: isCreateRegulatoryLoading,
+		mutateAsync: handleCreateOperator,
+		isPending: isCreateOperatorLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.createRegulatory(data),
+		mutationFn: (data: OperatorModel) =>
+			operatorRepository.createOperator(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: operatorRepository.getQueryKey(
+					'operators',
 					{
 						page,
 						limit: perPage,
@@ -197,33 +197,32 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: error.message ?? `Erro ao criar o normativo!` },
+				{ title: error.message ?? `Erro ao criar o operador!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Normativo criado com sucesso!` },
+				{ title: `operador criado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
-	const formattedAllTypeOfRegulatory = computed<RegulatoryTable[]>(() => {
-		return (regulations.value ?? []).map(
-			({ id, number, target, typeName, publicationAt, revocationAt, status }) => ({
+	const formattedAllOperators = computed<OperatorTable[]>(() => {
+		return (operators.value ?? []).map(
+			({ id, cpf, email, name, typeName, status }) => ({
 				id: id as number,
-				number,
-				target,
+				name,
+				email: email as string,
+				cpf: formatCPF(cpf),
 				type: typeName as string,
-				publicationAt: Intl.DateTimeFormat('pt-BR').format(new Date(publicationAt)),
-				revocationAt: Intl.DateTimeFormat('pt-BR').format(new Date(revocationAt)),
-				status: formatStatus(status as string),
+				status: status as string,
 			}),
 		)
 	})
 
-	const columns: ColumnDef<RegulatoryTable>[] = [
+	const columns: ColumnDef<OperatorTable>[] = [
 		{
 			accessorKey: 'id',
 			meta: 'Código',
@@ -233,7 +232,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllOperators.value.length <= 0,
 						// onClick: () => handleSort('id'),
 					},
 					() => [
@@ -249,22 +248,94 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'type',
-			meta: 'Tipo',
+			accessorKey: 'name',
+			meta: 'Nome',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('type'),
+						disabled: formattedAllOperators.value.length <= 0,
+						// onClick: () => handleSort('name'),
 					},
 					() => [
-						'Tipo',
+						'Nome',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('type')],
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('name')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'cpf',
+			meta: 'CPF',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllOperators.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'CPF',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('cpf')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'email',
+			meta: 'E-mail',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllOperators.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'E-mail',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('email')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'type',
+			meta: 'Tipo de operador',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						class: 'w-full justify-start px-2 font-bold',
+						disabled: formattedAllOperators.value.length <= 0,
+						// onClick: () => handleSort('name'),
+					},
+					() => [
+						'Tipo de operador',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('name')],
 						// }),
 					],
 				)
@@ -273,156 +344,24 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'number',
-			meta: 'Número',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('number'),
-					},
-					() => [
-						'Número',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('number')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('number')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'target',
-			meta: 'Objeto',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('target'),
-					},
-					() => [
-						'Objeto',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('target')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('target')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'publicationAt',
-			meta: 'Data Publicação',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('publicationAt'),
-					},
-					() => [
-						'Data Publicação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('publicationAt')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('publicationAt')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'revocationAt',
-			meta: 'Data de Revogação',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('revocationAt'),
-					},
-					() => [
-						'Data de Revogação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('revocationAt')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('revocationAt')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'status',
-			meta: 'Status',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
-					},
-					() => [
-						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row, cell }) =>
-				h(
-					'div',
-					{
-						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
-						style: {
-							color: row.getValue<StatusFormatted>('status').textColor,
-							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
-						},
-					},
-					row.getValue<StatusFormatted>('status')?.text,
-				),
-			enableHiding: false,
-		},
-		{
 			id: 'actions',
 			header: 'Ações',
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(RegulatoryUpdateAction, {
+					h(OperatorRegistrationUpdateAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableOperatorName: data.name,
 						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isUpdateOperatorLoading.value,
+						isActive: data.status === 'active',
 					}),
-					h(RegulatoryDeleteAction, {
+					h(OperatorRegistrationDeleteAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableOperatorName: data.name,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isDeleteOperatorLoading.value,
+						isActive: data.status === 'active',
 					}),
 				])
 			},
@@ -431,7 +370,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return formattedAllTypeOfRegulatory.value
+			return formattedAllOperators.value
 		},
 		get columns() {
 			return columns
@@ -474,8 +413,8 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateRegulatory(
-		// 	// new RegulatoryModel({  }),
+		// return handleCreateOperator(
+		// 	// new OperatorModel({  }),
 		// ).then(() => {
 		// 	openCreateModal.value = false
 		// })
@@ -486,8 +425,8 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateRegulatory(
-		// 	new RegulatoryModel({
+		// return handleUpdateOperator(
+		// 	new OperatorModel({
 		// 		id,
 		// 		...values,
 		// 	}),
@@ -497,7 +436,7 @@
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeleteRegulatory({ id })
+		return handleDeleteOperator({ id })
 	}
 
 	// function getSort(key: string) {
@@ -543,24 +482,24 @@
 
 	// 		if (changeValues[value] !== changeValues.NONE) {
 	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectRegulationsRefetch()
+	// 			selectOperatorsRefetch()
 	// 			return
 	// 		}
 
 	// 		selectSort.value = undefined
-	// 		selectRegulationsRefetch()
+	// 		selectOperatorsRefetch()
 	// 		return
 	// 	}
 
 	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectRegulationsRefetch()
+	// 	selectOperatorsRefetch()
 	// }
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
 			page.value = Math.max(to, 1)
 		} else if (to > page.value) {
-			if (!isRegulationsPlaceholderData.value) {
+			if (!isOperatorsPlaceholderData.value) {
 				page.value = to
 			}
 		}
@@ -575,13 +514,13 @@
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
 			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Lista de normativos" />
+				<titulo title="Operadores Cadastrados" />
 
 				<form-wrapper
 					v-model="openCreateModal"
-					:is-loading="isCreateRegulatoryLoading"
-					:title="`Criar um novo normativo`"
-					description="Crie o conteúdo de um novo normativo."
+					:is-loading="isCreateOperatorLoading"
+					:title="`Criar um novo operador`"
+					description="Crie o conteúdo de um novo operador."
 					class="sm:max-w-[780px]"
 					@form-submit="onCreateSubmit"
 				>
@@ -592,7 +531,6 @@
 									<button-root
 										variant="outline"
 										@click="openCreateModal = true"
-										disabled
 									>
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
@@ -601,16 +539,16 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo normativo</p>
+									<p>Cadastre um novo operador</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
 					</template>
 
 					<template #fields>
-						<regulatory-form
+						<operator-registration-form
 							:metadata="form.values"
-							:disabled="isCreateRegulatoryLoading"
+							:disabled="isCreateOperatorLoading"
 						/>
 					</template>
 				</form-wrapper>
@@ -660,13 +598,13 @@
 				:table="table"
 				:column-size="columns.length"
 				:row-limit="perPage"
-				:is-loading="isRegulationsLoading"
+				:is-loading="isOperatorsLoading"
 			/>
 
 			<div :class="['flex w-full items-center px-4']">
 				<table-pagination
 					v-model="page"
-					:disabled="formattedAllTypeOfRegulatory.length <= 0"
+					:disabled="formattedAllOperators.length <= 0"
 					:total-itens="pageMetadata.totalItens"
 					:items-per-page="perPage"
 					@update-paginate="handlePagination"

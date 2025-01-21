@@ -22,7 +22,7 @@
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
-		tableRegulatoryName: { type: String, required: true },
+		tableManagerName: { type: String, required: true },
 		isLoading: { type: Boolean, default: () => false },
 		isActive: { type: Boolean, required: true },
 	})
@@ -47,7 +47,7 @@
 						</button-root>
 					</tooltip-trigger>
 					<tooltip-content side="right">
-						<p>{{ isActive ? 'Desativar' : 'Ativar' }} normativo {{ isActive }}</p>
+						<p>{{ isActive ? 'Desativar' : 'Ativar' }} gestor</p>
 					</tooltip-content>
 				</tooltip>
 			</tooltip-provider>
@@ -57,7 +57,7 @@
 			<alert-dialog-header>
 				<alert-dialog-title
 					>Deseja {{ isActive ? 'desativar' : 'ativar' }} "{{
-						tableRegulatoryName
+						tableManagerName
 					}}"?</alert-dialog-title
 				>
 				<alert-dialog-description>

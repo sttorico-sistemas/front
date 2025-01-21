@@ -65,6 +65,11 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+
+	const props = defineProps({
+		dataId: { type: Number, required: true },
+	})
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
@@ -76,6 +81,10 @@
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
+
+	const consignorId = computed(() => {
+		return props.dataId
+	})
 
 	const {
 		data: operators,
@@ -89,6 +98,7 @@
 				limit: perPage,
 			},
 			status,
+			consignorId
 		),
 		queryFn: ({ signal }) =>
 			operatorRepository.getAllOperators({
@@ -97,6 +107,8 @@
 					page: page.value,
 					per_page: perPage.value,
 					status: status.value,
+					vinculavel_id: consignorId.value,
+					vinculavel_type: 1
 				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {

@@ -7,13 +7,13 @@
 	import { FormWrapper } from '@/core/components/form-wrapper'
 	import { ButtonRoot } from '@/core/components/button'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-	import { regulatoryRepository } from '@/core/stores'
-	import RegulatoryForm from './RegulatoryForm.vue'
-	import { RegulatoryModel } from '@/core/models'
+	import { managerRepository } from '@/core/stores'
+	import ManagerForm from './ManagerForm.vue'
+	import { ManagerModel } from '@/core/models'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
-		tableRegulatoryName: { type: String, required: true },
+		tableManagerName: { type: String, required: true },
 		isLoading: { type: Boolean, default: () => false },
 		isActive: { type: Boolean, required: true },
 	})
@@ -28,16 +28,16 @@
 			name: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			number: z
+			shortName: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
 			cnpj: z
 				.string({ message: 'O CNPJ é obrigatório.' })
 				.min(1, { message: 'O CNPJ é obrigatório.' }),
-			masterRegulatoryId: z
+			masterManagerId: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			regulatoryType: z
+			entityTypeId: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
 			addressId: z
@@ -66,11 +66,12 @@
 		if (!properties.dataId) return
 		isDataLoading.value = true
 		try {
-			const data = await regulatoryRepository.getRegulatoryById(
+			const data = await managerRepository.getManagerById(
 				properties.dataId,
 			)
 
 			form.setValues({})
+			console.log(data)
 		} catch (error) {
 			console.log(error)
 		} finally {
@@ -90,13 +91,13 @@
 		tooltip="Editar averbador"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar averbador ${tableRegulatoryName}`"
+		:title="`Editar averbador ${tableManagerName}`"
 		description="Atualize o conteúdo do averbador."
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive || true" variant="outline" @click="setNewData">
+			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
 				<font-awesome-icon
 					class="text-primary_3-table w-4 h-4"
 					:icon="['fas', 'pen']"
@@ -105,7 +106,7 @@
 		</template>
 
 		<template #fields>
-			<regulatory-form
+			<manager-form
 				:metadata="form.values"
 				:loadCities="loadCities"
 				:disabled="isLoading"
