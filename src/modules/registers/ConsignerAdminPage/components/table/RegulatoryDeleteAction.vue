@@ -47,7 +47,7 @@
 						</button-root>
 					</tooltip-trigger>
 					<tooltip-content side="right">
-						<p>{{ isActive ? 'Desativar' : 'Ativar' }} normativo {{ isActive }}</p>
+						<p>{{ isActive ? 'Desativar' : 'Ativar' }} averbador</p>
 					</tooltip-content>
 				</tooltip>
 			</tooltip-provider>

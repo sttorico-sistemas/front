@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from "vue-router";
 import { AuxiliaryTablesPage } from "@/modules/settings/AuxiliaryTablesPage";
 import { RouteManagementPage } from "@/modules/settings/RouteManagementPage";
+import { ServicePage } from "@/modules/settings/ServicePage";
 import { RulePage } from "@/modules/settings/RulePage";
 import { IamPage } from "@/modules/settings/IAMPage";
 
@@ -15,9 +16,9 @@ export const settingsRoutes: RouteRecordRaw[] = [
 				component: AuxiliaryTablesPage,
 			},
 			{
-				path: 'paginas',
-				name: 'configuracoes-paginas',
-				component: RouteManagementPage,
+				path: 'servicos',
+				name: 'configuracoes-servicos',
+				component: ServicePage,
 			},
 			{
 				path: 'paginas',

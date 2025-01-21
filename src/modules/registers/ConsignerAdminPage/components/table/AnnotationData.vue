@@ -11,7 +11,17 @@
 		useQueryClient,
 	} from '@tanstack/vue-query'
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+	import {
+		DateFormatter,
+		getLocalTimeZone,
+		type DateValue,
+	} from '@internationalized/date'
 
+	import {
+		Popover,
+		PopoverContent,
+		PopoverTrigger,
+	} from '@/core/components/popover'
 	import {
 		SelectRoot,
 		SelectContent,
@@ -32,44 +42,39 @@
 		TableWrapper,
 		TablePagination,
 	} from '@/core/components/table-wrapper'
-	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
+	import { Calendar } from '@/core/components/calendar'
+	import { InputRoot } from '@/core/components/fields/input'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, regulatoryRepository } from '@/core/stores'
+	import { annotationRepository, operatorRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { AddressModel, RegulatoryModel } from '@/core/models'
-	import {
-		formatPhone,
-		formatStatus,
-		valueUpdater,
-		type StatusFormatted,
-	} from '@/core/utils'
+	import { AnnotationModel } from '@/core/models'
+	import { cn, debounceAsync, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
-		RegulatoryUpdateAction,
-		RegulatoryForm,
-		RegulatoryDeleteAction,
+		AnnotationUpdateAction,
+		AnnotationForm,
+		AnnotationDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
 
-	type RegulatoryTable = {
+	type AnnotationTable = {
 		id: number
-		type: string
-		number: string
-		target: string
-		publicationAt: string
-		revocationAt: string
-		status: StatusFormatted
+		title: string
+		operatorName: string
+		createdAt: string
 	}
-
-	const statusItems = [
-		{ value: 1, label: 'Ativado' },
-		{ value: 0, label: 'Desativado' },
-	] as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
+	const search = ref<string | undefined>()
+	const searchDate = ref<DateValue | undefined>()
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
+	const selectSearch = useRouteQuery<string | undefined>(
+		'cgn-search',
+		undefined,
+	)
+	const selectDate = useRouteQuery<string | undefined>('cgn-date', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
 		transform: Number,
@@ -82,7 +87,7 @@
 		isLoading: isRegulationsLoading,
 		isPlaceholderData: isRegulationsPlaceholderData,
 	} = useQuery({
-		queryKey: regulatoryRepository.getQueryKey(
+		queryKey: annotationRepository.getQueryKey(
 			'regulations',
 			{
 				page,
@@ -91,7 +96,7 @@
 			status,
 		),
 		queryFn: ({ signal }) =>
-			regulatoryRepository.getAllRegulations({
+			annotationRepository.getAllRegulations({
 				signal,
 				params: {
 					page: page.value,
@@ -109,14 +114,14 @@
 	})
 
 	const {
-		mutateAsync: handleDeleteRegulatory,
-		isPending: isDeleteRegulatoryLoading,
+		mutateAsync: handleDeleteAnnotation,
+		isPending: isDeleteAnnotationLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			regulatoryRepository.activateRegulatory({ id }),
+			annotationRepository.deleteAnnotation({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
+				queryKey: annotationRepository.getQueryKey(
 					'regulations',
 					{
 						page,
@@ -144,14 +149,14 @@
 	})
 
 	const {
-		mutateAsync: handleUpdateRegulatory,
-		isPending: isUpdateRegulatoryLoading,
+		mutateAsync: handleUpdateAnnotation,
+		isPending: isUpdateAnnotationLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.updateRegulatory(data),
+		mutationFn: (data: AnnotationModel) =>
+			annotationRepository.updateAnnotation(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
+				queryKey: annotationRepository.getQueryKey(
 					'regulations',
 					{
 						page,
@@ -177,14 +182,14 @@
 	})
 
 	const {
-		mutateAsync: handleCreateRegulatory,
-		isPending: isCreateRegulatoryLoading,
+		mutateAsync: handleCreateAnnotation,
+		isPending: isCreateAnnotationLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.createRegulatory(data),
+		mutationFn: (data: AnnotationModel) =>
+			annotationRepository.createAnnotation(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
+				queryKey: annotationRepository.getQueryKey(
 					'regulations',
 					{
 						page,
@@ -209,21 +214,40 @@
 		},
 	})
 
-	const formattedAllTypeOfRegulatory = computed<RegulatoryTable[]>(() => {
+	const { data: operators, isLoading: isOperatorsLoading } = useQuery({
+		queryKey: operatorRepository.getQueryKey('operators', {
+			page,
+			limit: perPage,
+		}),
+		queryFn: ({ signal }) =>
+			operatorRepository.getAllOperators({
+				signal,
+				params: {
+					page: page.value,
+					perPage: perPage.value,
+				},
+			}),
+	})
+
+	const formattedAllTypeOfAnnotation = computed<AnnotationTable[]>(() => {
 		return (regulations.value ?? []).map(
-			({ id, number, target, typeName, publicationAt, revocationAt, status }) => ({
+			({ id, operatorName, title, createdAt }) => ({
 				id: id as number,
-				number,
-				target,
-				type: typeName as string,
-				publicationAt: Intl.DateTimeFormat('pt-BR').format(new Date(publicationAt)),
-				revocationAt: Intl.DateTimeFormat('pt-BR').format(new Date(revocationAt)),
-				status: formatStatus(status as string),
+				operatorName,
+				title,
+				createdAt,
 			}),
 		)
 	})
 
-	const columns: ColumnDef<RegulatoryTable>[] = [
+	const formattedAllOperators = computed(() => {
+		return (operators.value ?? []).map(({ id, name }) => ({
+			value: `${id}`,
+			label: name,
+		}))
+	})
+
+	const columns: ColumnDef<AnnotationTable>[] = [
 		{
 			accessorKey: 'id',
 			meta: 'Código',
@@ -233,7 +257,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
 						// onClick: () => handleSort('id'),
 					},
 					() => [
@@ -249,159 +273,75 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'type',
-			meta: 'Tipo',
+			accessorKey: 'createdAt',
+			meta: 'Data',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('type'),
+						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
+						// onClick: () => handleSort('createdAt'),
 					},
 					() => [
-						'Tipo',
+						'Data',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('type')],
+						// 	icon: ['fas', getSort('createdAt')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('type')),
+			cell: ({ row }) => h('div', row.getValue('createdAt')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'number',
-			meta: 'Número',
+			accessorKey: 'title',
+			meta: 'Título',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('number'),
+						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
+						// onClick: () => handleSort('title'),
 					},
 					() => [
-						'Número',
+						'Título',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('number')],
+						// 	icon: ['fas', getSort('title')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('number')),
+			cell: ({ row }) => h('div', row.getValue('title')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'target',
-			meta: 'Objeto',
+			accessorKey: 'operatorName',
+			meta: 'Operador',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('target'),
+						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
+						// onClick: () => handleSort('operatorName'),
 					},
 					() => [
-						'Objeto',
+						'Operador',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('target')],
+						// 	icon: ['fas', getSort('operatorName')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('target')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'publicationAt',
-			meta: 'Data Publicação',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('publicationAt'),
-					},
-					() => [
-						'Data Publicação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('publicationAt')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('publicationAt')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'revocationAt',
-			meta: 'Data de Revogação',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('revocationAt'),
-					},
-					() => [
-						'Data de Revogação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('revocationAt')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('revocationAt')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'status',
-			meta: 'Status',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
-					},
-					() => [
-						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row, cell }) =>
-				h(
-					'div',
-					{
-						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
-						style: {
-							color: row.getValue<StatusFormatted>('status').textColor,
-							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
-						},
-					},
-					row.getValue<StatusFormatted>('status')?.text,
-				),
+			cell: ({ row }) => h('div', row.getValue('operatorName')),
 			enableHiding: false,
 		},
 		{
@@ -410,19 +350,19 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(RegulatoryUpdateAction, {
+					h(AnnotationUpdateAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableAnnotationName: data.title,
 						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isUpdateAnnotationLoading.value,
+						isActive: true,
 					}),
-					h(RegulatoryDeleteAction, {
+					h(AnnotationDeleteAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableAnnotationName: data.title,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isDeleteAnnotationLoading.value,
+						isActive: true,
 					}),
 				])
 			},
@@ -431,7 +371,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return formattedAllTypeOfRegulatory.value
+			return formattedAllTypeOfAnnotation.value
 		},
 		get columns() {
 			return columns
@@ -474,8 +414,8 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateRegulatory(
-		// 	// new RegulatoryModel({  }),
+		// return handleCreateAnnotation(
+		// 	// new AnnotationModel({  }),
 		// ).then(() => {
 		// 	openCreateModal.value = false
 		// })
@@ -486,8 +426,8 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateRegulatory(
-		// 	new RegulatoryModel({
+		// return handleUpdateAnnotation(
+		// 	new AnnotationModel({
 		// 		id,
 		// 		...values,
 		// 	}),
@@ -497,7 +437,7 @@
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeleteRegulatory({ id })
+		return handleDeleteAnnotation({ id })
 	}
 
 	// function getSort(key: string) {
@@ -566,22 +506,39 @@
 		}
 	}
 
+	const handleSearch = debounceAsync(async (value: string | number) => {
+		selectSearch.value = value.toString()
+	}, 500)
+
+	const handleSearchDate = async (value: DateValue | undefined) => {
+		if (!value) return
+		selectDate.value = value.toString()
+	}
+
 	function handleClear() {
 		status.value = undefined
+		search.value = undefined
+		searchDate.value = undefined
+		selectSearch.value = undefined
+		selectDate.value = undefined
 	}
+
+	const df = new DateFormatter('pt-BR', {
+		dateStyle: 'long',
+	})
 </script>
 
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
 			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Lista de normativos" />
+				<titulo title="Anotações Importantes" />
 
 				<form-wrapper
 					v-model="openCreateModal"
-					:is-loading="isCreateRegulatoryLoading"
-					:title="`Criar um novo normativo`"
-					description="Crie o conteúdo de um novo normativo."
+					:is-loading="isCreateAnnotationLoading"
+					:title="`Criar um nova anotação`"
+					description="Crie o conteúdo de um nova anotação."
 					class="sm:max-w-[780px]"
 					@form-submit="onCreateSubmit"
 				>
@@ -592,7 +549,6 @@
 									<button-root
 										variant="outline"
 										@click="openCreateModal = true"
-										disabled
 									>
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
@@ -601,34 +557,41 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo normativo</p>
+									<p>Cadastre um nova anotação</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
 					</template>
 
 					<template #fields>
-						<regulatory-form
+						<annotation-form
 							:metadata="form.values"
-							:disabled="isCreateRegulatoryLoading"
+							:disabled="isCreateAnnotationLoading"
 						/>
 					</template>
 				</form-wrapper>
 			</div>
 
 			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
+				<input-root
+					class="max-w-96"
+					placeholder="Título"
+					v-model="search"
+					@update:model-value="handleSearch"
+				/>
+
 				<select-root class="flex-[1]" v-model="status">
 					<select-trigger class="lg:max-w-80 flex-[2]">
 						<select-value
 							class="text-left"
-							placeholder="Selecione um status..."
+							placeholder="Selecione um operador..."
 						/>
 					</select-trigger>
 					<select-content>
 						<select-group>
-							<select-label>Status:</select-label>
+							<select-label>Operadores:</select-label>
 							<select-item
-								v-for="statusItem of statusItems"
+								v-for="statusItem of formattedAllOperators"
 								:key="statusItem.value"
 								:value="statusItem.value.toString()"
 								>{{ statusItem.label }}</select-item
@@ -636,6 +599,39 @@
 						</select-group>
 					</select-content>
 				</select-root>
+
+				<popover>
+					<popover-trigger as-child>
+						<button-root
+							variant="outline"
+							:class="
+								cn(
+									'flex max-w-60 w-full justify-start text-left font-normal items-center',
+									!searchDate && 'text-muted-foreground',
+								)
+							"
+						>
+							<font-awesome-icon
+								class="mr-2 h-4 w-4 flex"
+								:icon="['far', 'calendar']"
+							/>
+
+							{{
+								searchDate
+									? df.format(searchDate!.toDate(getLocalTimeZone()))
+									: 'Selecione uma data'
+							}}
+						</button-root>
+					</popover-trigger>
+					<popover-Content class="w-auto p-0">
+						<calendar
+							v-model="searchDate"
+							initial-focus
+							class="col-span-3"
+							@update:model-value="handleSearchDate"
+						/>
+					</popover-Content>
+				</popover>
 
 				<tooltip-provider>
 					<tooltip>
@@ -666,7 +662,7 @@
 			<div :class="['flex w-full items-center px-4']">
 				<table-pagination
 					v-model="page"
-					:disabled="formattedAllTypeOfRegulatory.length <= 0"
+					:disabled="formattedAllTypeOfAnnotation.length <= 0"
 					:total-itens="pageMetadata.totalItens"
 					:items-per-page="perPage"
 					@update-paginate="handlePagination"

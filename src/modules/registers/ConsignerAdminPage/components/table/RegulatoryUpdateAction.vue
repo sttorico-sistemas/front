@@ -28,7 +28,7 @@
 			name: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			number: z
+			shortName: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
 			cnpj: z
@@ -37,7 +37,7 @@
 			masterRegulatoryId: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			regulatoryType: z
+			entityTypeId: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
 			addressId: z
@@ -71,6 +71,7 @@
 			)
 
 			form.setValues({})
+			console.log(data)
 		} catch (error) {
 			console.log(error)
 		} finally {
@@ -96,7 +97,7 @@
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive || true" variant="outline" @click="setNewData">
+			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
 				<font-awesome-icon
 					class="text-primary_3-table w-4 h-4"
 					:icon="['fas', 'pen']"

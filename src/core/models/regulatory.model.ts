@@ -7,10 +7,11 @@ export class RegulatoryModel extends BaseModel {
 	public consignerId: number
 	public number: string
 	public target: string
+	public typeName?: string
 	public subject: string
 	public publicationAt: string;
 	public revocationAt: string;
-	public status?: number
+	public status?: string
 
 	constructor(props: {
 		id?: number
@@ -18,10 +19,11 @@ export class RegulatoryModel extends BaseModel {
 		consignerId: number
 		number: string
 		target: string;
+		typeName?: string
 		subject: string
 		publicationAt: string;
 		revocationAt: string;
-		status?: number
+		status?: string
 	}) {
 		super();
 		this.id = props.id;
@@ -29,6 +31,8 @@ export class RegulatoryModel extends BaseModel {
 		this.consignerId = props.consignerId;
 		this.number = props.number;
 		this.target = props.target;
+		this.target = props.target;
+		this.typeName = props.typeName;
 		this.subject = props.subject;
 		this.publicationAt = props.publicationAt;
 		this.revocationAt = props.revocationAt;
@@ -51,14 +55,15 @@ export class RegulatoryModel extends BaseModel {
 	static fromRecord(record: Record<string, any>): RegulatoryModel {
 		return new RegulatoryModel({
 			id: record.id,
-			consignerId: record.consignante_id,
+			consignerId: record.consignante.id,
 			subject: record.assunto,
-			type: record.tipo,
-			target: record.objeto,
+			type: record.tipo_normativo.id,
+			typeName: record.tipo_normativo.nome,
+			target: record.assunto,
 			number: record.numero,
-			publicationAt: record.data_de_publicacao,
-			revocationAt: record.data_de_revogacao,
-			status: record.status,
+			publicationAt: record.data_publicacao,
+			revocationAt: record.data_revogacao,
+			status: record.situacao,
 		});
 	}
 

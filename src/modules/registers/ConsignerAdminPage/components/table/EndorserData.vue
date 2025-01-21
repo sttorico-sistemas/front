@@ -34,9 +34,9 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, regulatoryRepository } from '@/core/stores'
+	import { auxiliaryRepository, endorserRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { AddressModel, RegulatoryModel } from '@/core/models'
+	import { AddressModel, EndorserModel } from '@/core/models'
 	import {
 		formatPhone,
 		formatStatus,
@@ -45,18 +45,18 @@
 	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
-		RegulatoryUpdateAction,
-		RegulatoryForm,
-		RegulatoryDeleteAction,
+		EndorserUpdateAction,
+		EndorserForm,
+		EndorserDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
 
-	type RegulatoryTable = {
+	type EndorserTable = {
 		id: number
-		type: string
-		number: string
-		target: string
-		publicationAt: string
-		revocationAt: string
+		name: string
+		manager: string
+		phone: string
+		cellphone: string
+		email: string
 		status: StatusFormatted
 	}
 
@@ -78,12 +78,12 @@
 	const notify = useNotify()
 
 	const {
-		data: regulations,
-		isLoading: isRegulationsLoading,
-		isPlaceholderData: isRegulationsPlaceholderData,
+		data: endorsers,
+		isLoading: isEndorsersLoading,
+		isPlaceholderData: isEndorsersPlaceholderData,
 	} = useQuery({
-		queryKey: regulatoryRepository.getQueryKey(
-			'regulations',
+		queryKey: endorserRepository.getQueryKey(
+			'endorsers',
 			{
 				page,
 				limit: perPage,
@@ -91,7 +91,7 @@
 			status,
 		),
 		queryFn: ({ signal }) =>
-			regulatoryRepository.getAllRegulations({
+			endorserRepository.getAllEndorsers({
 				signal,
 				params: {
 					page: page.value,
@@ -109,15 +109,15 @@
 	})
 
 	const {
-		mutateAsync: handleDeleteRegulatory,
-		isPending: isDeleteRegulatoryLoading,
+		mutateAsync: handleDeleteEndorser,
+		isPending: isDeleteEndorserLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			regulatoryRepository.activateRegulatory({ id }),
+			endorserRepository.activateEndorser({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: endorserRepository.getQueryKey(
+					'endorsers',
 					{
 						page,
 						limit: perPage,
@@ -130,29 +130,29 @@
 			notify.error(
 				error,
 				{
-					title: error.message ?? 'Erro ao atualizar status do normativo!',
+					title: error.message ?? 'Erro ao atualizar status do averbador!',
 				},
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Status do normativo apagado com sucesso!` },
+				{ title: `Status do averbador apagado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
 	const {
-		mutateAsync: handleUpdateRegulatory,
-		isPending: isUpdateRegulatoryLoading,
+		mutateAsync: handleUpdateEndorser,
+		isPending: isUpdateEndorserLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.updateRegulatory(data),
+		mutationFn: (data: EndorserModel) =>
+			endorserRepository.updateEndorser(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: endorserRepository.getQueryKey(
+					'endorsers',
 					{
 						page,
 						limit: perPage,
@@ -164,28 +164,28 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: error.message ?? `Erro ao atualizar o normativo!` },
+				{ title: error.message ?? `Erro ao atualizar o averbador!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Normativo atualizado com sucesso!` },
+				{ title: `Averbador atualizado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
 	const {
-		mutateAsync: handleCreateRegulatory,
-		isPending: isCreateRegulatoryLoading,
+		mutateAsync: handleCreateEndorser,
+		isPending: isCreateEndorserLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.createRegulatory(data),
+		mutationFn: (data: EndorserModel) =>
+			endorserRepository.createEndorser(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: endorserRepository.getQueryKey(
+					'endorsers',
 					{
 						page,
 						limit: perPage,
@@ -197,33 +197,33 @@
 		onError: (error) => {
 			notify.error(
 				error,
-				{ title: error.message ?? `Erro ao criar o normativo!` },
+				{ title: error.message ?? `Erro ao criar o averbador!` },
 				{ duration: 1500 },
 			)
 		},
 		onSuccess: () => {
 			notify.success(
-				{ title: `Normativo criado com sucesso!` },
+				{ title: `Averbador criado com sucesso!` },
 				{ duration: 1500 },
 			)
 		},
 	})
 
-	const formattedAllTypeOfRegulatory = computed<RegulatoryTable[]>(() => {
-		return (regulations.value ?? []).map(
-			({ id, number, target, typeName, publicationAt, revocationAt, status }) => ({
+	const formattedAllTypeOfEndorser = computed<EndorserTable[]>(() => {
+		return (endorsers.value ?? []).map(
+			({ id, name, cellphone, email, phone, manager, status }) => ({
 				id: id as number,
-				number,
-				target,
-				type: typeName as string,
-				publicationAt: Intl.DateTimeFormat('pt-BR').format(new Date(publicationAt)),
-				revocationAt: Intl.DateTimeFormat('pt-BR').format(new Date(revocationAt)),
-				status: formatStatus(status as string),
+				name,
+				manager: manager.name,
+				cellphone: formatPhone(cellphone),
+				phone: formatPhone(phone),
+				email,
+				status: formatStatus(status as number),
 			}),
 		)
 	})
 
-	const columns: ColumnDef<RegulatoryTable>[] = [
+	const columns: ColumnDef<EndorserTable>[] = [
 		{
 			accessorKey: 'id',
 			meta: 'Código',
@@ -233,7 +233,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
 						// onClick: () => handleSort('id'),
 					},
 					() => [
@@ -249,123 +249,123 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'type',
-			meta: 'Tipo',
+			accessorKey: 'name',
+			meta: 'Nome',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('type'),
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
+						// onClick: () => handleSort('name'),
 					},
 					() => [
-						'Tipo',
+						'Nome',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('type')],
+						// 	icon: ['fas', getSort('name')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('type')),
+			cell: ({ row }) => h('div', row.getValue('name')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'number',
-			meta: 'Número',
+			accessorKey: 'manager',
+			meta: 'Gestor',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('number'),
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
+						// onClick: () => handleSort('city'),
 					},
 					() => [
-						'Número',
+						'Gestor',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('number')],
+						// 	icon: ['fas', getSort('city')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('number')),
+			cell: ({ row }) => h('div', row.getValue('manager')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'target',
-			meta: 'Objeto',
+			accessorKey: 'phone',
+			meta: 'Telefone',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('target'),
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
+						// onClick: () => handleSort('phone'),
 					},
 					() => [
-						'Objeto',
+						'Telefone',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('target')],
+						// 	icon: ['fas', getSort('phone')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('target')),
+			cell: ({ row }) => h('div', row.getValue('phone')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'publicationAt',
-			meta: 'Data Publicação',
+			accessorKey: 'cellphone',
+			meta: 'Celular',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('publicationAt'),
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
+						// onClick: () => handleSort('cellphone'),
 					},
 					() => [
-						'Data Publicação',
+						'Celular',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('publicationAt')],
+						// 	icon: ['fas', getSort('cellphone')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('publicationAt')),
+			cell: ({ row }) => h('div', row.getValue('cellphone')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'revocationAt',
-			meta: 'Data de Revogação',
+			accessorKey: 'email',
+			meta: 'E-mail',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('revocationAt'),
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
+						// onClick: () => handleSort('email'),
 					},
 					() => [
-						'Data de Revogação',
+						'E-mail',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('revocationAt')],
+						// 	icon: ['fas', getSort('email')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('revocationAt')),
+			cell: ({ row }) => h('div', row.getValue('email')),
 			enableHiding: false,
 		},
 		{
@@ -377,7 +377,7 @@
 					{
 						variant: 'ghost',
 						class: ['w-full justify-start px-1 font-bold'],
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfEndorser.value.length <= 0,
 						// onClick: () => handleSort('entityTypeId'),
 					},
 					() => [
@@ -410,19 +410,19 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(RegulatoryUpdateAction, {
+					h(EndorserUpdateAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableEndorserName: data.name,
 						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isUpdateEndorserLoading.value,
+						isActive: data.status.raw === 1,
 					}),
-					h(RegulatoryDeleteAction, {
+					h(EndorserDeleteAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableEndorserName: data.name,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isDeleteEndorserLoading.value,
+						isActive: data.status.raw === 1,
 					}),
 				])
 			},
@@ -431,7 +431,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return formattedAllTypeOfRegulatory.value
+			return formattedAllTypeOfEndorser.value
 		},
 		get columns() {
 			return columns
@@ -474,8 +474,8 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateRegulatory(
-		// 	// new RegulatoryModel({  }),
+		// return handleCreateEndorser(
+		// 	// new EndorserModel({  }),
 		// ).then(() => {
 		// 	openCreateModal.value = false
 		// })
@@ -486,8 +486,8 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateRegulatory(
-		// 	new RegulatoryModel({
+		// return handleUpdateEndorser(
+		// 	new EndorserModel({
 		// 		id,
 		// 		...values,
 		// 	}),
@@ -497,7 +497,7 @@
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeleteRegulatory({ id })
+		return handleDeleteEndorser({ id })
 	}
 
 	// function getSort(key: string) {
@@ -543,24 +543,24 @@
 
 	// 		if (changeValues[value] !== changeValues.NONE) {
 	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectRegulationsRefetch()
+	// 			selectEndorsersRefetch()
 	// 			return
 	// 		}
 
 	// 		selectSort.value = undefined
-	// 		selectRegulationsRefetch()
+	// 		selectEndorsersRefetch()
 	// 		return
 	// 	}
 
 	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectRegulationsRefetch()
+	// 	selectEndorsersRefetch()
 	// }
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
 			page.value = Math.max(to, 1)
 		} else if (to > page.value) {
-			if (!isRegulationsPlaceholderData.value) {
+			if (!isEndorsersPlaceholderData.value) {
 				page.value = to
 			}
 		}
@@ -575,13 +575,13 @@
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
 			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Lista de normativos" />
+				<titulo title="Lista de averbadores" />
 
 				<form-wrapper
 					v-model="openCreateModal"
-					:is-loading="isCreateRegulatoryLoading"
-					:title="`Criar um novo normativo`"
-					description="Crie o conteúdo de um novo normativo."
+					:is-loading="isCreateEndorserLoading"
+					:title="`Criar um novo averbador`"
+					description="Crie o conteúdo de um novo averbador."
 					class="sm:max-w-[780px]"
 					@form-submit="onCreateSubmit"
 				>
@@ -592,7 +592,6 @@
 									<button-root
 										variant="outline"
 										@click="openCreateModal = true"
-										disabled
 									>
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
@@ -601,16 +600,16 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo normativo</p>
+									<p>Cadastre um novo averbador</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
 					</template>
 
 					<template #fields>
-						<regulatory-form
+						<endorser-form
 							:metadata="form.values"
-							:disabled="isCreateRegulatoryLoading"
+							:disabled="isCreateEndorserLoading"
 						/>
 					</template>
 				</form-wrapper>
@@ -660,13 +659,13 @@
 				:table="table"
 				:column-size="columns.length"
 				:row-limit="perPage"
-				:is-loading="isRegulationsLoading"
+				:is-loading="isEndorsersLoading"
 			/>
 
 			<div :class="['flex w-full items-center px-4']">
 				<table-pagination
 					v-model="page"
-					:disabled="formattedAllTypeOfRegulatory.length <= 0"
+					:disabled="formattedAllTypeOfEndorser.length <= 0"
 					:total-itens="pageMetadata.totalItens"
 					:items-per-page="perPage"
 					@update-paginate="handlePagination"

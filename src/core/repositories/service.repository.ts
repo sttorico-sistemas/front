@@ -1,13 +1,13 @@
 import { useAxios } from "@/core/composables";
 import { BaseError } from "@/core/errors/base.error";
-import { RegulatoryModel } from "@/core/models";
+import { ServiceModel } from "@/core/models";
 import { HttpClientProps } from "@/modules/configuracoes/types";
 import { Ref } from "vue";
 
 
-export class RegulatoryRepository {
+export class ServiceRepository {
 	private http = useAxios();
-	#QUERY_KEY = 'regulatory'
+	#QUERY_KEY = 'consigner'
 
 	getQueryKey(tag?: string | Ref<string>, pagination?: { page?: Ref<number>, limit?: Ref<number> }, ...others: Ref<unknown>[]) {
 		if (pagination === undefined) {
@@ -16,13 +16,14 @@ export class RegulatoryRepository {
 		return [tag ?? this.#QUERY_KEY, pagination, ...others]
 	}
 
-	async getAllRegulations(configParams?: HttpClientProps<RegulatoryModel[]>): Promise<RegulatoryModel[]> {
+	async getAllServices(configParams?: HttpClientProps<ServiceModel[]>): Promise<ServiceModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[], meta: any }>(`/normativos`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/servicos`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.map((e: Record<string, any>) => RegulatoryModel.fromRecord(e));
+			console
+			const values = response.data.map((e: Record<string, any>) => ServiceModel.fromRecord(this.getServiceByIdAdapter(e)));
 			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
@@ -30,13 +31,13 @@ export class RegulatoryRepository {
 		}
 	}
 
-	async getRegulatoryById(dataId: number, configParams?: HttpClientProps<RegulatoryModel>): Promise<RegulatoryModel> {
+	async getServiceById(dataId: number, configParams?: HttpClientProps<ServiceModel>): Promise<ServiceModel> {
 		try {
-			const response = await this.http.get<{ data: any }>(`/normativos/${dataId}`, {
+			const response = await this.http.get<{ data: any }>(`/servicos/${dataId}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = RegulatoryModel.fromRecord(response.data)
+			const values = ServiceModel.fromRecord(this.getServiceByIdAdapter(response.data))
 			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
 			return values
 		} catch (error) {
@@ -44,12 +45,23 @@ export class RegulatoryRepository {
 		}
 	}
 
-	async createRegulatory(
-		body: RegulatoryModel,
-		configParams?: HttpClientProps<RegulatoryModel>
+	private getServiceByIdAdapter(data: Record<string, any>) {
+		return {
+			id: data.id,
+			nome: data.nome,
+			tema_do_icone: data.tema_do_icone,
+			icone: data.icone,
+			cor: data.cor
+		}
+	}
+
+
+	async createService(
+		body: ServiceModel,
+		configParams?: HttpClientProps<ServiceModel>
 	): Promise<void> {
 		try {
-			await this.http.post(`/normativos`, body.toRecord(), {
+			await this.http.post(`/servicos`, body.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -58,12 +70,12 @@ export class RegulatoryRepository {
 		}
 	}
 
-	async updateRegulatory(
-		data: RegulatoryModel,
-		configParams?: HttpClientProps<RegulatoryModel>
+	async updateService(
+		data: ServiceModel,
+		configParams?: HttpClientProps<ServiceModel>
 	): Promise<void> {
 		try {
-			await this.http.put(`/normativos/${data.id}`, data.toRecord(), {
+			await this.http.put(`/servicos/${data.id}`, data.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -72,11 +84,11 @@ export class RegulatoryRepository {
 		}
 	}
 
-	async activateRegulatory({ id }: Pick<RegulatoryModel, 'id'>,
-		configParams?: HttpClientProps<RegulatoryModel>
+	async deleteService({ id }: Pick<ServiceModel, 'id'>,
+		configParams?: HttpClientProps<ServiceModel>
 	): Promise<void> {
 		try {
-			await this.http.patch(`/normativos/${id}/status`, {
+			await this.http.delete(`/servicos/${id}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});

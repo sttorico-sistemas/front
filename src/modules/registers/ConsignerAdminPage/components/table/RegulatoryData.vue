@@ -211,14 +211,14 @@
 
 	const formattedAllTypeOfRegulatory = computed<RegulatoryTable[]>(() => {
 		return (regulations.value ?? []).map(
-			({ id, number, target, typeName, publicationAt, revocationAt, status }) => ({
+			({ id, number, target, type, publicationAt, revocationAt, status }) => ({
 				id: id as number,
 				number,
 				target,
-				type: typeName as string,
-				publicationAt: Intl.DateTimeFormat('pt-BR').format(new Date(publicationAt)),
-				revocationAt: Intl.DateTimeFormat('pt-BR').format(new Date(revocationAt)),
-				status: formatStatus(status as string),
+				type,
+				publicationAt,
+				revocationAt,
+				status: formatStatus(status as number),
 			}),
 		)
 	})
@@ -415,14 +415,14 @@
 						tableRegulatoryName: data.target,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isActive: data.status.raw === 1,
 					}),
 					h(RegulatoryDeleteAction, {
 						dataId: data.id,
 						tableRegulatoryName: data.target,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isActive: data.status.raw === 1,
 					}),
 				])
 			},
@@ -592,7 +592,6 @@
 									<button-root
 										variant="outline"
 										@click="openCreateModal = true"
-										disabled
 									>
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"

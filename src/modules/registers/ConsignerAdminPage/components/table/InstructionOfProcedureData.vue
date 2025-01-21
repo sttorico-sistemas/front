@@ -34,9 +34,9 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, regulatoryRepository } from '@/core/stores'
+	import { auxiliaryRepository, instructionOfProcedureRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { AddressModel, RegulatoryModel } from '@/core/models'
+	import { AddressModel, InstructionOfProcedureModel } from '@/core/models'
 	import {
 		formatPhone,
 		formatStatus,
@@ -45,16 +45,16 @@
 	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
-		RegulatoryUpdateAction,
-		RegulatoryForm,
-		RegulatoryDeleteAction,
+		InstructionOfProcedureUpdateAction,
+		InstructionOfProcedureForm,
+		InstructionOfProcedureDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
 
-	type RegulatoryTable = {
+	type InstructionOfProcedureTable = {
 		id: number
 		type: string
 		number: string
-		target: string
+		instruction: string
 		publicationAt: string
 		revocationAt: string
 		status: StatusFormatted
@@ -78,12 +78,12 @@
 	const notify = useNotify()
 
 	const {
-		data: regulations,
-		isLoading: isRegulationsLoading,
-		isPlaceholderData: isRegulationsPlaceholderData,
+		data: instructionOfProcedures,
+		isLoading: isInstructionOfProceduresLoading,
+		isPlaceholderData: isInstructionOfProceduresPlaceholderData,
 	} = useQuery({
-		queryKey: regulatoryRepository.getQueryKey(
-			'regulations',
+		queryKey: instructionOfProcedureRepository.getQueryKey(
+			'instruction-of-procedures',
 			{
 				page,
 				limit: perPage,
@@ -91,7 +91,7 @@
 			status,
 		),
 		queryFn: ({ signal }) =>
-			regulatoryRepository.getAllRegulations({
+			instructionOfProcedureRepository.getAllInstructionOfProcedures({
 				signal,
 				params: {
 					page: page.value,
@@ -109,15 +109,15 @@
 	})
 
 	const {
-		mutateAsync: handleDeleteRegulatory,
-		isPending: isDeleteRegulatoryLoading,
+		mutateAsync: handleDeleteInstructionOfProcedure,
+		isPending: isDeleteInstructionOfProcedureLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-			regulatoryRepository.activateRegulatory({ id }),
+			instructionOfProcedureRepository.activateInstructionOfProcedure({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: instructionOfProcedureRepository.getQueryKey(
+					'instruction-of-procedures',
 					{
 						page,
 						limit: perPage,
@@ -144,15 +144,15 @@
 	})
 
 	const {
-		mutateAsync: handleUpdateRegulatory,
-		isPending: isUpdateRegulatoryLoading,
+		mutateAsync: handleUpdateInstructionOfProcedure,
+		isPending: isUpdateInstructionOfProcedureLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.updateRegulatory(data),
+		mutationFn: (data: InstructionOfProcedureModel) =>
+			instructionOfProcedureRepository.updateInstructionOfProcedure(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: instructionOfProcedureRepository.getQueryKey(
+					'instruction-of-procedures',
 					{
 						page,
 						limit: perPage,
@@ -177,15 +177,15 @@
 	})
 
 	const {
-		mutateAsync: handleCreateRegulatory,
-		isPending: isCreateRegulatoryLoading,
+		mutateAsync: handleCreateInstructionOfProcedure,
+		isPending: isCreateInstructionOfProcedureLoading,
 	} = useMutation({
-		mutationFn: (data: RegulatoryModel) =>
-			regulatoryRepository.createRegulatory(data),
+		mutationFn: (data: InstructionOfProcedureModel) =>
+			instructionOfProcedureRepository.createInstructionOfProcedure(data),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
-				queryKey: regulatoryRepository.getQueryKey(
-					'regulations',
+				queryKey: instructionOfProcedureRepository.getQueryKey(
+					'instruction-of-procedures',
 					{
 						page,
 						limit: perPage,
@@ -209,21 +209,21 @@
 		},
 	})
 
-	const formattedAllTypeOfRegulatory = computed<RegulatoryTable[]>(() => {
-		return (regulations.value ?? []).map(
-			({ id, number, target, typeName, publicationAt, revocationAt, status }) => ({
+	const formattedAllTypeOfInstructionOfProcedure = computed<InstructionOfProcedureTable[]>(() => {
+		return (instructionOfProcedures.value ?? []).map(
+			({ id, number, instruction, type, publicationAt, revocationAt, status }) => ({
 				id: id as number,
 				number,
-				target,
-				type: typeName as string,
-				publicationAt: Intl.DateTimeFormat('pt-BR').format(new Date(publicationAt)),
-				revocationAt: Intl.DateTimeFormat('pt-BR').format(new Date(revocationAt)),
-				status: formatStatus(status as string),
+				instruction,
+				type,
+				publicationAt,
+				revocationAt,
+				status: formatStatus(status as number),
 			}),
 		)
 	})
 
-	const columns: ColumnDef<RegulatoryTable>[] = [
+	const columns: ColumnDef<InstructionOfProcedureTable>[] = [
 		{
 			accessorKey: 'id',
 			meta: 'Código',
@@ -233,7 +233,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
 						// onClick: () => handleSort('id'),
 					},
 					() => [
@@ -257,7 +257,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
 						// onClick: () => handleSort('type'),
 					},
 					() => [
@@ -281,7 +281,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
 						// onClick: () => handleSort('number'),
 					},
 					() => [
@@ -297,7 +297,7 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'target',
+			accessorKey: 'instruction',
 			meta: 'Objeto',
 			header: () => {
 				return h(
@@ -305,19 +305,19 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
-						// onClick: () => handleSort('target'),
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						// onClick: () => handleSort('instruction'),
 					},
 					() => [
 						'Objeto',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('target')],
+						// 	icon: ['fas', getSort('instruction')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('target')),
+			cell: ({ row }) => h('div', row.getValue('instruction')),
 			enableHiding: false,
 		},
 		{
@@ -329,7 +329,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
 						// onClick: () => handleSort('publicationAt'),
 					},
 					() => [
@@ -353,7 +353,7 @@
 					{
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
 						// onClick: () => handleSort('revocationAt'),
 					},
 					() => [
@@ -377,7 +377,7 @@
 					{
 						variant: 'ghost',
 						class: ['w-full justify-start px-1 font-bold'],
-						disabled: formattedAllTypeOfRegulatory.value.length <= 0,
+						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
 						// onClick: () => handleSort('entityTypeId'),
 					},
 					() => [
@@ -410,19 +410,19 @@
 			cell: ({ row }) => {
 				const data = row.original
 				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(RegulatoryUpdateAction, {
+					h(InstructionOfProcedureUpdateAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableInstructionOfProcedureName: data.number,
 						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isUpdateInstructionOfProcedureLoading.value,
+						isActive: data.status.raw === 1,
 					}),
-					h(RegulatoryDeleteAction, {
+					h(InstructionOfProcedureDeleteAction, {
 						dataId: data.id,
-						tableRegulatoryName: data.target,
+						tableInstructionOfProcedureName: data.number,
 						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteRegulatoryLoading.value,
-						isActive: data.status.raw === 'ativo',
+						isLoading: isDeleteInstructionOfProcedureLoading.value,
+						isActive: data.status.raw === 1,
 					}),
 				])
 			},
@@ -431,7 +431,7 @@
 
 	const table = useVueTable({
 		get data() {
-			return formattedAllTypeOfRegulatory.value
+			return formattedAllTypeOfInstructionOfProcedure.value
 		},
 		get columns() {
 			return columns
@@ -474,8 +474,8 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateRegulatory(
-		// 	// new RegulatoryModel({  }),
+		// return handleCreateInstructionOfProcedure(
+		// 	// new InstructionOfProcedureModel({  }),
 		// ).then(() => {
 		// 	openCreateModal.value = false
 		// })
@@ -486,8 +486,8 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateRegulatory(
-		// 	new RegulatoryModel({
+		// return handleUpdateInstructionOfProcedure(
+		// 	new InstructionOfProcedureModel({
 		// 		id,
 		// 		...values,
 		// 	}),
@@ -497,7 +497,7 @@
 	}
 
 	const onDeleteSubmit = async (id: number) => {
-		return handleDeleteRegulatory({ id })
+		return handleDeleteInstructionOfProcedure({ id })
 	}
 
 	// function getSort(key: string) {
@@ -543,24 +543,24 @@
 
 	// 		if (changeValues[value] !== changeValues.NONE) {
 	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectRegulationsRefetch()
+	// 			selectInstructionOfProceduresRefetch()
 	// 			return
 	// 		}
 
 	// 		selectSort.value = undefined
-	// 		selectRegulationsRefetch()
+	// 		selectInstructionOfProceduresRefetch()
 	// 		return
 	// 	}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectRegulationsRefetch()
+	// 	selectSort.value = `[${kInstruçãoey}][ASC]`
+	// 	selectInstructionOfProceduresRefetch()
 	// }
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
 			page.value = Math.max(to, 1)
 		} else if (to > page.value) {
-			if (!isRegulationsPlaceholderData.value) {
+			if (!isInstructionOfProceduresPlaceholderData.value) {
 				page.value = to
 			}
 		}
@@ -575,13 +575,13 @@
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
 			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Lista de normativos" />
+				<titulo title="Lista de IP-Instrução procedimentos" />
 
 				<form-wrapper
 					v-model="openCreateModal"
-					:is-loading="isCreateRegulatoryLoading"
-					:title="`Criar um novo normativo`"
-					description="Crie o conteúdo de um novo normativo."
+					:is-loading="isCreateInstructionOfProcedureLoading"
+					:title="`Criar uma nova instrução de procedimentos`"
+					description="Crie o conteúdo de uma nova instrução de procedimentos."
 					class="sm:max-w-[780px]"
 					@form-submit="onCreateSubmit"
 				>
@@ -592,7 +592,6 @@
 									<button-root
 										variant="outline"
 										@click="openCreateModal = true"
-										disabled
 									>
 										<font-awesome-icon
 											class="text-primary_3-table w-5 h-5"
@@ -601,16 +600,16 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo normativo</p>
+									<p>Cadastre uma nova instrução de procedimentos</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
 					</template>
 
 					<template #fields>
-						<regulatory-form
+						<instruction-of-procedure-form
 							:metadata="form.values"
-							:disabled="isCreateRegulatoryLoading"
+							:disabled="isCreateInstructionOfProcedureLoading"
 						/>
 					</template>
 				</form-wrapper>
@@ -660,13 +659,13 @@
 				:table="table"
 				:column-size="columns.length"
 				:row-limit="perPage"
-				:is-loading="isRegulationsLoading"
+				:is-loading="isInstructionOfProceduresLoading"
 			/>
 
 			<div :class="['flex w-full items-center px-4']">
 				<table-pagination
 					v-model="page"
-					:disabled="formattedAllTypeOfRegulatory.length <= 0"
+					:disabled="formattedAllTypeOfInstructionOfProcedure.length <= 0"
 					:total-itens="pageMetadata.totalItens"
 					:items-per-page="perPage"
 					@update-paginate="handlePagination"
