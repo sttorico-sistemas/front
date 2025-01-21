@@ -2,11 +2,12 @@ export type StatusFormatted = {
 	text: string;
 	bgColor: string;
 	textColor: string;
-	raw: number
+	raw: number | string
 }
 
-export function formatStatus(status: number): StatusFormatted {
+export function formatStatus(status: number | string): StatusFormatted {
 	switch (status) {
+		case 'revogado':
 		case 0: {
 			return {
 				text: 'Inativo',
@@ -16,6 +17,7 @@ export function formatStatus(status: number): StatusFormatted {
 			}
 		}
 
+		case 'ativo':
 		case 1: {
 			return {
 				text: 'Ativo',

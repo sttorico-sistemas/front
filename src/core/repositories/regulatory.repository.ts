@@ -18,12 +18,12 @@ export class RegulatoryRepository {
 
 	async getAllRegulations(configParams?: HttpClientProps<RegulatoryModel[]>): Promise<RegulatoryModel[]> {
 		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/normativos`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/normativos`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.data.map((e: Record<string, any>) => RegulatoryModel.fromRecord(e));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			const values = response.data.map((e: Record<string, any>) => RegulatoryModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
