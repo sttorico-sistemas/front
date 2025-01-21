@@ -2,6 +2,7 @@ import { RouteRecordRaw } from "vue-router";
 import { MasterConsignerPage } from "@/modules/registers/MasterConsignerPage";
 import { PersonPage } from "@/modules/registers/PersonPage";
 import { ConsignerDetailPage, ConsignerPage } from "@/modules/registers/ConsignerPage";
+import { ConsignerAdminDetailPage, ConsignerAdminPage } from "@/modules/registers/ConsignerAdminPage";
 
 
 export const registersRoutes: RouteRecordRaw[] = [
@@ -23,12 +24,21 @@ export const registersRoutes: RouteRecordRaw[] = [
 				path: 'consignantes',
 				name: 'cadastros-consignantes',
 				component: ConsignerPage,
-
+			},
+			{
+				path: 'consignatarias',
+				name: 'cadastros-consignatarias',
+				component: ConsignerAdminPage,
 			},
 			{
 				path: 'consignantes/:id',
 				name: 'cadastros-consignantes-detail',
 				component: ConsignerDetailPage,
+			},
+			{
+				path: 'consignatarias/:id',
+				name: 'cadastros-consignatarias-detail',
+				component: ConsignerAdminDetailPage,
 			},
 		],
 	}
