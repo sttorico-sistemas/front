@@ -84,11 +84,11 @@ export class ServiceRepository {
 		}
 	}
 
-	async activateService({ id }: Pick<ServiceModel, 'id'>,
+	async deleteService({ id }: Pick<ServiceModel, 'id'>,
 		configParams?: HttpClientProps<ServiceModel>
 	): Promise<void> {
 		try {
-			await this.http.patch(`/servicos/${id}/status`, {
+			await this.http.delete(`/servicos/${id}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
