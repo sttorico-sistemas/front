@@ -19,7 +19,7 @@
 
 	function handleGoToDetail() {
 		router.push({
-			name: 'cadastros-consignantes-detail',
+			name: 'cadastros-consignatarias-detail',
 			params: { id: properties.dataId },
 		})
 	}

@@ -31,12 +31,12 @@ export class AuxiliaryRepository {
 
 	async getAllGenericAuxiliaries(auxiliaryPath: string, configParams?: HttpClientProps<AuxiliaryModel[]>): Promise<AuxiliaryModel[]> {
 		try {
-			const response = await this.http.get<{ data: any[], meta: any }>(auxiliaryPath, {
+			const response = await this.http.get<{ data: any, meta: any }>(auxiliaryPath, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.map((e: Record<string, any>) => AuxiliaryModel.fromRecord(e));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
+			const values = (Array.isArray(response.data) ? response.data : response.data?.data).map((e: Record<string, any>) => AuxiliaryModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.data?.meta ?? response?.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

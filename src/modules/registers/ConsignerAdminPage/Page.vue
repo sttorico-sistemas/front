@@ -363,8 +363,8 @@
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'start',
-			meta: 'Inicio',
+			accessorKey: 'cnpj',
+			meta: 'CNPJ',
 			size: 50,
 			header: () => {
 				return h(
@@ -373,23 +373,23 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('start'),
+						// onClick: () => handleSort('cnpj'),
 					},
 					() => [
-						'Inicio',
+						'CNPJ',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('start')],
+						// 	icon: ['fas', getSort('cnpj')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('start')),
+			cell: ({ row }) => h('div', row.getValue('cnpj')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'end',
-			meta: 'Fim',
+			accessorKey: 'service',
+			meta: 'Tp. Serviços',
 			size: 50,
 			header: () => {
 				return h(
@@ -398,23 +398,23 @@
 						variant: 'ghost',
 						class: 'w-full justify-start px-2 font-bold',
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('end'),
+						// onClick: () => handleSort('service'),
 					},
 					() => [
-						'Fim',
+						'Tp. Serviços',
 						// h(FontAwesomeIcon, {
 						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('end')],
+						// 	icon: ['fas', getSort('service')],
 						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('end')),
+			// cell: ({ row }) => h('div', row.getValue('service')),
 			enableHiding: false,
 		},
 		{
 			accessorKey: 'status',
-			meta: 'Tipo de entidade',
+			meta: 'Status',
 			size: 20,
 			header: () => {
 				return h(
@@ -458,21 +458,21 @@
 					h(ConsignerAdminViewAction, {
 						dataId: data.id,
 						isLoading: isUpdateConsignerAdminLoading.value,
-						isActive: data.status.raw === 1,
+						isActive: data.status.raw === "ativo",
 					}),
 					h(ConsignerAdminUpdateAction, {
 						dataId: data.id,
 						tableConsignerAdminName: data.name,
 						'onOn-edit': onUpdateSubmit,
 						isLoading: isUpdateConsignerAdminLoading.value,
-						isActive: data.status.raw === 1,
+						isActive: data.status.raw === "ativo",
 					}),
 					h(ConsignerAdminDeleteAction, {
 						dataId: data.id,
 						tableConsignerAdminName: data.name,
 						'onOn-delete': onDeleteSubmit,
 						isLoading: isDeleteConsignerAdminLoading.value,
-						isActive: data.status.raw === 1,
+						isActive: data.status.raw === "ativo",
 					}),
 				])
 			},
