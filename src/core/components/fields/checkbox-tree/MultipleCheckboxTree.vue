@@ -70,12 +70,12 @@
 		>
 			<template v-if="item.hasChildren">
 				<font-awesome-icon
-					class="w-4 h-4 text-primary_3-table"
+					class="w-4 h-4 text-primary"
 					v-if="!isExpanded"
 					:icon="['far', 'square-plus']"
 				/>
 				<font-awesome-icon
-					class="w-4 h-4 text-primary_3-table"
+					class="w-4 h-4 text-primary"
 					v-else
 					:icon="['far', 'square-minus']"
 				/>
@@ -89,7 +89,7 @@
 
 			<font-awesome-icon
 				v-else
-				class="mx-2 text-primary_3-table"
+				class="mx-2 text-primary"
 				:icon="['fas', 'lock']"
 			/>
 

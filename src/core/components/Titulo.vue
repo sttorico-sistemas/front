@@ -7,7 +7,7 @@ withDefaults(defineProps<{
 	infoMessage?: string;
 }>(), {
 	title: '',
-	classStyle: 'text-lg font-semibold text-primary_3-table',
+	classStyle: 'text-lg font-semibold text-primary',
 	infoMessage: '',
 });
 </script>

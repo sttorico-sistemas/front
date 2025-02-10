@@ -616,7 +616,7 @@ import TablePagination from '@/core/components/table-wrapper/TablePagination.vue
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
-												class="text-primary_3-table w-5 h-5"
+												class="text-primary w-5 h-5"
 												:icon="['fas', 'circle-plus']"
 											/>
 										</button-root>

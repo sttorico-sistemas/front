@@ -1,5 +1,5 @@
 .datatable > div {
-    @apply text-black dark:text-white-dark;
+    @apply text-black dark:text-white;
 }
 
 .datatable .bh-table-responsive {
@@ -15,7 +15,7 @@
 }
 
 .datatable .bh-pagination .bh-page-item {
-    @apply w-9 h-9 bg-white-light text-dark border-white-light dark:border-[#191e3a] dark:bg-[#191e3a] dark:text-white-light hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white;
+    @apply w-9 h-9 bg-white text-dark border-white dark:border-[#191e3a] dark:bg-[#191e3a] dark:text-white hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white;
 }
 
 .datatable .bh-pagination .bh-page-item.bh-active {
@@ -27,7 +27,7 @@
 }
 
 .datatable .bh-pagination select {
-    @apply rounded-md border border-[#e0e6ed] bg-white pl-2 pr-4 py-1.5 text-sm font-semibold text-black focus:border-primary focus:ring-transparent dark:border-[#17263c] dark:bg-[#121e32] dark:text-white-dark dark:focus:border-primary;
+    @apply rounded-md border border-[#e0e6ed] bg-white pl-2 pr-4 py-1.5 text-sm font-semibold text-black focus:border-primary focus:ring-transparent dark:border-[#17263c] dark:bg-[#121e32] dark:text-white dark:focus:border-primary;
 }
 
 .datatable .bh-pagination .bh-pagination-number {
@@ -51,15 +51,15 @@
 }
 
 .datatable .bh-filter .bh-form-control {
-    @apply dark:!border-[#17263c] dark:!bg-[#121e32] dark:!text-white-dark dark:focus:!ring-transparent;
+    @apply dark:!border-[#17263c] dark:!bg-[#121e32] dark:!text-white dark:focus:!ring-transparent;
 }
 
 .datatable .bh-filter > button {
-    @apply dark:border-dark dark:bg-dark dark:text-white-dark dark:hover:text-white-light;
+    @apply dark:border-dark dark:bg-dark dark:text-white dark:hover:text-white;
 }
 
 .datatable .bh-filter-menu button {
-    @apply dark:bg-[#1b2e4b] dark:hover:bg-[#181f32] dark:hover:text-white-dark;
+    @apply dark:bg-[#1b2e4b] dark:hover:bg-[#181f32] dark:hover:text-white;
 }
 
 .datatable .bh-filter-menu button.active {
@@ -103,15 +103,15 @@
 
 .datatable .bh-table-responsive table.bh-table-bordered tbody tr td,
 .datatable .bh-table-responsive table.bh-table-bordered thead tr th {
-    @apply border-white-light/40 dark:border-[#191e3a];
+    @apply border-white/40 dark:border-[#191e3a];
 }
 
 .datatable .bh-table-responsive table.bh-table-hover tbody tr {
-    @apply hover:!bg-white-light/20 dark:hover:!bg-[#1a2941]/40;
+    @apply hover:!bg-white/20 dark:hover:!bg-[#1a2941]/40;
 }
 
 .datatable .bh-table-responsive table.bh-table-striped tbody tr:nth-child(odd) {
-    @apply !bg-white-light/20 dark:!bg-[#1a2941]/40;
+    @apply !bg-white/20 dark:!bg-[#1a2941]/40;
 }
 
 .datatable .bh-sort {

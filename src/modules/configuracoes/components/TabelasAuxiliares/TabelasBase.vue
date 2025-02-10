@@ -58,18 +58,18 @@ const tipoTabela = ref('');
     <div class="datatable pb-1">
       <vue3-datatable :rows="rows" :columns="cols" :total-rows="rows?.length" :sortable="true"
         skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-        pagination-info="Mostrando {0} a {1} de {2} entradas" :pagination="false">
+        pagination-primary="Mostrando {0} a {1} de {2} entradas" :pagination="false">
         <template #actions="data">
           <div class="flex gap-2">
             <div>
               <button v-tippy:right type="button" class="text-xs m-1">
-                <icon-edit class="w-5 h-5 text-primary_3-table" />
+                <icon-edit class="w-5 h-5 text-primary" />
               </button>
               <tippy target="right" placement="right">Editar</tippy>
             </div>
             <div>
               <button v-tippy:right type="button" class="text-xs m-1">
-                <icon-delete class="w-5 h-5 text-primary_3-table" />
+                <icon-delete class="w-5 h-5 text-primary" />
               </button>
               <tippy target="right" placement="right">Deletar</tippy>
             </div>
@@ -80,7 +80,7 @@ const tipoTabela = ref('');
     <modal-layout :is-open="isOpenDialog" title="Adicionar Nova Descrição" size="max-w-[440px]"
       @btn-close="isOpenDialog = false">
       <div class="flex flex-col">
-        <label-input id="tabela" label="Tabela Selecionada" class-label="text-lg text-primary_3-table"
+        <label-input id="tabela" label="Tabela Selecionada" class-label="text-lg text-primary"
           class-input="md:max-w-[400px] mb-3" layout="row" disabled />
         <label-input id="descricao" label="Nova descrição" class-label="text-sm" class-input="md:max-w-[400px] mb-3"
           layout="row" />
@@ -88,9 +88,9 @@ const tipoTabela = ref('');
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button type="button"
-          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+          class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
           @click="isOpenDialog = false">Cancelar</button>
-        <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+        <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
       </div>
     </modal-layout>
   </div>

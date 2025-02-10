@@ -30,7 +30,7 @@ const isDisabled = ref(props.disabled || store.fetchingPessoa);
 		@update:model-value="store.toggleEditor($event)"
 		:model-value="store.showEditor"
 	>
-		<div class="panel mt-5 border border-primary_3-table">
+		<div class="panel mt-5 border border-primary">
 			<div class="flex items-center gap-14 mb-6">
 				<titulo title="Cadastro Pessoa" />
 				<button v-if="props.disabled" @click="isDisabled = false" v-tippy:right>

@@ -18,7 +18,7 @@ import LabelSelect from 'src/core/components/Inputs/SelectLabel.vue'
 
           <div class="ml-40">
             <button type="button"
-              class="w-[140px] h-10 btn bg-primary_3-table mt-3 text-white text-xs rounded-full">Nova Consulta</button>
+              class="w-[140px] h-10 btn bg-primary mt-3 text-white text-xs rounded-full">Nova Consulta</button>
           </div>
         </div>
       </form>

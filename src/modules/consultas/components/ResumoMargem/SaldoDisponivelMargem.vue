@@ -22,7 +22,7 @@ const clear = () => servico.value = ''
 
 			<div class="saldo_disponivel__valor self-end border rounded px-2 py-2">R$ 0,00</div>
 
-			<button type="button" class="w-[77px] h-[48px] btn border-primary_3-table text-primary_3-table shadow-none"
+			<button type="button" class="w-[77px] h-[48px] btn border-primary text-primary shadow-none"
 				@click="clear">
 				Limpar
 			</button>

@@ -18,12 +18,12 @@ export class ConsignerAdminRepository {
 
 	async getAllConsignerAdmins(configParams?: HttpClientProps<ConsignerAdminModel[]>): Promise<ConsignerAdminModel[]> {
 		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/consignataria`, {
+			const response = await this.http.get< { data: any[], meta: any }>(`/consignatarias`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.data.map((e: Record<string, any>) => ConsignerAdminModel.fromRecord(this.getConsignerAdminByIdAdapter(e)));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			const values = response.data.map((e: Record<string, any>) => ConsignerAdminModel.fromRecord(this.getConsignerAdminByIdAdapter(e)));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
@@ -32,7 +32,7 @@ export class ConsignerAdminRepository {
 
 	async getConsignerAdminById(dataId: number, configParams?: HttpClientProps<ConsignerAdminModel>): Promise<ConsignerAdminModel> {
 		try {
-			const response = await this.http.get<{ data: any }>(`/consignataria/${dataId}`, {
+			const response = await this.http.get<{ data: any }>(`/consignatarias/${dataId}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
@@ -49,24 +49,19 @@ export class ConsignerAdminRepository {
 			id: data.id,
 			nome: data.nome,
 			nome_curto: data.nome_curto,
-			inicio: data.inicio,
-			fim: data.fim,
 			status: data.status,
 			cnpj: data.cnpj,
-			tipo_entidade_id: data.instituicao.id,
-			tipo_entidade_nome: data.instituicao.nome,
-			consignante_master_id: data.master.id,
-			consignante_master_nome: data.master.nome,
+			tipo_entidade_id: data.tipo_entidade_id,
+			tipo_entidade_nome: null,
 			endereco: {
-				id: data?.endereco?.id,
 				cidade_id: data?.cidade?.id,
 				cidade_nome: data?.cidade?.nome,
 				estado_id: data?.estado?.id,
 				estado_nome: data?.estado?.nome,
-				logradouro: data?.endereco?.logradouro,
-				cep: data?.endereco?.cep,
-				tipo_endereco_id: data?.endereco?.tipo_endereco_id,
-				tipo_endereco_nome: data?.endereco?.tipo_endereco,
+				logradouro: data?.logradouro,
+				cep: data?.cep,
+				// tipo_endereco_id: data?.endereco?.tipo_endereco_id,
+				// tipo_endereco_nome: data?.endereco?.tipo_endereco,
 			}
 		}
 	}
@@ -77,7 +72,7 @@ export class ConsignerAdminRepository {
 		configParams?: HttpClientProps<ConsignerAdminModel>
 	): Promise<void> {
 		try {
-			await this.http.post(`/consignataria`, body.toRecord(), {
+			await this.http.post(`/consignatarias`, body.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -91,7 +86,7 @@ export class ConsignerAdminRepository {
 		configParams?: HttpClientProps<ConsignerAdminModel>
 	): Promise<void> {
 		try {
-			await this.http.put(`/consignataria/${data.id}`, data.toRecord(), {
+			await this.http.put(`/consignatarias/${data.id}`, data.toRecord(), {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});
@@ -104,7 +99,7 @@ export class ConsignerAdminRepository {
 		configParams?: HttpClientProps<ConsignerAdminModel>
 	): Promise<void> {
 		try {
-			await this.http.patch(`/consignataria/${id}/status`, {
+			await this.http.patch(`/consignatarias/${id}/status`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			});

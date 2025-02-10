@@ -49,7 +49,7 @@ const margens = reactive<Margem[]>([
 const bgColor = (value: number) => {
 	switch (value) {
 		case 1:
-			return 'bg-info'
+			return 'bg-primary'
 		case 2:
 			return 'bg-success'
 		case 3:
@@ -64,10 +64,10 @@ const bgColor = (value: number) => {
 		<div
 			class="margem_individual__principal relative flex flex-col items-baseline w-full min-h-[123px] rounded border border-[#e0e6ed] p-3 mb-2 mt-8 text-start"
 			:class="bgColor(margem.id)">
-			<div class="margem_individual__principal__destaque absolute border bg-white text-info rounded-md shadow-md p-2"
+			<div class="margem_individual__principal__destaque absolute border bg-white text-primary rounded-md shadow-md p-2"
 				:class="bgColor(margem.id)">
 				<span>Limite</span>
-				<p class="text-info">{{ margem.porcentagem }}%</p>
+				<p class="text-primary">{{ margem.porcentagem }}%</p>
 			</div>
 
 			<h3>R$ {{ margem.valor }}</h3>

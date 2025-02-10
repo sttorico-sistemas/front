@@ -81,20 +81,20 @@ const emits = defineEmits(['btnSave', 'btnClose'])
 			<div class="datatable">
 				<vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
 					:sortable="false" skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas" :pagination="false">
+					pagination-primary="Mostrando {0} a {1} de {2} entradas" :pagination="false">
 					<template #id="data"> {{ data.value.id }}º </template>
 					<template #consignataria="data">
 						<image-name image="https://placehold.co/30x30" :name="data.value.consignataria.nome" />
 					</template>
 					<template #solicitar_proposta="data">
 						<button v-tippy:right type="button" class="text-xs m-1">
-							<icon-note class="w-5 h-5 text-primary_3-table" />
+							<icon-note class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="right" placement="right">Algum texto aqui {{ data.value.id }}</tippy>
 					</template>
 				</vue3-datatable>
 				<div class="flex flex-col items-center justify-center flex-wrap mt-8 gap-8">
-					<button type="button" class="btn border-primary_3-table text-primary_3-table shadow-none"
+					<button type="button" class="btn border-primary text-primary shadow-none"
 						@click="emits('btnClose', false)">Novo Cálculo</button>
 
 					<p class="max-w-3xl text-danger text-sm font-medium text-center">

@@ -12,8 +12,8 @@ const props = defineProps<{
 const color = [
 	{
 		title: 'Financeiro',
-		bgColor: 'bg-info',
-		textColor: 'text-info',
+		bgColor: 'bg-primary',
+		textColor: 'text-primary',
 		icon: currencyIcon,
 	},
 	{
@@ -30,8 +30,8 @@ const color = [
 	},
 	{
 		title: 'Cartão de Benefícios',
-		bgColor: 'bg-primary_3',
-		textColor: 'text-primary_3',
+		bgColor: 'bg-primary',
+		textColor: 'text-primary',
 		icon: beneficsCardIcon,
 	},
 ]

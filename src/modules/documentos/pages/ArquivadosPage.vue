@@ -59,10 +59,10 @@ const filtered = (value: string = '') => {
 			<div class="datatable pb-1">
 				<vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
 					:sortable="true" skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas">
+					pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #documento="data">
 						<button v-tippy:right type="button" class="text-xs m-1">
-							<icon-file class="w-5 h-5 text-primary_3-table" />
+							<icon-file class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="right" placement="right">Algum texto aqui {{ data.value.id }}</tippy>
 					</template>

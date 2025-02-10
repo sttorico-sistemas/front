@@ -59,7 +59,7 @@ const rows = reactive([
 			<div class="datatable">
 				<vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
 					skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas">
+					pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #dcto="data">
 						<icon-doc />
 					</template>
@@ -68,19 +68,19 @@ const rows = reactive([
 						<div class="flex gap-2">
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-eye class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Visualizar</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-edit class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Editar</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-delete class="w-5 h-5 text-primary_3-table" />
+									<icon-delete class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Deletar</tippy>
 							</div>

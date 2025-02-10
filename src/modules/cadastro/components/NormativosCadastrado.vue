@@ -129,7 +129,7 @@ const parseCols = () => {
 
 					<div>
 						<button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
+							<icon-clear class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="top" placement="top">Limpar pesquisa</tippy>
 					</div>
@@ -150,7 +150,7 @@ const parseCols = () => {
 				<vue3-datatable :rows="filtered(selected.label)" :columns="cols"
 					:total-rows="filtered(selected.label)?.length ?? 0" :sortable="true"
 					skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas">
+					pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #dcto="data">
 						<icon-doc />
 					</template>
@@ -162,20 +162,20 @@ const parseCols = () => {
 						<div class="flex gap-2">
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-eye class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Visualizar</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-edit class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Editar</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-block v-if="data.value.status === 'Vigente'" class="w-5 h-5 text-primary_3-table" />
-									<icon-check v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-block v-if="data.value.status === 'Vigente'" class="w-5 h-5 text-primary" />
+									<icon-check v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">{{ data.value.status === 'Vigente' ? 'Revogado' : 'Vigente' }}
 								</tippy>

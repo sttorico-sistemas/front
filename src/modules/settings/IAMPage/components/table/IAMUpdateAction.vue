@@ -83,22 +83,29 @@
 		tooltip="Editar perfil"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar perfil ${tableIamName}`"
-		description="Atualize o conteúdo da perfil."
+		:title="`Editar perfil`"
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root variant="ghost" size="icon" @click="setNewData">
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>
 		</template>
 
 		<template #fields>
-			<iam-form :metadata="form.values" :disabled="isLoading" />
+			<iam-form
+				:metadata="form.values"
+				:disabled="isLoading"
+				@on-close="
+					() => {
+						openUpdateModal = false
+					}
+				"
+			/>
 		</template>
 	</form-wrapper>
 </template>

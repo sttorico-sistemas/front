@@ -52,13 +52,21 @@
 	import { auxiliaryRepository, personRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { AddressModel, ContactModel, PersonModel } from '@/core/models'
-	import { cn, debounceAsync, formatCPF, valueUpdater } from '@/core/utils'
+	import {
+		cn,
+		debounceAsync,
+		formatCPF,
+		formatStatus,
+		StatusFormatted,
+		valueUpdater,
+	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		PersonDeleteAction,
 		PersonForm,
 		PersonUpdateAction,
 	} from './components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type PersonTable = {
 		id: number
@@ -67,15 +75,15 @@
 		linkedType: string
 		city: string
 		email: string
-		status: string
+		status: StatusFormatted
 		statusId: number
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const statusItems = [
 		{ value: 1, label: 'Ativado' },
@@ -93,7 +101,7 @@
 	const cpf = ref<string | undefined>(undefined)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
 	const formattedSearchCities = useLocalStorage<{ id: string; name: string }[]>(
 		'aux-sch-cities',
 		[],
@@ -273,37 +281,13 @@
 				linkedType: linkedType as string,
 				city: city as string,
 				email: email as string,
-				status: statusItemsMap[status as number],
+				status: formatStatus(status as number),
 				statusId: status as number,
 			}),
 		)
 	})
 
 	const columns: ColumnDef<PersonTable>[] = [
-		{
-			accessorKey: 'id',
-			meta: 'Código',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('id'),
-					},
-					() => [
-						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('id')),
-			enableHiding: false,
-		},
 		{
 			accessorKey: 'name',
 			meta: 'Nome',
@@ -312,16 +296,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -336,16 +321,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('cpf'),
 					},
 					() => [
 						'CPF',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('cpf')],
+						}),
 					],
 				)
 			},
@@ -360,16 +346,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('linkedType'),
 					},
 					() => [
 						'Tp. vinculo',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('linkedType')],
+						}),
 					],
 				)
 			},
@@ -384,16 +371,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('city'),
 					},
 					() => [
 						'Cidade',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('city')],
+						}),
 					],
 				)
 			},
@@ -408,16 +396,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('email'),
 					},
 					() => [
 						'E-mail',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('email')],
+						}),
 					],
 				)
 			},
@@ -426,49 +415,79 @@
 		},
 		{
 			accessorKey: 'status',
-			meta: 'Status',
+			meta: 'Tipo de entidade',
+			enableResizing: false,
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPersons.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('status'),
 					},
 					() => [
 						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeId')],
+						}),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('status')),
+			cell: ({ row, cell }) =>
+				h(
+					'span',
+					{
+						class:
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
+						style: {
+							color: row.getValue<StatusFormatted>('status').textColor,
+							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
+						},
+					},
+					row.getValue<StatusFormatted>('status')?.text,
+				),
 			enableHiding: false,
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(PersonUpdateAction, {
-						dataId: data.id,
-						tablePersonName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdatePersonLoading.value,
-						isActive: data.statusId === 1,
-					}),
-					h(PersonDeleteAction, {
-						dataId: data.id,
-						tablePersonName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isActivatePersonLoading.value,
-						isActive: data.statusId === 1,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(PersonUpdateAction, {
+							dataId: data.id,
+							tablePersonName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdatePersonLoading.value,
+							isActive: data.statusId === 1,
+						}),
+						h(PersonDeleteAction, {
+							dataId: data.id,
+							tablePersonName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isActivatePersonLoading.value,
+							isActive: data.statusId === 1,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -599,61 +618,58 @@
 		return handleActivatePerson({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectPersonsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
+				return
+			}
 
-	// 		selectSort.value = undefined
-	// 		selectPersonsRefetch()
-	// 		return
-	// 	}
+			selectSort.value = undefined
+			return
+		}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectPersonsRefetch()
-	// }
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -700,20 +716,19 @@
 	<main>
 		<breadcrumbs :paginas="['Cadastro', 'Pessoas Cadastradas']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex md:flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div
-					class="flex flex-1 gap-10 items-center justify-between lg:justify-start lg:flex-initial"
+					class="flex flex-1 gap-14 items-center justify-between lg:justify-start lg:flex-initial"
 				>
-					<titulo title="Gerenciar pessoas cadastradas" />
+					<titulo title="Gerenciar Pessoas Cadastradas" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreatePersonLoading"
-						:title="`Criar um nova pessoa`"
-						description="Crie o conteúdo de um nova pessoa."
+						:title="`Cadastro Pessoa`"
 						class="sm:max-w-[1100px]"
 						@form-submit="onCreateSubmit"
 					>
@@ -722,17 +737,18 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
-												class="text-primary_3-table w-5 h-5"
+												class="text-primary w-5 h-5"
 												:icon="['fas', 'circle-plus']"
 											/>
 										</button-root>
 									</tooltip-trigger>
 									<tooltip-content side="right">
-										<p>Cadastre um nova pessoa</p>
+										<p>Cadastro Pessoa</p>
 									</tooltip-content>
 								</tooltip>
 							</tooltip-provider>
@@ -742,21 +758,24 @@
 							<person-form
 								:metadata="form.values"
 								:disabled="isCreatePersonLoading"
+								@on-close="() => {
+									openCreateModal = false
+								}"
 							/>
 						</template>
 					</form-wrapper>
 				</div>
 
-				<div class="grid grid-cols-12 gap-4 w-full lg:flex-1">
+				<div class="header_actions flex items-center gap-5 flex-1 justify-end">
 					<input-root
-						class="col-span-3"
+						class="max-w-80"
 						v-model:model-value="name"
 						placeholder="Nome"
 						@update:model-value="handleSearch"
 					/>
 
 					<input-root
-						class="col-span-3"
+						class="max-w-40"
 						v-model:model-value="cpf"
 						v-maska="'###.###.###-##'"
 						placeholder="CPF"
@@ -769,12 +788,12 @@
 								variant="outline"
 								role="combobox"
 								:aria-expanded="openCityBox"
-								class="col-span-3 justify-between"
+								class="flex max-w-80 w-full justify-between items-center"
 							>
 								{{
 									formattedSearchCities.find(
 										(searchCities) => searchCities.id === selectCity,
-									)?.name ?? 'Selecione a cidade...'
+									)?.name ?? 'Cidade'
 								}}
 								<font-awesome-icon
 									v-if="openCityBox"
@@ -822,7 +841,7 @@
 					</Popover>
 
 					<select-root v-model="selectStatus">
-						<select-trigger class="col-span-2 md:col-start-10">
+						<select-trigger class="max-w-40">
 							<select-value class="text-left" placeholder="Status" />
 						</select-trigger>
 						<select-content>
@@ -841,19 +860,31 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root
-									class="md:col-start-12"
-									variant="outline"
-									@click="handleClear"
-								>
+								<button-root variant="ghost" size="icon" @click="handleClear">
 									<font-awesome-icon
-										class="text-primary_3-table w-5 h-5"
+										class="text-primary w-5 h-5"
 										:icon="['fas', 'eraser']"
 									/>
 								</button-root>
 							</tooltip-trigger>
 							<tooltip-content side="right">
-								<p>Apagar filtros</p>
+								<p>Limpar pesquisa</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root variant="ghost" size="icon" @click="handleClear">
+									<font-awesome-icon
+										class="text-primary w-5 h-5"
+										:icon="['fas', 'print']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Imprimir</p>
 							</tooltip-content>
 						</tooltip>
 					</tooltip-provider>
@@ -868,7 +899,7 @@
 					:is-loading="isPersonsLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllPersons.length <= 0"

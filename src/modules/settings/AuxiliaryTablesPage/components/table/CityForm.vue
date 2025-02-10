@@ -47,28 +47,28 @@
 	<div class="flex flex-col">
 		<form-field v-slot="{ componentField }" name="name">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Nome</form-label>
+				<form-label class="text-left col-span-12">Descrição</form-label>
 				<form-control>
 					<input-root
 						:disabled="disabled"
 						type="text"
-						placeholder="Digite o nome..."
-						class="col-span-5"
+						placeholder="Digite a descrição..."
+						class="col-span-12"
 						v-bind="componentField"
 					/>
 				</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
+				<form-message class="col-span-12" />
 			</form-item>
 		</form-field>
 
 		<form-field v-slot="{ componentField }" name="stateId">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Estado</form-label>
+				<form-label class="text-left col-span-12">UF</form-label>
 				<form-control>
 					<select-root :disabled="disabled" v-bind="componentField">
-						<select-trigger class="col-span-5">
-							<select-value placeholder="Selecione o estado..." />
+						<select-trigger class="col-span-4">
+							<select-value placeholder="UF" />
 						</select-trigger>
 						<select-content>
 							<select-group>
@@ -83,24 +83,24 @@
 						</select-content>
 					</select-root>
 				</form-control>
-				<form-Message class="col-span-3 col-start-3" />
+				<form-Message class="col-span-12" />
 			</form-item>
 		</form-field>
 
 		<form-field v-slot="{ componentField }" name="ibgeCode">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Código IBGE</form-label>
+				<form-label class="text-left col-span-12">Código IBGE</form-label>
 				<form-control>
 					<input-root
 						:disabled="disabled"
 						type="text"
 						placeholder="Digite o código..."
-						class="col-span-5"
+						class="col-span-6"
 						v-bind="componentField"
 					/>
 				</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
+				<form-message class="col-span-12" />
 			</form-item>
 		</form-field>
 	</div>

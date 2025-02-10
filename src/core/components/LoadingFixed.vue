@@ -11,7 +11,7 @@ const color = (value: number) => {
 		case 1:
 			return 'bg-dark-primary'
 		case 2:
-			return 'bg-info'
+			return 'bg-primary'
 		case 3:
 			return 'bg-success'
 		case 4:

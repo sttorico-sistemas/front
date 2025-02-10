@@ -91,16 +91,16 @@ const formatedCurrency = (value: number) => {
 
       <div class="panel mt-6 datatable">
         <div class="flex justify-between items-center mb-8">
-          <p class="text-primary_3 text-base font-semibold">
+          <p class="text-primary text-base font-semibold">
             Distribuição da Margem
           </p>
-          <span class="font-xs font-semibold text-primary_3">Data da atualização da margem: <strong
+          <span class="font-xs font-semibold text-primary">Data da atualização da margem: <strong
               class="ml-3 font-xs font-semibold text-[#2196F3]">{{ dataMargemAtualizada }}</strong></span>
         </div>
 
         <vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
           skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
-          pagination-info="Mostrando {0} a {1} de {2} entradas" :pagination="false">
+          pagination-primary="Mostrando {0} a {1} de {2} entradas" :pagination="false">
           <template #uso_margem="data">
             <div class="flex justify-between items-center gap-3">
               <div class="w-10/12 rounded-full h-2 bg-dark-light shadow">
@@ -111,7 +111,7 @@ const formatedCurrency = (value: number) => {
           </template>
           <template #action="data">
             <button v-tippy:right type="button" class="text-xs m-1" @click="openModal(data.value.id)">
-              <icon-eye class="w-5 h-5 text-primary_3-table" />
+              <icon-eye class="w-5 h-5 text-primary" />
             </button>
             <tippy target="right" placement="right">Ver resumo da margem principal</tippy>
           </template>

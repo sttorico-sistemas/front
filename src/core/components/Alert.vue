@@ -41,7 +41,7 @@ const setupAlert = () => {
       }
     default:
       return {
-        color: 'text-info bg-info-light',
+        color: 'text-primary bg-primary',
         icon: IconInfo
       }
   }

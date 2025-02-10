@@ -39,9 +39,9 @@
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger as-child>
-						<button-root variant="outline">
+						<button-root variant="ghost" size="icon">
 							<font-awesome-icon
-								:class="['w-4 h-4', isActive ? 'text-warning' : 'text-success']"
+								:class="['w-5 h-5', isActive ? 'text-danger' : 'text-success']"
 								:icon="isActive ? ['fas', 'ban'] : ['far', 'circle-check']"
 							/>
 						</button-root>
@@ -67,7 +67,7 @@
 			<alert-dialog-footer>
 				<alert-dialog-cancel>Cancelar</alert-dialog-cancel>
 				<alert-dialog-action
-				:class="['text-white', isActive ? 'bg-warning' : 'bg-success']"
+				:class="['text-white', isActive ? 'bg-danger' : 'bg-success']"
 				@click="handleDelete"
 					>{{ isActive ? 'Desativar' : 'Ativar' }}</alert-dialog-action
 				>

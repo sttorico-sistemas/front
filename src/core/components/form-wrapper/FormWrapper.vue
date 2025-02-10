@@ -27,7 +27,7 @@ const properties = defineProps({
 	},
 	description: {
 		type: String,
-		required: true,
+		required: false,
 	},
 	tooltip: {
 		type: String,
@@ -43,7 +43,7 @@ const properties = defineProps({
 	},
 	isAction: {
 		type: Boolean,
-		default: true,
+		default: false,
 	},
 	class: {
 		type: String as PropType<HTMLAttributes['class']>,
@@ -84,20 +84,20 @@ function onSubmit(event: Event) {
 			<div v-if="isLoading" class="absolute z-[100] flex h-full w-full items-center justify-center bg-black/40">
 				<font-awesome-icon v-if="isLoading" :icon="['fas', 'spinner']" class="animate-spin" />
 			</div>
-			<dialog-header>
+			<dialog-header class="bg-accent -mx-6 px-6 -mt-6 pt-6 pb-4 sm:rounded-lg">
 				<dialog-title>{{ title }}</dialog-title>
 				<dialog-description>
 					{{ description }}
 				</dialog-description>
 			</dialog-header>
 
-			<form v-if="$slots.fields" class="grid overflow-y-auto py-4" @submit="onSubmit">
+			<form v-if="$slots.fields" class="grid overflow-y-auto py-10 px-6" @submit="onSubmit">
 				<slot name="fields"></slot>
 
 				<dialog-footer>
 					<slot name="buttons"></slot>
 
-					<button-root v-if="isAction" :disabled="isLoading" type="submit" class="mt-4 bg-primary_3-table text-white gap-2">
+					<button-root v-if="isAction" :disabled="isLoading" type="submit" class="mt-4 bg-primary text-white gap-2">
 						{{ buttonName }}
 						<font-awesome-icon v-if="isLoading" :icon="['fas', 'spinner']" class="animate-spin" />
 					</button-root>

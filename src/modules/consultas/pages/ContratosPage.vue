@@ -167,7 +167,7 @@ const clearFilter = () => {
 const color = (id: number | string): string => {
   switch (id) {
     case 1:
-      return 'bg-info'
+      return 'bg-primary'
     case 2:
       return 'bg-danger'
     case 3:
@@ -235,7 +235,7 @@ const filtered = (value: string = '') => {
 
           <div>
             <button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
-              <icon-clear class="w-5 h-5 text-primary_3-table" />
+              <icon-clear class="w-5 h-5 text-primary" />
             </button>
             <tippy target="top" placement="top">Limpar pesquisa</tippy>
           </div>
@@ -262,15 +262,15 @@ const filtered = (value: string = '') => {
       <div class="datatable">
         <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
           :sortable="true" skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-          pagination-info="Mostrando {0} a {1} de {2} entradas">
+          pagination-primary="Mostrando {0} a {1} de {2} entradas">
           <template #rmc="data">
             <button>
-              <strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
+              <strong class="text-primary">{{ data.value.rmc }}</strong>
             </button>
           </template>
           <template #n_contrato="data">
             <button>
-              <strong class="text-primary_3-table">{{
+              <strong class="text-primary">{{
                 data.value.n_contrato
               }}</strong>
             </button>

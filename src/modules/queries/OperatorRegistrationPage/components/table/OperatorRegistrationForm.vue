@@ -18,11 +18,10 @@
 		FormLabel,
 		FormMessage,
 	} from '@/core/components/form'
-	import { Separator } from '@/core/components/separator'
+	import { ButtonRoot } from '@/core/components/button'
 	import { InputRoot } from '@/core/components/fields/input'
 	import { MultipleCheckboxTree } from '@/core/components/fields/checkbox-tree'
 	import { iamRepository, personRepository } from '@/core/stores'
-	import { ref } from 'vue'
 
 	defineProps({
 		edited: { type: Boolean, default: () => false },
@@ -36,7 +35,7 @@
 			default: () => ({}),
 		},
 	})
-	const emits = defineEmits(['update-permissions', 'search-cpf'])
+	const emits = defineEmits(['update-permissions', 'search-cpf', 'on-close'])
 
 	const { data: treePermissions, isLoading: isTreePermissionsLoading } =
 		useQuery({
@@ -101,180 +100,139 @@
 	function handleSearchCPF(cpf: string) {
 		emits('search-cpf', cpf)
 	}
+
+	function onClose() {
+		emits('on-close')
+	}
 </script>
 
 <template>
 	<div class="flex flex-col">
-		<!-- <form-field v-slot="{ componentField, handleChange }" name="userId">
-			<form-item
-				class="grid grid-cols-12 items-center gap-x-4 gap-y-1"
-			>
-				<form-label class="text-left col-span-2">Pessoa:</form-label>
-				<form-control>
-					<popover v-model:open="openPersonBox">
-						<popover-trigger as-child>
-							<button-root
-								variant="outline"
-								role="combobox"
-								:aria-expanded="openPersonBox"
-								class="flex-[3] justify-between col-span-5"
-								:disabled="
-									disabled ||
-									isPersonsLoading ||
-									formattedAllPersons.length <= 0
-								"
-							>
-								{{
-									formattedAllPersonsTempMap[componentField.modelValue] ??
-									'Selecione a pessoa...'
-								}}
-								<font-awesome-icon
-									v-if="openPersonBox"
-									:icon="['fas', 'chevron-up']"
-								/>
-								<font-awesome-icon v-else :icon="['fas', 'chevron-down']" />
-							</button-root>
-						</popover-trigger>
-						<popover-content class="flex-1 p-0">
-							<command>
-								<command-input class="h-9" placeholder="Busque a pessoa..." />
-								<command-empty>Nenhuma pessoa encontrada.</command-empty>
-								<command-list>
-									<command-group>
-										<command-item
-											v-for="searchPersons in formattedAllPersons"
-											:key="searchPersons.id"
-											:value="searchPersons.id"
-											@select="
-												(ev) => {
-													if (typeof ev.detail.value === 'string') {
-														handleChange(ev.detail.value)
-													}
-													openPersonBox = false
-												}
-											"
-										>
-											{{ searchPersons.name }}
-											<font-awesome-icon
-												:class="
-													cn(
-														'ml-auto h-4 w-4',
-														componentField.modelValue === searchPersons.id
-															? 'opacity-100'
-															: 'opacity-0',
-													)
-												"
-												:icon="['fas', 'check']"
-											/>
-										</command-item>
-									</command-group>
-								</command-list>
-							</command>
-						</popover-content>
-					</popover>
-				</form-control>
+		<div class="border border-primary rounded-md p-5">
+			<form-field v-slot="{ componentField }" name="cpf">
+				<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
+					<form-label class="text-left col-span-2">CPF</form-label>
+					<form-control>
+						<input-root
+							v-maska="'###.###.###-##'"
+							:disabled="disabled || edited"
+							type="text"
+							placeholder="Digite o CPF..."
+							class="col-span-5"
+							v-bind="componentField"
+							@blur="
+								(e: Event) => {
+									if (!handleSearchCPF) return
+									const inputValue = (e.target as any).value
+									handleSearchCPF(inputValue)
+								}
+							"
+						/>
+					</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
-			</form-item>
-		</form-field> -->
+					<form-message class="col-span-5 col-start-3" />
+				</form-item>
+			</form-field>
 
-		<form-field v-slot="{ componentField }" name="cpf">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">CPF</form-label>
-				<form-control>
-					<input-root
-						v-maska="'###.###.###-##'"
-						:disabled="disabled || edited"
-						type="text"
-						placeholder="Digite o CPF..."
-						class="col-span-5"
-						v-bind="componentField"
-						@blur="
-							(e: Event) => {
-								if (!handleSearchCPF) return
-								const inputValue = (e.target as any).value
-								handleSearchCPF(inputValue)
-							}
-						"
-					/>
-				</form-control>
+			<form-field v-slot="{ componentField }" name="name">
+				<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
+					<form-label class="text-left col-span-2">Nome</form-label>
+					<form-control>
+						<input-root
+							:disabled="true"
+							type="text"
+							placeholder="Digite o nome..."
+							class="col-span-5"
+							v-bind="componentField"
+						/>
+					</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
-			</form-item>
-		</form-field>
+					<form-message class="col-span-5 col-start-3" />
+				</form-item>
+			</form-field>
 
-		<form-field v-slot="{ componentField }" name="name">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Nome</form-label>
-				<form-control>
-					<input-root
-						:disabled="true"
-						type="text"
-						placeholder="Digite o nome..."
-						class="col-span-5"
-						v-bind="componentField"
-					/>
-				</form-control>
+			<form-field v-slot="{ componentField }" name="typeId">
+				<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
+					<form-label class="text-left col-span-2">Tipo de operador</form-label>
+					<form-control>
+						<select-root
+							class="items-start justify-start"
+							:disabled="
+								disabled || isTypeOfOperatorsLoading || isTreePermissionsLoading
+							"
+							v-bind="componentField"
+							@update:model-value="handleUpdatePermissions"
+						>
+							<select-Trigger class="col-span-5">
+								<select-Value placeholder="Selecione o tipo de operador..." />
+							</select-Trigger>
+							<select-content>
+								<select-group>
+									<select-label>Tipos de operadores:</select-label>
+									<select-item
+										v-for="contactType of formattedAllTypeOperators"
+										:key="contactType.id"
+										:value="contactType.id.toString()"
+									>
+										{{ contactType.name }}
+									</select-item>
+								</select-group>
+							</select-content>
+						</select-root>
+					</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
-			</form-item>
-		</form-field>
+					<form-message class="col-span-4" />
+				</form-item>
+			</form-field>
+			<div class="mb-8"></div>
+		</div>
 
-		<form-field v-slot="{ componentField }" name="typeId">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Tipo de operador</form-label>
-				<form-control>
-					<select-root
-						class="items-start justify-start"
+		<div class="border border-primary rounded-md p-5 mt-5">
+			<form-field v-slot="{ componentField, handleChange }" name="permissions">
+				<form-label
+					class="text-left mt-4 col-span-3 text-base text-primary font-bold"
+				>
+					Permissões
+				</form-label>
+
+				<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
+					<multiple-checkbox-tree
+						:data="formattedAllTreePermissions"
+						class="col-span-12"
 						:disabled="
 							disabled || isTypeOfOperatorsLoading || isTreePermissionsLoading
 						"
-						v-bind="componentField"
-						@update:model-value="handleUpdatePermissions"
-					>
-						<select-Trigger class="col-span-5">
-							<select-Value placeholder="Selecione o tipo de operador..." />
-						</select-Trigger>
-						<select-content>
-							<select-group>
-								<select-label>Tipos de operadores:</select-label>
-								<select-item
-									v-for="contactType of formattedAllTypeOperators"
-									:key="contactType.id"
-									:value="contactType.id.toString()"
-								>
-									{{ contactType.name }}
-								</select-item>
-							</select-group>
-						</select-content>
-					</select-root>
-				</form-control>
+						v-model="componentField.modelValue"
+						@update:model-value="
+							(value) => {
+								handleChange(value)
+							}
+						"
+					/>
 
-				<form-message class="col-span-4" />
-			</form-item>
-		</form-field>
-		<div class="mb-8"></div>
+					<form-message class="col-span-12" />
+				</form-item>
+			</form-field>
 
-		<form-field v-slot="{ componentField, handleChange }" name="permissions">
-			<separator class="my-4" label="Permissões" />
+			<div class="flex gap-12 justify-center">
+				<button-root
+					:disabled="disabled"
+					type="button"
+					variant="outline"
+					class="mt-4 gap-2 border border-primary text-primary font-semibold text-xs"
+					@click="onClose"
+				>
+					Cancelar
+				</button-root>
 
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<multiple-checkbox-tree
-					:data="formattedAllTreePermissions"
-					class="col-span-12"
-					:disabled="
-						disabled || isTypeOfOperatorsLoading || isTreePermissionsLoading
-					"
-					v-model="componentField.modelValue"
-					@update:model-value="
-						(value) => {
-							handleChange(value)
-						}
-					"
-				/>
-
-				<form-message class="col-span-12" />
-			</form-item>
-		</form-field>
+				<button-root
+					:disabled="disabled"
+					type="submit"
+					class="mt-4 bg-primary text-white gap-2 font-semibold text-xs"
+				>
+					Salvar
+				</button-root>
+			</div>
+		</div>
 	</div>
 </template>

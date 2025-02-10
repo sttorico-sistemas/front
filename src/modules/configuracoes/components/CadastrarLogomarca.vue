@@ -96,9 +96,9 @@ const onFileDelete = () => {
     </div>
 
     <div class="flex justify-center items-center gap-12 mt-8">
-      <button type="button" class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+      <button type="button" class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
         @click="emits('btnCancelar', false)">Cancelar</button>
-      <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+      <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
     </div>
   </main>
 </template>

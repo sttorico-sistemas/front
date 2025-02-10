@@ -16,7 +16,7 @@ const { error, formItemId } = useFormField()
 
 <template>
   <label-root
-    :class="cn(error && 'text-destructive', properties.class)"
+    :class="cn(error && 'text-destructive', properties.class, 'font-semibold')"
     :for="formItemId"
   >
     <slot />

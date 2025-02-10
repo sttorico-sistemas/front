@@ -54,16 +54,16 @@ const rows = reactive([
       <table>
         <thead>
           <tr>
-            <th class="text-primary_3-table text-left text-sm font-semibold">
+            <th class="text-primary text-left text-sm font-semibold">
               Local
             </th>
-            <th class="text-primary_3-table text-left text-sm font-semibold">
+            <th class="text-primary text-left text-sm font-semibold">
               Endereço
             </th>
-            <th class="text-primary_3-table text-left text-sm font-semibold">
+            <th class="text-primary text-left text-sm font-semibold">
               Telefone
             </th>
-            <th class="text-primary_3-table text-left text-sm font-semibold">
+            <th class="text-primary text-left text-sm font-semibold">
               E-mail
             </th>
           </tr>

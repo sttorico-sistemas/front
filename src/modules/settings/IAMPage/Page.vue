@@ -31,6 +31,7 @@
 	import { ButtonRoot } from '@/core/components/button'
 	import { IamDeleteAction, IamForm, IamUpdateAction } from './components/table'
 	import { useRouteQuery } from '@vueuse/router'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type IamTable = {
 		id: number
@@ -39,15 +40,16 @@
 		permissions: string
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
+	const selectSort = useRouteQuery<string | undefined>('prf-sort')
 	const page = useRouteQuery('prf-page', 1, { transform: Number })
 	const perPage = useRouteQuery('prf-per-page', 8, {
 		transform: Number,
@@ -177,16 +179,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllIams.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -201,16 +204,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllIams.value.length <= 0,
-						// onClick: () => handleSort('slug'),
+						onClick: () => handleSort('slug'),
 					},
 					() => [
 						'Descrição',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('slug')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('slug')],
+						}),
 					],
 				)
 			},
@@ -225,16 +229,16 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllIams.value.length <= 0,
-						// onClick: () => handleSort('slug'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						onClick: () => handleSort('slug'),
 					},
 					() => [
 						'Permissões',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('slug')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('slug')],
+						}),
 					],
 				)
 			},
@@ -243,24 +247,39 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(IamUpdateAction, {
-						dataId: data.id,
-						tableIamName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateIamLoading.value,
-					}),
-					h(IamDeleteAction, {
-						dataId: data.id,
-						tableIamName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteIamLoading.value,
-						isActive: true,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(IamUpdateAction, {
+							dataId: data.id,
+							tableIamName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateIamLoading.value,
+						}),
+						h(IamDeleteAction, {
+							dataId: data.id,
+							tableIamName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteIamLoading.value,
+							isActive: true,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -347,61 +366,60 @@
 		return handleDeleteIam({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectIamsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectIamsRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectIamsRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -417,18 +435,17 @@
 	<main>
 		<breadcrumbs :paginas="['Configurações', 'Perfil']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar perfis" />
+				<div class="flex gap-14 items-center justify-center">
+					<titulo title="Gerenciar Perfis" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateIamLoading"
 						:title="`Criar um novo perfil`"
-						description="Crie o conteúdo de um novo perfil."
 						class="sm:max-w-[780px]"
 						@form-submit="onCreateSubmit"
 					>
@@ -437,11 +454,12 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
-												class="text-primary_3-table w-5 h-5"
+												class="text-primary w-5 h-5"
 												:icon="['fas', 'circle-plus']"
 											/>
 										</button-root>
@@ -457,6 +475,7 @@
 							<iam-form
 								:metadata="form.values"
 								:disabled="isCreateIamLoading"
+								@on-close="openCreateModal = false"
 							/>
 						</template>
 					</form-wrapper>
@@ -471,7 +490,7 @@
 					:is-loading="isIamsLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllIams.length <= 0"

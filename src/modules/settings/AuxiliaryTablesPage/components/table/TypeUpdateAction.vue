@@ -63,15 +63,14 @@
 		tooltip="Editar tipo"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar tipo ${tableTypeName}`"
-		description="Atualize o conteúdo do tipo."
-		class="sm:max-w-[780px]"
+		:title="`Editar ${tableTypeName}`"
+		class="sm:max-w-[440px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root variant="ghost" size="icon" @click="setNewData">
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>

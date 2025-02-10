@@ -20,21 +20,21 @@
 </script>
 
 <template>
-	<div class="flex flex-col">
+	<div class="flex flex-col mx-2">
 		<form-field v-slot="{ componentField }" name="name">
 			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Nome</form-label>
+				<form-label class="text-left col-span-12">Nome</form-label>
 				<form-control>
 					<input-root
 						:disabled="disabled"
 						type="text"
 						placeholder="Digite o nome..."
-						class="col-span-5"
+						class="col-span-12"
 						v-bind="componentField"
 					/>
 				</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
+				<form-message class="col-span-12" />
 			</form-item>
 		</form-field>
 	</div>

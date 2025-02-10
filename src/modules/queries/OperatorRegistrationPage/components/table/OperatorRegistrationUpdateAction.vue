@@ -140,15 +140,19 @@
 		tooltip="Editar operador"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar operador ${tableOperatorName}`"
-		description="Atualize o conteúdo do operador."
+		:title="`Editar Operador`"
 		class="sm:max-w-[1100px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
+			<button-root
+				:disabled="!isActive"
+				variant="ghost"
+				size="icon"
+				@click="setNewData"
+			>
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>
@@ -161,6 +165,7 @@
 				:loadCities="loadCities"
 				:disabled="isLoading"
 				@update-permissions="handlePermissions"
+				@on-close="openUpdateModal=false"
 			/>
 		</template>
 	</form-wrapper>

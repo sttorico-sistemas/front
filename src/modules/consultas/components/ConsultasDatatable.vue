@@ -496,7 +496,7 @@ const rowsModal = reactive([
 const color = (id: number | string): string => {
   switch (id) {
     case 1:
-      return 'bg-info'
+      return 'bg-primary'
     case 2:
       return 'bg-danger'
     case 3:
@@ -529,10 +529,10 @@ const filtered = (value: string = '') => {
   <div class="datatable mb-[344px]">
     <vue3-datatable :rows="filtered(props.selected.label)" :columns="props.cols"
       :total-rows="filtered(props.selected.label)?.length" :sortable="true" skin="whitespace-nowrap bh-table-striped"
-      no-data-content="Nenhum dado foi encontrado" pagination-info="Mostrando {0} a {1} de {2} entradas">
+      no-data-content="Nenhum dado foi encontrado" pagination-primary="Mostrando {0} a {1} de {2} entradas">
       <template #rmc="data">
         <button @click="isOpenDialog = true">
-          <strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
+          <strong class="text-primary">{{ data.value.rmc }}</strong>
         </button>
       </template>
       <template #status="data">
@@ -549,15 +549,15 @@ const filtered = (value: string = '') => {
     <div class="datatable">
       <vue3-datatable :rows="rowsModal" :columns="columnsModal" :total-rows="rowsModal.length" :sortable="true"
         skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-        pagination-info="Mostrando {0} a {1} de {2} entradas" page-size="5">
+        pagination-primary="Mostrando {0} a {1} de {2} entradas" page-size="5">
         <template #rmc="data">
           <button>
-            <strong class="text-primary_3-table">{{ data.value.rmc }}</strong>
+            <strong class="text-primary">{{ data.value.rmc }}</strong>
           </button>
         </template>
         <template #n_contrato="data">
           <button>
-            <strong class="text-primary_3-table">{{
+            <strong class="text-primary">{{
               data.value.n_contrato
             }}</strong>
           </button>

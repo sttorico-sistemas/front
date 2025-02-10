@@ -6,15 +6,17 @@
 	const props = defineProps<{
 		class?: HTMLAttributes['class']
 		size?: number
+		colSpan?: number
 	}>()
 </script>
 
 <template>
 	<th
-		:style="{ width: !!size ? `${size}px` : undefined }"
+		:colSpan="colSpan"
+		:style="{ width: `${size}px` }"
 		:class="
 			cn(
-				'h-12 px-4 text-left align-middle font-bold text-muted-foreground text-primary_3-table [&:has([role=checkbox])]:pr-0',
+				'px-4 text-left align-middle font-bold text-primary [&:has([role=checkbox])]:pr-0',
 				props.class,
 			)
 		"

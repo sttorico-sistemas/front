@@ -30,6 +30,7 @@
 				<table-head
 					v-for="header in headerGroup.headers"
 					:size="header.getSize()"
+					:col-span="header.colSpan"
 					:key="header.id"
 				>
 					<flex-render
@@ -62,7 +63,11 @@
 					:data-state="row.getIsSelected() && 'selected'"
 					:class="[(row.index + 1) % 2 === 1 ? 'bg-muted/30' : undefined]"
 				>
-					<table-cell v-for="cell in row.getVisibleCells()" :key="cell.id">
+					<table-cell
+						v-for="cell in row.getVisibleCells()"
+						:key="cell.id"
+						:size="cell.column.getSize()"
+					>
 						<flex-render
 							:render="cell.column.columnDef.cell"
 							:props="cell.getContext()"
