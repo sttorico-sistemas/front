@@ -184,7 +184,7 @@ onMounted(() => {
 							class="text-xs m-1"
 							@click="clearFilter()"
 						>
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
+							<icon-clear class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="top" placement="top">Limpar pesquisa</tippy>
 					</div>
@@ -214,7 +214,7 @@ onMounted(() => {
 					:sortable="true"
 					skin="whitespace-nowrap bh-table-striped"
 					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
+					pagination-primary="Mostrando {0} a {1} de {2} entradas"
 					:loading="store.loadingConsignantes"
 					:page="store.pagina"
 					:page-size="store.limite"
@@ -250,7 +250,7 @@ onMounted(() => {
 										})
 									"
 								>
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-eye class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Ver Consignante</tippy>
 							</div>
@@ -264,11 +264,11 @@ onMounted(() => {
 								>
 									<icon-check
 										v-if="data.value.status === 'Ativo'"
-										class="w-5 h-5 text-primary_3-table"
+										class="w-5 h-5 text-primary"
 									/>
 									<icon-block
 										v-else-if="!store.saving"
-										class="w-5 h-5 text-primary_3-table"
+										class="w-5 h-5 text-primary"
 									/>
 									<circular-progress v-else :size="20"></circular-progress>
 								</button>
@@ -286,9 +286,9 @@ onMounted(() => {
 								>
 									<icon-unlock
 										v-if="data.value.averbacao === 'Liberada'"
-										class="w-5 h-5 text-primary_3-table"
+										class="w-5 h-5 text-primary"
 									/>
-									<icon-lock v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-lock v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">
 									{{

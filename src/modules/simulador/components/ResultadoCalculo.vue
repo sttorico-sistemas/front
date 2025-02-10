@@ -26,7 +26,7 @@ const emits = defineEmits(['btnSave', 'btnClose'])
 				</div>
 
 				<div class="max-w-2xl flex justify-center flex-wrap gap-5 mb-12">
-					<button type="button" class="btn border-primary_3-table text-primary_3-table shadow-none"
+					<button type="button" class="btn border-primary text-primary shadow-none"
 						@click="emits('btnClose', false)">Novo Cálculo</button>
 
 					<p class="text-danger text-xs text-center">O cálculo dos valores servem somente para você ter noção de como

@@ -22,8 +22,8 @@ import IconFilter from 'src/core/components/Icons/IconFilter.vue'
             layout="row" :options="['consignante 1', 'consignante 2']" />
         </div>
         <div class="flex items-center gap-2.5 mt-4">
-          <icon-clear class="w-6 h-6 text-primary_3-table" />
-          <icon-filter class="w-6 h-6 text-primary_3-table" />
+          <icon-clear class="w-6 h-6 text-primary" />
+          <icon-filter class="w-6 h-6 text-primary" />
         </div>
       </form>
     </div>

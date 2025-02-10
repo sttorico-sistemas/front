@@ -46,7 +46,7 @@
 	<div :class="cn('flex w-full gap-4', props.class)">
 		<button-root
 			variant="ghost"
-			class="text-primary_3-table font-bold"
+			class="text-primary font-bold"
 			as-child
 		>
 			<label for="input-file">
@@ -81,7 +81,7 @@
 			<button-root
 				variant="ghost"
 				size="icon"
-				class="text-primary_3-table font-bold rounded-full"
+				class="text-primary font-bold rounded-full"
 				@click="handleFileClear"
 			>
 				<font-awesome-icon class="w-4 h-4 ml-1" :icon="['fas', 'x']" />

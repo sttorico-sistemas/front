@@ -23,68 +23,38 @@ module.exports = {
 				'2xs': ['0.65rem', '1rem'],
 			},
 			colors: {
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
+				black: 'hsl(var(--black))',
+				dark: 'hsl(var(--dark))',
+				highlighter: {
+					DEFAULT: 'hsl(var(--highlighter))',
+					foreground: 'hsl(var(--highlighter-foreground))',
+				},
 				primary: {
-					DEFAULT: '#4361ee',
-					light: '#eaf1ff',
-					'dark-light': 'rgba(67,97,238,.15)',
+					DEFAULT: 'hsl(var(--primary-500))',
+					700: 'hsl(var(--primary-700))',
+					900: 'hsl(var(--primary-900))',
+					foreground: 'hsl(var(--primary-foreground))',
 				},
 				secondary: {
-					DEFAULT: '#805dca',
-					light: '#ebe4f7',
-					'dark-light': 'rgb(128 93 202 / 15%)',
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))',
 				},
-				info: {
-					DEFAULT: '#0ea5e9',
-				},
-				success: {
-					DEFAULT: '#00AB55',
-					light: '#f0fdf4',
+				danger: {
+					DEFAULT: 'hsl(var(--danger))',
+					foreground: 'hsl(var(--danger-foreground))',
 				},
 				warning: {
-					DEFAULT: '#E2A03F',
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))',
 				},
-				secondry: {
-					DEFAULT: '#805DCA',
-				},
-				primary_3: {
-					DEFAULT: '#255471',
-					table: '#1384AD',
-				},
-				// success: {
-				//     DEFAULT: '#00ab55',
-				//     light: '#ddf5f0',
-				//     'dark-light': 'rgba(0,171,85,.15)',
-				// },
-				danger: {
-					DEFAULT: '#E7515A',
-					light: '#fff5f5',
-					'dark-light': 'rgba(231,81,90,.15)',
-				},
-				// warning: {
-				//     DEFAULT: '#e2a03f',
-				//     light: '#fff9ed',
-				//     'dark-light': 'rgba(226,160,63,.15)',
-				// },
-				// info: {
-				//     DEFAULT: '#2196f3',
-				//     light: '#e7f7ff',
-				//     'dark-light': 'rgba(33,150,243,.15)',
-				// },
-				dark: {
-					primary: '#162640',
-					DEFAULT: '#3b3f5c',
-					light: '#eaeaec',
-					'dark-light': 'rgba(59,63,92,.15)',
-				},
-				black: {
-					DEFAULT: '#0e1726',
-					light: '#A9AAB1',
-					'dark-light': 'rgba(14,23,38,.15)',
-				},
-				white: {
-					DEFAULT: '#ffffff',
-					light: '#e0e6ed',
-					dark: '#888ea8',
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))',
 				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
@@ -102,8 +72,6 @@ module.exports = {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))',
 				},
-				background: 'hsl(var(--background))',
-				border: 'hsl(var(--border))',
 			},
 			fontFamily: {
 				nunito: ['Nunito', 'sans-serif'],

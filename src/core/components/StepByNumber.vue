@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{
 	textColor?: string;
 }>(), {
 	size: 5,
-	bgColor: 'bg-info',
+	bgColor: 'bg-primary',
 	textColor: 'text-white',
 });
 

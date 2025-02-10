@@ -14,7 +14,7 @@
 		:style="{ width: !!size ? `${size}px` : undefined }"
 		:class="
 			cn(
-				'h-12 px-4 text-left align-middle font-bold text-muted-foreground text-primary_3-table [&:has([role=checkbox])]:pr-0',
+				'h-12 px-4 text-left align-middle font-bold text-muted-foreground text-primary [&:has([role=checkbox])]:pr-0',
 				props.class,
 			)
 		"

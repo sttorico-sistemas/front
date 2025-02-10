@@ -97,7 +97,7 @@ const color = (value: string): string => {
     <div class="datatable">
       <vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
         skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-        pagination-info="Mostrando {0} a {1} de {2} entradas">
+        pagination-primary="Mostrando {0} a {1} de {2} entradas">
         <template #status="data">
           <span class="flex justify-center badge !w-[80px] h-[22px]" :class="color(data.value.status)">{{
             data.value.status }}</span>
@@ -106,14 +106,14 @@ const color = (value: string): string => {
           <div class="flex">
             <div>
               <button v-tippy:right type="button" class="text-xs m-1">
-                <icon-edit class="w-5 h-5 text-primary_3-table" />
+                <icon-edit class="w-5 h-5 text-primary" />
               </button>
               <tippy target="right" placement="right">Editar</tippy>
             </div>
             <div>
               <button v-tippy:right type="button" class="text-xs m-1">
-                <icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
-                <icon-block v-else class="w-5 h-5 text-primary_3-table" />
+                <icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary" />
+                <icon-block v-else class="w-5 h-5 text-primary" />
               </button>
               <tippy target="right" placement="right">{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}
               </tippy>
@@ -123,9 +123,9 @@ const color = (value: string): string => {
       </vue3-datatable>
     </div>
     <div class="flex justify-center items-center gap-12 mt-8">
-      <button type="button" class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+      <button type="button" class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
         @click="emits('btnCancelar', false)">Cancelar</button>
-      <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+      <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
     </div>
   </div>
 </template>

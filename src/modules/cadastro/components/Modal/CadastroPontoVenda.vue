@@ -15,8 +15,8 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
 
 <template>
   <main>
-    <div class="panel mt-5 border border-primary_3-table">
-      <label class="text-sm md:text-base text-primary_3-table m-0 mb-3">Dados do Ponto de Venda</label>
+    <div class="panel mt-5 border border-primary">
+      <label class="text-sm md:text-base text-primary m-0 mb-3">Dados do Ponto de Venda</label>
 
       <label-select id="ponto_venda" label="Tipo Ponto de Venda" class-label="text-sm"
         class-select="w-full md:max-w-[400px] mb-3" layout="row" :options="[]" />
@@ -90,9 +90,9 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button type="button"
-          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+          class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
           @click="emits('btnCancelar', false)">Cancelar</button>
-        <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+        <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
       </div>
     </div>
   </main>

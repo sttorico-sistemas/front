@@ -77,7 +77,7 @@ const filtered = (value: string = '') => {
       <div class="datatable pb-1">
         <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
           :sortable="true" skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-          pagination-info="Mostrando {0} a {1} de {2} entradas">
+          pagination-primary="Mostrando {0} a {1} de {2} entradas">
           <template #logo="data">
             <image-name image="https://placehold.co/30x30" />
           </template>
@@ -85,7 +85,7 @@ const filtered = (value: string = '') => {
             <div class="flex gap-2">
               <div>
                 <button v-tippy:right type="button" class="text-xs m-1">
-                  <icon-delete class="w-5 h-5 text-primary_3-table" />
+                  <icon-delete class="w-5 h-5 text-primary" />
                 </button>
                 <tippy target="right" placement="right">Deletar</tippy>
               </div>

@@ -7,8 +7,8 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
 
 <template>
   <main>
-    <div class="panel border mt-5 border-primary_3-table">
-      <h3 class="text-base font-semibold text-primary_3-table mb-7">Dados do Administrador</h3>
+    <div class="panel border mt-5 border-primary">
+      <h3 class="text-base font-semibold text-primary mb-7">Dados do Administrador</h3>
 
       <div class="flex flex-col md:flex-row items-center mb-3">
         <label for="cnpj" class="mb-0 md:mr-2 w-full md:w-1/5 text-sm text-left">CNPJ</label>
@@ -44,9 +44,9 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button type="button"
-          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+          class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
           @click="emits('btnCancelar', false)">Cancelar</button>
-        <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+        <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
       </div>
     </div>
   </main>

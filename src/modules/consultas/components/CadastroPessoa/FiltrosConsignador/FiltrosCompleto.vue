@@ -12,8 +12,8 @@ import IconFilter from 'src/core/components/Icons/IconFilter.vue'
       <titulo title="Dados para Pesquisa" />
 
       <div class="flex items-center gap-2.5">
-        <icon-clear class="w-6 h-6 text-primary_3-table" />
-        <icon-filter class="w-6 h-6 text-primary_3-table" />
+        <icon-clear class="w-6 h-6 text-primary" />
+        <icon-filter class="w-6 h-6 text-primary" />
       </div>
     </div>
 

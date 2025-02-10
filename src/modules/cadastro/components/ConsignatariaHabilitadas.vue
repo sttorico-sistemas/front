@@ -201,7 +201,7 @@ const parseRows = (): Record<string, any>[] => {
 
 					<div>
 						<button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
+							<icon-clear class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="top" placement="top">Limpar pesquisa</tippy>
 					</div>
@@ -221,7 +221,7 @@ const parseRows = (): Record<string, any>[] => {
 			<div class="datatable">
 				<vue3-datatable :rows="filtered(selected.label)" :columns="props.cols"
 					:total-rows="filtered(selected.label)?.length" :sortable="true" skin="whitespace-nowrap bh-table-striped"
-					no-data-content="Nenhum dado foi encontrado" pagination-info="Mostrando {0} a {1} de {2} entradas">
+					no-data-content="Nenhum dado foi encontrado" pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #consignataria="data">
 						<image-name image="https://placehold.co/30x30" :name="data.value.consignataria.nome" />
 					</template>
@@ -256,36 +256,36 @@ const parseRows = (): Record<string, any>[] => {
 						<div class="flex">
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-edit class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Editar</tippy>
 							</div>
 							<div v-if="props.typeScreen === 'consignante'">
 								<button v-tippy:right type="button" class="text-xs m-1">
 									<icon-habilitar v-if="data.value.habilitacao === 'Desabilitado'"
-										class="w-5 h-5 text-primary_3-table" />
-									<icon-desabilitar v-else class="w-5 h-5 text-primary_3-table" />
+										class="w-5 h-5 text-primary" />
+									<icon-desabilitar v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">{{ data.value.habilitacao === 'Desabilitado' ? 'Habilitar' :
 									'Desabilitar' }}</tippy>
 							</div>
 							<div v-if="props.typeScreen === 'consignante'">
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-unlock v-if="data.value.averbacao === 'Liberada'" class="w-5 h-5 text-primary_3-table" />
-									<icon-lock v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-unlock v-if="data.value.averbacao === 'Liberada'" class="w-5 h-5 text-primary" />
+									<icon-lock v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">{{ data.value.averbacao === 'Liberada' ? 'Liberar' : 'Bloquear'
 									}}</tippy>
 							</div>
 							<div v-if="props.typeScreen === 'consignataria'">
 								<button v-tippy:right type="button" class="text-xs m-1" @click="isOpenDialogBackOffice = true">
-									<icon-shield-check class="w-5 h-5 text-primary_3-table" />
+									<icon-shield-check class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Backoffice</tippy>
 							</div>
 							<div v-if="props.typeScreen === 'consignataria'">
 								<button v-tippy:right type="button" class="text-xs m-1" @click="isOpenDialogPontoVenda = true">
-									<icon-shield-user class="w-5 h-5 text-primary_3-table" />
+									<icon-shield-user class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Ponto de venda</tippy>
 							</div>

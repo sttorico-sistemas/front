@@ -33,10 +33,10 @@ const closeModal = () => {
         :style="{ maxWidth: props.maxWidth, maxHeight: props.maxHeight, minWidth: props.minWidth, minHeight: props.minHeight, width: props.width, height: props.height }">
 
         <div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-          <h5 class="flex items-center gap-2 text-lg font-semibold text-primary_3-table">
+          <h5 class="flex items-center gap-2 text-lg font-semibold text-primary">
             <slot name="title"></slot>
           </h5>
-          <button type="button" class="text-white-dark hover:text-dark ml-3" @click="closeModal">X</button>
+          <button type="button" class="text-white hover:text-dark ml-3" @click="closeModal">X</button>
         </div>
 
         <div class="px-5">
@@ -46,7 +46,7 @@ const closeModal = () => {
         </div>
 
         <div class="px-5 pt-2">
-          <div class="dark:text-white-dark/70 text-base font-medium text-[#1f2937]">
+          <div class="dark:text-white/70 text-base font-medium text-[#1f2937]">
             <slot></slot>
           </div>
         </div>

@@ -97,7 +97,7 @@ function onSubmit(event: Event) {
 				<dialog-footer>
 					<slot name="buttons"></slot>
 
-					<button-root v-if="isAction" :disabled="isLoading" type="submit" class="mt-4 bg-primary_3-table text-white gap-2">
+					<button-root v-if="isAction" :disabled="isLoading" type="submit" class="mt-4 bg-primary text-white gap-2">
 						{{ buttonName }}
 						<font-awesome-icon v-if="isLoading" :icon="['fas', 'spinner']" class="animate-spin" />
 					</button-root>

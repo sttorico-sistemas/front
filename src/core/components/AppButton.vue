@@ -49,7 +49,7 @@ const props = withDefaults(
 const variantClass = computed(() => {
 	switch (props.variant) {
 		case 'outlined':
-			return 'border border-primary_3-table text-primary_3-table bg-transparent';
+			return 'border border-primary text-primary bg-transparent';
 		case 'flat':
 			return `bg-${props.color} text-white shadow-none`;
 		case 'text':

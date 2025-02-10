@@ -30,7 +30,7 @@
 	<button-root
 		:disabled="props.disabled"
 		variant="ghost"
-		class="text-primary_3-table font-bold"
+		class="text-primary font-bold"
 		@click="handleDownload"
 	>
 		<font-awesome-icon class="w-5 h-5 mr-2" :icon="['fas', 'download']" />

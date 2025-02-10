@@ -22,7 +22,7 @@ const servico = ref('')
 		<div class="flex relative items-stretch flex-wrap">
 			<div class="ltr:-mr-px rtl:-ml-px flex">
 				<span
-					class="border border-[#e0e6ed] dark:border-[#17263c] rounded-l bg-[#EAEAEC] flex items-center justify-center text-black px-4 py-1.5 dark:bg-[#1a1c2d] dark:text-white-dark">
+					class="border border-[#e0e6ed] dark:border-[#17263c] rounded-l bg-[#EAEAEC] flex items-center justify-center text-black px-4 py-1.5 dark:bg-[#1a1c2d] dark:text-white">
 					<calculatorIcon />
 				</span>
 			</div>
