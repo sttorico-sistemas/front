@@ -97,7 +97,7 @@
 <template>
 	<main class="w-full h-dvh grid grid-cols-1 md:grid-cols-2">
 		<!-- Lado esquerdo (informações e accordion) -->
-		<div class="hidden md:flex flex-col justify-center bg-primary_3-table px-8">
+		<div class="hidden md:flex flex-col justify-center bg-primary px-8">
 			<div class="ml-9">
 				<img src="../../../../public/assets/logo-vazado.png" alt="Bem Vindo" />
 				<h2 class="text-white text-4xl font-extralight mt-5">Bem Vindo</h2>
@@ -218,7 +218,7 @@
 					type="form"
 					:disabled="isLoading"
 					:is-loading="isLoading"
-					class="text-white text-lg font-semibold bg-primary_3-table gap-4"
+					class="text-white text-lg font-semibold bg-primary gap-4"
 				>
 					Entrar
 					<font-awesome-icon
@@ -230,7 +230,7 @@
 			</form>
 
 			<!-- Esqueci minha senha -->
-			<span class="mt-5 md:mt-16 text-xl font-bold text-primary_3-table"
+			<span class="mt-5 md:mt-16 text-xl font-bold text-primary"
 				>Esqueci minha senha</span
 			>
 
@@ -244,7 +244,7 @@
 			</div>
 
 			<!-- Rodapé -->
-			<span class="text-xs text-primary_3-table absolute bottom-3"
+			<span class="text-xs text-primary absolute bottom-3"
 				>© 2024. Sttórico Sistemas Ltda. Todos os direitos reservados.</span
 			>
 		</div>

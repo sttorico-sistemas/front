@@ -123,7 +123,7 @@ onMounted(async () => {
 							class="text-xs m-1"
 							@click="store.clearFilter()"
 						>
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
+							<icon-clear class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="top" placement="top">Limpar pesquisa</tippy>
 					</div>
@@ -152,7 +152,7 @@ onMounted(async () => {
 					:sortable="true"
 					skin="whitespace-nowrap bh-table-striped mb-5"
 					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
+					pagination-primary="Mostrando {0} a {1} de {2} entradas"
 					:loading="store.loadingConsignantesMaster"
 					:page="store.page"
 					:page-size="store.limit"
@@ -167,7 +167,7 @@ onMounted(async () => {
 							class="text-xs m-1"
 							@click="openEditor(data.value)"
 						>
-							<icon-edit class="w-5 h-5 text-primary_3-table" />
+							<icon-edit class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="right" placement="right"
 							>Editar {{ data.value.nome }}</tippy

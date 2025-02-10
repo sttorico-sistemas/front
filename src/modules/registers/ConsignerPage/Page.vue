@@ -49,6 +49,7 @@
 		ConsignerUpdateAction,
 		ConsignerViewAction,
 	} from './components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type ConsignerTable = {
 		id: number
@@ -65,16 +66,16 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
@@ -263,121 +264,106 @@
 
 	const columns: ColumnDef<ConsignerTable>[] = [
 		{
-			accessorKey: 'id',
-			meta: 'Código',
-			size: 20,
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('id'),
-					},
-					() => [
-						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('id')),
-			enableHiding: false,
-		},
-		{
 			accessorKey: 'name',
 			meta: 'Consignante',
+			size: undefined,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Consignante',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('name')),
+			cell: ({ row }) => h('div', { class: 'uppercase' }, row.getValue('name')),
 			enableHiding: false,
 		},
 		{
 			accessorKey: 'entityTypeName',
 			meta: 'Tp. Entidade',
+			size: undefined,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('entityTypeName'),
+						onClick: () => handleSort('entityTypeName'),
 					},
 					() => [
 						'Tp. Entidade',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeName')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeName')],
+						}),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('entityTypeName')),
+			cell: ({ row }) =>
+				h('div', { class: 'uppercase' }, row.getValue('entityTypeName')),
 			enableHiding: false,
 		},
 		{
 			accessorKey: 'address',
 			meta: 'Cidade/UF',
+			size: undefined,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('address'),
+						onClick: () => handleSort('address'),
 					},
 					() => [
 						'Cidade/UF',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('address')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('address')],
+						}),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('address')),
+			cell: ({ row }) =>
+				h('div', { class: 'uppercase' }, row.getValue('address')),
 			enableHiding: false,
 		},
 		{
 			accessorKey: 'start',
-			meta: 'Inicio',
+			meta: 'Exp Inicial',
+			enableResizing: false,
 			size: 50,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('start'),
+						onClick: () => handleSort('start'),
 					},
 					() => [
-						'Inicio',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('start')],
-						// }),
+						'Exp Inicial',
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('start')],
+						}),
 					],
 				)
 			},
@@ -386,23 +372,25 @@
 		},
 		{
 			accessorKey: 'end',
-			meta: 'Fim',
+			meta: 'Exp Final',
+			enableResizing: false,
 			size: 50,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('end'),
+						onClick: () => handleSort('end'),
 					},
 					() => [
-						'Fim',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('end')],
-						// }),
+						'Exp Final',
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('end')],
+						}),
 					],
 				)
 			},
@@ -412,31 +400,33 @@
 		{
 			accessorKey: 'status',
 			meta: 'Tipo de entidade',
-			size: 20,
+			enableResizing: false,
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsigner.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
+						onClick: () => handleSort('status'),
 					},
 					() => [
 						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeId')],
+						}),
 					],
 				)
 			},
 			cell: ({ row, cell }) =>
 				h(
-					'div',
+					'span',
 					{
 						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('status').textColor,
 							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
@@ -447,31 +437,85 @@
 			enableHiding: false,
 		},
 		{
+			accessorKey: 'endorsement',
+			meta: 'Averbação',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled: formattedAllTypeOfConsigner.value.length <= 0,
+						onClick: () => handleSort('endorsement'),
+					},
+					() => [
+						'Averbação',
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('endorsement')],
+						}),
+					],
+				)
+			},
+			cell: ({ row, cell }) =>
+				h(
+					'div',
+					{
+						class:
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
+						style: {
+							color: row.getValue<StatusFormatted>('endorsement')?.textColor,
+							backgroundColor:
+								row.getValue<StatusFormatted>('endorsement')?.bgColor,
+						},
+					},
+					row.getValue<StatusFormatted>('endorsement')?.text,
+				),
+			enableHiding: false,
+		},
+		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(ConsignerViewAction, {
-						dataId: data.id,
-						isLoading: isUpdateConsignerLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-					h(ConsignerUpdateAction, {
-						dataId: data.id,
-						tableConsignerName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateConsignerLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-					h(ConsignerDeleteAction, {
-						dataId: data.id,
-						tableConsignerName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteConsignerLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(ConsignerViewAction, {
+							dataId: data.id,
+							isLoading: isUpdateConsignerLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+						h(ConsignerUpdateAction, {
+							dataId: data.id,
+							tableConsignerName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateConsignerLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+						h(ConsignerDeleteAction, {
+							dataId: data.id,
+							tableConsignerName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteConsignerLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -529,8 +573,8 @@
 				.string({ message: 'A cidade é obrigatória.' })
 				.min(1, { message: 'A cidade é obrigatória.' }),
 			stateId: z
-				.string({ message: 'O estado é obrigatório.' })
-				.min(1, { message: 'O estado é obrigatório.' }),
+				.string({ message: 'O UF é obrigatório.' })
+				.min(1, { message: 'O UF é obrigatório.' }),
 			street: z
 				.string({ message: 'O logradouro é obrigatório.' })
 				.min(1, { message: 'O logradouro é obrigatório.' }),
@@ -598,61 +642,56 @@
 		return handleDeleteConsigner({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+				return
+			}
+			selectSort.value = undefined
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectConsignersRefetch()
-	// 			return
-	// 		}
-
-	// 		selectSort.value = undefined
-	// 		selectConsignersRefetch()
-	// 		return
-	// 	}
-
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectConsignersRefetch()
-	// }
+			return
+		}
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -672,19 +711,18 @@
 	<main>
 		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar consignante" />
+				<div class="flex gap-14 items-center justify-center">
+					<titulo title="Gerenciar Consignante" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateConsignerLoading"
-						:title="`Criar um novo consignante`"
-						description="Crie o conteúdo de um novo consignante."
-						class="sm:max-w-[780px]"
+						:title="`Cadastro Consignante`"
+						class="sm:max-w-[834px]"
 						@form-submit="onCreateSubmit"
 					>
 						<template #trigger>
@@ -692,11 +730,12 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
-												class="text-primary_3-table w-5 h-5"
+												class="text-primary w-5 h-5"
 												:icon="['fas', 'circle-plus']"
 											/>
 										</button-root>
@@ -712,17 +751,22 @@
 							<consigner-form
 								:metadata="form.values"
 								:disabled="isCreateConsignerLoading"
+								@on-close="
+									() => {
+										openCreateModal = false
+									}
+								"
 							/>
 						</template>
 					</form-wrapper>
 				</div>
 
-				<div class="header_actions flex items-center gap-4 flex-1 justify-end">
+				<div class="header_actions flex items-center gap-5 flex-1 justify-end">
 					<select-root class="flex-[1]" v-model="status">
-						<select-trigger class="lg:max-w-80 flex-[2]">
+						<select-trigger class="lg:max-w-40 flex-[2]">
 							<select-value
 								class="text-left"
-								placeholder="Selecione um status..."
+								placeholder="Status"
 							/>
 						</select-trigger>
 						<select-content>
@@ -741,15 +785,31 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="outline" @click="handleClear">
+								<button-root variant="ghost" size="icon" @click="handleClear">
 									<font-awesome-icon
-										class="text-primary_3-table w-5 h-5"
+										class="text-primary w-5 h-5"
 										:icon="['fas', 'eraser']"
 									/>
 								</button-root>
 							</tooltip-trigger>
 							<tooltip-content side="right">
-								<p>Apagar filtros</p>
+								<p>Limpar pesquisa</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root variant="ghost" size="icon" @click="handleClear">
+									<font-awesome-icon
+										class="text-primary w-5 h-5"
+										:icon="['fas', 'print']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Imprimir</p>
 							</tooltip-content>
 						</tooltip>
 					</tooltip-provider>
@@ -764,7 +824,7 @@
 					:is-loading="isConsignersLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllTypeOfConsigner.length <= 0"

@@ -1,7 +1,14 @@
-import { ConsignerAdminData, EndorserData, RegulatoryData, InstructionOfProcedureData, ManagerData, } from "@/modules/registers/ConsignerAdminPage/components/table";
-import AnnotationData from "@/modules/registers/ConsignerAdminPage/components/table/AnnotationData.vue";
-import LogData from "@/modules/registers/ConsignerAdminPage/components/table/LogData.vue";
-import OperatorData from "@/modules/registers/ConsignerAdminPage/components/table/OperatorData.vue";
+import {
+	ConsignerAdminData,
+	RegulatoryData,
+	InstructionOfProcedureData,
+	ManagerData,
+	LogData,
+	AnnotationData,
+	OperatorData,
+	BackOfficeData,
+	SalePointData
+} from "@/modules/registers/ConsignerAdminPage/components/table";
 
 export const accordionItems = [
 	{
@@ -24,15 +31,15 @@ export const accordionItems = [
 	},
 	{
 		value: 'item-4',
-		title: 'Backoffice',
-		component: null,
-		disabled: true
+		title: 'Back Office',
+		component: BackOfficeData,
+		disabled: false
 	},
 	{
 		value: 'item-5',
 		title: 'Pontos de Venda',
-		component: null,
-		disabled: true
+		component: SalePointData,
+		disabled: false
 	},
 	{
 		value: 'item-6',

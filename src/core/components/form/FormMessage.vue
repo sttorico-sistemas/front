@@ -4,17 +4,26 @@
 	import { useFormField } from './useFormField'
 
 	const { name, formMessageId, error } = useFormField()
+
+	defineProps({
+		hasPosition: {
+			default: () => true,
+			type: Boolean,
+		},
+	})
 </script>
 
 <template>
-	<div>
+	<div v-if="error">
 		<error-message
-			v-if="error"
 			:id="formMessageId"
 			as="p"
 			:name="toValue(name)"
-			class="text-sm font-medium text-danger"
+			class="text-sm font-medium text-danger mb-2"
 		/>
-		<div class="text-sm font-medium text-transparent" v-else>Erro</div>
 	</div>
+	<div
+		v-else-if="hasPosition"
+		class="text-sm font-medium text-transparent"
+	>Error</div>
 </template>

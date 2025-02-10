@@ -40,23 +40,24 @@
 	import { cn, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import { TypeDeleteAction, TypeForm, TypeUpdateAction } from '../table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type TypeTable = {
 		id: number
 		name: string
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	const selectType = useRouteQuery<string | undefined>('aux-type', undefined)
-	// const selectSort = useRouteQuery<string | undefined>('aux-sort')
+	const selectSort = useRouteQuery<string | undefined>('aux-sort')
 	const page = useRouteQuery('aux-page', 1, { transform: Number })
 	const perPage = useRouteQuery('aux-per-page', 8, {
 		transform: Number,
@@ -210,16 +211,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedSelectedType.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -234,16 +236,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedSelectedType.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Descrição',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -252,25 +255,44 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(TypeUpdateAction, {
-						dataId: data.id,
-						tableTypeName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateTypeLoading.value,
-						baseUrl: selectType.value as string,
-					}),
-					h(TypeDeleteAction, {
-						dataId: data.id,
-						tableTypeName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteTypeLoading.value,
-						isActive: true,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(TypeUpdateAction, {
+							dataId: data.id,
+							tableTypeName: formattedAllAuxiliaries.value.find(
+								({ id }) => (selectType.value as string) === id,
+							)?.name as string,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateTypeLoading.value,
+							baseUrl: selectType.value as string,
+						}),
+						h(TypeDeleteAction, {
+							dataId: data.id,
+							tableTypeName: formattedAllAuxiliaries.value.find(
+								({ id }) => (selectType.value as string) === id,
+							)?.name as string,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteTypeLoading.value,
+							isActive: true,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -337,61 +359,60 @@
 		return handleDeleteType({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectTypesRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectTypesRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectTypesRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -408,15 +429,18 @@
 		<div
 			class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 		>
-			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Cadastro de tipos" />
+			<div class="flex gap-14 items-center justify-center">
+				<titulo title="Cadastro de Tabelas Auxiliares" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateTypeLoading"
-					:title="`Criar novo tipo`"
-					description="Crie o conteúdo do novo tipo."
-					class="sm:max-w-[780px]"
+					:title="`Cadastro ${
+						formattedAllAuxiliaries.find(
+							({ id }) => (selectType as string) === id,
+						)?.name as string
+					}`"
+					class="sm:max-w-[440px]"
 					@form-submit="onCreateSubmit"
 				>
 					<template #trigger>
@@ -424,17 +448,18 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
 									>
 										<font-awesome-icon
-											class="text-primary_3-table w-5 h-5"
+											class="text-primary w-5 h-5"
 											:icon="['fas', 'circle-plus']"
 										/>
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um nova tabela auxiliar</p>
+									<p>Cadastro Tipos</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>

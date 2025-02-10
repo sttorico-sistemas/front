@@ -6,7 +6,7 @@
 
 			<!-- Botão para abrir modal -->
 			<div class="flex justify-end mt-4">
-				<button @click="openModal(null)" class="btn bg-primary_3-table text-white text-xs">
+				<button @click="openModal(null)" class="btn bg-primary text-white text-xs">
 					Novo Operador
 				</button>
 			</div>

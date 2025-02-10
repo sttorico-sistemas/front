@@ -24,7 +24,7 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
       <div class="flex flex-col justify-between md:flex-row gap-4 items-center mt-2.5">
         <label for="anexar-documento" class="flex gap-2 cursor-pointer">
           <icon-doc />
-          <span class="text-primary_3-table text-sm">
+          <span class="text-primary text-sm">
             Anexar Documento (pdf)
           </span>
           <input type="file" id="anexar-documento" class="hidden" accept="application/pdf">
@@ -34,8 +34,8 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
   </div>
 
   <div class="flex justify-center items-center gap-12 mt-8">
-    <button type="button" class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+    <button type="button" class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
       @click="emits('btnCancelar', false)">Cancelar</button>
-    <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+    <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
   </div>
 </template>

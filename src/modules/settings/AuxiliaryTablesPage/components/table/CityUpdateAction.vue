@@ -68,15 +68,14 @@
 		tooltip="Editar cidade"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar cidade ${tableCityName}`"
-		description="Atualize o conteúdo da cidade."
-		class="sm:max-w-[1100px]"
+		:title="`Editar Cidade`"
+		class="sm:max-w-[440px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root variant="ghost" size="icon" @click="setNewData">
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>

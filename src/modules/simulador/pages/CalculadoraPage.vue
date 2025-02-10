@@ -60,7 +60,7 @@ const sendForm = () => { }
 			</div>
 
 			<div class="panel mt-6">
-				<p class="mb-8 text-primary_3 text-base font-semibold">
+				<p class="mb-8 text-primary text-base font-semibold">
 					Dados para o Cálculo
 				</p>
 
@@ -119,10 +119,10 @@ const sendForm = () => { }
 
 						<div class="flex gap-9 mt-4">
 							<div class="grid grid-cols-1 sm:flex justify-between gap-5">
-								<button type="button" class="btn bg-primary_3-table text-white shadow-none w-32" @click="calculate">
+								<button type="button" class="btn bg-primary text-white shadow-none w-32" @click="calculate">
 									Calcular
 								</button>
-								<button type="button" class="btn border-primary_3-table text-primary_3-table shadow-none"
+								<button type="button" class="btn border-primary text-primary shadow-none"
 									@click="clear">
 									Limpar
 								</button>

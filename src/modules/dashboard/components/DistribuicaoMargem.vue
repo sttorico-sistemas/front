@@ -26,7 +26,7 @@ const margens = reactive<Margem[]>([
 const color = (value: number) => {
 	switch (value) {
 		case 1:
-			return 'bg-info'
+			return 'bg-primary'
 		case 2:
 			return 'bg-success'
 		case 3:

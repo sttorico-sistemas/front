@@ -97,7 +97,7 @@
 		<template #trigger>
 			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>

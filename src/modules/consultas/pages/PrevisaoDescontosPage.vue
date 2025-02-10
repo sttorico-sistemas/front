@@ -81,7 +81,7 @@ const iconeService = (value: string) => {
       <div class="datatable pb-1">
         <vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
           skin="whitespace-nowrap bh-table-striped" :pagination="false" no-data-content="Nenhum dado foi encontrado"
-          pagination-info="Mostrando {0} a {1} de {2} entradas">
+          pagination-primary="Mostrando {0} a {1} de {2} entradas">
           <template #consignataria="data">
             <image-name image="https://placehold.co/30x30" :name="data.value.consignataria.nome" />
           </template>

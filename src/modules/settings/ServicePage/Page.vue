@@ -45,11 +45,11 @@
 		theme: string
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
@@ -90,7 +90,7 @@
 		isPending: isDeleteServiceLoading,
 	} = useMutation({
 		mutationFn: ({ id }: { id: number }) =>
-		serviceRepository.deleteService({ id }),
+			serviceRepository.deleteService({ id }),
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: serviceRepository.getQueryKey('services', {
@@ -189,16 +189,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -213,16 +214,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-center px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						// onClick: () => handleSort('icon'),
+						onClick: () => handleSort('icon'),
 					},
 					() => [
 						'Icon',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('icon')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('icon')],
+						}),
 					],
 				)
 			},
@@ -248,13 +250,14 @@
 		},
 		{
 			id: 'actions',
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-end px-2 font-bold',
-						disabled: formattedAllPages.value.length <= 0,
+						size: 'none',
+						class: ['justify-start font-bold'],
 					},
 					() => ['Ações'],
 				)
@@ -366,61 +369,60 @@
 		return handleDeleteService({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectServicesRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectServicesRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectServicesRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -436,18 +438,17 @@
 	<main>
 		<breadcrumbs :paginas="['Configurações', 'Serviços']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar serviços" />
+				<div class="flex gap-14 items-center justify-center">
+					<titulo title="Gerenciar Serviços" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateServiceLoading"
-						:title="`Criar um novo serviço`"
-						description="Crie o conteúdo de um novo serviço."
+						:title="`Cadastro Serviço`"
 						class="sm:max-w-[780px]"
 						@form-submit="onCreateSubmit"
 					>
@@ -456,17 +457,18 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
-												class="text-primary_3-table w-5 h-5"
+												class="text-primary w-5 h-5"
 												:icon="['fas', 'circle-plus']"
 											/>
 										</button-root>
 									</tooltip-trigger>
 									<tooltip-content side="right">
-										<p>Criar um novo serviço</p>
+										<p>Cadastro Serviço</p>
 									</tooltip-content>
 								</tooltip>
 							</tooltip-provider>
@@ -476,6 +478,7 @@
 							<service-form
 								:metadata="form.values"
 								:disabled="isCreateServiceLoading"
+								@on-close="openCreateModal = false"
 							/>
 						</template>
 					</form-wrapper>
@@ -490,7 +493,7 @@
 					:is-loading="isServicesLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllPages.length <= 0"

@@ -54,7 +54,7 @@
 				color: data.color,
 				theme: data.theme,
 				iconFamily: data.icon.family,
-				iconName: data.icon.name
+				iconName: data.icon.name,
 			})
 		} catch (error) {
 			console.log(error)
@@ -72,25 +72,28 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar serviço"
+		tooltip="Editar Serviço"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar página ${tableServiceName}`"
-		description="Atualize o conteúdo do serviço."
+		:title="`Editar Serviço`"
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root variant="ghost" size="icon" @click="setNewData">
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>
 		</template>
 
 		<template #fields>
-			<service-form :metadata="form.values" :disabled="isLoading" />
+			<service-form
+				:metadata="form.values"
+				:disabled="isLoading"
+				@on-close="openUpdateModal = false"
+			/>
 		</template>
 	</form-wrapper>
 </template>

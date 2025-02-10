@@ -176,7 +176,7 @@ onMounted(() => {
         <div>
           <div class="w-full flex justify-between items-center">
             <div>
-              <h3 class="text-primary_3 text-xl font-semibold mb-5">
+              <h3 class="text-primary text-xl font-semibold mb-5">
                 <span class="text-secondary text-xl font-bold">{{
                   headerChart.percent
                 }}</span>

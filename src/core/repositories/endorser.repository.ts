@@ -22,7 +22,6 @@ export class EndorserRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			console.log(response)
 			const values = response.data.data.map((e: Record<string, any>) => EndorserModel.fromRecord(e));
 			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
 			return values;

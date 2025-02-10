@@ -27,15 +27,15 @@ const emits = defineEmits(['btnSave', 'btnClose'])
 				<div x-show="open" x-transition x-transition.duration.300
 					class="panel border-0 p-0 rounded-lg overflow-hidden w-full my-8" :class="size">
 					<div class="flex bg-[#fbfbfb] dark:bg-[#121c2c] items-center justify-between px-5 py-3">
-						<h5 class="flex items-center gap-2 text-lg font-semibold text-primary_3-table">
+						<h5 class="flex items-center gap-2 text-lg font-semibold text-primary">
 							<slot name="icon"></slot> {{ title }}
 						</h5>
-						<button type="button" class="text-white-dark hover:text-dark" @click="emits('btnClose', false)">
+						<button type="button" class="text-white hover:text-dark" @click="emits('btnClose', false)">
 							X
 						</button>
 					</div>
 					<div class="p-5">
-						<div class="dark:text-white-dark/70 text-base font-medium text-[#1f2937]">
+						<div class="dark:text-white/70 text-base font-medium text-[#1f2937]">
 							<slot></slot>
 						</div>
 						<div class="flex justify-end items-center mt-8">

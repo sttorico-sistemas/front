@@ -110,7 +110,7 @@ const parseCols = () => {
     <div class="mt-6 border border-slate-50 shadow-md rounded-md bg-[#f6f8fa]">
       <button type="button" class="p-4 w-full flex justify-between items-center text-lg bg-[#f6f8fa]"
         @click="accordians.filtros === true ? (accordians.filtros = false) : (accordians.filtros = true)">
-        <div class="flex items-center gap-2 text-primary_3-table"><icon-filter /> Filtros</div>
+        <div class="flex items-center gap-2 text-primary"><icon-filter /> Filtros</div>
         <div :class="{ 'rotate-180': accordians.filtros === true }">
           <icon-caret-down />
         </div>
@@ -139,7 +139,7 @@ const parseCols = () => {
             <div class="header_actions flex flex-wrap md:flex-nowrap items-center gap-5">
               <div>
                 <button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
-                  <icon-clear class="w-5 h-5 text-primary_3-table" />
+                  <icon-clear class="w-5 h-5 text-primary" />
                 </button>
                 <tippy target="top" placement="top">Limpar pesquisa</tippy>
               </div>
@@ -159,7 +159,7 @@ const parseCols = () => {
           <div class="datatable">
             <vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
               skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-              pagination-info="Mostrando {0} a {1} de {2} entradas">
+              pagination-primary="Mostrando {0} a {1} de {2} entradas">
               <template #status="data">
                 <span class="flex justify-center badge !w-[110px] h-[22px]" :class="color(data.value.status)">{{
                   data.value.status }}</span>
@@ -172,21 +172,21 @@ const parseCols = () => {
                 <div class="flex">
                   <div>
                     <button v-tippy:right type="button" class="text-xs m-1" @click="isOpenDialog = true">
-                      <icon-eye class="w-5 h-5 text-primary_3-table" />
+                      <icon-eye class="w-5 h-5 text-primary" />
                     </button>
                     <tippy target="right" placement="right">Cadastro Matrícula {{ data.value.id }}</tippy>
                   </div>
                   <div>
                     <button v-tippy:right type="button" class="text-xs m-1" @click="isOpenDialogCadastrarPessoa = true">
-                      <icon-user class="w-5 h-5 text-primary_3-table" />
+                      <icon-user class="w-5 h-5 text-primary" />
                     </button>
                     <tippy target="right" placement="right">Cadastro Pessoa {{ data.value.id }}</tippy>
                   </div>
                   <div>
                     <div>
                       <button v-tippy:right type="button" class="text-xs m-1">
-                        <icon-check v-if="data.value.status === 'Inativo'" class="w-5 h-5 text-primary_3-table" />
-                        <icon-block v-else class="w-5 h-5 text-primary_3-table" />
+                        <icon-check v-if="data.value.status === 'Inativo'" class="w-5 h-5 text-primary" />
+                        <icon-block v-else class="w-5 h-5 text-primary" />
                       </button>
                       <tippy target="right" placement="right">{{ data.value.status === 'Inativo' ? 'Ativar' : 'Inativar'
                         }}</tippy>
@@ -195,8 +195,8 @@ const parseCols = () => {
                   <div>
                     <div>
                       <button v-tippy:right type="button" class="text-xs m-1">
-                        <icon-unlock v-if="data.value.status === 'Inativo'" class="w-5 h-5 text-primary_3-table" />
-                        <icon-lock v-else class="w-5 h-5 text-primary_3-table" />
+                        <icon-unlock v-if="data.value.status === 'Inativo'" class="w-5 h-5 text-primary" />
+                        <icon-lock v-else class="w-5 h-5 text-primary" />
                       </button>
                       <tippy target="right" placement="right">{{ data.value.status === 'Inativo' ? 'Ativar' : 'Bloquear'
                         }}</tippy>

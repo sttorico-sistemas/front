@@ -68,7 +68,7 @@ const iconeService = (value: string) => {
 <template>
 	<div class="panel mt-5 flex justify-between">
 		<div
-			class="w-[70px] h-[53px] rounded-md flex justify-center items-center flex-col px-2 py-2.5 bg-info text-white font-semibold">
+			class="w-[70px] h-[53px] rounded-md flex justify-center items-center flex-col px-2 py-2.5 bg-primary text-white font-semibold">
 			<span class="text-base">35%</span>
 			<span class="text-sm ">Limite</span>
 		</div>
@@ -83,14 +83,14 @@ const iconeService = (value: string) => {
 	</div>
 	<div class="panel mt-6 datatable">
 		<div class="flex justify-between items-center mb-8">
-			<p class="text-primary_3 text-base font-semibold">
+			<p class="text-primary text-base font-semibold">
 				Margens Reservadas
 			</p>
 		</div>
 
 		<vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
 			skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
-			pagination-info="Mostrando {0} a {1} de {2} entradas" :pagination="false">
+			pagination-primary="Mostrando {0} a {1} de {2} entradas" :pagination="false">
 			<template #tipo_servicos="data">
 				<div class="flex">
 					<template v-for="(tipo_servico, idx) in data.value.tipo_servicos" :key="idx">
@@ -103,7 +103,7 @@ const iconeService = (value: string) => {
 			<template #action="data">
 				<button v-tippy:right type="button" class="text-xs m-1"
 					@click="router.push({ name: 'consultas-rmc', params: { id: data.value.id } })">
-					<icon-eye class="w-5 h-5 text-primary_3-table" />
+					<icon-eye class="w-5 h-5 text-primary" />
 				</button>
 				<tippy target="right" placement="right">Ver resumo da margem principal</tippy>
 			</template>

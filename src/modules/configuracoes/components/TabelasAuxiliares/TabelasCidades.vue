@@ -534,7 +534,7 @@
 								<tooltip-trigger as-child>
 									<button-root variant="outline" @click="openCreateModal = true">
 										<font-awesome-icon
-											class="text-primary_3-table w-5 h-5"
+											class="text-primary w-5 h-5"
 											:icon="['fas', 'circle-plus']"
 										/>
 									</button-root>
@@ -650,7 +650,7 @@
 						<tooltip-trigger as-child>
 							<button-root variant="outline" @click="handleClear">
 								<font-awesome-icon
-									class="text-primary_3-table w-5 h-5"
+									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"
 								/>
 							</button-root>

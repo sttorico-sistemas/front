@@ -59,7 +59,7 @@ const color = (value: string) => {
 			<div class="datatable">
 				<vue3-datatable :rows="rows" :columns="cols" :total-rows="rows.length" :sortable="true"
 					skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas">
+					pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #dcto="data">
 						<icon-doc />
 					</template>

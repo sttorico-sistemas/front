@@ -163,7 +163,7 @@ const operador = ref('');
 
 					<div>
 						<button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
+							<icon-clear class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="top" placement="top">Limpar pesquisa</tippy>
 					</div>
@@ -182,7 +182,7 @@ const operador = ref('');
 			<div class="datatable">
 				<vue3-datatable :rows="filtered(selected.label)" :columns="props.cols"
 					:total-rows="filtered(selected.label)?.length" :sortable="true" skin="whitespace-nowrap bh-table-striped"
-					no-data-content="Nenhum dado foi encontrado" pagination-info="Mostrando {0} a {1} de {2} entradas">
+					no-data-content="Nenhum dado foi encontrado" pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #status="data">
 						<span class="flex justify-center badge !w-[80px] h-[22px]" :class="color(data.value.status)">{{
 							data.value.status }}</span>
@@ -191,26 +191,26 @@ const operador = ref('');
 						<div class="flex">
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-eye class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Visualizar</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-edit class="w-5 h-5 text-primary_3-table" />
+									<icon-edit class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Editar</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-reset-password class="w-5 h-5 text-primary_3-table" />
+									<icon-reset-password class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">Resetar senha</tippy>
 							</div>
 							<div>
 								<button v-tippy:right type="button" class="text-xs m-1">
-									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary_3-table" />
-									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-check v-if="data.value.status === 'Ativo'" class="w-5 h-5 text-primary" />
+									<icon-block v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}
 								</tippy>

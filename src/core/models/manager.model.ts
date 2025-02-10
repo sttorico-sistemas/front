@@ -34,9 +34,9 @@ export class ManagerModel extends BaseModel {
 		this.personId = props.personId;
 		this.position = props.position;
 		this.department = props.department;
-		this.phone = props.phone;
-		this.cellphone = props.cellphone;
-		this.email = props.email;
+		this.phone = props.phone ?? '';
+		this.cellphone = props.cellphone ?? '';
+		this.email = props.email ?? '';
 		this.status = props.status;
 	}
 
@@ -58,7 +58,7 @@ export class ManagerModel extends BaseModel {
 	static fromRecord(record: Record<string, any>): ManagerModel {
 		return new ManagerModel({
 			id: record.id,
-			name: record.nome,
+			name: record.pessoa.nome,
 			typeOfBond: record?.vinculo_type,
 			bondId: record.vinculo_id,
 			personId: record.pessoa_id,

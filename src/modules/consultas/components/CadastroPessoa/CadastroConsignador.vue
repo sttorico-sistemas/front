@@ -22,7 +22,7 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
 
 <template>
   <main>
-    <div class="panel mt-5 border border-primary_3-table">
+    <div class="panel mt-5 border border-primary">
       <div class="flex items-center gap-14 mb-6">
         <titulo title="Cadastro Pessoa" />
         <button v-if="props.disabled" @click="isDisabled = false" v-tippy:right>
@@ -53,9 +53,9 @@ const emits = defineEmits(['btnSave', 'btnCancelar'])
 
       <div class="flex justify-center items-center gap-12 mt-8">
         <button type="button"
-          class="w-[86px] btn border border-primary_3-table shadow-none text-primary_3-table text-xs"
+          class="w-[86px] btn border border-primary shadow-none text-primary text-xs"
           @click="emits('btnCancelar', false)">Cancelar</button>
-        <button type="button" class="w-[86px] btn bg-primary_3-table text-white text-xs">Salvar</button>
+        <button type="button" class="w-[86px] btn bg-primary text-white text-xs">Salvar</button>
       </div>
     </div>
   </main>

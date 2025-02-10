@@ -50,11 +50,11 @@ const clearOption = () => (consignanteMaster.value = '');
 <template>
 	<main>
 		<div
-			class="panel mt-5 border border-primary_3-table flex items-center md:gap-12"
+			class="panel mt-5 border border-primary flex items-center md:gap-12"
 		>
 			<label
 				for="consignante_master"
-				class="text-sm md:text-base text-primary_3-table m-0"
+				class="text-sm md:text-base text-primary m-0"
 				>Consignante Master</label
 			>
 			<div class="flex items-center gap-6">
@@ -71,13 +71,13 @@ const clearOption = () => (consignanteMaster.value = '');
 					:items="consignanteMasterStore.consignantesMaster.map((e) => e.nome)"
 				/>
 				<button @click="clearOption">
-					<icon-clear class="w-5 h-5 text-primary_3-table" />
+					<icon-clear class="w-5 h-5 text-primary" />
 				</button>
 			</div>
 		</div>
 
-		<div class="panel border mt-5 border-primary_3-table">
-			<h3 class="text-base font-semibold text-primary_3-table mb-7">
+		<div class="panel border mt-5 border-primary">
+			<h3 class="text-base font-semibold text-primary mb-7">
 				Consignante
 			</h3>
 

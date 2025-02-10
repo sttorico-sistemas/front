@@ -127,7 +127,7 @@ const parseCols = () => {
 
           <div>
             <button v-tippy:top type="button" class="text-xs m-1" @click="clearFilter()">
-              <icon-clear class="w-5 h-5 text-primary_3-table" />
+              <icon-clear class="w-5 h-5 text-primary" />
             </button>
             <tippy target="top" placement="top">Limpar pesquisa</tippy>
           </div>
@@ -147,7 +147,7 @@ const parseCols = () => {
       <div class="datatable">
         <vue3-datatable :rows="filtered(selected.label)" :columns="cols" :total-rows="filtered(selected.label)?.length"
           :sortable="true" skin="whitespace-nowrap bh-table-striped" no-data-content="Nenhum dado foi encontrado"
-          pagination-info="Mostrando {0} a {1} de {2} entradas">
+          pagination-primary="Mostrando {0} a {1} de {2} entradas">
           <template #solicitado="data">
             <image-name image="https://placehold.co/30x30" :name="data.value.solicitado.nome" />
           </template>
@@ -157,7 +157,7 @@ const parseCols = () => {
           </template>
           <template #acao="data">
             <button v-tippy:right type="button" class="text-xs m-1">
-              <icon-eye class="w-5 h-5 text-primary_3-table" />
+              <icon-eye class="w-5 h-5 text-primary" />
             </button>
             <tippy target="right" placement="right">Algum texto aqui {{ data.value.id }}</tippy>
           </template>

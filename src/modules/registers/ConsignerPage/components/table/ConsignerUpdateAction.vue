@@ -89,8 +89,7 @@
 				},
 				{
 					path: ['endOfBusiness', 'startOfBusiness'],
-					message:
-						'Expediente inválido.',
+					message: 'Expediente inválido.',
 				},
 			),
 	)
@@ -144,15 +143,19 @@
 		tooltip="Editar consignante"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar consignante ${tableConsignerName}`"
-		description="Atualize o conteúdo do consignante."
-		class="sm:max-w-[780px]"
+		:title="`Editar Consignante`"
+		class="sm:max-w-[834px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
+			<button-root
+				:disabled="!isActive"
+				variant="ghost"
+				size="icon"
+				@click="setNewData"
+			>
 				<font-awesome-icon
-					class="text-primary_3-table w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>
@@ -163,6 +166,11 @@
 				:metadata="form.values"
 				:loadCities="loadCities"
 				:disabled="isLoading"
+				@on-close="
+					() => {
+						openUpdateModal = false
+					}
+				"
 			/>
 		</template>
 	</form-wrapper>

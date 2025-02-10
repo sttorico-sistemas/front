@@ -29,8 +29,11 @@
 	<tooltip-provider>
 		<tooltip>
 			<tooltip-trigger as-child>
-				<button-root variant="outline" @click="handleGoToDetail">
-					<font-awesome-icon :class="['w-4 h-4 text-primary_3-table']" :icon="['fas', 'eye']" />
+				<button-root variant="ghost" size="icon" @click="handleGoToDetail">
+					<font-awesome-icon
+						:class="['w-5 h-5 text-primary']"
+						:icon="['fas', 'eye']"
+					/>
 				</button-root>
 			</tooltip-trigger>
 			<tooltip-content side="right">

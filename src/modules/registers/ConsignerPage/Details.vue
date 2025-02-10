@@ -194,7 +194,7 @@
 						<tooltip-trigger as-child>
 							<button-root variant="outline" @click="goToBack">
 								<font-awesome-icon
-									class="text-primary_3-table w-5 h-5"
+									class="text-primary w-5 h-5"
 									:icon="['fas', 'arrow-left']"
 								/>
 							</button-root>
@@ -350,11 +350,11 @@
 
 					<button-root variant="outline" type="submit">
 						<font-awesome-icon
-							class="text-primary_3-table w-5 h-5"
+							class="text-primary w-5 h-5"
 							:icon="['fas', 'magnifying-glass']"
 						/>
 
-						<p class="text-primary_3-table font-semibold ml-4 text-md">
+						<p class="text-primary font-semibold ml-4 text-md">
 							Nova consulta
 						</p>
 					</button-root>

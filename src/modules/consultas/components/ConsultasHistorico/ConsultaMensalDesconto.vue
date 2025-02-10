@@ -209,7 +209,7 @@ const iconeService = (value: string) => {
 			<div class="datatable">
 				<vue3-datatable :rows="filterDate()" :columns="cols" :total-rows="rows.length" :sortable="true"
 					skin="whitespace-nowrap bh-table-striped mb-5" no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas">
+					pagination-primary="Mostrando {0} a {1} de {2} entradas">
 					<template #consignataria="data">
 						<image-name image="https://placehold.co/30x30" :name="data.value.consignataria.nome" />
 					</template>
@@ -222,7 +222,7 @@ const iconeService = (value: string) => {
 						}}</tippy>
 					</template>
 					<template #n_contrato="data">
-						<strong class="text-primary_3-table">{{
+						<strong class="text-primary">{{
 							data.value.n_contrato
 						}}</strong>
 					</template>

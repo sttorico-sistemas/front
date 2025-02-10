@@ -278,7 +278,7 @@ const parseRows = () => {
 							class="text-xs m-1"
 							@click="clearFilter()"
 						>
-							<icon-clear class="w-5 h-5 text-primary_3-table" />
+							<icon-clear class="w-5 h-5 text-primary" />
 						</button>
 						<tippy target="top" placement="top">Limpar pesquisa</tippy>
 					</div>
@@ -308,7 +308,7 @@ const parseRows = () => {
 					:sortable="true"
 					skin="whitespace-nowrap bh-table-striped"
 					no-data-content="Nenhum dado foi encontrado"
-					pagination-info="Mostrando {0} a {1} de {2} entradas"
+					pagination-primary="Mostrando {0} a {1} de {2} entradas"
 				>
 					<template #tipo_servicos="data">
 						<div class="flex gap-1">
@@ -353,7 +353,7 @@ const parseRows = () => {
 										})
 									"
 								>
-									<icon-eye class="w-5 h-5 text-primary_3-table" />
+									<icon-eye class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right"
 									>Ver Consignatária</tippy
@@ -363,9 +363,9 @@ const parseRows = () => {
 								<button v-tippy:right type="button" class="text-xs m-1">
 									<icon-check
 										v-if="data.value.status === 'Ativo'"
-										class="w-5 h-5 text-primary_3-table"
+										class="w-5 h-5 text-primary"
 									/>
-									<icon-block v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-block v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right"
 									>{{ data.value.status === 'Ativo' ? 'Inativar' : 'Ativar' }}
@@ -375,9 +375,9 @@ const parseRows = () => {
 								<button v-tippy:right type="button" class="text-xs m-1">
 									<icon-unlock
 										v-if="data.value.averbacao === 'Liberada'"
-										class="w-5 h-5 text-primary_3-table"
+										class="w-5 h-5 text-primary"
 									/>
-									<icon-lock v-else class="w-5 h-5 text-primary_3-table" />
+									<icon-lock v-else class="w-5 h-5 text-primary" />
 								</button>
 								<tippy target="right" placement="right">{{
 									data.value.averbacao === 'Liberada' ? 'Liberar' : 'Bloquear'
