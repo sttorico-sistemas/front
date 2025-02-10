@@ -431,7 +431,7 @@
 									:style="{
 										color: item.theme === 'dark' ? '#FFFFFF' : '#000000',
 									}"
-									class="w-4 h-4"
+									class="w-5 h-5"
 									:icon="[item.icon.family, item.icon.name]"
 								/>
 							</div>

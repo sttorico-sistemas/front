@@ -5,7 +5,7 @@ const currentYear = computed(() => new Date().getFullYear());
 </script>
 
 <template>
-  <footer class="footer">
+  <footer class="footer mt-4">
     <p class="footer__title">
       © {{ currentYear }}. Sttórico Sistemas Ltda. Todos direitos reservados.
     </p>

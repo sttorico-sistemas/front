@@ -171,18 +171,22 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar pessoa"
+		tooltip="Editar Pessoa"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar pessoa ${tablePersonName}`"
-		description="Atualize o conteúdo da pessoa."
+		:title="`Editar Pessoa`"
 		class="sm:max-w-[1100px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
+			<button-root
+				:disabled="!isActive"
+				variant="ghost"
+				size="icon"
+				@click="setNewData"
+			>
 				<font-awesome-icon
-					class="text-primary w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>
@@ -193,6 +197,11 @@
 				:metadata="form.values"
 				:loadCities="loadCities"
 				:disabled="isLoading"
+				@on-close="
+					() => {
+						openUpdateModal = false
+					}
+				"
 			/>
 		</template>
 	</form-wrapper>

@@ -65,6 +65,11 @@
 				zipCode: z
 					.string({ message: 'O CEP é obrigatório.' })
 					.min(1, { message: 'O CEP é obrigatório.' }),
+				services: z
+					.array(z.string())
+					.refine((value) => value.some((item) => item), {
+						message: 'Selecione pelo menos 1 serviço.',
+					}),
 			})
 			.refine(
 				({ startOfBusiness, endOfBusiness }) => {
@@ -90,14 +95,16 @@
 				},
 				{
 					path: ['endOfBusiness', 'startOfBusiness'],
-					message:
-						'Expediente inválido.',
+					message: 'Expediente inválido.',
 				},
 			),
 	)
 
 	const form = useForm({
 		validationSchema: formSchema,
+		initialValues: {
+			services: [],
+		},
 	})
 
 	async function setNewData() {
@@ -142,18 +149,22 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar consignante"
+		tooltip="Editar Consignatária"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar consignante ${tableConsignerAdminName}`"
-		description="Atualize o conteúdo do consignante."
-		class="sm:max-w-[780px]"
+		:title="`Editar Consignatária`"
+		class="sm:max-w-[834px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
+			<button-root
+				:disabled="!isActive"
+				variant="ghost"
+				size="icon"
+				@click="setNewData"
+			>
 				<font-awesome-icon
-					class="text-primary w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>

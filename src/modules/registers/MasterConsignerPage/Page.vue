@@ -46,6 +46,7 @@
 		MasterConsignerUpdateAction,
 	} from './components/table'
 	import { Status } from '@/core/types'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type MasterConsignerTable = {
 		id: number
@@ -53,11 +54,11 @@
 		status: Status
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const statusItems = [
 		{ value: 1, label: 'Ativado' },
@@ -67,7 +68,7 @@
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
 	const selectSearch = useRouteQuery<string | undefined>(
 		'mtr-cgn-search',
 		undefined,
@@ -231,30 +232,6 @@
 
 	const columns: ColumnDef<MasterConsignerTable>[] = [
 		{
-			accessorKey: 'id',
-			meta: 'Código',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfMasterConsigner.value.length <= 0,
-						// onClick: () => handleSort('id'),
-					},
-					() => [
-						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('id')),
-			enableHiding: false,
-		},
-		{
 			accessorKey: 'name',
 			meta: 'Nome',
 			header: () => {
@@ -262,16 +239,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfMasterConsigner.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -280,25 +258,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-center font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(MasterConsignerUpdateAction, {
-						dataId: data.id,
-						tableMasterConsignerName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateMasterConsignerLoading.value,
-						isActive: data.status.value === 1,
-					}),
-					h(MasterConsignerDeleteAction, {
-						dataId: data.id,
-						tableMasterConsignerName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isActivateMasterConsignerLoading.value,
-						isActive: data.status.value === 1,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(MasterConsignerUpdateAction, {
+							dataId: data.id,
+							tableMasterConsignerName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateMasterConsignerLoading.value,
+							isActive: data.status.value === 1,
+						}),
+						h(MasterConsignerDeleteAction, {
+							dataId: data.id,
+							tableMasterConsignerName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isActivateMasterConsignerLoading.value,
+							isActive: data.status.value === 1,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -365,61 +358,60 @@
 		selectSearch.value = value.toString()
 	}, 500)
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectMasterConsignersRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectMasterConsignersRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectMasterConsignersRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -439,23 +431,22 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Cadastro', 'Consignante master']" />
+		<breadcrumbs :paginas="['Cadastro', 'Consignante Master']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div
-					class="flex flex-1 gap-10 items-center justify-between md:justify-start md:flex-initial"
+					class="flex flex-1 gap-14 items-center justify-between md:justify-start md:flex-initial"
 				>
-					<titulo title="Gerenciar consignante master" />
+					<titulo title="Gerenciar Consignante Master" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateMasterConsignerLoading"
-						:title="`Criar um novo consignante master`"
-						description="Crie o conteúdo de um novo consignante master."
-						class="sm:max-w-[780px]"
+						:title="`Cadastrar Consignante Master`"
+						class="sm:max-w-[458px]"
 						@form-submit="onCreateSubmit"
 					>
 						<template #trigger>
@@ -463,7 +454,8 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
@@ -489,11 +481,19 @@
 				</div>
 
 				<div class="header_actions flex items-center gap-4 flex-1 justify-end">
-					<select-root class="flex-[1]" v-model="status">
-						<select-trigger class="lg:max-w-96 flex-[2]">
+					<input-root
+						class="flex-[3] max-w-96"
+						placeholder="Nome"
+						v-model="search"
+						@update:model-value="handleSearch"
+					/>
+
+
+					<select-root class="flex-[4]" v-model="status">
+						<select-trigger class="lg:max-w-40 flex-[2]">
 							<select-value
 								class="text-left"
-								placeholder="Selecione um status..."
+								placeholder="Status"
 							/>
 						</select-trigger>
 						<select-content>
@@ -509,17 +509,12 @@
 						</select-content>
 					</select-root>
 
-					<input-root
-						class="flex-[3] max-w-96"
-						placeholder="Search"
-						v-model="search"
-						@update:model-value="handleSearch"
-					/>
+
 
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="outline" @click="handleClear">
+								<button-root variant="ghost" size="icon" @click="handleClear">
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'eraser']"
@@ -527,7 +522,23 @@
 								</button-root>
 							</tooltip-trigger>
 							<tooltip-content side="right">
-								<p>Apagar filtros</p>
+								<p>Limpar pesquisa</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root variant="ghost" size="icon" @click="handleClear">
+									<font-awesome-icon
+										class="text-primary w-5 h-5"
+										:icon="['fas', 'print']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Imprimir</p>
 							</tooltip-content>
 						</tooltip>
 					</tooltip-provider>
@@ -542,7 +553,7 @@
 					:is-loading="isMasterConsignersLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllTypeOfMasterConsigner.length <= 0"

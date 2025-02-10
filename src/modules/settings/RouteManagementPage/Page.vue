@@ -35,6 +35,7 @@
 		RouteManagerForm,
 		RouteManagerUpdateAction,
 	} from './components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type RouteManagerTable = {
 		id: number
@@ -43,11 +44,11 @@
 		url: string
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
@@ -186,16 +187,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -210,16 +212,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						// onClick: () => handleSort('slug'),
+						onClick: () => handleSort('slug'),
 					},
 					() => [
 						'Slug',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('slug')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('slug')],
+						}),
 					],
 				)
 			},
@@ -234,16 +237,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						// onClick: () => handleSort('slug'),
+						onClick: () => handleSort('slug'),
 					},
 					() => [
 						'URL',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('slug')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('slug')],
+						}),
 					],
 				)
 			},
@@ -252,24 +256,39 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(RouteManagerUpdateAction, {
-						dataId: data.id,
-						tableRouteManagerName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateRouteManagerLoading.value,
-					}),
-					h(RouteManagerDeleteAction, {
-						dataId: data.id,
-						tableRouteManagerName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteRouteManagerLoading.value,
-						isActive: true,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(RouteManagerUpdateAction, {
+							dataId: data.id,
+							tableRouteManagerName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateRouteManagerLoading.value,
+						}),
+						h(RouteManagerDeleteAction, {
+							dataId: data.id,
+							tableRouteManagerName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteRouteManagerLoading.value,
+							isActive: true,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -353,61 +372,60 @@
 		return handleDeleteRouteManager({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectRouteManagersRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectRouteManagersRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectRouteManagersRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -423,18 +441,17 @@
 	<main>
 		<breadcrumbs :paginas="['Configurações', 'Páginas']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
-					<titulo title="Gerenciar páginas" />
+				<div class="flex gap-14 items-center justify-center">
+					<titulo title="Gerenciar Páginas" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateRouteManagerLoading"
-						:title="`Criar uma nova página`"
-						description="Crie o conteúdo de uma nova página."
+						:title="`Cadastro Página`"
 						class="sm:max-w-[780px]"
 						@form-submit="onCreateSubmit"
 					>
@@ -443,7 +460,8 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
@@ -453,7 +471,7 @@
 										</button-root>
 									</tooltip-trigger>
 									<tooltip-content side="right">
-										<p>Cadastre um nova páginas</p>
+										<p>Cadastro Página</p>
 									</tooltip-content>
 								</tooltip>
 							</tooltip-provider>
@@ -463,6 +481,9 @@
 							<route-manager-form
 								:metadata="form.values"
 								:disabled="isCreateRouteManagerLoading"
+								@on-close="() => {
+									openCreateModal = false
+								}"
 							/>
 						</template>
 					</form-wrapper>
@@ -477,7 +498,7 @@
 					:is-loading="isRouteManagersLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllPages.length <= 0"

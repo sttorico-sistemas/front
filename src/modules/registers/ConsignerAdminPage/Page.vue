@@ -55,6 +55,7 @@
 		ConsignerAdminUpdateAction,
 		ConsignerAdminViewAction,
 	} from './components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type ConsignerAdminTable = {
 		id: number
@@ -70,16 +71,16 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
@@ -266,31 +267,6 @@
 
 	const columns: ColumnDef<ConsignerAdminTable>[] = [
 		{
-			accessorKey: 'id',
-			meta: 'Código',
-			size: 20,
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('id'),
-					},
-					() => [
-						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('id')),
-			enableHiding: false,
-		},
-		{
 			accessorKey: 'name',
 			meta: 'Consignatária',
 			header: () => {
@@ -298,16 +274,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Consignatária',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -316,50 +293,27 @@
 		},
 		{
 			accessorKey: 'entityTypeName',
-			meta: 'Tp. Entidade',
+			meta: 'Tp Entidade',
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('entityTypeName'),
+						onClick: () => handleSort('entityTypeName'),
 					},
 					() => [
 						'Tp. Entidade',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeName')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeName')],
+						}),
 					],
 				)
 			},
 			cell: ({ row }) => h('div', row.getValue('entityTypeName')),
-			enableHiding: false,
-		},
-		{
-			accessorKey: 'address',
-			meta: 'Cidade/UF',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('address'),
-					},
-					() => [
-						'Cidade/UF',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('address')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('address')),
 			enableHiding: false,
 		},
 		{
@@ -371,16 +325,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('cnpj'),
+						onClick: () => handleSort('cnpj'),
 					},
 					() => [
 						'CNPJ',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('cnpj')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('cnpj')],
+						}),
 					],
 				)
 			},
@@ -389,23 +344,24 @@
 		},
 		{
 			accessorKey: 'service',
-			meta: 'Tp. Serviços',
-			size: 50,
+			meta: 'Tp Serviços',
+			size: 200,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('service'),
+						onClick: () => handleSort('service'),
 					},
 					() => [
 						'Tp. Serviços',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('service')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('service')],
+						}),
 					],
 				)
 			},
@@ -414,32 +370,34 @@
 		},
 		{
 			accessorKey: 'status',
-			meta: 'Status',
-			size: 20,
+			meta: 'Tipo de entidade',
+			enableResizing: false,
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
+						onClick: () => handleSort('status'),
 					},
 					() => [
 						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeId')],
+						}),
 					],
 				)
 			},
 			cell: ({ row, cell }) =>
 				h(
-					'div',
+					'span',
 					{
 						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('status').textColor,
 							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
@@ -450,31 +408,85 @@
 			enableHiding: false,
 		},
 		{
+			accessorKey: 'endorsement',
+			meta: 'Averbação',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled: formattedAllTypeOfConsignerAdmin.value.length <= 0,
+						onClick: () => handleSort('endorsement'),
+					},
+					() => [
+						'Averbação',
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('endorsement')],
+						}),
+					],
+				)
+			},
+			cell: ({ row, cell }) =>
+				h(
+					'div',
+					{
+						class:
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
+						style: {
+							color: row.getValue<StatusFormatted>('endorsement')?.textColor,
+							backgroundColor:
+								row.getValue<StatusFormatted>('endorsement')?.bgColor,
+						},
+					},
+					row.getValue<StatusFormatted>('endorsement')?.text,
+				),
+			enableHiding: false,
+		},
+		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(ConsignerAdminViewAction, {
-						dataId: data.id,
-						isLoading: isUpdateConsignerAdminLoading.value,
-						isActive: data.status.raw === "ativo",
-					}),
-					h(ConsignerAdminUpdateAction, {
-						dataId: data.id,
-						tableConsignerAdminName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateConsignerAdminLoading.value,
-						isActive: data.status.raw === "ativo",
-					}),
-					h(ConsignerAdminDeleteAction, {
-						dataId: data.id,
-						tableConsignerAdminName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteConsignerAdminLoading.value,
-						isActive: data.status.raw === "ativo",
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(ConsignerAdminViewAction, {
+							dataId: data.id,
+							isLoading: isUpdateConsignerAdminLoading.value,
+							isActive: data.status.raw === 'ativo',
+						}),
+						h(ConsignerAdminUpdateAction, {
+							dataId: data.id,
+							tableConsignerAdminName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateConsignerAdminLoading.value,
+							isActive: data.status.raw === 'ativo',
+						}),
+						h(ConsignerAdminDeleteAction, {
+							dataId: data.id,
+							tableConsignerAdminName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteConsignerAdminLoading.value,
+							isActive: data.status.raw === 'ativo',
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -612,61 +624,60 @@
 		return handleDeleteConsignerAdmin({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectConsignerAdminsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectConsignerAdminsRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectConsignerAdminsRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -686,19 +697,18 @@
 	<main>
 		<breadcrumbs :paginas="['Cadastro', 'Consignatárias Admin']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
-				<div class="flex gap-10 items-center justify-center">
+				<div class="flex gap-14 items-center justify-center">
 					<titulo title="Consignatárias Habilitadas" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateConsignerAdminLoading"
-						:title="`Criar uma nova consignatária`"
-						description="Crie o conteúdo de um novo consignatária."
-						class="sm:max-w-[780px]"
+						:title="`Cadastro Consignatária`"
+						class="sm:max-w-[834px]"
 						@form-submit="onCreateSubmit"
 					>
 						<template #trigger>
@@ -706,7 +716,8 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
@@ -716,7 +727,7 @@
 										</button-root>
 									</tooltip-trigger>
 									<tooltip-content side="right">
-										<p>Cadastre uma nova consignatária</p>
+										<p>Cadastro Consignatária</p>
 									</tooltip-content>
 								</tooltip>
 							</tooltip-provider>
@@ -726,6 +737,9 @@
 							<consigner-admin-form
 								:metadata="form.values"
 								:disabled="isCreateConsignerAdminLoading"
+								@on-close="() => {
+									openCreateModal = false
+								}"
 							/>
 						</template>
 					</form-wrapper>
@@ -733,11 +747,8 @@
 
 				<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 					<select-root class="flex-[1]" v-model="status">
-						<select-trigger class="lg:max-w-80 flex-[2]">
-							<select-value
-								class="text-left"
-								placeholder="Selecione um status..."
-							/>
+						<select-trigger class="lg:max-w-40 flex-[2]">
+							<select-value class="text-left" placeholder="Status" />
 						</select-trigger>
 						<select-content>
 							<select-group>
@@ -755,7 +766,7 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="outline" @click="handleClear">
+								<button-root variant="ghost" size="icon" @click="handleClear">
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'eraser']"
@@ -763,7 +774,23 @@
 								</button-root>
 							</tooltip-trigger>
 							<tooltip-content side="right">
-								<p>Apagar filtros</p>
+								<p>Limpar pesquisa</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root variant="ghost" size="icon" @click="handleClear">
+									<font-awesome-icon
+										class="text-primary w-5 h-5"
+										:icon="['fas', 'print']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Imprimir</p>
 							</tooltip-content>
 						</tooltip>
 					</tooltip-provider>
@@ -778,7 +805,7 @@
 					:is-loading="isConsignerAdminsLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllTypeOfConsignerAdmin.length <= 0"

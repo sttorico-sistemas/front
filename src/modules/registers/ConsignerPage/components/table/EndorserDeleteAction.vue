@@ -41,7 +41,7 @@
 					<tooltip-trigger as-child>
 						<button-root variant="outline">
 							<font-awesome-icon
-								:class="['w-4 h-4', isActive ? 'text-warning' : 'text-success']"
+								:class="['w-5 h-5', isActive ? 'text-warning' : 'text-success']"
 								:icon="isActive ? ['fas', 'ban'] : ['far', 'circle-check']"
 							/>
 						</button-root>

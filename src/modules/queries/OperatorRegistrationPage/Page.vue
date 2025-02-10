@@ -49,6 +49,7 @@
 		OperatorRegistrationForm,
 		OperatorRegistrationUpdateAction,
 	} from './components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type OperatorTable = {
 		id: number
@@ -64,11 +65,11 @@
 		{ value: 'inactive', label: 'Desativado' },
 	] as const
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
@@ -76,7 +77,7 @@
 	const name = ref<string | undefined>(undefined)
 	const cpf = ref<string | undefined>(undefined)
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('op-rgt-sort')
+	const selectSort = useRouteQuery<string | undefined>('op-rgt-sort')
 	const selectName = useRouteQuery<string | undefined>('opr-name', undefined)
 	const selectCPF = useRouteQuery<string | undefined>('opr-cpf', undefined)
 	const selectOperatorType = useRouteQuery<string | undefined>(
@@ -260,30 +261,6 @@
 
 	const columns: ColumnDef<OperatorTable>[] = [
 		{
-			accessorKey: 'id',
-			meta: 'Código',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('id'),
-					},
-					() => [
-						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('id')),
-			enableHiding: false,
-		},
-		{
 			accessorKey: 'name',
 			meta: 'Nome',
 			header: () => {
@@ -291,16 +268,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -315,16 +293,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'CPF',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -339,16 +318,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'E-mail',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -363,16 +343,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Tipo de operador',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -381,25 +362,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(OperatorRegistrationUpdateAction, {
-						dataId: data.id,
-						tableOperatorName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateOperatorLoading.value,
-						isActive: data.status === 'active',
-					}),
-					h(OperatorRegistrationDeleteAction, {
-						dataId: data.id,
-						tableOperatorName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteOperatorLoading.value,
-						isActive: data.status === 'active',
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(OperatorRegistrationUpdateAction, {
+							dataId: data.id,
+							tableOperatorName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateOperatorLoading.value,
+							isActive: data.status === 'active',
+						}),
+						h(OperatorRegistrationDeleteAction, {
+							dataId: data.id,
+							tableOperatorName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteOperatorLoading.value,
+							isActive: data.status === 'active',
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -545,61 +541,60 @@
 		return handleDeleteOperator({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectOperatorsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectOperatorsRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectOperatorsRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -636,20 +631,19 @@
 	<main>
 		<breadcrumbs :paginas="['Consultas', 'Operadores']" />
 
-		<div class="panel pb-0 mt-6">
+		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div
-					class="flex flex-1 gap-10 items-center justify-between lg:justify-start lg:flex-initial"
+					class="flex flex-1 gap-14 items-center justify-between lg:justify-start lg:flex-initial"
 				>
-					<titulo title="Gerenciar operadores" />
+					<titulo title="Gerenciar Operadores" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateOperatorLoading"
-						:title="`Criar um novo operador`"
-						description="Crie o conteúdo de um novo operador."
+						:title="`Cadastro Operador`"
 						class="sm:max-w-[1100px]"
 						@form-submit="onCreateSubmit"
 					>
@@ -658,7 +652,8 @@
 								<tooltip>
 									<tooltip-trigger as-child>
 										<button-root
-											variant="outline"
+											variant="ghost"
+											size="icon"
 											@click="openCreateModal = true"
 										>
 											<font-awesome-icon
@@ -680,21 +675,22 @@
 								:disabled="isCreateOperatorLoading"
 								@search-cpf="handleSearchPerson"
 								@update-permissions="handlePermissions"
+								@on-close="openCreateModal=false"
 							/>
 						</template>
 					</form-wrapper>
 				</div>
 
-				<div class="grid grid-cols-12 gap-4 w-full lg:flex-1">
+				<div class="header_actions flex items-center gap-5 flex-1 justify-end">
 					<input-root
-						class="col-span-3 md:col-start-4"
+						class="lg:max-w-80"
 						v-model:model-value="name"
 						placeholder="Nome"
 						@update:model-value="handleSearch"
 					/>
 
 					<input-root
-						class="col-span-3 md:col-start-7"
+						class="lg:max-w-80"
 						v-model:model-value="cpf"
 						v-maska="'###.###.###-##'"
 						placeholder="CPF"
@@ -702,7 +698,7 @@
 					/>
 
 					<select-root v-model="selectOperatorType">
-						<select-trigger class="col-span-2 md:col-start-10">
+						<select-trigger class="lg:max-w-80">
 							<select-value class="text-left" placeholder="Tipo de operador" />
 						</select-trigger>
 						<select-content>
@@ -721,11 +717,7 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root
-									class="md:col-start-12"
-									variant="outline"
-									@click="handleClear"
-								>
+								<button-root variant="ghost" size="icon" @click="handleClear">
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'eraser']"
@@ -733,7 +725,23 @@
 								</button-root>
 							</tooltip-trigger>
 							<tooltip-content side="right">
-								<p>Apagar filtros</p>
+								<p>Limpar pesquisa</p>
+							</tooltip-content>
+						</tooltip>
+					</tooltip-provider>
+
+					<tooltip-provider>
+						<tooltip>
+							<tooltip-trigger as-child>
+								<button-root variant="ghost" size="icon" @click="handleClear">
+									<font-awesome-icon
+										class="text-primary w-5 h-5"
+										:icon="['fas', 'print']"
+									/>
+								</button-root>
+							</tooltip-trigger>
+							<tooltip-content side="right">
+								<p>Imprimir</p>
 							</tooltip-content>
 						</tooltip>
 					</tooltip-provider>
@@ -748,7 +756,7 @@
 					:is-loading="isOperatorsLoading"
 				/>
 
-				<div :class="['flex w-full items-center px-4']">
+				<div :class="['flex w-full items-center justify-end px-4']">
 					<table-pagination
 						v-model="page"
 						:disabled="formattedAllOperators.length <= 0"

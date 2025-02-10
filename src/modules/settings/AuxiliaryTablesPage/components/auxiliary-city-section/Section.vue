@@ -53,6 +53,7 @@
 	import { cn, debounceAsync, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import { CityDeleteAction, CityForm, CityUpdateAction } from '../table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type CityTable = {
 		id: number
@@ -60,11 +61,11 @@
 		uf: string
 	}
 
-	// const changeValues = {
-	// 	ASC: 'DESC',
-	// 	DESC: 'NONE',
-	// 	NONE: 'ASC',
-	// } as const
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
 
 	const openCreateModal = ref(false)
 	const openCityBox = ref(false)
@@ -76,7 +77,7 @@
 	)
 	const selectCity = useRouteQuery<string | undefined>('aux-city', undefined)
 	const selectUf = useRouteQuery<string | undefined>('aux-uf', undefined)
-	// const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
 	const page = useRouteQuery('aux-page', 1, { transform: Number })
 	const perPage = useRouteQuery('aux-per-page', 8, {
 		transform: Number,
@@ -249,16 +250,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllCities.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -273,16 +275,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllCities.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Descrição',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -297,16 +300,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllCities.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('uf'),
 					},
 					() => [
 						'Estado',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('uf')],
+						}),
 					],
 				)
 			},
@@ -315,24 +319,39 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(CityUpdateAction, {
-						dataId: data.id,
-						tableCityName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateCityLoading.value,
-					}),
-					h(CityDeleteAction, {
-						dataId: data.id,
-						tableCityName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteCityLoading.value,
-						isActive: true,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(CityUpdateAction, {
+							dataId: data.id,
+							tableCityName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateCityLoading.value,
+						}),
+						h(CityDeleteAction, {
+							dataId: data.id,
+							tableCityName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteCityLoading.value,
+							isActive: true,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -409,61 +428,60 @@
 		return handleDeleteCity({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectCitiesRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectCitiesRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectCitiesRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -499,15 +517,14 @@
 		<div
 			class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 		>
-			<div class="flex gap-10 items-center justify-center">
-				<titulo title="Cadastro de cidade" />
+			<div class="flex gap-14 items-center justify-center">
+				<titulo title="Cadastro de Cidades" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateCityLoading"
-					:title="`Criar nova cidade`"
-					description="Crie o conteúdo de uma nova cidade."
-					class="sm:max-w-[780px]"
+					:title="`Cadastro Cidade`"
+					class="sm:max-w-[440px]"
 					@form-submit="onCreateSubmit"
 				>
 					<template #trigger>
@@ -515,7 +532,8 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
 									>
 										<font-awesome-icon
@@ -525,7 +543,7 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um nova cidade</p>
+									<p>Cadastro Cidade</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
@@ -546,11 +564,8 @@
 					:disabled="formattedAllStates.length <= 0"
 					v-model="selectUf"
 				>
-					<select-trigger class="lg:max-w-96 flex-[2]">
-						<select-value
-							class="text-left"
-							placeholder="Selecione um estado..."
-						/>
+					<select-trigger class="lg:max-w-40">
+						<select-value class="text-left" placeholder="Estado" />
 					</select-trigger>
 					<select-content>
 						<select-group>
@@ -571,14 +586,14 @@
 							variant="outline"
 							role="combobox"
 							:aria-expanded="openCityBox"
-							class="lg:max-w-96 flex-[3] justify-between"
+							class="w-full max-w-56 flex justify-between items-center"
 						>
 							{{
 								selectCity
 									? formattedSearchCities.find(
 											(searchCities) => searchCities.name === selectCity,
 										)?.name
-									: 'Selecione a cidade...'
+									: 'Cidade'
 							}}
 							<font-awesome-icon
 								v-if="openCityBox"
@@ -632,7 +647,7 @@
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
+							<button-root variant="ghost" size="icon" @click="handleClear">
 								<font-awesome-icon
 									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"

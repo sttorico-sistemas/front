@@ -16,7 +16,11 @@ module.exports = {
 		},
 		extend: {
 			gridTemplateColumns: {
+				13: 'repeat(13, minmax(0, 1fr))',
 				14: 'repeat(14, minmax(0, 1fr))',
+				15: 'repeat(15, minmax(0, 1fr))',
+				17: 'repeat(17, minmax(0, 1fr))',
+				24: 'repeat(24, minmax(0, 1fr))',
 				28: 'repeat(28, minmax(0, 1fr))',
 			},
 			fontSize: {
@@ -85,6 +89,13 @@ module.exports = {
 			},
 			gridRow: {
 				'span-8': 'span 8 / span 8',
+				'span-20': 'span 20 / span 20',
+			},
+			gridColumn: {
+				'span-8': 'span 8 / span 8',
+				'span-20': 'span 20 / span 20',
+				'span-18': 'span 18 / span 18',
+				'span-19': 'span 19 / span 19',
 			},
 			typography: ({ theme }) => ({
 				DEFAULT: {

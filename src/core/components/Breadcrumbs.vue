@@ -28,7 +28,7 @@ ol {
   line-height: normal;
 
   li:first-child {
-    color: #4361ee;
+    @apply text-primary;
   }
 }
 </style>

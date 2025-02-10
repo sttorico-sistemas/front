@@ -49,6 +49,7 @@
 
 	const openIconNameBox = ref(false)
 
+	const emits =  defineEmits(['on-close'])
 	const props = defineProps({
 		disabled: { type: Boolean, default: () => false },
 		metadata: {
@@ -106,96 +107,66 @@
 	const formattedAllPages = computed(() => {
 		return (allPages.value ?? []).map(({ id, name }) => ({ id: `${id}`, name }))
 	})
+
+	function onClose() {
+		emits('on-close')
+	}
 </script>
 
 <template>
 	<div class="flex flex-col">
-		<form-field v-slot="{ componentField }" name="name">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Nome</form-label>
-				<form-control>
-					<input-root
-						:disabled="disabled"
-						type="text"
-						placeholder="Digite o nome..."
-						class="col-span-5"
-						v-bind="componentField"
-					/>
-				</form-control>
+		<div class="border border-primary rounded-md p-5">
+			<form-field v-slot="{ componentField }" name="name">
+				<form-item class="grid grid-cols-24 items-center gap-x-4 gap-y-1">
+					<form-label class="text-left col-span-5">Nome</form-label>
+					<form-control>
+						<input-root
+							:disabled="disabled"
+							type="text"
+							placeholder="Digite o nome..."
+							class="col-span-18"
+							v-bind="componentField"
+						/>
+					</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
-			</form-item>
-		</form-field>
+					<form-message class="col-span-12 col-start-6" />
+				</form-item>
+			</form-field>
 
-		<form-field v-slot="{ componentField }" name="color">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Cor de fundo</form-label>
-				<form-control>
-					<input-root
-						:disabled="disabled"
-						type="color"
-						placeholder="Digite a cor de fundo..."
-						class="col-span-5"
-						v-bind="componentField"
-					/>
-				</form-control>
+			<form-field v-slot="{ componentField }" name="color">
+				<form-item class="grid grid-cols-24 items-center gap-x-4 gap-y-1">
+					<form-label class="text-left col-span-5">Cor de fundo</form-label>
+					<form-control>
+						<input-root
+							:disabled="disabled"
+							type="color"
+							placeholder="Digite a cor de fundo..."
+							class="col-span-5"
+							v-bind="componentField"
+						/>
+					</form-control>
 
-				<form-message class="col-span-5 col-start-3" />
-			</form-item>
-		</form-field>
+					<form-message class="col-span-10 col-start-6" />
+				</form-item>
+			</form-field>
 
-		<form-field v-slot="{ componentField }" name="theme">
-			<form-item class="grid grid-cols-12 items-center gap-x-4 gap-y-1">
-				<form-label class="text-left col-span-2">Tema do ícone</form-label>
-				<form-control>
-					<select-root
-						class="items-start justify-start"
-						:disabled="disabled"
-						v-bind="componentField"
-					>
-						<select-trigger class="col-span-5">
-							<select-value placeholder="Selecione o tipo..." />
-						</select-trigger>
-						<select-content>
-							<select-group>
-								<select-label>Tipos de entidade:</select-label>
-								<select-item
-									v-for="theme of formattedAllThemes"
-									:key="theme.id"
-									:value="theme.id.toString()"
-									>{{ theme.name }}</select-item
-								>
-							</select-group>
-						</select-content>
-					</select-root>
-				</form-control>
-
-				<form-message class="col-span-5 col-start-3" />
-			</form-item>
-		</form-field>
-
-		<div class="grid grid-cols-12 gap-x-4">
-			<form-field v-slot="{ componentField }" name="iconFamily">
-				<form-item
-					class="grid grid-cols-12 col-span-6 items-center gap-x-4 gap-y-1"
-				>
-					<form-label class="text-left col-span-12"
-						>Família do ícone</form-label
-					>
+			<form-field v-slot="{ componentField }" name="theme">
+				<form-item class="grid grid-cols-24 items-center gap-x-4 gap-y-1">
+					<form-label class="text-left col-span-5">Tema do ícone</form-label>
 					<form-control>
 						<select-root
 							class="items-start justify-start"
 							:disabled="disabled"
 							v-bind="componentField"
 						>
-							<select-trigger class="col-span-12">
-								<select-value placeholder="Selecione a família..." />
+							<select-trigger class="col-span-10">
+								<select-value placeholder="Selecione o tipo..." />
 							</select-trigger>
 							<select-content>
 								<select-group>
-									<select-label>Família disponíveis:</select-label>
+									<select-label>Tipos de entidade:</select-label>
 									<select-item
-										v-for="theme of formattedAllIconFamily"
+										v-for="theme of formattedAllThemes"
 										:key="theme.id"
 										:value="theme.id.toString()"
 										>{{ theme.name }}</select-item
@@ -205,110 +176,164 @@
 						</select-root>
 					</form-control>
 
-					<form-message class="col-span-12 col-start-3" />
+					<form-message class="col-span-15 col-start-6" />
 				</form-item>
 			</form-field>
 
-			<form-field v-slot="{ componentField, handleChange }" name="iconName">
-				<form-item
-					class="grid grid-cols-12 col-span-6 items-center gap-x-4 gap-y-1"
-				>
-					<form-label class="text-left col-span-12">Ícone</form-label>
-					<form-control>
-						<popover v-model:open="openIconNameBox">
-							<popover-trigger as-child>
-								<button-root
-									variant="outline"
-									role="combobox"
-									:aria-expanded="openIconNameBox"
-									class="lg:max-w-96 flex-[3] justify-between col-span-12"
-									:disabled="
-										disabled ||
-										!metadata?.iconFamily ||
-										formattedAllIconNames.length <= 0
-									"
-								>
-									{{ metadata.iconName ?? 'Selecione o ícone...' }}
-									<font-awesome-icon
-										v-if="openIconNameBox"
-										:icon="['fas', 'chevron-up']"
-									/>
-									<font-awesome-icon v-else :icon="['fas', 'chevron-down']" />
-								</button-root>
-							</popover-trigger>
-							<popover-content class="lg:max-w-96 flex-[3]A p-0">
-								<command>
-									<command-input
-										class="h-9"
-										placeholder="Busque um ícone pelo nome (inglês)..."
-									/>
-									<command-empty>Nenhuma ícone encontrada.</command-empty>
-									<command-list>
-										<command-group>
-											<command-item
-												v-for="icon in formattedAllIconNames"
-												:key="icon.id"
-												:value="icon.id"
-												@select="
-													(ev) => {
-														if (typeof ev.detail.value === 'string') {
-															handleChange(ev.detail.value)
+			<div class="grid grid-cols-24">
+				<form-field v-slot="{ componentField }" name="iconFamily">
+					<form-item class="grid grid-cols-12 col-span-12 items-center">
+						<form-label class="text-left col-span-5"
+							>Família do ícone</form-label
+						>
+						<form-control>
+							<select-root
+								class="items-start justify-start"
+								:disabled="disabled"
+								v-bind="componentField"
+							>
+								<select-trigger class="col-span-8">
+									<select-value placeholder="Selecione a família..." />
+								</select-trigger>
+								<select-content>
+									<select-group>
+										<select-label>Família disponíveis:</select-label>
+										<select-item
+											v-for="theme of formattedAllIconFamily"
+											:key="theme.id"
+											:value="theme.id.toString()"
+											>{{ theme.name }}</select-item
+										>
+									</select-group>
+								</select-content>
+							</select-root>
+						</form-control>
+
+						<form-message class="col-span-12 col-start-3" />
+					</form-item>
+				</form-field>
+
+				<form-field v-slot="{ componentField, handleChange }" name="iconName">
+					<form-item class="grid grid-cols-12 col-span-12 items-center">
+						<form-label class="text-left col-span-3 col-start-2"
+							>Ícone</form-label
+						>
+						<form-control>
+							<popover v-model:open="openIconNameBox">
+								<popover-trigger as-child>
+									<button-root
+										variant="outline"
+										role="combobox"
+										:aria-expanded="openIconNameBox"
+										class="lg:max-w-96 flex justify-between col-span-7"
+										:disabled="
+											disabled ||
+											!metadata?.iconFamily ||
+											formattedAllIconNames.length <= 0
+										"
+									>
+										{{ metadata.iconName ?? 'Selecione o ícone...' }}
+										<font-awesome-icon
+											v-if="openIconNameBox"
+											:icon="['fas', 'chevron-up']"
+										/>
+										<font-awesome-icon v-else :icon="['fas', 'chevron-down']" />
+									</button-root>
+								</popover-trigger>
+								<popover-content class="lg:max-w-96 flex-[3]A p-0">
+									<command>
+										<command-input
+											class="h-9"
+											placeholder="Busque um ícone pelo nome (inglês)..."
+										/>
+										<command-empty>Nenhuma ícone encontrada.</command-empty>
+										<command-list>
+											<command-group>
+												<command-item
+													v-for="icon in formattedAllIconNames"
+													:key="icon.id"
+													:value="icon.id"
+													@select="
+														(ev) => {
+															if (typeof ev.detail.value === 'string') {
+																handleChange(ev.detail.value)
+															}
+															openIconNameBox = false
 														}
-														openIconNameBox = false
-													}
-												"
-											>
-												{{ icon.name }}
-												<font-awesome-icon
-													:class="
-														cn(
-															'ml-auto h-4 w-4',
-															componentField.modelValue === icon.id
-																? 'opacity-100'
-																: 'opacity-0',
-														)
 													"
-													:icon="['fas', 'check']"
-												/>
-											</command-item>
-										</command-group>
-									</command-list>
-								</command>
-							</popover-content>
-						</popover>
-					</form-control>
+												>
+													{{ icon.name }}
+													<font-awesome-icon
+														:class="
+															cn(
+																'ml-auto h-4 w-4',
+																componentField.modelValue === icon.id
+																	? 'opacity-100'
+																	: 'opacity-0',
+															)
+														"
+														:icon="['fas', 'check']"
+													/>
+												</command-item>
+											</command-group>
+										</command-list>
+									</command>
+								</popover-content>
+							</popover>
+						</form-control>
 
-					<form-message class="col-span-12 col-start-3" />
-				</form-item>
-			</form-field>
-		</div>
+						<form-message class="col-span-12 col-start-3" />
+					</form-item>
+				</form-field>
+			</div>
 
-		<div class="flex gap-10 items-center">
-			<p class="text-left font-semibold text-base">
-				Pré-visualização do ícone:
-			</p>
+			<div class="flex gap-10 items-center">
+				<p class="text-left font-semibold text-base">
+					Pré-visualização do ícone:
+				</p>
 
-			<div
-				class="flex border-2 rounded-md w-14 h-14 justify-center items-center"
-			>
 				<div
-					v-if="
-						metadata?.color &&
-						metadata?.theme &&
-						metadata?.iconFamily &&
-						metadata?.iconName
-					"
-					:style="{ backgroundColor: metadata.color }"
-					class="w-7 h-7 rounded-full flex justify-center items-center"
+					class="flex border-2 rounded-md w-14 h-14 justify-center items-center"
 				>
-					<font-awesome-icon
-						:style="{
-							color: metadata.theme === 'dark' ? '#FFFFFF' : '#000000',
-						}"
-						class="w-4 h-4"
-						:icon="[metadata.iconFamily, metadata.iconName]"
-					/>
+					<div
+						v-if="
+							metadata?.color &&
+							metadata?.theme &&
+							metadata?.iconFamily &&
+							metadata?.iconName
+						"
+						:style="{ backgroundColor: metadata.color }"
+						class="w-7 h-7 rounded-full flex justify-center items-center"
+					>
+						<font-awesome-icon
+							:style="{
+								color: metadata.theme === 'dark' ? '#FFFFFF' : '#000000',
+							}"
+							class="w-5 h-5"
+							:icon="[metadata.iconFamily, metadata.iconName]"
+						/>
+					</div>
 				</div>
+			</div>
+
+			<div class="flex gap-12 justify-center mt-5">
+				<button-root
+					:disabled="disabled"
+					type="button"
+					variant="outline"
+					class="mt-4 gap-2 border border-primary text-primary font-semibold text-xs"
+					@click="onClose"
+				>
+					Cancelar
+				</button-root>
+
+				<button-root
+					:disabled="disabled"
+					type="submit"
+					class="mt-4 bg-primary text-white gap-2 font-semibold text-xs"
+				>
+					Salvar
+				</button-root>
 			</div>
 		</div>
 	</div>

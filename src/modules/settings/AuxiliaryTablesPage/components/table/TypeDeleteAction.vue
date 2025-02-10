@@ -39,9 +39,9 @@
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger as-child>
-						<button-root variant="outline">
+						<button-root variant="ghost" size="icon">
 							<font-awesome-icon
-								:class="['w-4 h-4 text-danger']"
+								:class="['w-5 h-5 text-danger']"
 								:icon="['far', 'trash-can']"
 							/>
 						</button-root>

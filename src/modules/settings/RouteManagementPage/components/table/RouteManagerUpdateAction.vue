@@ -93,22 +93,29 @@
 		tooltip="Editar página"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar página ${tableRouteManagerName}`"
-		description="Atualize o conteúdo da página."
+		:title="`Editar Página`"
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root variant="outline" @click="setNewData">
+			<button-root variant="ghost" size="icon" @click="setNewData">
 				<font-awesome-icon
-					class="text-primary w-4 h-4"
+					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
 				/>
 			</button-root>
 		</template>
 
 		<template #fields>
-			<route-manager-form :metadata="form.values" :disabled="isLoading" />
+			<route-manager-form
+				:metadata="form.values"
+				:disabled="isLoading"
+				@on-close="
+					() => {
+						openUpdateModal = false
+					}
+				"
+			/>
 		</template>
 	</form-wrapper>
 </template>

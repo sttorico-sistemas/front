@@ -39,9 +39,9 @@
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger as-child>
-						<button-root variant="outline">
+						<button-root variant="ghost" size="icon">
 							<font-awesome-icon
-								:class="['w-4 h-4 text-danger']"
+								:class="['w-5 h-5 text-danger']"
 								:icon="['far', 'trash-can']"
 							/>
 						</button-root>
@@ -56,9 +56,7 @@
 		<alert-dialog-content>
 			<alert-dialog-header>
 				<alert-dialog-title
-					>Deseja apagar "{{
-						tableCityName
-					}}"?</alert-dialog-title
+					>Deseja apagar "{{ tableCityName }}"?</alert-dialog-title
 				>
 				<alert-dialog-description>
 					A ação não poderá ser desfeita.
@@ -66,9 +64,7 @@
 			</alert-dialog-header>
 			<alert-dialog-footer>
 				<alert-dialog-cancel>Cancelar</alert-dialog-cancel>
-				<alert-dialog-action
-					class="bg-danger text-white"
-					@click="handleDelete"
+				<alert-dialog-action class="bg-danger text-white" @click="handleDelete"
 					>Apagar</alert-dialog-action
 				>
 			</alert-dialog-footer>
