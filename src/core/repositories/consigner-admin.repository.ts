@@ -62,7 +62,10 @@ export class ConsignerAdminRepository {
 				cep: data?.cep,
 				// tipo_endereco_id: data?.endereco?.tipo_endereco_id,
 				// tipo_endereco_nome: data?.endereco?.tipo_endereco,
-			}
+			},
+			servicos: data.servicos,
+			averbacao: data.averbacao,
+			tipo_entidade: data.tipo_entidade
 		}
 	}
 

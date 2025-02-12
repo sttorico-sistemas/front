@@ -49,7 +49,7 @@ export class AuxiliaryRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			return AuxiliaryModel.fromRecord(response.data)
+			return AuxiliaryModel.fromRecord(response?.data ?? response)
 		} catch (error) {
 			throw BaseError.fromHttpError(error);
 		}
@@ -149,6 +149,33 @@ export class AuxiliaryRepository {
 			})
 			const values = response.data.map((e: Record<string, any>) => AuxiliaryModel.fromRecord(e));
 			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
+			return values;
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
+
+	async getAllEndorsers(configParams?: HttpClientProps<AuxiliaryModel[]>): Promise<AuxiliaryModel[]> {
+		try {
+			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`tipo-averbadores`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			const values = response.data.data.map((e: Record<string, any>) => AuxiliaryModel.fromRecord(e));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			return values;
+		} catch (error) {
+			throw BaseError.fromHttpError(error);
+		}
+	}
+
+	async getAllRegulators(configParams?: HttpClientProps<AuxiliaryModel[]>): Promise<AuxiliaryModel[]> {
+		try {
+			const response = await this.http.get<{ data: any[], meta: any }>(`tipo-normativos`, {
+				params: configParams?.params,
+				signal: configParams?.signal
+			})
+			const values = response.data.map((e: Record<string, any>) => AuxiliaryModel.fromRecord(e));
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

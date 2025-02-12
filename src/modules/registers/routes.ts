@@ -20,8 +20,8 @@ export const registersRoutes: RouteRecordRaw[] = [
 				component: ConsignerPage,
 			},
 			{
-				path: 'consignatarias',
-				name: 'cadastros-consignatarias',
+				path: 'consignatarias-admin',
+				name: 'cadastros-consignatarias-admin',
 				component: ConsignerAdminPage,
 			},
 			{

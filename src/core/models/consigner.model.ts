@@ -14,6 +14,7 @@ export class ConsignerModel extends BaseModel {
 	public startOfBusiness?: string | null;
 	public endOfBusiness?: string | null;
 	public addresses: AddressModel
+	public endorsement?: string
 
 	constructor(props: {
 		id?: number;
@@ -21,6 +22,7 @@ export class ConsignerModel extends BaseModel {
 		shortName: string;
 		cnpj: string;
 		status?: number;
+		endorsement?: string
 		startOfBusiness?: string | null;
 		endOfBusiness?: string | null;
 		masterConsignerId: string;
@@ -42,6 +44,7 @@ export class ConsignerModel extends BaseModel {
 		this.entityTypeName = props.entityTypeName;
 		this.status = props.status;
 		this.addresses = props.addresses;
+		this.endorsement = props.endorsement
 	}
 
 	toRecord(): Record<string, any> {
@@ -64,13 +67,14 @@ export class ConsignerModel extends BaseModel {
 			name: record.nome,
 			shortName: record.nome_curto,
 			cnpj: record.cnpj,
-			endOfBusiness: record.fim,
-			startOfBusiness: record.inicio,
+			endOfBusiness: record.fim?.slice(0, -3),
+			startOfBusiness: record.inicio?.slice(0, -3),
 			entityTypeId: record.tipo_entidade_id,
 			entityTypeName: record?.tipo_entidade_nome,
 			masterConsignerId: record.consignante_master_id,
 			masterConsignerName: record?.consignante_master_nome,
 			status: record.status,
+			endorsement: record.endorsement,
 			addresses: AddressModel.fromRecord(record.endereco)
 		});
 	}

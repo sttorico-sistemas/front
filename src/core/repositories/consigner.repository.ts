@@ -18,12 +18,12 @@ export class ConsignerRepository {
 
 	async getAllConsigners(configParams?: HttpClientProps<ConsignerModel[]>): Promise<ConsignerModel[]> {
 		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/consignante`, {
+			const response = await this.http.get<{ data: any[], meta: any }>(`/consignante`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = response.data.data.map((e: Record<string, any>) => ConsignerModel.fromRecord(this.getConsignerByIdAdapter(e)));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+			const values = response.data.map((e: Record<string, any>) => ConsignerModel.fromRecord(this.getConsignerByIdAdapter(e)));
+			if (configParams?.metaCallback) { configParams?.metaCallback(response.meta, values) }
 			return values;
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

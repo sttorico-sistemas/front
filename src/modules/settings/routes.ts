@@ -27,12 +27,12 @@ export const settingsRoutes: RouteRecordRaw[] = [
 			},
 			{
 				path: 'perfil',
-				name: 'perfil',
+				name: 'configuracoes-perfil',
 				component: IamPage,
 			},
 			{
 				path: 'regras',
-				name: 'regras',
+				name: 'configuracoes-regras',
 				component: RulePage,
 			},
 		],

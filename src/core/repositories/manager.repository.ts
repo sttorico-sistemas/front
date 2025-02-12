@@ -32,12 +32,13 @@ export class ManagerRepository {
 
 	async getManagerById(dataId: number, configParams?: HttpClientProps<ManagerModel>): Promise<ManagerModel> {
 		try {
-			const response = await this.http.get<{ data: any }>(`/consignante/${dataId}`, {
+			const response = await this.http.get<{ data: any }>(`/gestores/${dataId}`, {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
+			console.log(response.data)
+
 			const values = ManagerModel.fromRecord(response.data)
-			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
 			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

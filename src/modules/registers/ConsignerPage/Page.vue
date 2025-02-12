@@ -246,6 +246,7 @@
 				startOfBusiness,
 				endOfBusiness,
 				status,
+				endorsement
 			}) => ({
 				id: id as number,
 				name,
@@ -258,6 +259,7 @@
 				// 	'$1.$2.$3/$4-$5',
 				// ),
 				status: formatStatus(status as number),
+				endorsement: formatStatus(endorsement as string),
 			}),
 		)
 	})
@@ -464,7 +466,7 @@
 					'div',
 					{
 						class:
-							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
+							'flex justify-center items-center min-w-20 w-fit rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('endorsement')?.textColor,
 							backgroundColor:

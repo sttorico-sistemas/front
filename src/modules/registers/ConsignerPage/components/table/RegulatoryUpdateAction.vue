@@ -10,6 +10,8 @@
 	import { regulatoryRepository } from '@/core/stores'
 	import RegulatoryForm from './RegulatoryForm.vue'
 	import { RegulatoryModel } from '@/core/models'
+	import { validateCalendar } from '@/core/utils'
+	import { DateValue, parseDate } from '@internationalized/date'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
@@ -25,36 +27,27 @@
 
 	const formSchema = toTypedSchema(
 		z.object({
-			name: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
 			number: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			cnpj: z
-				.string({ message: 'O CNPJ é obrigatório.' })
-				.min(1, { message: 'O CNPJ é obrigatório.' }),
-			masterRegulatoryId: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			regulatoryType: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			addressId: z
-				.number({ message: 'O id endereço é obrigatório.' })
-				.min(1, { message: 'O id endereço é obrigatório.' }),
-			cityId: z
-				.string({ message: 'A cidade é obrigatória.' })
-				.min(1, { message: 'A cidade é obrigatória.' }),
-			stateId: z
-				.string({ message: 'O estado é obrigatório.' })
-				.min(1, { message: 'O estado é obrigatório.' }),
-			street: z
-				.string({ message: 'O logradouro é obrigatório.' })
-				.min(1, { message: 'O logradouro é obrigatório.' }),
-			zipCode: z
-				.string({ message: 'O CEP é obrigatório.' })
-				.min(1, { message: 'O CEP é obrigatório.' }),
+				.string({ message: 'O numero é obrigatório' })
+				.min(1, { message: 'O numero é obrigatório.' }),
+			typeId: z
+				.string({ message: 'O tipo é obrigatório' })
+				.min(1, { message: 'O tipo é obrigatório.' }),
+			publicationAt: z.custom<DateValue>(validateCalendar, {
+				message: 'Esse campo é obrigatório.',
+			}),
+			target: z
+				.string({ message: 'O objeto é obrigatório' })
+				.min(1, { message: 'O objeto é obrigatório.' }),
+			subject: z
+				.string({ message: 'O assunto é obrigatório' })
+				.min(1, { message: 'O assunto é obrigatório.' }),
+			revocationAt: z
+				.custom<DateValue>(validateCalendar, {
+					message: 'Esse campo é obrigatório.',
+				})
+				.optional(),
+			observation: z.string({ message: 'O assunto é obrigatório' }).optional(),
 		}),
 	)
 
@@ -70,7 +63,16 @@
 				properties.dataId,
 			)
 
-			form.setValues({})
+			form.setValues({
+				number: data.number,
+				target: data.target,
+				subject: data.subject,
+				publicationAt: parseDate(data.publicationAt),
+				typeId: data.typeId.toString(),
+				revocationAt: data.revocationAt
+					? parseDate(data.revocationAt)
+					: undefined,
+			})
 		} catch (error) {
 			console.log(error)
 		} finally {
@@ -92,11 +94,16 @@
 		:is-loading="isLoading || isDataLoading"
 		:title="`Editar averbador ${tableRegulatoryName}`"
 		description="Atualize o conteúdo do averbador."
-		class="sm:max-w-[780px]"
+		class="sm:max-w-[650px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive || true" variant="outline" @click="setNewData">
+			<button-root
+				:disabled="!isActive"
+				variant="ghost"
+				size="icon"
+				@click="setNewData"
+			>
 				<font-awesome-icon
 					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"

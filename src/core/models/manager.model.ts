@@ -8,9 +8,9 @@ export class ManagerModel extends BaseModel {
 	public personId: string
 	public position: string
 	public department: string
-	public phone: string
-	public cellphone: string;
-	public email: string;
+	public phone?: string
+	public cellphone?: string;
+	public email?: string;
 	public status?: number
 
 	constructor(props: {
@@ -21,9 +21,9 @@ export class ManagerModel extends BaseModel {
 		personId: string
 		position: string
 		department: string
-		phone: string
-		cellphone: string;
-		email: string;
+		phone?: string
+		cellphone?: string;
+		email?: string;
 		status?: number
 	}) {
 		super();
@@ -48,19 +48,15 @@ export class ManagerModel extends BaseModel {
 			pessoa_id: this.personId,
 			departamento: this.department,
 			funcao: this.position,
-			nome: this.name,
-			telefone: this.phone,
-			celular: this.cellphone,
-			email: this.email,
 		}
 	}
 
 	static fromRecord(record: Record<string, any>): ManagerModel {
 		return new ManagerModel({
 			id: record.id,
-			name: record.pessoa.nome,
-			typeOfBond: record?.vinculo_type,
-			bondId: record.vinculo_id,
+			name: record.nome,
+			typeOfBond: record?.vinculo.nome,
+			bondId: record.vinculo.id,
 			personId: record.pessoa_id,
 			department: record.departamento,
 			position: record.funcao,

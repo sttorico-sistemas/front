@@ -475,6 +475,9 @@
 							<master-consigner-form
 								:metadata="form.values"
 								:disabled="isCreateMasterConsignerLoading"
+								@on-close="() => {
+									openCreateModal = false
+								}"
 							/>
 						</template>
 					</form-wrapper>

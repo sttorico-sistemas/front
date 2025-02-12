@@ -91,7 +91,7 @@ function onSubmit(event: Event) {
 				</dialog-description>
 			</dialog-header>
 
-			<form v-if="$slots.fields" class="grid overflow-y-auto py-10 px-6" @submit="onSubmit">
+			<form v-if="$slots.fields" class="grid overflow-y-auto" @submit="onSubmit">
 				<slot name="fields"></slot>
 
 				<dialog-footer>

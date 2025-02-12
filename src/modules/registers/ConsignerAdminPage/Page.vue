@@ -64,6 +64,7 @@
 		entityTypeName: string
 		services: ServiceModel[]
 		status: StatusFormatted
+		endorsement: StatusFormatted
 	}
 
 	const statusItems = [
@@ -252,6 +253,7 @@
 					entityTypeName,
 					services,
 					status,
+					endorsement,
 				}) => ({
 					id: id as number,
 					name,
@@ -260,6 +262,7 @@
 					entityTypeName: entityTypeName as string,
 					services,
 					status: formatStatus(status as number),
+					endorsement: formatStatus(endorsement as string),
 				}),
 			)
 		},
@@ -365,7 +368,33 @@
 					],
 				)
 			},
-			// cell: ({ row }) => h('div', row.getValue('service')),
+			cell: ({ row }) => {
+				const data = row.original
+				return h(
+					'div',
+					{
+						class: 'flex gap-3'
+					},
+					data.services.map(({ color, theme, icon }) =>
+						h(
+							'div',
+							{ class: 'flex justify-center items-center' },
+							h(
+								'div',
+								{
+									class:
+										'w-7 h-7 rounded-full flex justify-center items-center w-[30px] h-[30px]',
+									style: { backgroundColor: color },
+								},
+								h(FontAwesomeIcon, {
+									style: { color: theme === 'dark' ? '#FFFFFF' : '#000000' },
+									icon: icon,
+								}),
+							),
+						),
+					),
+				)
+			},
 			enableHiding: false,
 		},
 		{
@@ -435,7 +464,7 @@
 					'div',
 					{
 						class:
-							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
+							'flex justify-center items-center min-w-20 w-fit rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('endorsement')?.textColor,
 							backgroundColor:
@@ -737,9 +766,11 @@
 							<consigner-admin-form
 								:metadata="form.values"
 								:disabled="isCreateConsignerAdminLoading"
-								@on-close="() => {
-									openCreateModal = false
-								}"
+								@on-close="
+									() => {
+										openCreateModal = false
+									}
+								"
 							/>
 						</template>
 					</form-wrapper>

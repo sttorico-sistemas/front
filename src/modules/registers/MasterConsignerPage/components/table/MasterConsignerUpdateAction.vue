@@ -82,7 +82,15 @@
 		</template>
 
 		<template #fields>
-			<master-consigner-form :metadata="form.values" :disabled="isLoading" />
+			<master-consigner-form
+				:metadata="form.values"
+				:disabled="isLoading"
+				@on-close="
+					() => {
+						openUpdateModal = false
+					}
+				"
+			/>
 		</template>
 	</form-wrapper>
 </template>

@@ -9,6 +9,7 @@ export class ConsignerAdminModel extends BaseModel {
 	public entityTypeId: string
 	public entityTypeName?: string;
 	public status?: number
+	public endorsement?: string
 
 	constructor(props: {
 		id?: number;
@@ -18,6 +19,7 @@ export class ConsignerAdminModel extends BaseModel {
 		entityTypeId: string;
 		entityTypeName?: string;
 		status?: number;
+		endorsement?: string
 	}) {
 		super();
 		this.id = props.id;
@@ -27,6 +29,7 @@ export class ConsignerAdminModel extends BaseModel {
 		this.entityTypeId = props.entityTypeId;
 		this.entityTypeName = props.entityTypeName;
 		this.status = props.status;
+		this.endorsement = props.endorsement
 	}
 
 	toRecord(): Record<string, any> {
@@ -42,10 +45,11 @@ export class ConsignerAdminModel extends BaseModel {
 			id: record.id,
 			name: record.nome,
 			cnpj: record.cnpj,
-			services: record.servicos,
-			entityTypeId: record.tipo_entidade_id,
-			entityTypeName: record?.tipo_entidade_nome,
+			services: record.servicos.map((data: Record<string, any>) => ServiceModel.fromRecord(data)) ,
+			entityTypeId: record.tipo_entidade.id,
+			entityTypeName: record?.tipo_entidade.nome,
 			status: record.status,
+			endorsement: record.averbacao,
 		});
 	}
 

@@ -1,22 +1,17 @@
 import { AddressModel } from "@/core/models/address.model";
 import { BaseModel } from "src/core/models/base.model";
 
-export type IconData = {
-	family: string
-	name: string
-}
-
 export class ServiceModel extends BaseModel {
 	public id?: number;
 	public name: string;
-	public icon: IconData;
+	public icon: string;
 	public theme: string;
 	public color: string;
 
 	constructor(props: {
 		id?: number;
 		name: string;
-		icon: IconData;
+		icon: string;
 		theme: string;
 		color: string;
 	}) {
@@ -42,7 +37,7 @@ export class ServiceModel extends BaseModel {
 		return new ServiceModel({
 			id: record.id,
 			name: record.nome,
-			icon: record.icone,
+			icon: record?.icone ? JSON.parse(record.icone)?.fontawesome : null,
 			color: record.cor,
 			theme: record.tema_do_icone,
 		});
