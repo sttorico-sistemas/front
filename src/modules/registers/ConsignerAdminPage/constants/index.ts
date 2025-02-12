@@ -13,19 +13,19 @@ import {
 export const accordionItems = [
 	{
 		value: 'item-1',
-		title: 'Dados da consignatária',
+		title: 'Dados da Consignatária',
 		component: ConsignerAdminData,
 		disabled: false
 	},
 	{
 		value: 'item-2',
-		title: 'Contratos sistema',
+		title: 'Contratos Sistema',
 		component: null,
 		disabled: true
 	},
 	{
 		value: 'item-3',
-		title: 'Lista de gestores',
+		title: 'Lista de Gestores',
 		component: ManagerData,
 		disabled: false
 	},
@@ -79,7 +79,7 @@ export const accordionItems = [
 	},
 	{
 		value: 'item-12',
-		title: 'IP - Instrução de procedimentos',
+		title: 'IP - Instrução de Procedimentos',
 		component: InstructionOfProcedureData,
 		disabled: false
 	},

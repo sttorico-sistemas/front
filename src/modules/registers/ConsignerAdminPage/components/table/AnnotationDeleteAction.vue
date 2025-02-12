@@ -39,7 +39,7 @@
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger as-child>
-						<button-root variant="outline">
+						<button-root variant="outline" disabled>
 							<font-awesome-icon
 								:class="['w-5 h-5', isActive ? 'text-warning' : 'text-success']"
 								:icon="isActive ? ['fas', 'ban'] : ['far', 'circle-check']"

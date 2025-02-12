@@ -4,6 +4,7 @@ import { BaseModel } from "src/core/models/base.model";
 export class ConsignerAdminModel extends BaseModel {
 	public id?: number
 	public name: string
+	public shortName: string
 	public cnpj: string
 	public services: ServiceModel[]
 	public entityTypeId: string
@@ -14,6 +15,7 @@ export class ConsignerAdminModel extends BaseModel {
 	constructor(props: {
 		id?: number;
 		name: string;
+		shortName?: string;
 		cnpj: string;
 		services: ServiceModel[];
 		entityTypeId: string;
@@ -24,6 +26,7 @@ export class ConsignerAdminModel extends BaseModel {
 		super();
 		this.id = props.id;
 		this.name = props.name;
+		this.shortName = props.shortName ?? '';
 		this.cnpj = props.cnpj?.replace(/\D+/g, "");
 		this.services = props?.services ?? [];
 		this.entityTypeId = props.entityTypeId;
@@ -44,8 +47,9 @@ export class ConsignerAdminModel extends BaseModel {
 		return new ConsignerAdminModel({
 			id: record.id,
 			name: record.nome,
+			shortName: record.nome_curto,
 			cnpj: record.cnpj,
-			services: record.servicos.map((data: Record<string, any>) => ServiceModel.fromRecord(data)) ,
+			services: record.servicos.map((data: Record<string, any>) => ServiceModel.fromRecord(data)),
 			entityTypeId: record.tipo_entidade.id,
 			entityTypeName: record?.tipo_entidade.nome,
 			status: record.status,

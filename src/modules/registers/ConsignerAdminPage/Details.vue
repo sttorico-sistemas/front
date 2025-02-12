@@ -47,6 +47,7 @@
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import {
 		auxiliaryRepository,
+		consignerAdminRepository,
 		consignerRepository,
 		masterConsignerRepository,
 	} from '@/core/stores'
@@ -65,15 +66,15 @@
 	}
 
 	const formSchema = z.object({
-		masterConsignerId: z
-			.string({ message: 'O consignante master é obrigatório' })
-			.min(1, { message: 'O consignante master é obrigatório.' }),
+		shortName: z
+			.string({ message: 'O nome curto é obrigatório' })
+			.min(1, { message: 'O nome curto é obrigatório.' }),
 		entityTypeId: z
 			.string({ message: 'A entidade é obrigatória' })
 			.min(1, { message: 'A entidade é obrigatória.' }),
-		consignerId: z
-			.string({ message: 'O consignante é obrigatório.' })
-			.min(1, { message: 'O consignante é obrigatório.' }),
+		consignerAdminId: z
+			.string({ message: 'O consignatária é obrigatória.' })
+			.min(1, { message: 'O consignatária é obrigatória.' }),
 	})
 
 	const form = useForm({
@@ -93,8 +94,8 @@
 		return +(route.params.id as string)
 	})
 
-	const currentMasterConsignerId = computed(() => {
-		return +(form.values.masterConsignerId as string)
+	const currentShortName = computed(() => {
+		return +(form.values.shortName as string)
 	})
 
 	const currentEntityTypeId = computed(() => {
@@ -102,9 +103,9 @@
 	})
 
 	const { data: consigner, isLoading: isConsignerLoading } = useQuery({
-		queryKey: consignerRepository.getQueryKey('consigner-by-id', {}, currentId),
+		queryKey: consignerAdminRepository.getQueryKey('consigner-admin-by-id', {}, currentId),
 		queryFn: ({ signal }) =>
-			consignerRepository.getConsignerById(currentId.value, {
+		consignerAdminRepository.getConsignerAdminById(currentId.value, {
 				signal,
 				metaCallback: (meta, data) => {
 					tmpConsigner.value = {
@@ -112,19 +113,19 @@
 						name: data.name,
 					}
 					form.setValues({
-						consignerId: data.id?.toString() as string,
-						masterConsignerId: data.masterConsignerId.toString(),
+						consignerAdminId: data.id?.toString() as string,
+						shortName: data.shortName.toString(),
 						entityTypeId: data.entityTypeId.toString(),
 					})
 				},
 			}),
 	})
 
-	const { data: masterConsigners, isLoading: isMasterConsignersLoading } =
+	const { data: consignerAdmin, isLoading: isConsignerAdminLoading } =
 		useQuery({
-			queryKey: masterConsignerRepository.getQueryKey('master-consigners'),
+			queryKey: consignerAdminRepository.getQueryKey('consigner-admins'),
 			queryFn: ({ signal }) =>
-				masterConsignerRepository.getAllMasterConsigners({
+			consignerAdminRepository.getAllConsignerAdmins({
 					signal,
 					params: { perPage: '100' },
 				}),
@@ -139,8 +140,8 @@
 			}),
 	})
 
-	const formattedAllMasterConsigners = computed(() => {
-		return (masterConsigners.value ?? []).map(({ id, name }) => ({
+	const formattedAllConsignerAdmin = computed(() => {
+		return (consignerAdmin.value ?? []).map(({ id, name }) => ({
 			id: `${id}`,
 			name,
 		}))
@@ -154,9 +155,9 @@
 	})
 
 	const onSubmit = form.handleSubmit((value) => {
-		if (currentId.value.toString() === value.consignerId) return
+		if (currentId.value.toString() === value.consignerAdminId) return
 		console.log(value)
-		router.replace({ params: { id: value.consignerId } })
+		router.replace({ params: { id: value.consignerAdminId } })
 	})
 
 	function goToBack() {
@@ -169,7 +170,7 @@
 				params: {
 					search: value,
 					per_page: 10,
-					consignante_master_id: currentMasterConsignerId.value,
+					consignante_master_id: currentShortName.value,
 					tipo_entidade_id: currentEntityTypeId.value,
 				},
 			})
@@ -184,18 +185,22 @@
 </script>
 <template>
 	<main class="mb-4">
-		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
+		<breadcrumbs :paginas="['Cadastro', 'Consignatária']" />
 
-		<div class="panel pb-1 mt-6">
+		<div class="panel pb-1 mt-6 bg-[#EAEAEC]">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="goToBack">
+							<button-root
+								variant="default"
+								@click="goToBack"
+								class="rounded-3xl"
+							>
 								<font-awesome-icon
-									class="text-primary w-5 h-5"
+									class="text-white w-5 h-5"
 									:icon="['fas', 'arrow-left']"
 								/>
 							</button-root>
@@ -212,14 +217,14 @@
 				>
 					<form-field
 						v-slot="{ componentField }"
-						id="masterConsignerId"
-						name="masterConsignerId"
+						id="shortName"
+						name="shortName"
 					>
 						<form-item class="flex-1 max-w-96">
 							<form-control>
 								<select-root
 									class="items-start justify-start"
-									:disabled="isMasterConsignersLoading"
+									:disabled="isConsignerAdminLoading"
 									v-bind="componentField"
 								>
 									<select-trigger class="col-span-5">
@@ -229,7 +234,7 @@
 										<select-group>
 											<select-label>Consignatárias:</select-label>
 											<select-item
-												v-for="masterConsigner of formattedAllMasterConsigners"
+												v-for="masterConsigner of formattedAllConsignerAdmin"
 												:key="masterConsigner.id"
 												:value="masterConsigner.id.toString()"
 												>{{ masterConsigner.name }}</select-item
@@ -276,8 +281,8 @@
 
 					<form-field
 						v-slot="{ componentField, handleChange }"
-						id="consignerId"
-						name="consignerId"
+						id="consignerAdminId"
+						name="consignerAdminId"
 					>
 						<form-item class="flex-1 max-w-96">
 							<form-control>
@@ -286,15 +291,12 @@
 						</form-item>
 					</form-field>
 
-					<button-root variant="outline" type="submit">
-						<font-awesome-icon
-							class="text-primary w-5 h-5"
-							:icon="['fas', 'magnifying-glass']"
-						/>
-
-						<p class="text-primary font-semibold ml-4 text-md">
-							Nova consulta
-						</p>
+					<button-root
+						variant="default"
+						type="submit"
+						class="flex ml-40 rounded-3xl justify-center items-center"
+					>
+						<p class="text-white font-semibold text-xs">Nova consulta</p>
 					</button-root>
 				</form>
 			</div>
