@@ -373,7 +373,7 @@
 				return h(
 					'div',
 					{
-						class: 'flex gap-3'
+						class: 'flex gap-3',
 					},
 					data.services.map(({ color, theme, icon }) =>
 						h(
@@ -541,79 +541,40 @@
 		},
 	})
 
-	const formSchema = z
-		.object({
-			name: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			shortName: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			startOfBusiness: z
-				.string({ message: 'O inicio é obrigatório' })
-				.optional()
-				.nullable(),
-			endOfBusiness: z
-				.string({ message: 'O fim é obrigatório' })
-				.optional()
-				.nullable(),
-			cnpj: z
-				.string({ message: 'O CNPJ é obrigatório.' })
-				.min(1, { message: 'O CNPJ é obrigatório.' }),
-			masterConsignerAdminId: z
-				.string({ message: 'O consignatária master é obrigatório' })
-				.min(1, { message: 'O consignatária master é obrigatório.' }),
-			entityTypeId: z
-				.string({ message: 'A entidade é obrigatória' })
-				.min(1, { message: 'A entidade é obrigatória.' }),
-			addressId: z
-				.number({ message: 'O id endereço é obrigatório.' })
-				.min(1, { message: 'O id endereço é obrigatório.' }),
-			cityId: z
-				.string({ message: 'A cidade é obrigatória.' })
-				.min(1, { message: 'A cidade é obrigatória.' }),
-			stateId: z
-				.string({ message: 'O estado é obrigatório.' })
-				.min(1, { message: 'O estado é obrigatório.' }),
-			street: z
-				.string({ message: 'O logradouro é obrigatório.' })
-				.min(1, { message: 'O logradouro é obrigatório.' }),
-			zipCode: z
-				.string({ message: 'O CEP é obrigatório.' })
-				.min(1, { message: 'O CEP é obrigatório.' }),
-			services: z
-				.array(z.string())
-				.refine((value) => value.some((item) => item), {
-					message: 'Selecione pelo menos 1 serviço.',
-				}),
-		})
-		.refine(
-			({ startOfBusiness, endOfBusiness }) => {
-				if (
-					startOfBusiness === null ||
-					startOfBusiness === undefined ||
-					endOfBusiness === null ||
-					endOfBusiness === undefined
-				) {
-					return
-				}
-
-				const [h1, m1] = startOfBusiness.split(':').map(Number)
-				const [h2, m2] = endOfBusiness.split(':').map(Number)
-
-				const start = new Date()
-				start.setHours(h1, m1, 0, 0)
-
-				const end = new Date()
-				end.setHours(h2, m2, 0, 0)
-
-				return end > start
-			},
-			{
-				path: ['endOfBusiness', 'startOfBusiness'],
-				message: 'Expediente inválido.',
-			},
-		)
+	const formSchema = z.object({
+		cnpj: z
+			.string({ message: 'O CNPJ é obrigatório.' })
+			.min(1, { message: 'O CNPJ é obrigatório.' }),
+		entityTypeId: z
+			.string({ message: 'A entidade é obrigatória' })
+			.min(1, { message: 'A entidade é obrigatória.' }),
+		name: z
+			.string({ message: 'O nome é obrigatório' })
+			.min(1, { message: 'O nome é obrigatório.' }),
+		shortName: z
+			.string({ message: 'O nome é obrigatório' })
+			.min(1, { message: 'O nome é obrigatório.' }),
+		addressId: z
+			.number({ message: 'O id endereço é obrigatório.' })
+			.min(1, { message: 'O id endereço é obrigatório.' }),
+		cityId: z
+			.string({ message: 'A cidade é obrigatória.' })
+			.min(1, { message: 'A cidade é obrigatória.' }),
+		stateId: z
+			.string({ message: 'O estado é obrigatório.' })
+			.min(1, { message: 'O estado é obrigatório.' }),
+		street: z
+			.string({ message: 'O logradouro é obrigatório.' })
+			.min(1, { message: 'O logradouro é obrigatório.' }),
+		zipCode: z
+			.string({ message: 'O CEP é obrigatório.' })
+			.min(1, { message: 'O CEP é obrigatório.' }),
+		services: z
+			.array(z.string())
+			.refine((value) => value.some((item) => item), {
+				message: 'Selecione pelo menos 1 serviço.',
+			}),
+	})
 
 	const form = useForm({
 		validationSchema: toTypedSchema(formSchema),
@@ -623,14 +584,15 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		return handleCreateConsignerAdmin(
-			new ConsignerAdminModel({
-				...values,
-				// addresses: new AddressModel(values),
-			}),
-		).then(() => {
-			openCreateModal.value = false
-		})
+		// return handleCreateConsignerAdmin(
+		// 	new ConsignerAdminModel({
+		// 		...values,
+		// 		address: new AddressModel(values),
+		// 		services:
+		// 	}),
+		// ).then(() => {
+		// 	openCreateModal.value = false
+		// })
 	})
 
 	const onUpdateSubmit = async (
@@ -638,15 +600,15 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		return handleUpdateConsignerAdmin(
-			new ConsignerAdminModel({
-				id,
-				...values,
-				// addresses: new AddressModel({ ...values, id: `${values.addressId}` }),
-			}),
-		).then(() => {
-			onClose()
-		})
+		// return handleUpdateConsignerAdmin(
+		// 	new ConsignerAdminModel({
+		// 		id,
+		// 		...values,
+		// 		// addresses: new AddressModel({ ...values, id: `${values.addressId}` }),
+		// 	}),
+		// ).then(() => {
+		// 	onClose()
+		// })
 	}
 
 	const onDeleteSubmit = async (id: number) => {

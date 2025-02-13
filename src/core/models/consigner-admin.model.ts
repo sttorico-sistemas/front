@@ -1,3 +1,4 @@
+import { AddressModel } from "@/core/models/address.model";
 import { ServiceModel } from "@/core/models/service.model";
 import { BaseModel } from "src/core/models/base.model";
 
@@ -11,6 +12,7 @@ export class ConsignerAdminModel extends BaseModel {
 	public entityTypeName?: string;
 	public status?: number
 	public endorsement?: string
+	public address?: AddressModel
 
 	constructor(props: {
 		id?: number;
@@ -22,6 +24,7 @@ export class ConsignerAdminModel extends BaseModel {
 		entityTypeName?: string;
 		status?: number;
 		endorsement?: string
+		address?: AddressModel
 	}) {
 		super();
 		this.id = props.id;
@@ -33,6 +36,7 @@ export class ConsignerAdminModel extends BaseModel {
 		this.entityTypeName = props.entityTypeName;
 		this.status = props.status;
 		this.endorsement = props.endorsement
+		this.address = props.address
 	}
 
 	toRecord(): Record<string, any> {
@@ -54,6 +58,17 @@ export class ConsignerAdminModel extends BaseModel {
 			entityTypeName: record?.tipo_entidade.nome,
 			status: record.status,
 			endorsement: record.averbacao,
+			address: AddressModel.fromRecord({
+				id: 1,
+				tipo_endereco_id: 1,
+				tipo_endereco_nome: undefined,
+				cidade_id: record.endereco?.cidade_id,
+				cidade_nome: record.endereco?.cidade_nome,
+				estado_id: record.endereco?.estado_id,
+				estado_nome: record.endereco?.estado_nome,
+				logradouro: record.endereco.logradouro,
+				cep: record.endereco.cep
+			})
 		});
 	}
 

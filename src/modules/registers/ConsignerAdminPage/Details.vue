@@ -103,11 +103,16 @@
 	})
 
 	const { data: consigner, isLoading: isConsignerLoading } = useQuery({
-		queryKey: consignerAdminRepository.getQueryKey('consigner-admin-by-id', {}, currentId),
+		queryKey: consignerAdminRepository.getQueryKey(
+			'consigner-admin-by-id',
+			{},
+			currentId,
+		),
 		queryFn: ({ signal }) =>
-		consignerAdminRepository.getConsignerAdminById(currentId.value, {
+			consignerAdminRepository.getConsignerAdminById(currentId.value, {
 				signal,
 				metaCallback: (meta, data) => {
+					console.log('Meta', data)
 					tmpConsigner.value = {
 						id: data.id?.toString() as string,
 						name: data.name,
@@ -121,15 +126,16 @@
 			}),
 	})
 
-	const { data: consignerAdmin, isLoading: isConsignerAdminLoading } =
-		useQuery({
+	const { data: consignerAdmin, isLoading: isConsignerAdminLoading } = useQuery(
+		{
 			queryKey: consignerAdminRepository.getQueryKey('consigner-admins'),
 			queryFn: ({ signal }) =>
-			consignerAdminRepository.getAllConsignerAdmins({
+				consignerAdminRepository.getAllConsignerAdmins({
 					signal,
 					params: { perPage: '100' },
 				}),
-		})
+		},
+	)
 
 	const { data: entityTypes, isLoading: isEntityTypesLoading } = useQuery({
 		queryKey: auxiliaryRepository.getQueryKey('entity-types'),
@@ -217,8 +223,8 @@
 				>
 					<form-field
 						v-slot="{ componentField }"
-						id="shortName"
-						name="shortName"
+						id="consignerAdminId"
+						name="consignerAdminId"
 					>
 						<form-item class="flex-1 max-w-96">
 							<form-control>
@@ -281,12 +287,16 @@
 
 					<form-field
 						v-slot="{ componentField, handleChange }"
-						id="consignerAdminId"
-						name="consignerAdminId"
+						id="shortName"
+						name="shortName"
 					>
 						<form-item class="flex-1 max-w-96">
 							<form-control>
-								<input-root placeholder="Nome curto" />
+								<input-root
+									:disabled="isEntityTypesLoading"
+									v-bind="componentField"
+									placeholder="Nome curto"
+								/>
 							</form-control>
 						</form-item>
 					</form-field>

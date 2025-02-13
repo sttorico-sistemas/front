@@ -7,10 +7,11 @@
 	import { FormWrapper } from '@/core/components/form-wrapper'
 	import { ButtonRoot } from '@/core/components/button'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-	import { consignerRepository } from '@/core/stores'
+	import { consignerAdminRepository, consignerRepository } from '@/core/stores'
 	import Admin from './ConsignerAdminForm.vue'
 	import { ConsignerModel } from '@/core/models'
 	import { ConsignerAdminForm } from '@/modules/registers/ConsignerAdminPage/components/table'
+	import { formatIcon } from '@/core/utils'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
@@ -25,79 +26,40 @@
 	const loadCities = ref<Record<string, string>>({})
 
 	const formSchema = toTypedSchema(
-		z
-			.object({
-				name: z
-					.string({ message: 'O nome é obrigatório' })
-					.min(1, { message: 'O nome é obrigatório.' }),
-				shortName: z
-					.string({ message: 'O nome é obrigatório' })
-					.min(1, { message: 'O nome é obrigatório.' }),
-				startOfBusiness: z
-					.string({ message: 'O inicio é obrigatório' })
-					.optional()
-					.nullable(),
-				endOfBusiness: z
-					.string({ message: 'O fim é obrigatório' })
-					.optional()
-					.nullable(),
-				cnpj: z
-					.string({ message: 'O CNPJ é obrigatório.' })
-					.min(1, { message: 'O CNPJ é obrigatório.' }),
-				masterConsignerId: z
-					.string({ message: 'O consignante master é obrigatório' })
-					.min(1, { message: 'O consignante master é obrigatório.' }),
-				entityTypeId: z
-					.string({ message: 'A entidade é obrigatória' })
-					.min(1, { message: 'A entidade é obrigatória.' }),
-				addressId: z
-					.number({ message: 'O id endereço é obrigatório.' })
-					.min(1, { message: 'O id endereço é obrigatório.' }),
-				cityId: z
-					.string({ message: 'A cidade é obrigatória.' })
-					.min(1, { message: 'A cidade é obrigatória.' }),
-				stateId: z
-					.string({ message: 'O estado é obrigatório.' })
-					.min(1, { message: 'O estado é obrigatório.' }),
-				street: z
-					.string({ message: 'O logradouro é obrigatório.' })
-					.min(1, { message: 'O logradouro é obrigatório.' }),
-				zipCode: z
-					.string({ message: 'O CEP é obrigatório.' })
-					.min(1, { message: 'O CEP é obrigatório.' }),
-				services: z
-					.array(z.string())
-					.refine((value) => value.some((item) => item), {
-						message: 'Selecione pelo menos 1 serviço.',
-					}),
-			})
-			.refine(
-				({ startOfBusiness, endOfBusiness }) => {
-					if (
-						startOfBusiness === null ||
-						startOfBusiness === undefined ||
-						endOfBusiness === null ||
-						endOfBusiness === undefined
-					) {
-						return
-					}
-
-					const [h1, m1] = startOfBusiness.split(':').map(Number)
-					const [h2, m2] = endOfBusiness.split(':').map(Number)
-
-					const start = new Date()
-					start.setHours(h1, m1, 0, 0)
-
-					const end = new Date()
-					end.setHours(h2, m2, 0, 0)
-
-					return end > start
-				},
-				{
-					path: ['endOfBusiness', 'startOfBusiness'],
-					message: 'Expediente inválido.',
-				},
-			),
+		z.object({
+			cnpj: z
+				.string({ message: 'O CNPJ é obrigatório.' })
+				.min(1, { message: 'O CNPJ é obrigatório.' }),
+			entityTypeId: z
+				.string({ message: 'A entidade é obrigatória' })
+				.min(1, { message: 'A entidade é obrigatória.' }),
+			name: z
+				.string({ message: 'O nome é obrigatório' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			shortName: z
+				.string({ message: 'O nome é obrigatório' })
+				.min(1, { message: 'O nome é obrigatório.' }),
+			addressId: z
+				.number({ message: 'O id endereço é obrigatório.' })
+				.min(1, { message: 'O id endereço é obrigatório.' }),
+			cityId: z
+				.string({ message: 'A cidade é obrigatória.' })
+				.min(1, { message: 'A cidade é obrigatória.' }),
+			stateId: z
+				.string({ message: 'O estado é obrigatório.' })
+				.min(1, { message: 'O estado é obrigatório.' }),
+			street: z
+				.string({ message: 'O logradouro é obrigatório.' })
+				.min(1, { message: 'O logradouro é obrigatório.' }),
+			zipCode: z
+				.string({ message: 'O CEP é obrigatório.' })
+				.min(1, { message: 'O CEP é obrigatório.' }),
+			services: z
+				.array(z.string())
+				.refine((value) => value.some((item) => item), {
+					message: 'Selecione pelo menos 1 serviço.',
+				}),
+		}),
 	)
 
 	const form = useForm({
@@ -111,10 +73,12 @@
 		if (!properties.dataId) return
 		isDataLoading.value = true
 		try {
-			const data = await consignerRepository.getConsignerById(properties.dataId)
-			loadCities.value[`${data.addresses.cityId.toString()}`] = data.addresses
-				.cityName as string
-			console.log(data)
+			const data = await consignerAdminRepository.getConsignerAdminById(
+				properties.dataId,
+			)
+			// loadCities.value[`${data.addresses.cityId.toString()}`] = data.addresses
+			// 	.cityName as string
+			// console.log(data)
 			form.setValues({
 				name: data.name,
 				cnpj: data.cnpj.replace(
@@ -122,16 +86,13 @@
 					'$1.$2.$3/$4-$5',
 				),
 				shortName: data.shortName,
-				startOfBusiness: data.startOfBusiness,
-				endOfBusiness: data.endOfBusiness,
 				entityTypeId: data.entityTypeId.toString(),
-				masterConsignerId: data.masterConsignerId.toString(),
-				addressId: data.addresses.id,
-
-				stateId: data.addresses.stateId.toString(),
-				cityId: data.addresses.cityId.toString(),
-				street: data.addresses.street,
-				zipCode: data.addresses.zipCode.replace(/(\d{5})(\d{3})/, '$1-$2'),
+				addressId: data.address?.id,
+				stateId: data.address?.stateId.toString(),
+				cityId: data.address?.cityId.toString(),
+				street: data.address?.street,
+				zipCode: data.address?.zipCode.replace(/(\d{5})(\d{3})/, '$1-$2'),
+				services: data.services.map((data) => data.id?.toString() as string),
 			})
 		} catch (error) {
 			console.log(error)

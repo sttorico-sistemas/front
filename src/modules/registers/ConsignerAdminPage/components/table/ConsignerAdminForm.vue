@@ -441,7 +441,7 @@
 			</div>
 
 			<form-field name="items">
-				<form-item>
+				<form-item class="flex flex-col gap-y-4">
 					<div class="mb-4 col-span-12">
 						<form-description>
 							Selecione os Tipos de Serviços:
@@ -475,11 +475,11 @@
 											color: item.theme === 'dark' ? '#FFFFFF' : '#000000',
 										}"
 										class="w-5 h-5"
-										:icon="[item.icon.family, item.icon.name]"
+										:icon="item.icon"
 									/>
 								</div>
 
-								<form-label class="m-0 font-semibold">
+								<form-label class="m-0 font-semibold text-xs">
 									{{ item.name }}
 								</form-label>
 							</div>
@@ -494,7 +494,7 @@
 					:disabled="disabled"
 					type="button"
 					variant="outline"
-					class="mt-4 gap-2 border border-primary text-primary font-semibold text-xs"
+					class="mt-4 gap-2 w-24 border border-primary text-primary font-semibold text-xs"
 					@click="onClose"
 				>
 					Cancelar
@@ -503,7 +503,7 @@
 				<button-root
 					:disabled="disabled"
 					type="submit"
-					class="mt-4 bg-primary text-white gap-2 font-semibold text-xs"
+					class="mt-4 bg-primary w-24 text-white gap-2 font-semibold text-xs"
 				>
 					Salvar
 				</button-root>

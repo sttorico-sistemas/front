@@ -219,7 +219,7 @@
 					:disabled="disabled"
 					type="button"
 					variant="outline"
-					class="mt-4 gap-2 border border-primary text-primary font-semibold text-xs"
+					class="mt-4 gap-2 w-24 border border-primary text-primary font-semibold text-xs"
 					@click="onClose"
 				>
 					Cancelar
@@ -228,7 +228,7 @@
 				<button-root
 					:disabled="disabled"
 					type="submit"
-					class="mt-4 bg-primary text-white gap-2 font-semibold text-xs"
+					class="mt-4 bg-primary w-24 text-white gap-2 font-semibold text-xs"
 				>
 					Salvar
 				</button-root>
