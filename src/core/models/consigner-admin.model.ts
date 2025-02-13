@@ -43,7 +43,14 @@ export class ConsignerAdminModel extends BaseModel {
 		return {
 			id: this.id,
 			nome: this.name,
+			nome_curto: this.shortName,
 			cnpj: this.cnpj,
+			tipo_entidade_id: this.entityTypeId,
+			cidade_id: this.address?.cityId,
+			logradouro: this.address?.street,
+			cep: this.address?.zipCode,
+			numero: "1",
+			servicos: this.services.map(({ icon }) => icon)
 		}
 	}
 

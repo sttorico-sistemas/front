@@ -39,9 +39,6 @@
 			shortName: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			addressId: z
-				.number({ message: 'O id endereço é obrigatório.' })
-				.min(1, { message: 'O id endereço é obrigatório.' }),
 			cityId: z
 				.string({ message: 'A cidade é obrigatória.' })
 				.min(1, { message: 'A cidade é obrigatória.' }),
@@ -87,7 +84,6 @@
 				),
 				shortName: data.shortName,
 				entityTypeId: data.entityTypeId.toString(),
-				addressId: data.address?.id,
 				stateId: data.address?.stateId.toString(),
 				cityId: data.address?.cityId.toString(),
 				street: data.address?.street,

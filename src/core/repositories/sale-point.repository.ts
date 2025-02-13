@@ -17,17 +17,18 @@ export class SalePointRepository {
 	}
 
 	async getAllSalePoints(configParams?: HttpClientProps<SalePointModel[]>): Promise<SalePointModel[]> {
-		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/consignante`, {
-				params: configParams?.params,
-				signal: configParams?.signal
-			})
-			const values = response.data.data.map((e: Record<string, any>) => SalePointModel.fromRecord(this.getSalePointByIdAdapter(e)));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
-			return values;
-		} catch (error) {
-			throw BaseError.fromHttpError(error);
-		}
+		return Promise.resolve([])
+		// try {
+		// 	const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/consignante`, {
+		// 		params: configParams?.params,
+		// 		signal: configParams?.signal
+		// 	})
+		// 	const values = response.data.data.map((e: Record<string, any>) => SalePointModel.fromRecord(this.getSalePointByIdAdapter(e)));
+		// 	if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+		// 	return values;
+		// } catch (error) {
+		// 	throw BaseError.fromHttpError(error);
+		// }
 	}
 
 	async getSalePointById(dataId: number, configParams?: HttpClientProps<SalePointModel>): Promise<SalePointModel> {

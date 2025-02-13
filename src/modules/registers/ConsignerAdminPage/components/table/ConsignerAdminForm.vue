@@ -257,7 +257,7 @@
 				</form-item>
 			</form-field>
 
-			<form-field v-slot="{ componentField }" name="addressType">
+			<!-- <form-field v-slot="{ componentField }" name="addressType">
 				<form-item class="grid grid-cols-24 items-center justify-center">
 					<form-label class="text-left mt-4 col-span-5">
 						Tipo de endereço
@@ -287,7 +287,7 @@
 
 					<form-message class="col-span-12 col-start-6" />
 				</form-item>
-			</form-field>
+			</form-field> -->
 
 			<form-field v-slot="{ componentField }" name="street">
 				<form-item class="grid grid-cols-24 items-center">
@@ -440,7 +440,7 @@
 				</form-field>
 			</div>
 
-			<form-field name="items">
+			<form-field name="services">
 				<form-item class="flex flex-col gap-y-4">
 					<div class="mb-4 col-span-12">
 						<form-description>
@@ -485,6 +485,7 @@
 							</div>
 						</form-item>
 					</form-field>
+
 					<form-message />
 				</form-item>
 			</form-field>

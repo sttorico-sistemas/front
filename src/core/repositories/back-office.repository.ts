@@ -17,17 +17,18 @@ export class BackOfficeRepository {
 	}
 
 	async getAllBackOffices(configParams?: HttpClientProps<BackOfficeModel[]>): Promise<BackOfficeModel[]> {
-		try {
-			const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/back-office`, {
-				params: configParams?.params,
-				signal: configParams?.signal
-			})
-			const values = response.data.data.map((e: Record<string, any>) => BackOfficeModel.fromRecord(this.getBackOfficeByIdAdapter(e)));
-			if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
-			return values;
-		} catch (error) {
-			throw BaseError.fromHttpError(error);
-		}
+		return Promise.resolve([])
+		// try {
+		// 	const response = await this.http.get<{ data: { data: any[], meta: any } }>(`/back-office`, {
+		// 		params: configParams?.params,
+		// 		signal: configParams?.signal
+		// 	})
+		// 	const values = response.data.data.map((e: Record<string, any>) => BackOfficeModel.fromRecord(this.getBackOfficeByIdAdapter(e)));
+		// 	if (configParams?.metaCallback) { configParams?.metaCallback(response.data.meta, values) }
+		// 	return values;
+		// } catch (error) {
+		// 	throw BaseError.fromHttpError(error);
+		// }
 	}
 
 	async getBackOfficeById(dataId: number, configParams?: HttpClientProps<BackOfficeModel>): Promise<BackOfficeModel> {

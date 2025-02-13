@@ -11,6 +11,7 @@
 		useQueryClient,
 	} from '@tanstack/vue-query'
 	import { ColumnDef, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	import {
 		SelectRoot,
@@ -65,17 +66,31 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
+	const props = defineProps({
+		dataId: { type: Number, required: true },
+	})
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
-	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
-	const page = useRouteQuery('cgn-page', 1, { transform: Number })
-	const perPage = useRouteQuery('cgn-per-page', 8, {
+	const selectSort = useRouteQuery<string | undefined>('opt-csg-sort')
+	const status = useRouteQuery<string | undefined>('opt-csg-status', undefined)
+	const page = useRouteQuery('opt-csg-page', 1, { transform: Number })
+	const perPage = useRouteQuery('opt-csg-per-page', 8, {
 		transform: Number,
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
+
+	const consignorId = computed(() => {
+		return props.dataId
+	})
 
 	const {
 		data: operators,
@@ -89,6 +104,7 @@
 				limit: perPage,
 			},
 			status,
+			consignorId,
 		),
 		queryFn: ({ signal }) =>
 			operatorRepository.getAllOperators({
@@ -97,6 +113,8 @@
 					page: page.value,
 					per_page: perPage.value,
 					status: status.value,
+					vinculavel_id: consignorId.value,
+					vinculavel_type: 1,
 				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {
@@ -123,6 +141,7 @@
 						limit: perPage,
 					},
 					status,
+					consignorId,
 				),
 			})
 		},
@@ -158,6 +177,7 @@
 						limit: perPage,
 					},
 					status,
+					consignorId,
 				),
 			})
 		},
@@ -191,6 +211,7 @@
 						limit: perPage,
 					},
 					status,
+					consignorId,
 				),
 			})
 		},
@@ -231,16 +252,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -255,16 +277,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -279,16 +302,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'CPF',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -303,16 +327,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'E-mail',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -327,16 +352,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllOperators.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Tipo de operador',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -345,25 +371,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(OperatorRegistrationUpdateAction, {
-						dataId: data.id,
-						tableOperatorName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateOperatorLoading.value,
-						isActive: data.status === 'active',
-					}),
-					h(OperatorRegistrationDeleteAction, {
-						dataId: data.id,
-						tableOperatorName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteOperatorLoading.value,
-						isActive: data.status === 'active',
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(OperatorRegistrationUpdateAction, {
+							dataId: data.id,
+							tableOperatorName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateOperatorLoading.value,
+							isActive: data.status === 'active',
+						}),
+						h(OperatorRegistrationDeleteAction, {
+							dataId: data.id,
+							tableOperatorName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteOperatorLoading.value,
+							isActive: data.status === 'active',
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -439,61 +480,60 @@
 		return handleDeleteOperator({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectOperatorsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectOperatorsRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectOperatorsRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -513,15 +553,14 @@
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
-			<div class="flex gap-10 items-center justify-center">
+			<div class="flex gap-14 items-center justify-center">
 				<titulo title="Operadores Cadastrados" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateOperatorLoading"
-					:title="`Criar um novo operador`"
-					description="Crie o conteúdo de um novo operador."
-					class="sm:max-w-[780px]"
+					:title="`Cadastro Operador`"
+					class="sm:max-w-[680px]"
 					@form-submit="onCreateSubmit"
 				>
 					<template #trigger>
@@ -529,7 +568,8 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
 									>
 										<font-awesome-icon
@@ -539,7 +579,7 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo operador</p>
+									<p>Cadastro Operador</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
@@ -549,6 +589,7 @@
 						<operator-registration-form
 							:metadata="form.values"
 							:disabled="isCreateOperatorLoading"
+							@on-close="openCreateModal = false"
 						/>
 					</template>
 				</form-wrapper>
@@ -556,11 +597,8 @@
 
 			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 				<select-root class="flex-[1]" v-model="status">
-					<select-trigger class="lg:max-w-80 flex-[2]">
-						<select-value
-							class="text-left"
-							placeholder="Selecione um status..."
-						/>
+					<select-trigger class="lg:max-w-40 flex-[2]">
+						<select-value class="text-left" placeholder="Status" />
 					</select-trigger>
 					<select-content>
 						<select-group>
@@ -578,7 +616,7 @@
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
+							<button-root variant="ghost" size="icon" @click="handleClear">
 								<font-awesome-icon
 									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"
@@ -586,7 +624,23 @@
 							</button-root>
 						</tooltip-trigger>
 						<tooltip-content side="right">
-							<p>Apagar filtros</p>
+							<p>Limpar pesquisa</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="ghost" size="icon" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary w-5 h-5"
+									:icon="['fas', 'print']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Imprimir</p>
 						</tooltip-content>
 					</tooltip>
 				</tooltip-provider>
@@ -601,7 +655,7 @@
 				:is-loading="isOperatorsLoading"
 			/>
 
-			<div :class="['flex w-full items-center px-4']">
+			<div :class="['flex w-full items-center justify-end px-4']">
 				<table-pagination
 					v-model="page"
 					:disabled="formattedAllOperators.length <= 0"

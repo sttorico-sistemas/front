@@ -196,7 +196,7 @@
 			<ConsignerAdminUpdateAction
 				:data-id="Number(consigner?.id)"
 				:table-consigner-admin-name="`${consigner?.name}`"
-				:is-active="false"
+				:is-active="true"
 				:is-loading="false"
 				@on-edit="onUpdateSubmit"
 			/>

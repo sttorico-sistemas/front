@@ -34,7 +34,11 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, consignerAdminRepository } from '@/core/stores'
+	import {
+		auxiliaryRepository,
+		consignerAdminRepository,
+		serviceRepository,
+	} from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import {
 		AddressModel,
@@ -45,10 +49,12 @@
 		formatCNPJ,
 		formatCPF,
 		formatStatus,
+		generatePrint,
 		valueUpdater,
 		type StatusFormatted,
 	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
+	import { InputRoot } from '@/core/components/fields/input'
 	import {
 		ConsignerAdminDeleteAction,
 		ConsignerAdminForm,
@@ -72,6 +78,11 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const endorsementItems = [
+		{ value: 'bloqueado', label: 'Bloqueado' },
+		{ value: 'liberado', label: 'Liberado' },
+	] as const
+
 	const changeValues = {
 		ASC: 'DESC',
 		DESC: 'NONE',
@@ -81,22 +92,32 @@
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
-	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
-	const page = useRouteQuery('cgn-page', 1, { transform: Number })
-	const perPage = useRouteQuery('cgn-per-page', 8, {
+	const selectSort = useRouteQuery<string | undefined>('cgt-sort')
+	const entityType = useRouteQuery<string | undefined>(
+		'cgt-entity-type',
+		undefined,
+	)
+	const name = useRouteQuery<string | undefined>('opr-name', undefined)
+	const service = useRouteQuery<string | undefined>('cgt-service', undefined)
+	const status = useRouteQuery<string | undefined>('cgt-status', undefined)
+	const endorsement = useRouteQuery<string | undefined>(
+		'cgt-endorsement',
+		undefined,
+	)
+	const page = useRouteQuery('cgt-page', 1, { transform: Number })
+	const perPage = useRouteQuery('cgt-per-page', 8, {
 		transform: Number,
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
 
 	const {
-		data: consigneradmins,
+		data: consignerAdmins,
 		isLoading: isConsignerAdminsLoading,
 		isPlaceholderData: isConsignerAdminsPlaceholderData,
 	} = useQuery({
 		queryKey: consignerAdminRepository.getQueryKey(
-			'consigneradmins',
+			'consigner-admins',
 			{
 				page,
 				limit: perPage,
@@ -130,6 +151,15 @@
 			}),
 	})
 
+	const { data: serviceTypes, isLoading: isServiceTypesLoading } = useQuery({
+		queryKey: serviceRepository.getQueryKey('services'),
+		queryFn: ({ signal }) =>
+			serviceRepository.getAllServices({
+				signal,
+				params: { perPage: '100' },
+			}),
+	})
+
 	const {
 		mutateAsync: handleDeleteConsignerAdmin,
 		isPending: isDeleteConsignerAdminLoading,
@@ -139,7 +169,7 @@
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: consignerAdminRepository.getQueryKey(
-					'consigneradmins',
+					'consigner-admins',
 					{
 						page,
 						limit: perPage,
@@ -176,7 +206,7 @@
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
 				queryKey: consignerAdminRepository.getQueryKey(
-					'consigneradmins',
+					'consigner-admins',
 					{
 						page,
 						limit: perPage,
@@ -209,7 +239,7 @@
 		onSettled: async () => {
 			await queryClient.invalidateQueries({
 				queryKey: consignerAdminRepository.getQueryKey(
-					'consigneradmins',
+					'consigner-admins',
 					{
 						page,
 						limit: perPage,
@@ -233,18 +263,23 @@
 		},
 	})
 
-	const formattedAllEntityTypesMap = computed(() => {
-		return Object.fromEntries(
-			(entityTypes.value ?? []).map(({ id, name }) => [
-				`${id as number}`,
-				name,
-			]),
-		)
+	const formattedAllEntityTypes = computed(() => {
+		return (entityTypes.value ?? []).map(({ id, name }) => ({
+			id: `${id}`,
+			name,
+		}))
+	})
+
+	const formattedAllServicesMap = computed(() => {
+		return (serviceTypes.value ?? []).map(({ id, name }) => ({
+			id: `${id}`,
+			name,
+		}))
 	})
 
 	const formattedAllTypeOfConsignerAdmin = computed<ConsignerAdminTable[]>(
 		() => {
-			return (consigneradmins.value ?? []).map(
+			return (consignerAdmins.value ?? []).map(
 				({
 					id,
 					name,
@@ -554,9 +589,6 @@
 		shortName: z
 			.string({ message: 'O nome é obrigatório' })
 			.min(1, { message: 'O nome é obrigatório.' }),
-		addressId: z
-			.number({ message: 'O id endereço é obrigatório.' })
-			.min(1, { message: 'O id endereço é obrigatório.' }),
 		cityId: z
 			.string({ message: 'A cidade é obrigatória.' })
 			.min(1, { message: 'A cidade é obrigatória.' }),
@@ -584,15 +616,17 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateConsignerAdmin(
-		// 	new ConsignerAdminModel({
-		// 		...values,
-		// 		address: new AddressModel(values),
-		// 		services:
-		// 	}),
-		// ).then(() => {
-		// 	openCreateModal.value = false
-		// })
+		return handleCreateConsignerAdmin(
+			new ConsignerAdminModel({
+				...values,
+				address: new AddressModel(values),
+				services: values.services.map((data) => ({
+					icon: data,
+				})) as ServiceModel[],
+			}),
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (
@@ -600,15 +634,18 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateConsignerAdmin(
-		// 	new ConsignerAdminModel({
-		// 		id,
-		// 		...values,
-		// 		// addresses: new AddressModel({ ...values, id: `${values.addressId}` }),
-		// 	}),
-		// ).then(() => {
-		// 	onClose()
-		// })
+		return handleUpdateConsignerAdmin(
+			new ConsignerAdminModel({
+				id,
+				...values,
+				address: new AddressModel(values),
+				services: values.services.map((data) => ({
+					icon: data,
+				})) as ServiceModel[],
+			}),
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
@@ -682,6 +719,10 @@
 
 	function handleClear() {
 		status.value = undefined
+		service.value = undefined
+		name.value = undefined
+		endorsement.value = undefined
+		entityType.value = undefined
 	}
 </script>
 <template>
@@ -739,8 +780,49 @@
 				</div>
 
 				<div class="header_actions flex items-center gap-4 flex-1 justify-end">
-					<select-root class="flex-[1]" v-model="status">
+					<input-root
+						class="lg:max-w-56"
+						v-model:model-value="name"
+						placeholder="Consignatárias"
+						@update:model-value="() => {}"
+					/>
+
+					<select-root class="" v-model="entityType">
 						<select-trigger class="lg:max-w-40 flex-[2]">
+							<select-value class="text-left" placeholder="Tipo instituição" />
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Tipos de instituições:</select-label>
+								<select-item
+									v-for="typesItem of formattedAllEntityTypes"
+									:key="typesItem.id"
+									:value="typesItem.id.toString()"
+									>{{ typesItem.name }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<select-root class="" v-model="service">
+						<select-trigger class="lg:max-w-40 flex-[2]">
+							<select-value class="text-left" placeholder="Tipo de Serviço" />
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Tipo de Serviços:</select-label>
+								<select-item
+									v-for="serviceItem of formattedAllServicesMap"
+									:key="serviceItem.id"
+									:value="serviceItem.id.toString()"
+									>{{ serviceItem.name }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<select-root class="" v-model="status">
+						<select-trigger class="lg:max-w-24 flex-[2]">
 							<select-value class="text-left" placeholder="Status" />
 						</select-trigger>
 						<select-content>
@@ -751,6 +833,23 @@
 									:key="statusItem.value"
 									:value="statusItem.value.toString()"
 									>{{ statusItem.label }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<select-root class="" v-model="endorsement">
+						<select-trigger class="lg:max-w-28 flex-[2]">
+							<select-value class="text-left" placeholder="Averbação" />
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Averbações:</select-label>
+								<select-item
+									v-for="endorsementItem of endorsementItems"
+									:key="endorsementItem.value"
+									:value="endorsementItem.value.toString()"
+									>{{ endorsementItem.label }}</select-item
 								>
 							</select-group>
 						</select-content>
@@ -775,7 +874,17 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="ghost" size="icon" @click="handleClear">
+								<button-root
+									variant="ghost"
+									size="icon"
+									@click="
+										generatePrint({
+											columns,
+											data: formattedAllTypeOfConsignerAdmin,
+											title: 'Consignatárias Habilitadas',
+										})
+									"
+								>
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'print']"
