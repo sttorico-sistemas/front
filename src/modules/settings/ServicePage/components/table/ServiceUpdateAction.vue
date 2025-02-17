@@ -9,6 +9,7 @@
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 	import { serviceRepository } from '@/core/stores'
 	import ServiceForm from './ServiceForm.vue'
+	import { parseIcon } from '@/core/utils'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
@@ -49,12 +50,13 @@
 		isDataLoading.value = true
 		try {
 			const data = await serviceRepository.getServiceById(properties.dataId)
+			const icon = parseIcon(data.icon)
 			form.setValues({
 				name: data.name,
 				color: data.color,
 				theme: data.theme,
-				iconFamily: data.icon.family,
-				iconName: data.icon.name,
+				iconFamily: icon.family,
+				iconName: icon.name,
 			})
 		} catch (error) {
 			console.log(error)

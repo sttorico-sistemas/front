@@ -28,8 +28,8 @@
 	import Titulo from 'src/core/components/Titulo.vue'
 	import { generalRepository, serviceRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
-	import { IconData, ServiceModel } from '@/core/models'
-	import { valueUpdater } from '@/core/utils'
+	import { ServiceModel } from '@/core/models'
+	import { formatIcon, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		ServiceDeleteAction,
@@ -40,7 +40,7 @@
 	type ServiceTable = {
 		id: number
 		name: string
-		icon: IconData
+		icon: string
 		color: string
 		theme: string
 	}
@@ -74,7 +74,7 @@
 		queryFn: ({ signal }) =>
 			serviceRepository.getAllServices({
 				signal,
-				params: { page: page.value, per_page: perPage.value },
+				params: { page: page.value, perPage: perPage.value },
 				metaCallback: (meta) => {
 					pageMetadata.value = {
 						totalItens: meta.total,
@@ -241,7 +241,7 @@
 						},
 						h(FontAwesomeIcon, {
 							style: { color: data.theme === 'dark' ? '#FFFFFF' : '#000000' },
-							icon: [data.icon.family, data.icon.name],
+							icon: data.icon,
 						}),
 					),
 				)
@@ -335,10 +335,10 @@
 			return handleCreateService(
 				new ServiceModel({
 					...rest,
-					icon: {
+					icon: formatIcon({
 						family: iconFamily,
 						name: iconName,
-					},
+					}),
 				}),
 			).then(() => {
 				openCreateModal.value = false
@@ -354,10 +354,10 @@
 		return handleUpdateService(
 			new ServiceModel({
 				...rest,
-				icon: {
+				icon: formatIcon({
 					family: iconFamily,
 					name: iconName,
-				},
+				}),
 				id: id,
 			}),
 		).then(() => {

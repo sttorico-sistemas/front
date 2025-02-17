@@ -9,7 +9,9 @@
 		FormLabel,
 		FormMessage,
 	} from '@/core/components/form'
+	import { ButtonRoot } from '@/core/components/button'
 
+	const emits =  defineEmits(['on-close'])
 	defineProps({
 		disabled: { type: Boolean, default: () => false },
 		metadata: {
@@ -17,6 +19,10 @@
 			default: () => ({}),
 		},
 	})
+
+	function onClose() {
+		emits('on-close')
+	}
 </script>
 
 <template>
@@ -37,5 +43,25 @@
 				<form-message class="col-span-12" />
 			</form-item>
 		</form-field>
+
+		<div class="flex gap-12 justify-center">
+				<button-root
+					:disabled="disabled"
+					type="button"
+					variant="outline"
+					class="mt-4 gap-2 border border-primary text-primary font-semibold text-xs"
+					@click="onClose"
+				>
+					Cancelar
+				</button-root>
+
+				<button-root
+					:disabled="disabled"
+					type="submit"
+					class="mt-4 bg-primary text-white gap-2 font-semibold text-xs"
+				>
+					Salvar
+				</button-root>
+			</div>
 	</div>
 </template>

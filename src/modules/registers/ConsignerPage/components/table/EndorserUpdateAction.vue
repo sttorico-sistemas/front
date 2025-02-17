@@ -28,33 +28,22 @@
 			name: z
 				.string({ message: 'O nome é obrigatório' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			shortName: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			cnpj: z
-				.string({ message: 'O CNPJ é obrigatório.' })
-				.min(1, { message: 'O CNPJ é obrigatório.' }),
-			masterEndorserId: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			entityTypeId: z
-				.string({ message: 'O nome é obrigatório' })
-				.min(1, { message: 'O nome é obrigatório.' }),
-			addressId: z
-				.number({ message: 'O id endereço é obrigatório.' })
-				.min(1, { message: 'O id endereço é obrigatório.' }),
-			cityId: z
-				.string({ message: 'A cidade é obrigatória.' })
-				.min(1, { message: 'A cidade é obrigatória.' }),
-			stateId: z
-				.string({ message: 'O estado é obrigatório.' })
-				.min(1, { message: 'O estado é obrigatório.' }),
-			street: z
-				.string({ message: 'O logradouro é obrigatório.' })
-				.min(1, { message: 'O logradouro é obrigatório.' }),
-			zipCode: z
-				.string({ message: 'O CEP é obrigatório.' })
-				.min(1, { message: 'O CEP é obrigatório.' }),
+			managerId: z
+				.string({ message: 'O gestor é obrigatório' })
+				.min(1, { message: 'O gestor é obrigatório.' }),
+			endorserTypeId: z
+				.string({ message: 'O tipo do averbador é obrigatório' })
+				.min(1, { message: 'O tipo do averbador é obrigatório.' }),
+			phone: z
+				.string({ message: 'O telefone é obrigatório.' })
+				.min(1, { message: 'O telefone é obrigatório.' }),
+			cellphone: z
+				.string({ message: 'O celular é obrigatório' })
+				.min(1, { message: 'O celular é obrigatório.' }),
+			email: z
+				.string({ message: 'O e-mail é obrigatório' })
+				.email({ message: 'O e-mail tem que ser válido.' })
+				.min(1, { message: 'O e-mail é obrigatório.' }),
 		}),
 	)
 
@@ -68,8 +57,14 @@
 		try {
 			const data = await endorserRepository.getEndorserById(properties.dataId)
 
-			form.setValues({})
-			console.log(data)
+			form.setValues({
+				name: data.name,
+				managerId: data.manager?.id?.toString(),
+				endorserTypeId: data.endorserTypeId.toString(),
+				cellphone: data.cellphone,
+				email: data.email,
+				phone: data.phone
+			})
 		} catch (error) {
 			console.log(error)
 		} finally {
@@ -86,16 +81,20 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar averbador"
+		tooltip="Editar Averbador"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar averbador ${tableEndorserName}`"
-		description="Atualize o conteúdo do averbador."
-		class="sm:max-w-[780px]"
+		:title="`Editar Averbador`"
+		class="sm:max-w-[526px]"
 		@form-submit="onSubmit"
 	>
 		<template #trigger>
-			<button-root :disabled="!isActive" variant="outline" @click="setNewData">
+			<button-root
+				:disabled="!isActive"
+				variant="ghost"
+				size="icon"
+				@click="setNewData"
+			>
 				<font-awesome-icon
 					class="text-primary w-5 h-5"
 					:icon="['fas', 'pen']"
@@ -108,6 +107,7 @@
 				:metadata="form.values"
 				:loadCities="loadCities"
 				:disabled="isLoading"
+				@on-close="openUpdateModal = false"
 			/>
 		</template>
 	</form-wrapper>

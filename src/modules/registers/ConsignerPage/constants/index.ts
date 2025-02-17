@@ -6,37 +6,37 @@ import OperatorData from "@/modules/registers/ConsignerPage/components/table/Ope
 export const accordionItems = [
 	{
 		value: 'item-1',
-		title: 'Dados do consignante',
+		title: 'Dados do Consignante',
 		component: ConsignerData,
 		disabled: false
 	},
 	{
 		value: 'item-2',
-		title: 'Contratos sistema',
+		title: 'Contratos Sistema',
 		component: null,
 		disabled: true
 	},
 	{
 		value: 'item-3',
-		title: 'Lista de gestores',
+		title: 'Lista de Gestores',
 		component: ManagerData,
 		disabled: false
 	},
 	{
 		value: 'item-4',
-		title: 'Lista de averbadores',
+		title: 'Lista de Averbadores',
 		component: EndorserData,
 		disabled: false
 	},
 	{
 		value: 'item-5',
-		title: 'Perfil de acesso para operadores',
+		title: 'Perfil de Acesso para Operadores',
 		component: null,
 		disabled: true
 	},
 	{
 		value: 'item-6',
-		title: 'Consignatárias habilitadas',
+		title: 'Consignatárias Habilitadas',
 		component: null,
 		disabled: true
 	},
@@ -60,7 +60,7 @@ export const accordionItems = [
 	},
 	{
 		value: 'item-10',
-		title: 'Margem consignável',
+		title: 'Margem Consignável',
 		component: null,
 		disabled: true
 	},
@@ -78,7 +78,7 @@ export const accordionItems = [
 	},
 	{
 		value: 'item-13',
-		title: 'IP - Instrução de procedimentos',
+		title: 'IP - Instrução de Procedimentos',
 		component: InstructionOfProcedureData,
 		disabled: false
 	},

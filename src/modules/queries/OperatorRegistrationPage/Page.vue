@@ -42,7 +42,7 @@
 	} from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { OperatorModel, PermissionList, PermissionModel } from '@/core/models'
-	import { debounceAsync, formatCPF, valueUpdater } from '@/core/utils'
+	import { debounceAsync, formatCPF, generatePrint, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		OperatorRegistrationDeleteAction,
@@ -675,7 +675,7 @@
 								:disabled="isCreateOperatorLoading"
 								@search-cpf="handleSearchPerson"
 								@update-permissions="handlePermissions"
-								@on-close="openCreateModal=false"
+								@on-close="openCreateModal = false"
 							/>
 						</template>
 					</form-wrapper>
@@ -733,7 +733,17 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="ghost" size="icon" @click="handleClear">
+								<button-root
+									variant="ghost"
+									size="icon"
+									@click="
+										generatePrint({
+											columns,
+											data: formattedAllOperators,
+											title: 'Gerenciar Operadores',
+										})
+									"
+								>
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'print']"

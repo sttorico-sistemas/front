@@ -3,34 +3,36 @@ import { BaseModel } from "src/core/models/base.model";
 
 export class RegulatoryModel extends BaseModel {
 	public id?: number
-	public type: string
-	public consignerId: number
+	public typeId: string
+	public typeOfBond: string = '1'
+	public bondId: string
 	public number: string
 	public target: string
 	public typeName?: string
 	public subject: string
 	public publicationAt: string;
-	public revocationAt: string;
+	public revocationAt?: string;
 	public status?: string
 
 	constructor(props: {
 		id?: number
-		type: string
-		consignerId: number
+		typeId: string
+		typeOfBond?: string
+		bondId: string
 		number: string
 		target: string;
 		typeName?: string
 		subject: string
 		publicationAt: string;
-		revocationAt: string;
+		revocationAt?: string;
 		status?: string
 	}) {
 		super();
 		this.id = props.id;
-		this.type = props.type;
-		this.consignerId = props.consignerId;
+		this.typeId = props.typeId;
+		this.typeOfBond = props?.typeOfBond ?? this.typeOfBond;
+		this.bondId = props.bondId;
 		this.number = props.number;
-		this.target = props.target;
 		this.target = props.target;
 		this.typeName = props.typeName;
 		this.subject = props.subject;
@@ -47,19 +49,21 @@ export class RegulatoryModel extends BaseModel {
 			data_publicacao: this.publicationAt,
 			data_revogacao: this.revocationAt,
 			objeto: this.target,
-			tipo_normativo_id: this.type,
-			consignante_id: this.consignerId,
+			tipo_normativo_id: this.typeId,
+			vinculo_type: this.typeOfBond,
+			vinculo_id: this.bondId,
 		}
 	}
 
 	static fromRecord(record: Record<string, any>): RegulatoryModel {
 		return new RegulatoryModel({
 			id: record.id,
-			consignerId: record.consignante.id,
+			typeOfBond: record?.vinculo.nome,
+			bondId: record.vinculo.id,
 			subject: record.assunto,
-			type: record.tipo_normativo.id,
+			typeId: record.tipo_normativo.id,
 			typeName: record.tipo_normativo.nome,
-			target: record.assunto,
+			target: '',
 			number: record.numero,
 			publicationAt: record.data_publicacao,
 			revocationAt: record.data_revogacao,

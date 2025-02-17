@@ -185,16 +185,16 @@
 	<main class="mb-4">
 		<breadcrumbs :paginas="['Cadastro', 'Consignante']" />
 
-		<div class="panel pb-1 mt-6">
+		<div class="panel pb-1 mt-6 bg-[#EAEAEC]">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="goToBack">
+							<button-root variant="default" @click="goToBack" class="rounded-3xl">
 								<font-awesome-icon
-									class="text-primary w-5 h-5"
+									class="text-white w-5 h-5"
 									:icon="['fas', 'arrow-left']"
 								/>
 							</button-root>
@@ -286,7 +286,7 @@
 											variant="outline"
 											role="combobox"
 											:aria-expanded="openConsignerBox"
-											class="w-full justify-between"
+											class="w-full flex items-center justify-between"
 										>
 											{{ tmpConsigner?.name ?? 'Selecione o consignante...' }}
 											<font-awesome-icon
@@ -299,7 +299,7 @@
 											/>
 										</ButtonRoot>
 									</PopoverTrigger>
-									<PopoverContent class="lg:max-w-96 flex-[3]A p-0">
+									<PopoverContent class="lg:max-w-96 flex justify-between items-center p-0">
 										<Command @update:searchTerm="handleSearchConsigners">
 											<CommandInput
 												name="search-input"
@@ -348,13 +348,8 @@
 						</form-item>
 					</form-field>
 
-					<button-root variant="outline" type="submit">
-						<font-awesome-icon
-							class="text-primary w-5 h-5"
-							:icon="['fas', 'magnifying-glass']"
-						/>
-
-						<p class="text-primary font-semibold ml-4 text-md">
+					<button-root variant="default" type="submit" class="flex ml-40 rounded-3xl justify-center items-center">
+						<p class="text-white font-semibold text-xs">
 							Nova consulta
 						</p>
 					</button-root>

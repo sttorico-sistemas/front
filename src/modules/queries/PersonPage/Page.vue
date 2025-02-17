@@ -57,6 +57,7 @@
 		debounceAsync,
 		formatCPF,
 		formatStatus,
+		generatePrint,
 		StatusFormatted,
 		valueUpdater,
 	} from '@/core/utils'
@@ -758,9 +759,11 @@
 							<person-form
 								:metadata="form.values"
 								:disabled="isCreatePersonLoading"
-								@on-close="() => {
-									openCreateModal = false
-								}"
+								@on-close="
+									() => {
+										openCreateModal = false
+									}
+								"
 							/>
 						</template>
 					</form-wrapper>
@@ -876,7 +879,17 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="ghost" size="icon" @click="handleClear">
+								<button-root
+									variant="ghost"
+									size="icon"
+									@click="
+										generatePrint({
+											columns,
+											data: formattedAllPersons,
+											title: 'Gerenciar Pessoas Cadastradas',
+										})
+									"
+								>
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'print']"

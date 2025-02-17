@@ -34,10 +34,15 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, managerRepository } from '@/core/stores'
+	import {
+		auxiliaryRepository,
+		managerRepository,
+		personRepository,
+	} from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { AddressModel, ManagerModel } from '@/core/models'
 	import {
+		formatCPF,
 		formatPhone,
 		formatStatus,
 		valueUpdater,
@@ -49,15 +54,16 @@
 		ManagerForm,
 		ManagerDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type ManagerTable = {
 		id: number
 		name: string
 		position: string
 		department: string
-		phone: string
-		cellphone: string
-		email: string
+		phone?: string
+		cellphone?: string
+		email?: string
 		status: StatusFormatted
 	}
 
@@ -66,10 +72,16 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
@@ -77,6 +89,14 @@
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
+
+	const props = defineProps({
+		dataId: { type: Number, required: true },
+	})
+
+	const currentCode = computed(() => {
+		return props.dataId
+	})
 
 	const {
 		data: managers,
@@ -90,6 +110,7 @@
 				limit: perPage,
 			},
 			status,
+			currentCode
 		),
 		queryFn: ({ signal }) =>
 			managerRepository.getAllManagers({
@@ -98,6 +119,8 @@
 					page: page.value,
 					per_page: perPage.value,
 					status: status.value,
+					vinculavel_id: currentCode.value,
+					vinculavel_type: 1,
 				},
 				metaCallback: (meta) => {
 					pageMetadata.value = {
@@ -124,6 +147,7 @@
 						limit: perPage,
 					},
 					status,
+					currentCode
 				),
 			})
 		},
@@ -158,6 +182,7 @@
 						limit: perPage,
 					},
 					status,
+					currentCode
 				),
 			})
 		},
@@ -190,6 +215,7 @@
 						limit: perPage,
 					},
 					status,
+					currentCode
 				),
 			})
 		},
@@ -224,8 +250,8 @@
 				name,
 				position,
 				department,
-				phone: formatPhone(phone),
-				cellphone: formatPhone(cellphone),
+				phone: formatPhone(phone ?? ''),
+				cellphone: formatPhone(cellphone ?? ''),
 				email,
 				status: formatStatus(status as number),
 			}),
@@ -234,30 +260,6 @@
 
 	const columns: ColumnDef<ManagerTable>[] = [
 		{
-			accessorKey: 'id',
-			meta: 'Código',
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('id'),
-					},
-					() => [
-						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
-					],
-				)
-			},
-			cell: ({ row }) => h('div', row.getValue('id')),
-			enableHiding: false,
-		},
-		{
 			accessorKey: 'name',
 			meta: 'Gestores',
 			header: () => {
@@ -265,16 +267,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Gestores',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -289,16 +292,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('position'),
+						onClick: () => handleSort('position'),
 					},
 					() => [
 						'Função',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('position')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('position')],
+						}),
 					],
 				)
 			},
@@ -313,16 +317,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('department'),
+						onClick: () => handleSort('department'),
 					},
 					() => [
 						'Departamento',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('department')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('department')],
+						}),
 					],
 				)
 			},
@@ -337,16 +342,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('phone'),
+						onClick: () => handleSort('phone'),
 					},
 					() => [
 						'Telefone',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('phone')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('phone')],
+						}),
 					],
 				)
 			},
@@ -361,16 +367,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('cellphone'),
+						onClick: () => handleSort('cellphone'),
 					},
 					() => [
 						'Celular',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('cellphone')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('cellphone')],
+						}),
 					],
 				)
 			},
@@ -385,16 +392,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('email'),
+						onClick: () => handleSort('email'),
 					},
 					() => [
 						'E-mail',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('email')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('email')],
+						}),
 					],
 				)
 			},
@@ -403,31 +411,34 @@
 		},
 		{
 			accessorKey: 'status',
-			meta: 'Status',
+			meta: 'Tipo de entidade',
+			enableResizing: false,
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfManager.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
+						onClick: () => handleSort('status'),
 					},
 					() => [
 						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeId')],
+						}),
 					],
 				)
 			},
 			cell: ({ row, cell }) =>
 				h(
-					'div',
+					'span',
 					{
 						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('status').textColor,
 							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
@@ -439,25 +450,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(ManagerUpdateAction, {
-						dataId: data.id,
-						tableManagerName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateManagerLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-					h(ManagerDeleteAction, {
-						dataId: data.id,
-						tableManagerName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteManagerLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(ManagerUpdateAction, {
+							dataId: data.id,
+							tableManagerName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateManagerLoading.value,
+							isActive: data.status.raw === 'ativo',
+						}),
+						h(ManagerDeleteAction, {
+							dataId: data.id,
+							tableManagerName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteManagerLoading.value,
+							isActive: data.status.raw === 'ativo',
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -484,22 +510,34 @@
 	})
 
 	const formSchema = z.object({
+		personId: z
+			.string({ message: 'A pessoa é obrigatória.' })
+			.min(1, { message: 'A pessoa é obrigatória.' }),
+		cpf: z
+			.string({ message: 'O CPF é obrigatório.' })
+			.min(1, { message: 'O CPF é obrigatório.' }),
 		name: z
 			.string({ message: 'O nome é obrigatório' })
 			.min(1, { message: 'O nome é obrigatório.' }),
-		managerId: z
-			.string({ message: 'O gestor é obrigatório' })
-			.min(1, { message: 'O gestor é obrigatório.' }),
+		position: z
+			.string({ message: 'O função é obrigatório' })
+			.min(1, { message: 'O função é obrigatório.' }),
+		department: z
+			.string({ message: 'O departamento é obrigatório' })
+			.min(1, { message: 'O departamento é obrigatório.' }),
 		phone: z
 			.string({ message: 'O telefone é obrigatório.' })
-			.min(1, { message: 'O telefone é obrigatório.' }),
+			.min(1, { message: 'O telefone é obrigatório.' })
+			.optional(),
 		cellphone: z
 			.string({ message: 'O celular é obrigatório' })
-			.min(1, { message: 'O celular é obrigatório.' }),
+			.min(1, { message: 'O celular é obrigatório.' })
+			.optional(),
 		email: z
 			.string({ message: 'O e-mail é obrigatório' })
 			.email({ message: 'O e-mail tem que ser válido.' })
-			.min(1, { message: 'O e-mail é obrigatório.' }),
+			.min(1, { message: 'O e-mail é obrigatório.' })
+			.optional(),
 	})
 
 	const form = useForm({
@@ -507,11 +545,11 @@
 	})
 
 	const onCreateSubmit = form.handleSubmit(async (values) => {
-		// return handleCreateManager(
-		// 	// new ManagerModel({  }),
-		// ).then(() => {
-		// 	openCreateModal.value = false
-		// })
+		return handleCreateManager(
+			new ManagerModel({ ...values, bondId: currentCode.value.toString() }),
+		).then(() => {
+			openCreateModal.value = false
+		})
 	})
 
 	const onUpdateSubmit = async (
@@ -519,75 +557,93 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		// return handleUpdateManager(
-		// 	new ManagerModel({
-		// 		id,
-		// 		...values,
-		// 	}),
-		// ).then(() => {
-		// 	onClose()
-		// })
+		return handleUpdateManager(
+			new ManagerModel({
+				id,
+				...values,
+				bondId: currentCode.value.toString(),
+			}),
+		).then(() => {
+			onClose()
+		})
 	}
 
 	const onDeleteSubmit = async (id: number) => {
 		return handleDeleteManager({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	async function handleSearchPerson(cpf: string) {
+		try {
+			const person = await personRepository.getAllPersons({
+				params: { cpf: cpf.replace(/\D/g, '') },
+			})
+			form.setValues({
+				...form.values,
+				name: person[0].name,
+				cpf: formatCPF(person[0].cpf),
+				email: person[0].email ?? undefined,
+				personId: person[0].id?.toString(),
+			})
+		} catch (error) {
+			console.log(error)
+			form.setFieldError('cpf', 'CPF é inválido ou a pessoa não existe.')
+		}
+	}
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	if (!regexData) return
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		if (!regexData) return
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectManagersRefetch()
-	// 			return
-	// 		}
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		selectSort.value = undefined
-	// 		selectManagersRefetch()
-	// 		return
-	// 	}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectManagersRefetch()
-	// }
+				return
+			}
+
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -607,15 +663,14 @@
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
-			<div class="flex gap-10 items-center justify-center">
+			<div class="flex gap-14 items-center justify-center">
 				<titulo title="Lista de gestores" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateManagerLoading"
-					:title="`Criar um novo gestor`"
-					description="Crie o conteúdo de um novo gestor."
-					class="sm:max-w-[780px]"
+					:title="`Cadastro Gestor`"
+					class="sm:max-w-[526px]"
 					@form-submit="onCreateSubmit"
 				>
 					<template #trigger>
@@ -623,7 +678,8 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
 									>
 										<font-awesome-icon
@@ -633,7 +689,7 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo gestor</p>
+									<p>Cadastro Gestor</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
@@ -643,6 +699,8 @@
 						<manager-form
 							:metadata="form.values"
 							:disabled="isCreateManagerLoading"
+							@search-cpf="handleSearchPerson"
+							@on-close="openCreateModal = false"
 						/>
 					</template>
 				</form-wrapper>
@@ -650,11 +708,8 @@
 
 			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 				<select-root class="flex-[1]" v-model="status">
-					<select-trigger class="lg:max-w-80 flex-[2]">
-						<select-value
-							class="text-left"
-							placeholder="Selecione um status..."
-						/>
+					<select-trigger class="lg:max-w-40 flex-[2]">
+						<select-value class="text-left" placeholder="Status" />
 					</select-trigger>
 					<select-content>
 						<select-group>
@@ -672,7 +727,7 @@
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
+							<button-root variant="ghost" size="icon" @click="handleClear">
 								<font-awesome-icon
 									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"
@@ -680,7 +735,23 @@
 							</button-root>
 						</tooltip-trigger>
 						<tooltip-content side="right">
-							<p>Apagar filtros</p>
+							<p>Limpar pesquisa</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="ghost" size="icon" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary w-5 h-5"
+									:icon="['fas', 'print']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Imprimir</p>
 						</tooltip-content>
 					</tooltip>
 				</tooltip-provider>
@@ -695,7 +766,7 @@
 				:is-loading="isManagersLoading"
 			/>
 
-			<div :class="['flex w-full items-center px-4']">
+			<div :class="['flex w-full items-center justify-end px-4']">
 				<table-pagination
 					v-model="page"
 					:disabled="formattedAllTypeOfManager.length <= 0"

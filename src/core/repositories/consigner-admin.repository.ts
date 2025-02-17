@@ -57,12 +57,15 @@ export class ConsignerAdminRepository {
 				cidade_id: data?.cidade?.id,
 				cidade_nome: data?.cidade?.nome,
 				estado_id: data?.estado?.id,
-				estado_nome: data?.estado?.nome,
+				estado_nome: data?.estado?.uf,
 				logradouro: data?.logradouro,
 				cep: data?.cep,
 				// tipo_endereco_id: data?.endereco?.tipo_endereco_id,
 				// tipo_endereco_nome: data?.endereco?.tipo_endereco,
-			}
+			},
+			servicos: data.servicos,
+			averbacao: data.averbacao,
+			tipo_entidade: data.tipo_entidade
 		}
 	}
 
