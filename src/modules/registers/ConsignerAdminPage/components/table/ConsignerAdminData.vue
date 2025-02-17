@@ -3,7 +3,7 @@
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	import { InputRoot } from '@/core/components/fields/input'
-	import { AddressModel, ConsignerModel } from '@/core/models'
+	import { AddressModel, ConsignerAdminModel, ConsignerModel } from '@/core/models'
 	import Titulo from '@/core/components/Titulo.vue'
 	import ConsignerAdminUpdateAction from './ConsignerAdminUpdateAction.vue'
 	import {
@@ -12,10 +12,11 @@
 		useQuery,
 		useQueryClient,
 	} from '@tanstack/vue-query'
-	import { consignerRepository } from '@/core/stores'
+	import { consignerAdminRepository, consignerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { computed } from 'vue'
 	import * as z from 'zod'
+	import { formatStatus } from '@/core/utils'
 
 	type ConsignerData = {
 		code: string
@@ -43,21 +44,23 @@
 	})
 
 	const { data: consigner, isLoading: isConsignerLoading } = useQuery({
-		queryKey: consignerRepository.getQueryKey(
-			'consigner-by-id',
+		queryKey: consignerAdminRepository.getQueryKey(
+			'consigner-admin-by-id',
 			{},
 			currentCode,
 		),
 		queryFn: ({ signal }) =>
-			consignerRepository.getConsignerById(currentCode.value, { signal }),
+			consignerAdminRepository.getConsignerAdminById(currentCode.value, {
+				signal,
+			}),
 	})
 
 	const {
 		mutateAsync: handleUpdateConsigner,
 		isPending: isUpdateConsignerLoading,
 	} = useMutation({
-		mutationFn: (data: ConsignerModel) =>
-			consignerRepository.updateConsigner(data),
+		mutationFn: (data: ConsignerAdminModel) =>
+			consignerAdminRepository.updateConsignerAdmin(data),
 		onSettled: async () => {
 			return await queryClient.invalidateQueries({
 				queryKey: consignerRepository.getQueryKey(
@@ -92,15 +95,14 @@
 					'$1.$2.$3/$4-$5',
 				) ?? '',
 			entityType: consigner?.value?.entityTypeName ?? '',
-			startOfBusiness: consigner?.value?.startOfBusiness ?? undefined,
-			endOfBusiness: consigner?.value?.endOfBusiness ?? undefined,
-			masterConsigner: consigner?.value?.masterConsignerName ?? '',
 			shortName: consigner?.value?.shortName ?? '',
-			addressType: consigner?.value?.addresses?.addressTypeName ?? '',
-			street: consigner?.value?.addresses?.street ?? '',
-			city: consigner?.value?.addresses?.cityName ?? '',
-			uf: consigner?.value?.addresses?.stateName ?? '',
-			zipCode: consigner?.value?.addresses?.zipCode ?? '',
+			addressType: consigner?.value?.address?.addressTypeName ?? '',
+			street: consigner?.value?.address?.street ?? '',
+			city: consigner?.value?.address?.cityName ?? '',
+			uf: consigner?.value?.address?.stateName ?? '',
+			zipCode: consigner?.value?.address?.zipCode ?? '',
+			status: formatStatus(consigner?.value?.status as number),
+			services: consigner?.value?.services,
 		}
 	})
 
@@ -174,15 +176,15 @@
 		values: z.infer<typeof formSchema> & { addressId: number },
 		onClose: () => void,
 	) => {
-		return handleUpdateConsigner(
-			new ConsignerModel({
-				id,
-				...values,
-				addresses: new AddressModel({ ...values, id: `${values.addressId}` }),
-			}),
-		).then(() => {
-			onClose()
-		})
+		// return handleUpdateConsigner(
+		// 	new ConsignerModel({
+		// 		id,
+		// 		...values,
+		// 		addresses: new AddressModel({ ...values, id: `${values.addressId}` }),
+		// 	}),
+		// ).then(() => {
+		// 	onClose()
+		// })
 	}
 </script>
 
@@ -194,7 +196,7 @@
 			<ConsignerAdminUpdateAction
 				:data-id="Number(consigner?.id)"
 				:table-consigner-admin-name="`${consigner?.name}`"
-				:is-active="false"
+				:is-active="true"
 				:is-loading="false"
 				@on-edit="onUpdateSubmit"
 			/>
@@ -354,7 +356,7 @@
 			</div>
 		</div>
 
-		<div class="grid grid-cols-28 gap-4">
+		<div class="flex gap-14">
 			<div class="flex col-span-4 items-center gap-4">
 				<label
 					for="consigner-data-addressType"
@@ -363,6 +365,20 @@
 					Serviços:
 				</label>
 
+				<div class="flex gap-1">
+					<div
+						class="flex justify-center items-center"
+						v-for="service of formattedConsigner.services"
+						:key="service.id"
+					>
+						<div
+							:style="{ backgroundColor: service.color }"
+							class="rounded-full flex justify-center items-center w-[30px] h-[30px]"
+						>
+							<font-awesome-icon :icon="service.icon" />
+						</div>
+					</div>
+				</div>
 			</div>
 
 			<div class="flex col-span-4 items-center gap-4">
@@ -373,6 +389,15 @@
 					Status:
 				</label>
 
+				<div
+					:style="{
+						color: formattedConsigner.status?.textColor,
+						backgroundColor: formattedConsigner.status?.bgColor,
+					}"
+					class="flex justify-center items-center min-w-20 w-fit rounded-md px-2 py-1 text-xs font-semibold"
+				>
+					{{ formattedConsigner.status.text }}
+				</div>
 			</div>
 		</div>
 

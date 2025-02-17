@@ -257,7 +257,7 @@
 				</form-item>
 			</form-field>
 
-			<form-field v-slot="{ componentField }" name="addressType">
+			<!-- <form-field v-slot="{ componentField }" name="addressType">
 				<form-item class="grid grid-cols-24 items-center justify-center">
 					<form-label class="text-left mt-4 col-span-5">
 						Tipo de endereço
@@ -287,7 +287,7 @@
 
 					<form-message class="col-span-12 col-start-6" />
 				</form-item>
-			</form-field>
+			</form-field> -->
 
 			<form-field v-slot="{ componentField }" name="street">
 				<form-item class="grid grid-cols-24 items-center">
@@ -440,8 +440,8 @@
 				</form-field>
 			</div>
 
-			<form-field name="items">
-				<form-item>
+			<form-field name="services">
+				<form-item class="flex flex-col gap-y-4">
 					<div class="mb-4 col-span-12">
 						<form-description>
 							Selecione os Tipos de Serviços:
@@ -475,16 +475,17 @@
 											color: item.theme === 'dark' ? '#FFFFFF' : '#000000',
 										}"
 										class="w-5 h-5"
-										:icon="[item.icon.family, item.icon.name]"
+										:icon="item.icon"
 									/>
 								</div>
 
-								<form-label class="m-0 font-semibold">
+								<form-label class="m-0 font-semibold text-xs">
 									{{ item.name }}
 								</form-label>
 							</div>
 						</form-item>
 					</form-field>
+
 					<form-message />
 				</form-item>
 			</form-field>
@@ -494,7 +495,7 @@
 					:disabled="disabled"
 					type="button"
 					variant="outline"
-					class="mt-4 gap-2 border border-primary text-primary font-semibold text-xs"
+					class="mt-4 gap-2 w-24 border border-primary text-primary font-semibold text-xs"
 					@click="onClose"
 				>
 					Cancelar
@@ -503,7 +504,7 @@
 				<button-root
 					:disabled="disabled"
 					type="submit"
-					class="mt-4 bg-primary text-white gap-2 font-semibold text-xs"
+					class="mt-4 bg-primary w-24 text-white gap-2 font-semibold text-xs"
 				>
 					Salvar
 				</button-root>

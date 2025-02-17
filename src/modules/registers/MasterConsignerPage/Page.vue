@@ -38,7 +38,7 @@
 	import { masterConsignerRepository } from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { MasterConsignerModel } from '@/core/models'
-	import { debounceAsync, valueUpdater } from '@/core/utils'
+	import { debounceAsync, generatePrint, valueUpdater } from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
 	import {
 		MasterConsignerDeleteAction,
@@ -475,6 +475,11 @@
 							<master-consigner-form
 								:metadata="form.values"
 								:disabled="isCreateMasterConsignerLoading"
+								@on-close="
+									() => {
+										openCreateModal = false
+									}
+								"
 							/>
 						</template>
 					</form-wrapper>
@@ -488,13 +493,9 @@
 						@update:model-value="handleSearch"
 					/>
 
-
 					<select-root class="flex-[4]" v-model="status">
 						<select-trigger class="lg:max-w-40 flex-[2]">
-							<select-value
-								class="text-left"
-								placeholder="Status"
-							/>
+							<select-value class="text-left" placeholder="Status" />
 						</select-trigger>
 						<select-content>
 							<select-group>
@@ -508,8 +509,6 @@
 							</select-group>
 						</select-content>
 					</select-root>
-
-
 
 					<tooltip-provider>
 						<tooltip>
@@ -530,7 +529,17 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="ghost" size="icon" @click="handleClear">
+								<button-root
+									variant="ghost"
+									size="icon"
+									@click="
+										generatePrint({
+											columns,
+											data: formattedAllTypeOfMasterConsigner,
+											title: 'Gerenciar Consignante Master',
+										})
+									"
+								>
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'print']"

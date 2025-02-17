@@ -7,6 +7,8 @@ export class EndorserModel extends BaseModel {
 	public phone: string
 	public cellphone: string;
 	public email: string;
+	public consigneeId: number;
+	public endorserTypeId: number;
 	public status?: number
 	public manager: ManagerModel
 
@@ -16,6 +18,8 @@ export class EndorserModel extends BaseModel {
 		phone: string
 		cellphone: string;
 		email: string;
+		consigneeId: number,
+		endorserTypeId: string,
 		status?: number
 		manager: ManagerModel
 	}) {
@@ -26,6 +30,8 @@ export class EndorserModel extends BaseModel {
 		this.cellphone = props.cellphone?.replace(/\D+/g, "");
 		this.email = props.email;
 		this.status = props.status;
+		this.consigneeId = props.consigneeId;
+		this.endorserTypeId = +props.endorserTypeId;
 		this.manager = props.manager;
 	}
 
@@ -33,6 +39,9 @@ export class EndorserModel extends BaseModel {
 		return {
 			id: this.id,
 			nome: this.name,
+			consignante_id: this.consigneeId,
+			gestor_id: this.manager.id,
+			tipo_averbador_id: this.endorserTypeId
 		}
 	}
 
@@ -40,11 +49,13 @@ export class EndorserModel extends BaseModel {
 		return new EndorserModel({
 			id: record.id,
 			name: record.nome,
-			cellphone: record.celular,
-			email: record.email,
-			phone: record.telefone,
+			cellphone: record.gestor.celular,
+			email: record.gestor.email,
+			phone: record.gestor.telefone,
 			status: record.status,
-			manager: ManagerModel.fromRecord(record.gestor)
+			consigneeId: record.consignante.id,
+			manager: ManagerModel.fromRecord(record.gestor),
+			endorserTypeId: record.tipo_averbador.id
 		});
 	}
 

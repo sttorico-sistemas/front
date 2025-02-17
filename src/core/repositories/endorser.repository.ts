@@ -36,8 +36,7 @@ export class EndorserRepository {
 				params: configParams?.params,
 				signal: configParams?.signal
 			})
-			const values = EndorserModel.fromRecord(response.data)
-			if (configParams?.metaCallback) { configParams?.metaCallback(response?.data?.meta, values) }
+			const values = EndorserModel.fromRecord(response)
 			return values
 		} catch (error) {
 			throw BaseError.fromHttpError(error);

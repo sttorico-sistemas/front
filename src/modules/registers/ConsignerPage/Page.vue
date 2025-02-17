@@ -39,6 +39,7 @@
 	import { AddressModel, ConsignerModel } from '@/core/models'
 	import {
 		formatStatus,
+		generatePrint,
 		valueUpdater,
 		type StatusFormatted,
 	} from '@/core/utils'
@@ -66,6 +67,11 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const endorsementItems = [
+		{ value: 'bloqueado', label: 'Bloqueado' },
+		{ value: 'liberado', label: 'Liberado' },
+	] as const
+
 	const changeValues = {
 		ASC: 'DESC',
 		DESC: 'NONE',
@@ -76,7 +82,15 @@
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const entityType = useRouteQuery<string | undefined>(
+		'cgn-entity-type',
+		undefined,
+	)
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
+	const endorsement = useRouteQuery<string | undefined>(
+		'cgn-endorsement',
+		undefined,
+	)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
 		transform: Number,
@@ -226,13 +240,11 @@
 		},
 	})
 
-	const formattedAllEntityTypesMap = computed(() => {
-		return Object.fromEntries(
-			(entityTypes.value ?? []).map(({ id, name }) => [
-				`${id as number}`,
-				name,
-			]),
-		)
+	const formattedAllEntityTypes = computed(() => {
+		return (entityTypes.value ?? []).map(({ id, name }) => ({
+			id: `${id}`,
+			name,
+		}))
 	})
 
 	const formattedAllTypeOfConsigner = computed<ConsignerTable[]>(() => {
@@ -246,6 +258,7 @@
 				startOfBusiness,
 				endOfBusiness,
 				status,
+				endorsement,
 			}) => ({
 				id: id as number,
 				name,
@@ -258,6 +271,7 @@
 				// 	'$1.$2.$3/$4-$5',
 				// ),
 				status: formatStatus(status as number),
+				endorsement: formatStatus(endorsement as string),
 			}),
 		)
 	})
@@ -464,7 +478,7 @@
 					'div',
 					{
 						class:
-							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
+							'flex justify-center items-center min-w-20 w-fit rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('endorsement')?.textColor,
 							backgroundColor:
@@ -762,12 +776,26 @@
 				</div>
 
 				<div class="header_actions flex items-center gap-5 flex-1 justify-end">
-					<select-root class="flex-[1]" v-model="status">
+					<select-root class="" v-model="entityType">
 						<select-trigger class="lg:max-w-40 flex-[2]">
-							<select-value
-								class="text-left"
-								placeholder="Status"
-							/>
+							<select-value class="text-left" placeholder="Tipo entidade" />
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Tipos de entidades:</select-label>
+								<select-item
+									v-for="typesItem of formattedAllEntityTypes"
+									:key="typesItem.id"
+									:value="typesItem.id.toString()"
+									>{{ typesItem.name }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<select-root class="" v-model="status">
+						<select-trigger class="lg:max-w-24 flex-[2]">
+							<select-value class="text-left" placeholder="Status" />
 						</select-trigger>
 						<select-content>
 							<select-group>
@@ -777,6 +805,23 @@
 									:key="statusItem.value"
 									:value="statusItem.value.toString()"
 									>{{ statusItem.label }}</select-item
+								>
+							</select-group>
+						</select-content>
+					</select-root>
+
+					<select-root class="" v-model="endorsement">
+						<select-trigger class="lg:max-w-28 flex-[2]">
+							<select-value class="text-left" placeholder="Averbação" />
+						</select-trigger>
+						<select-content>
+							<select-group>
+								<select-label>Averbações:</select-label>
+								<select-item
+									v-for="endorsementItem of endorsementItems"
+									:key="endorsementItem.value"
+									:value="endorsementItem.value.toString()"
+									>{{ endorsementItem.label }}</select-item
 								>
 							</select-group>
 						</select-content>
@@ -801,7 +846,17 @@
 					<tooltip-provider>
 						<tooltip>
 							<tooltip-trigger as-child>
-								<button-root variant="ghost" size="icon" @click="handleClear">
+								<button-root
+									variant="ghost"
+									size="icon"
+									@click="
+										generatePrint({
+											columns,
+											data: formattedAllTypeOfConsigner,
+											title: 'Gerenciar Consignante',
+										})
+									"
+								>
 									<font-awesome-icon
 										class="text-primary w-5 h-5"
 										:icon="['fas', 'print']"

@@ -49,6 +49,7 @@
 		BackOfficeForm,
 		BackOfficeDeleteAction,
 	} from '@/modules/registers/ConsignerAdminPage/components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type BackOfficeTable = {
 		id: number
@@ -63,10 +64,16 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
@@ -74,6 +81,14 @@
 	})
 	const queryClient = useQueryClient()
 	const notify = useNotify()
+
+	const props = defineProps({
+		dataId: { type: Number, required: true },
+	})
+
+	const currentCode = computed(() => {
+		return props.dataId
+	})
 
 	const {
 		data: backOffices,
@@ -87,6 +102,7 @@
 				limit: perPage,
 			},
 			status,
+			currentCode,
 		),
 		queryFn: ({ signal }) =>
 			backOfficeRepository.getAllBackOffices({
@@ -121,6 +137,7 @@
 						limit: perPage,
 					},
 					status,
+					currentCode,
 				),
 			})
 		},
@@ -156,6 +173,7 @@
 						limit: perPage,
 					},
 					status,
+					currentCode,
 				),
 			})
 		},
@@ -189,6 +207,7 @@
 						limit: perPage,
 					},
 					status,
+					currentCode,
 				),
 			})
 		},
@@ -209,7 +228,7 @@
 
 	const formattedAllBackOffice = computed<BackOfficeTable[]>(() => {
 		return (backOffices.value ?? []).map(
-			({ id, name,sectorName, cityName, status }) => ({
+			({ id, name, sectorName, cityName, status }) => ({
 				id: id as number,
 				name,
 				sector: sectorName as string,
@@ -228,16 +247,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllBackOffice.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -252,16 +272,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllBackOffice.value.length <= 0,
-						// onClick: () => handleSort('name'),
+						onClick: () => handleSort('name'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('name')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('name')],
+						}),
 					],
 				)
 			},
@@ -276,16 +297,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllBackOffice.value.length <= 0,
-						// onClick: () => handleSort('sector'),
+						onClick: () => handleSort('sector'),
 					},
 					() => [
 						'Setor',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('sector')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('sector')],
+						}),
 					],
 				)
 			},
@@ -300,16 +322,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllBackOffice.value.length <= 0,
-						// onClick: () => handleSort('city'),
+						onClick: () => handleSort('city'),
 					},
 					() => [
 						'Cidade',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('city')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('city')],
+						}),
 					],
 				)
 			},
@@ -318,31 +341,34 @@
 		},
 		{
 			accessorKey: 'status',
-			meta: 'Status',
+			meta: 'Tipo de entidade',
+			enableResizing: false,
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllBackOffice.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
+						onClick: () => handleSort('status'),
 					},
 					() => [
 						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeId')],
+						}),
 					],
 				)
 			},
 			cell: ({ row, cell }) =>
 				h(
-					'div',
+					'span',
 					{
 						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('status').textColor,
 							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
@@ -354,25 +380,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(BackOfficeUpdateAction, {
-						dataId: data.id,
-						tableBackOfficeName: data.name,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateBackOfficeLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-					h(BackOfficeDeleteAction, {
-						dataId: data.id,
-						tableBackOfficeName: data.name,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteBackOfficeLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(BackOfficeUpdateAction, {
+							dataId: data.id,
+							tableBackOfficeName: data.name,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateBackOfficeLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+						h(BackOfficeDeleteAction, {
+							dataId: data.id,
+							tableBackOfficeName: data.name,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteBackOfficeLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -448,61 +489,60 @@
 		return handleDeleteBackOffice({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectBackOfficesRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectBackOfficesRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${kInstruçãoey}][ASC]`
-	// 	selectBackOfficesRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -522,14 +562,13 @@
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
-			<div class="flex gap-10 items-center justify-center">
+			<div class="flex gap-14 items-center justify-center">
 				<titulo title="Back Offices Cadastrados" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateBackOfficeLoading"
-					:title="`Criar um novo Back Office`"
-					description="Crie o conteúdo de um novo back office."
+					:title="`Cadastro Back Office`"
 					class="sm:max-w-[780px]"
 					@form-submit="onCreateSubmit"
 				>
@@ -538,8 +577,10 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
+										disabled
 									>
 										<font-awesome-icon
 											class="text-primary w-5 h-5"
@@ -548,7 +589,7 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um novo back office</p>
+									<p>Cadastro Back Office</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
@@ -565,11 +606,8 @@
 
 			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 				<select-root class="flex-[1]" v-model="status">
-					<select-trigger class="lg:max-w-80 flex-[2]">
-						<select-value
-							class="text-left"
-							placeholder="Selecione um status..."
-						/>
+					<select-trigger class="lg:max-w-40 flex-[2]">
+						<select-value class="text-left" placeholder="Status" />
 					</select-trigger>
 					<select-content>
 						<select-group>
@@ -583,11 +621,10 @@
 						</select-group>
 					</select-content>
 				</select-root>
-
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
+							<button-root variant="ghost" size="icon" @click="handleClear">
 								<font-awesome-icon
 									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"
@@ -595,7 +632,23 @@
 							</button-root>
 						</tooltip-trigger>
 						<tooltip-content side="right">
-							<p>Apagar filtros</p>
+							<p>Limpar pesquisa</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="ghost" size="icon" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary w-5 h-5"
+									:icon="['fas', 'print']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Imprimir</p>
 						</tooltip-content>
 					</tooltip>
 				</tooltip-provider>
@@ -610,7 +663,7 @@
 				:is-loading="isBackOfficesLoading"
 			/>
 
-			<div :class="['flex w-full items-center px-4']">
+			<div :class="['flex w-full items-center justify-end px-4']">
 				<table-pagination
 					v-model="page"
 					:disabled="formattedAllBackOffice.length <= 0"

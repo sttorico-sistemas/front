@@ -39,15 +39,17 @@
 			<tooltip-provider>
 				<tooltip>
 					<tooltip-trigger as-child>
-						<button-root variant="outline">
+						<button-root variant="ghost" size="icon">
 							<font-awesome-icon
-								:class="['w-5 h-5', isActive ? 'text-warning' : 'text-success']"
+								:class="['w-5 h-5', isActive ? 'text-danger' : 'text-success']"
 								:icon="isActive ? ['fas', 'ban'] : ['far', 'circle-check']"
 							/>
 						</button-root>
 					</tooltip-trigger>
 					<tooltip-content side="right">
-						<p>{{ isActive ? 'Desativar' : 'Ativar' }} averbador</p>
+						<p>
+							{{ isActive ? 'Desativar' : 'Ativar' }} normativo {{ isActive }}
+						</p>
 					</tooltip-content>
 				</tooltip>
 			</tooltip-provider>
@@ -67,7 +69,7 @@
 			<alert-dialog-footer>
 				<alert-dialog-cancel>Cancelar</alert-dialog-cancel>
 				<alert-dialog-action
-					:class="['text-white', isActive ? 'bg-warning' : 'bg-success']"
+					:class="['text-white', isActive ? 'bg-danger' : 'bg-success']"
 					@click="handleDelete"
 					>{{ isActive ? 'Desativar' : 'Ativar' }}</alert-dialog-action
 				>

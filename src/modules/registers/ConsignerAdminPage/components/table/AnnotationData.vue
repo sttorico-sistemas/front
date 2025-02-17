@@ -55,6 +55,7 @@
 		AnnotationForm,
 		AnnotationDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type AnnotationTable = {
 		id: number
@@ -63,12 +64,18 @@
 		createdAt: string
 	}
 
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const search = ref<string | undefined>()
 	const searchDate = ref<DateValue | undefined>()
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const selectSearch = useRouteQuery<string | undefined>(
 		'cgn-search',
@@ -256,16 +263,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -280,16 +288,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
-						// onClick: () => handleSort('createdAt'),
+						onClick: () => handleSort('createdAt'),
 					},
 					() => [
 						'Data',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('createdAt')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('createdAt')],
+						}),
 					],
 				)
 			},
@@ -304,16 +313,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
-						// onClick: () => handleSort('title'),
+						onClick: () => handleSort('title'),
 					},
 					() => [
 						'Título',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('title')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('title')],
+						}),
 					],
 				)
 			},
@@ -328,16 +338,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfAnnotation.value.length <= 0,
-						// onClick: () => handleSort('operatorName'),
+						onClick: () => handleSort('operatorName'),
 					},
 					() => [
 						'Operador',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('operatorName')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('operatorName')],
+						}),
 					],
 				)
 			},
@@ -346,25 +357,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(AnnotationUpdateAction, {
-						dataId: data.id,
-						tableAnnotationName: data.title,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateAnnotationLoading.value,
-						isActive: true,
-					}),
-					h(AnnotationDeleteAction, {
-						dataId: data.id,
-						tableAnnotationName: data.title,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteAnnotationLoading.value,
-						isActive: true,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(AnnotationUpdateAction, {
+							dataId: data.id,
+							tableAnnotationName: data.title,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateAnnotationLoading.value,
+							isActive: true,
+						}),
+						h(AnnotationDeleteAction, {
+							dataId: data.id,
+							tableAnnotationName: data.title,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteAnnotationLoading.value,
+							isActive: true,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -440,61 +466,60 @@
 		return handleDeleteAnnotation({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectRegulationsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectRegulationsRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectRegulationsRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -531,15 +556,14 @@
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
-			<div class="flex gap-10 items-center justify-center">
+			<div class="flex gap-14 items-center justify-center">
 				<titulo title="Anotações Importantes" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateAnnotationLoading"
-					:title="`Criar um nova anotação`"
-					description="Crie o conteúdo de um nova anotação."
-					class="sm:max-w-[780px]"
+					:title="`Cadastro Anotação`"
+					class="sm:max-w-[580px]"
 					@form-submit="onCreateSubmit"
 				>
 					<template #trigger>
@@ -547,8 +571,10 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
+										disabled
 									>
 										<font-awesome-icon
 											class="text-primary w-5 h-5"
@@ -557,7 +583,7 @@
 									</button-root>
 								</tooltip-trigger>
 								<tooltip-content side="right">
-									<p>Cadastre um nova anotação</p>
+									<p>Cadastro Anotação</p>
 								</tooltip-content>
 							</tooltip>
 						</tooltip-provider>
@@ -581,7 +607,7 @@
 				/>
 
 				<select-root class="flex-[1]" v-model="status">
-					<select-trigger class="lg:max-w-80 flex-[2]">
+					<select-trigger class="lg:max-w-80 flex">
 						<select-value
 							class="text-left"
 							placeholder="Selecione um operador..."
@@ -636,7 +662,7 @@
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
+							<button-root variant="ghost" size="icon" @click="handleClear">
 								<font-awesome-icon
 									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"
@@ -644,7 +670,23 @@
 							</button-root>
 						</tooltip-trigger>
 						<tooltip-content side="right">
-							<p>Apagar filtros</p>
+							<p>Limpar pesquisa</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="ghost" size="icon" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary w-5 h-5"
+									:icon="['fas', 'print']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Imprimir</p>
 						</tooltip-content>
 					</tooltip>
 				</tooltip-provider>
@@ -659,7 +701,7 @@
 				:is-loading="isRegulationsLoading"
 			/>
 
-			<div :class="['flex w-full items-center px-4']">
+			<div :class="['flex w-full items-center justify-end px-4']">
 				<table-pagination
 					v-model="page"
 					:disabled="formattedAllTypeOfAnnotation.length <= 0"

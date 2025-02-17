@@ -3,6 +3,7 @@
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	import { ButtonRoot } from '@/core/components/button'
+	import { cn } from '@/core/utils'
 
 	const props = defineProps<{
 		url: string
@@ -27,13 +28,15 @@
 </script>
 
 <template>
-	<button-root
-		:disabled="props.disabled"
-		variant="ghost"
-		class="text-primary font-bold"
-		@click="handleDownload"
-	>
-		<font-awesome-icon class="w-5 h-5 mr-2" :icon="['fas', 'download']" />
-		Ver Documento
-	</button-root>
+	<div :class="cn('flex gap-4', props.class)">
+		<button-root
+			:disabled="props.disabled"
+			variant="ghost"
+			class="text-primary font-bold"
+			@click="handleDownload"
+		>
+			<font-awesome-icon class="w-5 h-5 mr-2" :icon="['fas', 'download']" />
+			Ver Documento
+		</button-root>
+	</div>
 </template>

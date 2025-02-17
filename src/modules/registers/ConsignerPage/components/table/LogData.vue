@@ -44,6 +44,7 @@
 		type StatusFormatted,
 	} from '@/core/utils'
 	import { ButtonRoot } from '@/core/components/button'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type LogTable = {
 		id: number
@@ -59,10 +60,16 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
@@ -127,16 +134,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -151,16 +159,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('createdAt'),
+						onClick: () => handleSort('createdAt'),
 					},
 					() => [
 						'Data/Hora',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('createdAt')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('createdAt')],
+						}),
 					],
 				)
 			},
@@ -175,16 +184,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('type'),
+						onClick: () => handleSort('type'),
 					},
 					() => [
 						'Tipo de ação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('type')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('type')],
+						}),
 					],
 				)
 			},
@@ -199,16 +209,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('componentName'),
+						onClick: () => handleSort('componentName'),
 					},
 					() => [
 						'Componente',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('componentName')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('componentName')],
+						}),
 					],
 				)
 			},
@@ -223,16 +234,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('operatorUsername'),
+						onClick: () => handleSort('operatorUsername'),
 					},
 					() => [
 						'Operador',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('operatorUsername')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('operatorUsername')],
+						}),
 					],
 				)
 			},
@@ -247,16 +259,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('operatorName'),
+						onClick: () => handleSort('operatorName'),
 					},
 					() => [
 						'Nome',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('operatorName')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('operatorName')],
+						}),
 					],
 				)
 			},
@@ -271,16 +284,17 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
+						size: 'none',
+						class: ['justify-start font-bold'],
 						disabled: formattedAllTypeOfLog.value.length <= 0,
-						// onClick: () => handleSort('ip'),
+						onClick: () => handleSort('ip'),
 					},
 					() => [
 						'Endereço de IP',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('ip')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('ip')],
+						}),
 					],
 				)
 			},
@@ -333,61 +347,60 @@
 		validationSchema: toTypedSchema(formSchema),
 	})
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectLogsRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectLogsRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${key}][ASC]`
-	// 	selectLogsRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -407,7 +420,7 @@
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
-			<div class="flex gap-10 items-center justify-center">
+			<div class="flex gap-14 items-center justify-center">
 				<titulo title="Logs de Alterações" />
 			</div>
 		</div>
@@ -420,7 +433,7 @@
 				:is-loading="isLogsLoading"
 			/>
 
-			<div :class="['flex w-full items-center px-4']">
+			<div :class="['flex w-full items-center justify-end px-4']">
 				<table-pagination
 					v-model="page"
 					:disabled="formattedAllTypeOfLog.length <= 0"

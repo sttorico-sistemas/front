@@ -34,7 +34,10 @@
 	} from '@/core/components/table-wrapper'
 	import Breadcrumbs from '@/core/components/Breadcrumbs.vue'
 	import Titulo from '@/core/components/Titulo.vue'
-	import { auxiliaryRepository, instructionOfProcedureRepository } from '@/core/stores'
+	import {
+		auxiliaryRepository,
+		instructionOfProcedureRepository,
+	} from '@/core/stores'
 	import { useNotify } from '@/core/composables'
 	import { AddressModel, InstructionOfProcedureModel } from '@/core/models'
 	import {
@@ -49,6 +52,7 @@
 		InstructionOfProcedureForm,
 		InstructionOfProcedureDeleteAction,
 	} from '@/modules/registers/ConsignerPage/components/table'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	type InstructionOfProcedureTable = {
 		id: number
@@ -65,10 +69,16 @@
 		{ value: 0, label: 'Desativado' },
 	] as const
 
+	const changeValues = {
+		ASC: 'DESC',
+		DESC: 'NONE',
+		NONE: 'ASC',
+	} as const
+
 	const openCreateModal = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
-	// const selectSort = useRouteQuery<string | undefined>('cgn-sort')
+	const selectSort = useRouteQuery<string | undefined>('cgn-sort')
 	const status = useRouteQuery<string | undefined>('cgn-status', undefined)
 	const page = useRouteQuery('cgn-page', 1, { transform: Number })
 	const perPage = useRouteQuery('cgn-per-page', 8, {
@@ -209,9 +219,19 @@
 		},
 	})
 
-	const formattedAllTypeOfInstructionOfProcedure = computed<InstructionOfProcedureTable[]>(() => {
+	const formattedAllTypeOfInstructionOfProcedure = computed<
+		InstructionOfProcedureTable[]
+	>(() => {
 		return (instructionOfProcedures.value ?? []).map(
-			({ id, number, instruction, type, publicationAt, revocationAt, status }) => ({
+			({
+				id,
+				number,
+				instruction,
+				type,
+				publicationAt,
+				revocationAt,
+				status,
+			}) => ({
 				id: id as number,
 				number,
 				instruction,
@@ -232,16 +252,18 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('id'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('id'),
 					},
 					() => [
 						'Código',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('id')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('id')],
+						}),
 					],
 				)
 			},
@@ -256,16 +278,18 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('type'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('type'),
 					},
 					() => [
 						'Tipo',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('type')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('type')],
+						}),
 					],
 				)
 			},
@@ -280,16 +304,18 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('number'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('number'),
 					},
 					() => [
 						'Número',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('number')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('number')],
+						}),
 					],
 				)
 			},
@@ -304,16 +330,18 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('instruction'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('instruction'),
 					},
 					() => [
 						'Objeto',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('instruction')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('instruction')],
+						}),
 					],
 				)
 			},
@@ -328,16 +356,18 @@
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('publicationAt'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('publicationAt'),
 					},
 					() => [
 						'Data Publicação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('publicationAt')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('publicationAt')],
+						}),
 					],
 				)
 			},
@@ -351,17 +381,19 @@
 				return h(
 					ButtonRoot,
 					{
-						variant: 'ghost',
-						class: 'w-full justify-start px-2 font-bold',
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('revocationAt'),
+						vvariant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('revocationAt'),
 					},
 					() => [
 						'Data de Revogação',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('revocationAt')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('revocationAt')],
+						}),
 					],
 				)
 			},
@@ -370,31 +402,35 @@
 		},
 		{
 			accessorKey: 'status',
-			meta: 'Status',
+			meta: 'Tipo de entidade',
+			enableResizing: false,
+			size: 0,
 			header: () => {
 				return h(
 					ButtonRoot,
 					{
 						variant: 'ghost',
-						class: ['w-full justify-start px-1 font-bold'],
-						disabled: formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
-						// onClick: () => handleSort('entityTypeId'),
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled:
+							formattedAllTypeOfInstructionOfProcedure.value.length <= 0,
+						onClick: () => handleSort('status'),
 					},
 					() => [
 						'Status',
-						// h(FontAwesomeIcon, {
-						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
-						// 	icon: ['fas', getSort('entityTypeId')],
-						// }),
+						h(FontAwesomeIcon, {
+							class: 'ml-2 h-4 w-4 bh-text-black/20',
+							icon: ['fas', getSort('entityTypeId')],
+						}),
 					],
 				)
 			},
 			cell: ({ row, cell }) =>
 				h(
-					'div',
+					'span',
 					{
 						class:
-							'flex justify-center items-center, max-w-32 rounded-md py-[0.3rem]',
+							'flex justify-center items-center max-w-20 rounded-md px-2 py-1 text-xs font-semibold',
 						style: {
 							color: row.getValue<StatusFormatted>('status').textColor,
 							backgroundColor: row.getValue<StatusFormatted>('status').bgColor,
@@ -406,25 +442,40 @@
 		},
 		{
 			id: 'actions',
-			header: 'Ações',
+			size: 0,
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+					},
+					() => ['Ações'],
+				)
+			},
 			cell: ({ row }) => {
 				const data = row.original
-				return h('div', { class: 'relative max-w-4 flex gap-2' }, [
-					h(InstructionOfProcedureUpdateAction, {
-						dataId: data.id,
-						tableInstructionOfProcedureName: data.number,
-						'onOn-edit': onUpdateSubmit,
-						isLoading: isUpdateInstructionOfProcedureLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-					h(InstructionOfProcedureDeleteAction, {
-						dataId: data.id,
-						tableInstructionOfProcedureName: data.number,
-						'onOn-delete': onDeleteSubmit,
-						isLoading: isDeleteInstructionOfProcedureLoading.value,
-						isActive: data.status.raw === 1,
-					}),
-				])
+				return h(
+					'div',
+					{ class: 'relative flex gap-2 justify-end items-center' },
+					[
+						h(InstructionOfProcedureUpdateAction, {
+							dataId: data.id,
+							tableInstructionOfProcedureName: data.number,
+							'onOn-edit': onUpdateSubmit,
+							isLoading: isUpdateInstructionOfProcedureLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+						h(InstructionOfProcedureDeleteAction, {
+							dataId: data.id,
+							tableInstructionOfProcedureName: data.number,
+							'onOn-delete': onDeleteSubmit,
+							isLoading: isDeleteInstructionOfProcedureLoading.value,
+							isActive: data.status.raw === 1,
+						}),
+					],
+				)
 			},
 		},
 	]
@@ -500,61 +551,60 @@
 		return handleDeleteInstructionOfProcedure({ id })
 	}
 
-	// function getSort(key: string) {
-	// 	const sortParameters = extractSort(selectSort.value as string)
+	function getSort(key: string) {
+		const sortParameters = extractSort(selectSort.value as string)
 
-	// 	switch (sortParameters?.[key]) {
-	// 		case 'ASC': {
-	// 			return 'sort-up'
-	// 		}
-	// 		case 'DESC': {
-	// 			return 'sort-down'
-	// 		}
-	// 		default: {
-	// 			return 'sort'
-	// 		}
-	// 	}
-	// }
+		switch (sortParameters?.[key]) {
+			case 'ASC': {
+				return 'sort-up'
+			}
+			case 'DESC': {
+				return 'sort-down'
+			}
+			default: {
+				return 'sort'
+			}
+		}
+	}
 
-	// function extractSort<T = string>(
-	// 	sort: string,
-	// ):
-	// 	| {
-	// 			[x: string]: T
-	// 	  }
-	// 	| undefined {
-	// 	if (!sort) return
+	function extractSort<T = string>(
+		sort: string,
+	):
+		| {
+				[x: string]: T
+		  }
+		| undefined {
+		if (!sort) return
 
-	// 	const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
+		const regexData = /^\[(\w+)\]\[(\w+)\]$/.exec(sort)
 
-	// 	if (!regexData) return
+		if (!regexData) return
 
-	// 	return { [regexData[1]]: regexData[2] as T }
-	// }
+		return { [regexData[1]]: regexData[2] as T }
+	}
 
-	// function handleSort(key: string) {
-	// 	const sortParameters = extractSort<keyof typeof changeValues>(
-	// 		selectSort.value as string,
-	// 	)
-	// 	const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
+	function handleSort(key: string) {
+		const sortParameters = extractSort<keyof typeof changeValues>(
+			selectSort.value as string,
+		)
+		const hasSearch = Object.hasOwn(sortParameters ?? {}, key)
 
-	// 	if (hasSearch && sortParameters) {
-	// 		const value = changeValues[sortParameters[key]]
+		if (hasSearch && sortParameters) {
+			const value = changeValues[sortParameters[key]]
 
-	// 		if (changeValues[value] !== changeValues.NONE) {
-	// 			selectSort.value = `[${key}][${value}]`
-	// 			selectInstructionOfProceduresRefetch()
-	// 			return
-	// 		}
+			if (changeValues[value] !== changeValues.NONE) {
+				selectSort.value = `[${key}][${value}]`
 
-	// 		selectSort.value = undefined
-	// 		selectInstructionOfProceduresRefetch()
-	// 		return
-	// 	}
+				return
+			}
 
-	// 	selectSort.value = `[${kInstruçãoey}][ASC]`
-	// 	selectInstructionOfProceduresRefetch()
-	// }
+			selectSort.value = undefined
+
+			return
+		}
+
+		selectSort.value = `[${key}][ASC]`
+	}
 
 	function handlePagination(to: number) {
 		if (to < page.value) {
@@ -574,15 +624,14 @@
 <template>
 	<div class="flex flex-col gap-y-4">
 		<div class="mb-4 flex gap-10 items-center">
-			<div class="flex gap-10 items-center justify-center">
+			<div class="flex gap-14 items-center justify-center">
 				<titulo title="Lista de IP-Instrução procedimentos" />
 
 				<form-wrapper
 					v-model="openCreateModal"
 					:is-loading="isCreateInstructionOfProcedureLoading"
-					:title="`Criar uma nova instrução de procedimentos`"
-					description="Crie o conteúdo de uma nova instrução de procedimentos."
-					class="sm:max-w-[780px]"
+					:title="`Cadastro Instrução de Procedimentos`"
+					class="sm:max-w-[580px]"
 					@form-submit="onCreateSubmit"
 				>
 					<template #trigger>
@@ -590,8 +639,10 @@
 							<tooltip>
 								<tooltip-trigger as-child>
 									<button-root
-										variant="outline"
+										variant="ghost"
+										size="icon"
 										@click="openCreateModal = true"
+										disabled
 									>
 										<font-awesome-icon
 											class="text-primary w-5 h-5"
@@ -617,11 +668,8 @@
 
 			<div class="header_actions flex items-center gap-4 flex-1 justify-end">
 				<select-root class="flex-[1]" v-model="status">
-					<select-trigger class="lg:max-w-80 flex-[2]">
-						<select-value
-							class="text-left"
-							placeholder="Selecione um status..."
-						/>
+					<select-trigger class="lg:max-w-40 flex-[2]">
+						<select-value class="text-left" placeholder="Status" />
 					</select-trigger>
 					<select-content>
 						<select-group>
@@ -639,7 +687,7 @@
 				<tooltip-provider>
 					<tooltip>
 						<tooltip-trigger as-child>
-							<button-root variant="outline" @click="handleClear">
+							<button-root variant="ghost" size="icon" @click="handleClear">
 								<font-awesome-icon
 									class="text-primary w-5 h-5"
 									:icon="['fas', 'eraser']"
@@ -647,7 +695,23 @@
 							</button-root>
 						</tooltip-trigger>
 						<tooltip-content side="right">
-							<p>Apagar filtros</p>
+							<p>Limpar pesquisa</p>
+						</tooltip-content>
+					</tooltip>
+				</tooltip-provider>
+
+				<tooltip-provider>
+					<tooltip>
+						<tooltip-trigger as-child>
+							<button-root variant="ghost" size="icon" @click="handleClear">
+								<font-awesome-icon
+									class="text-primary w-5 h-5"
+									:icon="['fas', 'print']"
+								/>
+							</button-root>
+						</tooltip-trigger>
+						<tooltip-content side="right">
+							<p>Imprimir</p>
 						</tooltip-content>
 					</tooltip>
 				</tooltip-provider>
@@ -662,7 +726,7 @@
 				:is-loading="isInstructionOfProceduresLoading"
 			/>
 
-			<div :class="['flex w-full items-center px-4']">
+			<div :class="['flex w-full items-center justify-end px-4']">
 				<table-pagination
 					v-model="page"
 					:disabled="formattedAllTypeOfInstructionOfProcedure.length <= 0"
