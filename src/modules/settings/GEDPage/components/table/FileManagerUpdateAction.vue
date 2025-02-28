@@ -3,16 +3,16 @@
 	import { toTypedSchema } from '@vee-validate/zod'
 	import { useForm } from 'vee-validate'
 	import * as z from 'zod'
-	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 	import { FormWrapper } from '@/core/components/form-wrapper'
 	import { ButtonRoot } from '@/core/components/button'
-	import { iamRepository } from '@/core/stores'
-	import IamForm from './IAMForm.vue'
+	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+	import { generalRepository } from '@/core/stores'
+	import RouteManagerForm from './FileManagerForm.vue'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
-		tableIamName: { type: String, required: true },
+		tableRouteManagerName: { type: String, required: true },
 		isLoading: { type: Boolean, default: () => false },
 	})
 	const emits = defineEmits(['on-edit'])
@@ -25,44 +25,54 @@
 			name: z
 				.string({ message: 'O nome é obrigatório.' })
 				.min(1, { message: 'O nome é obrigatório.' }),
-			description: z
-				.string({ message: 'A descrição é obrigatória.' })
-				.min(1, { message: 'A descrição é obrigatória.' }),
+			slug: z
+				.string({ message: 'O slug é obrigatório.' })
+				.min(1, { message: 'O slug é obrigatório.' }),
+			url: z
+				.string({ message: 'A url é obrigatória.' })
+				.min(1, { message: 'A url é obrigatória.' }),
 			permissions: z
-				.array(
-					z.object(
-						{
-							id: z.string({ message: 'Esse campo é obrigatório.' }),
-							title: z.string({ message: 'Esse campo é obrigatório.' }),
-						},
-						{ message: 'Esse campo é obrigatório.' },
-					),
-					{ message: 'Deve haver pelo menos 1 permissão.' },
+				.object(
+					{
+						id: z.string({ message: 'Esse campo é obrigatório.' }),
+						title: z.string({ message: 'Esse campo é obrigatório.' }),
+					},
+					{ message: 'Esse campo é obrigatório.' },
 				)
-				.min(1, { message: 'Deve haver pelo menos 1 permissão.' }),
+				.optional(),
 		}),
 	)
 
 	const form = useForm({
 		validationSchema: formSchema,
-		initialValues: {
-			permissions: [],
-		},
 	})
 
 	async function setNewData() {
 		if (!properties.dataId) return
 		isDataLoading.value = true
 		try {
-			const data = await iamRepository.getTypeOfOperatorById(properties.dataId)
+			const data = await generalRepository.getPageById(properties.dataId)
+			console.log({
+				name: data.name,
+				permissions: data?.parentId
+					? {
+							id: data?.parentId.toString(),
+							title: data,
+						}
+					: undefined,
+				slug: data.slug,
+				url: data.url,
+			})
 			form.setValues({
 				name: data.name,
-				description: data?.description,
-				permissions:
-					data?.permissions?.map(({ id, relatedName }) => ({
-						id: `${id}`,
-						title: relatedName,
-					})) ?? [],
+				permissions: data?.parentId
+					? {
+							id: data?.parentId.toString(),
+							title: '',
+						}
+					: undefined,
+				slug: data.slug,
+				url: data.url,
 			})
 		} catch (error) {
 			console.log(error)
@@ -80,10 +90,10 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar tipo de operador"
+		tooltip="Editar página"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar tipo de operador`"
+		:title="`Editar Página`"
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>
@@ -97,7 +107,7 @@
 		</template>
 
 		<template #fields>
-			<iam-form
+			<route-manager-form
 				:metadata="form.values"
 				:disabled="isLoading"
 				@on-close="
