@@ -4,6 +4,7 @@ import { RouteManagementPage } from "@/modules/settings/RouteManagementPage";
 import { ServicePage } from "@/modules/settings/ServicePage";
 import { RulePage } from "@/modules/settings/RulePage";
 import { IamPage } from "@/modules/settings/IAMPage";
+import { GEDPage } from "@/modules/settings/GEDPage";
 
 export const settingsRoutes: RouteRecordRaw[] = [
 	{
@@ -26,14 +27,19 @@ export const settingsRoutes: RouteRecordRaw[] = [
 				component: RouteManagementPage,
 			},
 			{
-				path: 'perfil',
-				name: 'configuracoes-perfil',
+				path: 'tipo-de-operador',
+				name: 'configuracoes-tipo-de-operador',
 				component: IamPage,
 			},
 			{
 				path: 'regras',
 				name: 'configuracoes-regras',
 				component: RulePage,
+			},
+			{
+				path: 'ged',
+				name: 'configuracoes-ged',
+				component: GEDPage,
 			},
 		],
 	}
