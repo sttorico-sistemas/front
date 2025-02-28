@@ -1,0 +1,1 @@
+export { default as DiscountHistoryPage } from './Page.vue'
