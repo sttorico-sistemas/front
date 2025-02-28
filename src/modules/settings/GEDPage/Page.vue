@@ -36,6 +36,7 @@
 		FileManagerUpdateAction,
 	} from './components/table'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import Checkbox from '@/core/components/fields/checkbox/Checkbox.vue'
 
 	type FileManagerTable = {
 		id: number
@@ -51,6 +52,7 @@
 	} as const
 
 	const openCreateModal = ref(false)
+	const rawIsAllPageRowsSelected = ref(false)
 	const rowSelection = ref({})
 	const pageMetadata = ref({ totalPages: 1, totalItens: 0 })
 	const selectSort = useRouteQuery<string | undefined>('mtr-cgn-sort')
@@ -66,6 +68,7 @@
 		isLoading: isFileManagerLoading,
 		isPlaceholderData: isFileManagerPlaceholderData,
 	} = useQuery({
+		enabled: false,
 		queryKey: generalRepository.getQueryKey('files', {
 			page,
 			limit: perPage,
@@ -178,10 +181,54 @@
 		}))
 	})
 
+	const countRowSelection = computed(() => {
+  return rawIsAllPageRowsSelected.value
+    ? pageMetadata.value.totalItens
+    : Object.keys(rowSelection.value).length
+})
+
+	const isAllPageRowsSelected = computed(() => {
+  return (
+    rawIsAllPageRowsSelected.value ||
+    (table.getIsAllPageRowsSelected() &&
+      countRowSelection.value === pageMetadata.value.totalItens) ||
+    (countRowSelection.value !== pageMetadata.value.totalItens &&
+      countRowSelection.value > 0 &&
+      'indeterminate')
+  )
+})
+
 	const columns: ColumnDef<FileManagerTable>[] = [
 		{
-			accessorKey: 'name',
-			meta: 'Nome',
+			id: 'select',
+			header: ({ table }) =>
+				h(Checkbox, {
+					checked: isAllPageRowsSelected.value,
+					'onUpdate:checked': (value) => {
+						if (value === false) rowSelection.value = {}
+						rawIsAllPageRowsSelected.value = value
+						return table.toggleAllPageRowsSelected(!!value)
+					},
+					ariaLabel: 'Select all',
+				}),
+			cell: ({ row }) =>
+				h(Checkbox, {
+					checked: row.getIsSelected() || rawIsAllPageRowsSelected.value,
+					'onUpdate:checked': (value) => {
+						if (value === false && rawIsAllPageRowsSelected.value) {
+							rawIsAllPageRowsSelected.value = false
+						}
+						return row.toggleSelected(!!value)
+					},
+					ariaLabel: 'Select row',
+				}),
+
+			enableSorting: false,
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'objects',
+			meta: 'Objetos',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -190,23 +237,23 @@
 						size: 'none',
 						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						onClick: () => handleSort('name'),
+						// onClick: () => handleSort('objects'),
 					},
 					() => [
 						'Nome',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('name')],
-						}),
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('objects')],
+						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('name')),
+			cell: ({ row }) => h('div', row.getValue('objects')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'slug',
-			meta: 'Slug',
+			accessorKey: 'type',
+			meta: 'Tipo',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -215,23 +262,23 @@
 						size: 'none',
 						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						onClick: () => handleSort('slug'),
+						// onClick: () => handleSort('type'),
 					},
-					() => [
-						'Slug',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('slug')],
-						}),
-					],
+					// () => [
+					// 	'Tipo',
+					// 	h(FontAwesomeIcon, {
+					// 		class: 'ml-2 h-4 w-4 bh-text-black/20',
+					// 		icon: ['fas', getSort('type')],
+					// 	}),
+					// ],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('slug')),
+			cell: ({ row }) => h('div', row.getValue('type')),
 			enableHiding: false,
 		},
 		{
-			accessorKey: 'url',
-			meta: 'URL',
+			accessorKey: 'size',
+			meta: 'Tamanho',
 			header: () => {
 				return h(
 					ButtonRoot,
@@ -240,53 +287,67 @@
 						size: 'none',
 						class: ['justify-start font-bold'],
 						disabled: formattedAllPages.value.length <= 0,
-						onClick: () => handleSort('slug'),
+						// onClick: () => handleSort('size'),
 					},
 					() => [
-						'URL',
-						h(FontAwesomeIcon, {
-							class: 'ml-2 h-4 w-4 bh-text-black/20',
-							icon: ['fas', getSort('slug')],
-						}),
+						'Tamanho',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('size')],
+						// }),
 					],
 				)
 			},
-			cell: ({ row }) => h('div', row.getValue('url')),
+			cell: ({ row }) => h('div', row.getValue('size')),
+			enableHiding: false,
+		},
+		{
+			accessorKey: 'updatedAt',
+			meta: 'Atualizado em',
+			header: () => {
+				return h(
+					ButtonRoot,
+					{
+						variant: 'ghost',
+						size: 'none',
+						class: ['justify-start font-bold'],
+						disabled: formattedAllPages.value.length <= 0,
+						// onClick: () => handleSort('updatedAt'),
+					},
+					() => [
+						'Atualizado em',
+						// h(FontAwesomeIcon, {
+						// 	class: 'ml-2 h-4 w-4 bh-text-black/20',
+						// 	icon: ['fas', getSort('updatedAt')],
+						// }),
+					],
+				)
+			},
+			cell: ({ row }) => h('div', row.getValue('updatedAt')),
 			enableHiding: false,
 		},
 		{
 			id: 'actions',
 			size: 0,
-			header: () => {
-				return h(
-					ButtonRoot,
-					{
-						variant: 'ghost',
-						size: 'none',
-						class: ['justify-start font-bold'],
-					},
-					() => ['Ações'],
-				)
-			},
 			cell: ({ row }) => {
 				const data = row.original
 				return h(
 					'div',
 					{ class: 'relative flex gap-2 justify-end items-center' },
 					[
-						h(FileManagerUpdateAction, {
-							dataId: data.id,
-							tableFileManagerName: data.name,
-							'onOn-edit': onUpdateSubmit,
-							isLoading: isUpdateFileManagerLoading.value,
-						}),
-						h(FileManagerDeleteAction, {
-							dataId: data.id,
-							tableFileManagerName: data.name,
-							'onOn-delete': onDeleteSubmit,
-							isLoading: isDeleteFileManagerLoading.value,
-							isActive: true,
-						}),
+						// h(FileManagerUpdateAction, {
+						// 	dataId: data.id,
+						// 	tableFileManagerName: data.name,
+						// 	'onOn-edit': onUpdateSubmit,
+						// 	isLoading: isUpdateFileManagerLoading.value,
+						// }),
+						// h(FileManagerDeleteAction, {
+						// 	dataId: data.id,
+						// 	tableFileManagerName: data.name,
+						// 	'onOn-delete': onDeleteSubmit,
+						// 	isLoading: isDeleteFileManagerLoading.value,
+						// 	isActive: true,
+						// }),
 					],
 				)
 			},
@@ -439,54 +500,14 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Configurações', 'Páginas']" />
+		<breadcrumbs :paginas="['Configurações', 'GED']" />
 
 		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex gap-14 items-center justify-center">
-					<titulo title="Gerenciar Páginas" />
-
-					<form-wrapper
-						v-model="openCreateModal"
-						:is-loading="isCreateFileManagerLoading"
-						:title="`Cadastro Página`"
-						class="sm:max-w-[780px]"
-						@form-submit="onCreateSubmit"
-					>
-						<template #trigger>
-							<tooltip-provider>
-								<tooltip>
-									<tooltip-trigger as-child>
-										<button-root
-											variant="ghost"
-											size="icon"
-											@click="openCreateModal = true"
-										>
-											<font-awesome-icon
-												class="text-primary w-5 h-5"
-												:icon="['fas', 'circle-plus']"
-											/>
-										</button-root>
-									</tooltip-trigger>
-									<tooltip-content side="right">
-										<p>Cadastro Página</p>
-									</tooltip-content>
-								</tooltip>
-							</tooltip-provider>
-						</template>
-
-						<template #fields>
-							<route-manager-form
-								:metadata="form.values"
-								:disabled="isCreateFileManagerLoading"
-								@on-close="() => {
-									openCreateModal = false
-								}"
-							/>
-						</template>
-					</form-wrapper>
+					<titulo title="Gerenciamento eletrônico de documentos" />
 				</div>
 			</div>
 

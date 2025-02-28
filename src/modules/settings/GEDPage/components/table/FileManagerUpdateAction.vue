@@ -8,7 +8,7 @@
 	import { ButtonRoot } from '@/core/components/button'
 	import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 	import { generalRepository } from '@/core/stores'
-	import RouteManagerForm from './RouteManagerForm.vue'
+	import RouteManagerForm from './FileManagerForm.vue'
 
 	const properties = defineProps({
 		dataId: { type: Number, required: true },
