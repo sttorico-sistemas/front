@@ -95,13 +95,13 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: error.message ?? 'Erro ao apagar o perfil!' },
+					{ title: error.message ?? 'Erro ao apagar o tipo de operador!' },
 					{ duration: 1500 },
 				)
 			},
 			onSuccess: () => {
 				notify.success(
-					{ title: `Perfil apagado com sucesso!` },
+					{ title: `Tipo de Operador apagado com sucesso!` },
 					{ duration: 1500 },
 				)
 			},
@@ -122,13 +122,13 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: error.message ?? `Erro ao atualizar o perfil!` },
+					{ title: error.message ?? `Erro ao atualizar o tipo de operador!` },
 					{ duration: 1500 },
 				)
 			},
 			onSuccess: () => {
 				notify.success(
-					{ title: `Perfil atualizado com sucesso!` },
+					{ title: `Tipo de Operador atualizado com sucesso!` },
 					{ duration: 1500 },
 				)
 			},
@@ -149,13 +149,13 @@
 			onError: (error) => {
 				notify.error(
 					error,
-					{ title: error.message ?? `Erro ao criar o perfil!` },
+					{ title: error.message ?? `Erro ao criar o tipo de operador!` },
 					{ duration: 1500 },
 				)
 			},
 			onSuccess: () => {
 				notify.success(
-					{ title: `Perfil criado com sucesso!` },
+					{ title: `Tipo de Operador criado com sucesso!` },
 					{ duration: 1500 },
 				)
 			},
@@ -433,19 +433,19 @@
 </script>
 <template>
 	<main>
-		<breadcrumbs :paginas="['Configurações', 'Perfil']" />
+		<breadcrumbs :paginas="['Configurações', 'Tipo de Operadores']" />
 
 		<div class="panel pb-4 mt-6">
 			<div
 				class="flex flex-wrap justify-between md:items-center md:flex-row flex-col mb-5 gap-5"
 			>
 				<div class="flex gap-14 items-center justify-center">
-					<titulo title="Gerenciar Perfis" />
+					<titulo title="Gerenciar Tipo de Operadores" />
 
 					<form-wrapper
 						v-model="openCreateModal"
 						:is-loading="isCreateIamLoading"
-						:title="`Criar um novo perfil`"
+						:title="`Criar um novo tipo de operador`"
 						class="sm:max-w-[780px]"
 						@form-submit="onCreateSubmit"
 					>

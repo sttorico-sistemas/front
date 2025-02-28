@@ -80,10 +80,10 @@
 
 <template>
 	<form-wrapper
-		tooltip="Editar perfil"
+		tooltip="Editar tipo de operador"
 		v-model="openUpdateModal"
 		:is-loading="isLoading || isDataLoading"
-		:title="`Editar perfil`"
+		:title="`Editar tipo de operador`"
 		class="sm:max-w-[780px]"
 		@form-submit="onSubmit"
 	>
